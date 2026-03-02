@@ -1679,31 +1679,34 @@ Three phases: <OrangeText>Initialize</OrangeText> → <b>Operate</b> → Shutdow
 
 </div>
 
-<div class="mt-4">
+<div class="flex justify-center mt-4">
+<div class="w-110">
 
-```mermaid
+```mermaid {scale: 0.85}
 sequenceDiagram
-    participant Client
-    participant Server
+    participant C as Client
+    participant S as Server
 
     rect rgba(96,165,250,0.15)
-    Note over Client,Server: Initialization
-    Client->>+Server: initialize (protocol version, capabilities)
-    Server-->>Client: initialize response (capabilities)
-    Client--)Server: initialized notification
+    Note over C,S: Initialization
+    C->>+S: initialize (version, capabilities)
+    S-->>C: response (capabilities)
+    C--)S: initialized notification
     end
 
     rect rgba(74,222,128,0.15)
-    Note over Client,Server: Operation
-    Note over Client,Server: Normal protocol communication
+    Note over C,S: Operation
+    Note over C,S: Normal protocol communication
     end
 
     rect rgba(248,113,113,0.15)
-    Note over Client,Server: Shutdown
-    Client--)-Server: Disconnect (close transport)
+    Note over C,S: Shutdown
+    C--)S: Disconnect
+    deactivate S
     end
 ```
 
+</div>
 </div>
 
 <div class="mt-2 text-base text-gray-400">
@@ -1776,17 +1779,18 @@ Sub-capabilities: <code>listChanged</code> (change notifications) · <code>subsc
 
 Client launches server as a <b>subprocess</b>. Messages on stdin/stdout, newline-delimited.
 
-```mermaid
+```mermaid {scale: 0.75}
 sequenceDiagram
-    participant Client
-    participant Server
+    participant C as Client
+    participant S as Server
 
-    Client->>+Server: Launch subprocess
+    C->>+S: Launch subprocess
     loop Message Exchange
-        Client->>Server: Write to stdin
-        Server->>Client: Write to stdout
+        C->>S: Write to stdin
+        S->>C: Write to stdout
     end
-    Client->>-Server: Close stdin / terminate
+    C->>S: Close stdin / terminate
+    deactivate S
 ```
 
 </div>
@@ -1797,18 +1801,18 @@ sequenceDiagram
 
 Server runs <b>independently</b>, handles multiple clients.
 
-```mermaid
+```mermaid {scale: 0.75}
 sequenceDiagram
-    participant Client
-    participant Server
+    participant C as Client
+    participant S as Server
 
-    Client->>Server: Open SSE connection
-    Server->>Client: endpoint event
+    C->>S: Open SSE connection
+    S->>C: endpoint event
     loop Message Exchange
-        Client->>Server: HTTP POST
-        Server->>Client: SSE events
+        C->>S: HTTP POST
+        S->>C: SSE events
     end
-    Client->>Server: Close connection
+    C->>S: Close connection
 ```
 
 </div>
