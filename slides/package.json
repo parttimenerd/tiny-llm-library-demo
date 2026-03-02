@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "slidev --open --port 3032",
     "build": "slidev build",
+    "build:gh-pages": "slidev build --base /tiny-llm-library-demo/",
     "export": "slidev export",
     "launch": "./launch.sh",
     "launch:terminal": "./launch.sh --terminal"
