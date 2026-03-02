@@ -35,7 +35,7 @@ jobs:
       - name: Copy static images
         run: |
           rm -rf slides/dist/img || true
-          cp -R slides/img slides/dist/img || trze
+          cp -R slides/img slides/dist/img || true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
