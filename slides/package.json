@@ -1,0 +1,30 @@
+{
+  "name": "tiny-llm-library-slides",
+  "version": "1.0.0",
+  "description": "Let's create a tiny AI library together — Slidev Presentation",
+  "type": "module",
+  "scripts": {
+    "dev": "slidev --open --port 3032",
+    "build": "slidev build",
+    "export": "slidev export",
+    "launch": "./launch.sh",
+    "launch:terminal": "./launch.sh --terminal"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.12.0",
+    "@slidev/theme-default": "latest",
+    "@codemirror/commands": "^6.10.2",
+    "@codemirror/lang-java": "^6.0.2",
+    "@codemirror/language": "^6.12.2",
+    "@codemirror/state": "^6.5.4",
+    "@codemirror/view": "^6.39.15",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/addon-search": "^0.16.0",
+    "@xterm/addon-web-links": "^0.12.0",
+    "@xterm/xterm": "^6.0.0",
+    "codemirror": "^6.0.2"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.12.0"
+  }
+}

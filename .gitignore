@@ -1,0 +1,36 @@
+# Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+*.sublime-*
+.project
+.classpath
+.settings/
+
+# Node.js
+node_modules/
+dist/
+build/
+coverage/
+.nyc_output/
+*.log
+.env
+.env.*
+*.map
+
+# General
+.DS_Store
+*.swp
+*.tmp
+
+slides/resources
+plan.md

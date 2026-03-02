@@ -1,0 +1,17 @@
+{
+  "name": "k3s-demo-terminal-server",
+  "version": "1.0.0",
+  "description": "Terminal server for executing demo scripts in slides",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["terminal", "xterm", "demo"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.16.0",
+    "node-pty": "^1.2.0-beta.11"
+  }
+}
