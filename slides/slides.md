@@ -1503,15 +1503,6 @@ Same `/v1/chat/completions` endpoint. Just add a `tools` array.
 The model is <b>untrusted</b>. You are the executor.
 </Callout>
 
-<div class="mt-6">
-
-- 🔒 **Sandbox root** — all paths resolved relative to it
-- 🛡️ **Canonical path checks** — reject `..` and symlink escapes
-- 📏 **Output caps** — exclude dotfiles, cap bytes/entries
-- 🔄 **Retry on bad JSON** — models return garbage sometimes
-
-</div>
-
 <!--
 **[~33:00]** "Read-only, sandboxed, canonical paths, no dotfiles, size limits."
 "And retry on bad JSON — because the model WILL sometimes return garbage."
