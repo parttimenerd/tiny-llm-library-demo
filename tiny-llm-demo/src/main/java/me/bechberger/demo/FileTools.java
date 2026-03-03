@@ -306,30 +306,44 @@ public class FileTools {
             pb.redirectErrorStream(true); // Merge stderr with stdout
 
             Process process = pb.start();
+            
+            // Read output concurrently to prevent buffer deadlock
+            StringBuilder output = new StringBuilder();
+            Thread outputReader = new Thread(() -> {
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        synchronized (output) {
+                            output.append(line).append("\n");
+                            if (output.length() > MAX_COMMAND_OUTPUT_BYTES) {
+                                output.setLength(MAX_COMMAND_OUTPUT_BYTES);
+                                output.append("\n... (output truncated at ").append(MAX_COMMAND_OUTPUT_BYTES).append(" bytes)");
+                                break;
+                            }
+                        }
+                    }
+                } catch (IOException ignored) {
+                }
+            });
+            outputReader.start();
+            
             boolean completed = process.waitFor(COMMAND_TIMEOUT_SECONDS, java.util.concurrent.TimeUnit.SECONDS);
 
             if (!completed) {
                 process.destroyForcibly();
+                outputReader.interrupt();
                 return "Error: command timed out after " + COMMAND_TIMEOUT_SECONDS + " seconds";
             }
-
-            // Read output
-            StringBuilder output = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line).append("\n");
-                    if (output.length() > MAX_COMMAND_OUTPUT_BYTES) {
-                        output.setLength(MAX_COMMAND_OUTPUT_BYTES);
-                        output.append("\n... (output truncated at ").append(MAX_COMMAND_OUTPUT_BYTES).append(" bytes)");
-                        break;
-                    }
-                }
-            }
+            
+            // Wait for output reader to finish
+            outputReader.join(1000);
 
             int exitCode = process.exitValue();
-            String result = output.toString().trim();
+            String result;
+            synchronized (output) {
+                result = output.toString().trim();
+            }
             
             if (exitCode != 0) {
                 return "Exit code " + exitCode + ":\n" + result;

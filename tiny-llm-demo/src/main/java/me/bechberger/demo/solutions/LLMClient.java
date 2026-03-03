@@ -149,8 +149,6 @@ public class LLMClient {
         var delta = Util.asMap(Util.asMap(choices.getFirst()).get("delta"));
         var content = (String) delta.get("content");
         if (delta.containsKey("thinking")) {
-            // Optional: handle "thinking" signals if your LLM sends them
-            // For example, you could print a placeholder or update a progress indicator
             System.out.print(delta.get("thinking"));
         }
         return content != null ? content : "";

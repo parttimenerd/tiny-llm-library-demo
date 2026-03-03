@@ -70,6 +70,7 @@ Resources
 - **LangChain4j musings, six months later:** [blog.frankel.ch](https://blog.frankel.ch/langchain4j-musings-six-months-after/) — Follow-up post on LangChain4j experience.
 - **Build AI apps with LangChain4j:** [javapro.io](https://javapro.io/2025/04/23/build-ai-apps-and-agents-in-java-hands-on-with-langchain4j/) — Hands-on guide to building AI apps and agents in Java with LangChain4j.
 - **RAG is dead:** [medium.com](https://medium.com/data-science-in-your-pocket/rag-is-dead-5fd1350def6d) — Provocative take on RAG's limitations and alternatives.
+- **Don’t Let Your AI Agent Forget: Smarter Strategies for Summarizing Message History** [agentailor.com](https://blog.agentailor.com/posts/message-history-summarization-strategies)
 
 License
 -------

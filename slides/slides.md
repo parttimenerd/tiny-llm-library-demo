@@ -137,6 +137,101 @@ layout: default
   font-size: 1.5rem;
   margin: 2px 0;
 }
+
+.strategy-box {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  padding: 10px 8px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.strategy-box.selected {
+  border: 2px solid #f97316;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.25);
+}
+.strategy-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  color: #e2e8f0;
+}
+.msg-block {
+  width: 85%;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 2px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+.msg-user     { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
+.msg-assistant { background: rgba(74, 222, 128, 0.2); color: #86efac; }
+.msg-system   { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+.msg-summary  { background: rgba(249, 115, 22, 0.3); color: #fdba74; border: 1px dashed rgba(249, 115, 22, 0.5); }
+.msg-discarded { background: rgba(100, 116, 139, 0.15); color: #64748b; text-decoration: line-through; }
+.msg-pinned   { border: 1px solid rgba(250, 204, 21, 0.5); position: relative; }
+.msg-pinned::after { content: '📌'; position: absolute; right: 2px; top: -1px; font-size: 0.5rem; }
+.cutoff-line  { border-top: 2px dashed #ef4444; width: 85%; margin: 3px 0; }
+.msg-flow-arrow { color: #6890c8; font-size: 0.75rem; margin: 1px 0; }
+.pick-badge {
+  background: #f97316;
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+.ctx-window {
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+  min-height: 260px;
+}
+.ctx-label {
+  position: absolute;
+  right: -90px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+.ctx-bar {
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+}
+.ctx-bar.sys  { background: rgba(148,163,184,0.25); color: #cbd5e1; }
+.ctx-bar.usr  { background: rgba(59,130,246,0.25);  color: #93c5fd; }
+.ctx-bar.ast  { background: rgba(74,222,128,0.2);   color: #86efac; }
+.ctx-bar.tool { background: rgba(168,85,247,0.2);   color: #c4b5fd; min-height: 28px; }
+.ctx-bar.empty { background: transparent; border: 1px dashed rgba(148,163,184,0.2); color: #475569; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+.ctx-threshold {
+  border-top: 2px dashed #f97316;
+  position: relative;
+  margin: 2px 0;
+}
+
+.mcp-diagram text { font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
+.mcp-diagram .label { font-size: 20px !important; font-weight: 700 !important; }
+.mcp-diagram .center { font-size: 22px !important; font-weight: 700 !important; }
+.mcp-diagram .sub { font-size: 20px !important; }
+.mcp-diagram .meta { font-size: 20px !important; font-style: italic; }
+.mcp-diagram .flow { font-size: 20px !important; }
 </style>
 
 <script setup>
@@ -193,64 +288,21 @@ Either way: what <OrangeText>actually happens</OrangeText> under the hood?
 
 ---
 
-# The Question: Who's Using Frameworks?
+# The Gap: Why Understanding Matters
 
-<div class="mt-12 text-2xl text-gray-300">
+<div class="mt-6 text-lg text-gray-400">
 
-**[Show of hands]** Who here has used an LLM library?
-
-</div>
-
-<div class="mt-8 text-xl text-gray-400">
-
-LangChain4j · Spring AI · Semantic Kernel · Others?
+Libraries are designed to abstract away HTTP. But when something breaks — or you need to design something custom — that knowledge is invaluable.
 
 </div>
 
-<div class="mt-12 text-lg text-gray-500">
+<Callout variant="orange">
+<b>Real example:</b> A colleague's app started failing with "context window exceeded." Without understanding token counting and message history, they couldn't debug it. With frameworks as a black box, they'd have been lost.
+</Callout>
 
-Keep your hands up for the next question...
+<div class="mt-6 text-xl text-gray-300">
 
-</div>
-
-<!--
-**[~0:35]** **[SHOW OF HANDS]** First poll. "Who has used one of these frameworks?" Most hands should go up.
--->
-
----
-
-# The Revelation
-
-<div class="mt-12 text-2xl text-gray-300">
-
-**[Still with hands up]** Who knows exactly what HTTP calls that library makes?
-
-</div>
-
-<!--
-**[~0:50]** **[REVEAL]** Second question. Watch the hands drop. This is the dramatic moment.
-"Most of you don't have visibility into what's actually happening underneath."
--->
-
----
-
-# The Gap
-
-<div class="mt-8 text-lg text-gray-400">
-
-This is normal. These libraries are designed to <OrangeText>hide</OrangeText> the HTTP layer.
-
-</div>
-
-<div class="mt-8 text-lg text-gray-400">
-
-But what does it actually look like?
-
-</div>
-
-<div class="mt-8 text-2xl text-gray-300">
-
-**What's in the JSON?**
+Let's lift the hood. <b>What's actually in the JSON?</b>
 
 </div>
 
@@ -394,7 +446,7 @@ Understanding the REST layer underneath means:
 
 </div>
 
-<div class="mt-4 text-lg">
+<div class="mt-3 text-base">
 
 - When a framework breaks, you can debug it
 - You can design better systems by knowing what's underneath
@@ -469,12 +521,6 @@ flowchart TB
 ---
 
 # Local LLMs
-
-<div class="mt-2">
-
-**[Show of hands]** Who has run a local LLM — Ollama, LM Studio, llama.cpp?
-
-</div>
 
 <div class="grid grid-cols-3 gap-6 mt-6">
 
@@ -1066,13 +1112,7 @@ Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
 
 <div class="mt-12 text-2xl">
 
-**[Show of hands]** Who has used tool calling or function calling with an LLM?
-
-</div>
-
-<div class="mt-12 text-2xl" v-click>
-
-"It sounds fancy, but it's built on specs old specs."
+"Tool calling sounds fancy, but it's built on old specs."
 
 </div>
 
@@ -1553,7 +1593,7 @@ public class FileTools {
 
     @Tool(description = "List directory contents")
     public String ls(@Description("Directory path") String path) {
-  // (provided) resolve path, enforce sandbox, list files
+       // (provided) resolve path, enforce sandbox, list files
     }
 
     @Tool(description = "Read file contents (paged)")
@@ -1618,7 +1658,231 @@ layout: center
 
 <div class="big-statement">
 
-MCP — The Bigger Picture
+Token Tracking & Summarization
+
+</div>
+
+<div class="text-xl text-gray-400 mt-4">
+
+Context windows aren't infinite — here's how to manage them.
+
+</div>
+
+<!--
+**[~43:30]** Transition to the token management section. "Our chatbot works, but what happens after a long conversation? The context window fills up. Let's fix that."
+-->
+
+---
+
+# The Problem: Context Overflow
+
+<div class="grid grid-cols-[1fr_180px_180px] gap-6 mt-4 items-start">
+
+<div class="mt-8">
+
+Every LLM has a fixed <OrangeText>context window</OrangeText> — and tool-calling conversations fill it up **fast**.
+
+</div>
+
+<div class="flex justify-center">
+<div class="ctx-window" style="width:150px;min-height:240px">
+<div class="ctx-bar sys">SYS</div>
+<div class="ctx-bar usr">U1</div>
+<div class="ctx-bar ast">A1</div>
+<div class="ctx-bar usr">U2</div>
+<div class="ctx-bar ast">A2</div>
+<div class="ctx-bar empty" style="flex-grow:1">headroom</div>
+<div class="ctx-label">CONTEXT WINDOW</div>
+</div>
+</div>
+
+<div class="flex justify-center">
+<v-click>
+<div>
+<div class="ctx-window" style="width:150px;min-height:240px">
+<div class="ctx-bar sys">SYS</div>
+<div class="ctx-bar usr">U1</div>
+<div class="ctx-bar ast">A1</div>
+<div class="ctx-bar usr">U2 (tool)</div>
+<div class="ctx-bar tool">Tool result</div>
+<div class="ctx-bar ast">A2</div>
+<div class="ctx-bar usr">U3</div>
+<div class="ctx-bar ast">A3</div>
+<div class="ctx-threshold"></div>
+<div class="ctx-bar usr">U4</div>
+<div class="ctx-bar tool">Tool result</div>
+<div class="ctx-bar ast" style="opacity:0.4">A4 ?</div>
+<div class="ctx-bar empty">⚠️ overflow</div>
+</div>
+</div>
+</v-click>
+</div>
+
+</div>
+
+<!--
+**[~44:00]** "Every LLM has a fixed context window. Messages, tool calls, results — they all count toward it. Tool-calling conversations fill it up fast because every tool invocation adds both a request and a response message."
+-->
+
+---
+
+# Detecting the Limit
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+The API already tells us how many tokens we've used:
+
+```json
+{
+  "choices": [
+    { "message": { "content": "..." } }
+  ],
+  "usage": {
+    "prompt_tokens": 4012,
+    "completion_tokens": 88,
+    "total_tokens": 4100
+  }
+}
+```
+
+</div>
+
+<div>
+
+Auto-detect the limit via `GET /v1/models` → `meta.n_ctx_train`. E.g. 40960 for my local models.
+
+</div>
+
+</div>
+
+<!--
+**[~44:15]** "The good news: the API already tells us how many tokens we've used via the usage object. We can auto-detect the window size from the models endpoint. We trigger summarization at 80% — leaving headroom for the next response."
+-->
+
+---
+
+# Four Strategies for Managing History
+
+<div class="flex flex-col justify-between h-full">
+
+<div class="grid grid-cols-4 gap-3 mt-4 flex-grow items-center">
+
+<div class="strategy-box">
+<div class="strategy-label">Dynamic Cutoff</div>
+<div class="msg-block msg-discarded">SYS</div>
+<div class="msg-block msg-discarded">U1</div>
+<div class="msg-block msg-discarded">A1</div>
+<div class="cutoff-line"></div>
+<div class="msg-block msg-user">U2</div>
+<div class="msg-block msg-assistant">A2</div>
+<div class="msg-block msg-user">U3</div>
+<div class="msg-block msg-assistant">A3</div>
+<div class="text-xs text-gray-500 mt-2 text-center">Keep recent, drop old.<br/>Simple but loses context.</div>
+</div>
+
+<v-click>
+<div class="strategy-box">
+<div class="strategy-label">Rolling Summaries</div>
+<div class="msg-block msg-system">SYS</div>
+<div class="msg-block msg-summary">Summary(U1, ..., A2)</div>
+<div class="msg-block msg-user">U3</div>
+<div class="msg-block msg-assistant">A3</div>
+<div class="msg-block msg-user">U4</div>
+<div class="msg-block msg-assistant">A4</div>
+<div class="text-xs text-gray-500 mt-2 text-center">Periodically compress.<br/>Continuous but lossy.</div>
+</div>
+</v-click>
+
+<v-click>
+<div class="strategy-box selected">
+<div class="strategy-label">Hybrid Memory</div>
+<div class="msg-block msg-system msg-pinned">SYS</div>
+<div class="msg-block msg-user msg-pinned">U1</div>
+<div class="msg-block msg-summary">Summary(A1, U2, A2)</div>
+<div class="msg-block msg-user">U3</div>
+<div class="msg-block msg-assistant">A3</div>
+<div class="msg-block msg-user">U4</div>
+<div class="msg-block msg-assistant">A4</div>
+<div class="pick-badge">Our pick</div>
+<div class="text-xs text-gray-500 mt-2 text-center">Pin key msgs + summarize.<br/>Best balance.</div>
+</div>
+</v-click>
+
+<v-click>
+<div class="strategy-box">
+<div class="strategy-label">Externalized Memory</div>
+<div class="msg-block msg-system">SYS</div>
+<div class="msg-block msg-user">U1</div>
+<div class="msg-flow-arrow">↓</div>
+<div class="msg-block msg-summary">🗄️ Vector DB</div>
+<div class="msg-flow-arrow">↑ semantic search</div>
+<div class="msg-block msg-user">U4</div>
+<div class="msg-block msg-assistant">A4</div>
+<div class="text-xs text-gray-500 mt-2 text-center">Store in DB for retrieval.<br/>Most complex.</div>
+</div>
+</v-click>
+
+</div>
+
+<div style="text-xs">
+
+<a href="https://blog.agentailor.com/posts/message-history-summarization-strategies" target="_blank" class="text-gray-600 hover:text-gray-300">agentailor.com — "Smarter Strategies for Summarizing Message History"</a>
+</div>
+
+</div>
+
+<!--
+**[~44:30]** "There are four common approaches. Dynamic Cutoff is simplest but loses context. Rolling Summaries compress periodically but details fade. Externalized Memory is most powerful but complex. We'll use Hybrid Memory — pin the important messages, summarize the middle, keep recent ones."
+-->
+
+---
+
+# Why Hybrid?
+
+<div class="grid grid-cols-2 gap-8 mt-2">
+
+<div>
+
+<div class="text-lg font-semibold mb-3">Three tiers of importance:</div>
+
+<v-clicks>
+
+- 📌 **Pinned** — system prompt<br/><span class="text-sm text-gray-400">Defines *who* the bot is and sets the rules. Never summarized.</span>
+- 🗜️ **Summarized** — everything in between<br/><span class="text-sm text-gray-400">Compressed via an LLM call. Tool results included, then dropped.</span>
+- 💬 **Recent** — last 4 messages (2 pairs)<br/><span class="text-sm text-gray-400">Full fidelity for coherent follow-up.</span>
+
+</v-clicks>
+
+<div class="mt-3" v-click>
+The LLM <b>summarizes itself</b>
+</div>
+
+<div class="mt-3" v-click>
+
+```
+if prompt_tokens > 0.8 × contextWindow
+```
+
+</div>
+
+</div>
+</div>
+
+<!--
+**[~45:30]** "Hybrid Memory has three tiers. The system prompt is pinned — it defines the bot's identity and rules. Everything in the middle gets summarized by the LLM itself. The last 4 messages stay verbatim for coherent follow-up. No external DB needed."
+-->
+
+---
+layout: center
+---
+
+<div class="section-header">Part 6</div>
+
+<div class="big-statement">
+
+Briefly: MCP
 
 </div>
 
@@ -1643,27 +1907,64 @@ MCP is an <OrangeText>open standard</OrangeText> (by Anthropic) for connecting a
 
 </div>
 
-<div class="mt-6">
+<div class="mt-3 flex justify-center">
+<svg class="mcp-diagram" viewBox="0 0 920 340" xmlns="http://www.w3.org/2000/svg" style="width:min(100%,820px);max-height:280px;height:auto">
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/></marker>
+    <marker id="ahr" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="8 0, 0 3, 8 6" fill="#94a3b8"/></marker>
+  </defs>
+  <!-- Left boxes -->
+  <rect x="10" y="10" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text class="label" x="130" y="44" text-anchor="middle" fill="#e2e8f0">Chat interfaces</text>
 
-```mermaid
-flowchart LR
-  app["App\n(MCP Client)"]
-  server["MCP Server\ntools / resources"]
-  llm["LLM\n(e.g. Claude)"]
+  <rect x="10" y="100" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text class="label" x="130" y="134" text-anchor="middle" fill="#e2e8f0">IDEs &amp; code editors</text>
 
-  app <-->|"JSON-RPC 2.0"| server
-  llm -.->|"calls tools"| app
-```
+  <rect x="10" y="190" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text class="label" x="130" y="224" text-anchor="middle" fill="#e2e8f0">Other AI applications</text>
+
+  <text class="meta" x="130" y="290" text-anchor="middle" fill="#64748b">AI applications</text>
+
+  <!-- Center box -->
+  <rect x="340" y="75" width="240" height="120" rx="12" fill="rgba(96,165,250,0.12)" stroke="#60a5fa" stroke-width="2"/>
+  <text class="center" x="460" y="125" text-anchor="middle" fill="#e2e8f0">MCP</text>
+  <text class="sub" x="460" y="152" text-anchor="middle" fill="#94a3b8">Standardized protocol</text>
+
+  <!-- Right boxes -->
+  <rect x="670" y="10" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text class="label" x="790" y="44" text-anchor="middle" fill="#e2e8f0">Data &amp; file systems</text>
+
+  <rect x="670" y="100" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text class="label" x="790" y="134" text-anchor="middle" fill="#e2e8f0">Development tools</text>
+
+  <rect x="670" y="190" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <text class="label" x="790" y="224" text-anchor="middle" fill="#e2e8f0">Productivity tools</text>
+
+  <text class="meta" x="790" y="290" text-anchor="middle" fill="#64748b">Data sources and tools</text>
+
+  <!-- Left arrows -->
+  <line x1="250" y1="45" x2="340" y2="110" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
+  <line x1="250" y1="135" x2="340" y2="135" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
+  <line x1="250" y1="225" x2="340" y2="160" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
+
+  <!-- Right arrows -->
+  <line x1="580" y1="110" x2="670" y2="45" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
+  <line x1="580" y1="135" x2="670" y2="135" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
+  <line x1="580" y1="160" x2="670" y2="225" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
+
+  <!-- Flow labels -->
+  <text class="flow" x="310" y="320" text-anchor="middle" fill="#64748b">Bidirectional data flow</text>
+  <text class="flow" x="610" y="320" text-anchor="middle" fill="#64748b">Bidirectional data flow</text>
+</svg>
+</div>
+
+<div class="mt-3 text-base">
+
+Any AI app can connect to any tool server — <OrangeText>one protocol to rule them all</OrangeText>.
 
 </div>
 
-<div class="mt-4">
-
-**Your app** embeds the MCP Client, talks to the LLM, and connects to servers that expose tools.
-
-</div>
-
-<Caption><a href="https://modelcontextprotocol.io/specification/2024-11-05" target="_blank">modelcontextprotocol.io/specification/2024-11-05</a></Caption>
+<Caption><a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank">https://modelcontextprotocol.io/docs/getting-started/intro</a></Caption>
 
 <!--
 **[~47:30]** "MCP uses JSON-RPC 2.0 for communication. Your app embeds the MCP Client, connects to servers that provide tools, and the LLM calls those tools through your app."
@@ -1671,18 +1972,12 @@ flowchart LR
 
 ---
 
-# MCP — Lifecycle
+# Lifecycle
 
-<div class="mt-2 text-lg">
-
-Three phases: <OrangeText>Initialize</OrangeText> → <b>Operate</b> → Shutdown
-
-</div>
-
-<div class="flex justify-center mt-4">
+<div class="flex justify-center" style="margin-top: -2.2cm">
 <div class="w-110">
 
-```mermaid {scale: 0.85}
+```mermaid {scale: 0.8}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1946,7 +2241,7 @@ layout: center
 
 <div class="big-statement">
 
-<OrangeText>LLM APIs are boring.</OrangeText>
+LLM APIs are boring.
 
 </div>
 
@@ -1979,8 +2274,6 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 - ✅ **Streaming chatbot** — SSE parsing, conversation history, ~50 lines
 - ✅ **Tool calling** — JSON Schema, sandbox security, while loop
 
-All with <OrangeText>no dependencies beyond the JDK</OrangeText> and two tiny libs (~120KB).
-
 </div>
 
 <div>
@@ -1988,16 +2281,16 @@ All with <OrangeText>no dependencies beyond the JDK</OrangeText> and two tiny li
 ```mermaid
 flowchart TB
   subgraph "What we built"
-    lc["LLMClient\nchat · stream"]
-    cb["ChatBot\nREPL loop"]
-    ts["ToolSupport\nwhile loop"]
-    ft["FileTools\nls · catPaged"]
+    lc["LLMClient<br>chat · stream"]
+    cb["ChatBot<br>REPL loop"]
+    ts["ToolSupport<br>while loop"]
+    ft["FileTools<br>ls · catPaged"]
   end
 
   cb --> lc
   ts --> lc
   ts --> ft
-  lc -->|"HTTP + JSON"| llm["LLM"]
+  lc -->|"HTTP + JSON"| llm["Local LLM"]
 
   style lc fill:#f97316,color:#000,stroke:none
   style cb fill:#f97316,color:#000,stroke:none
@@ -2019,41 +2312,51 @@ flowchart TB
 
 <div class="mt-12 text-2xl">
 
-**[Show of hands]** Who thinks they could implement this themselves now?
+**[Show of hands]**: Who thinks they could implement this themselves now?
 
 </div>
 
-<div class="mt-12 text-lg text-gray-400">
-
-🔗 Slides & code: <b>github.com/parttimenerd/tiny-llm-library-demo</b><br/>
-🔗 Blog: <b>mostlynerdless.de</b><br/>
-🔗 femtoai / femtojson / femtoschema: <b>github.com/parttimenerd</b>
-
+<div class="grid grid-cols-3 gap-8 mt-10 text-center">
+  <div>
+    <div class="text-lg font-bold mb-3">Blog</div>
+    <img
+      src="./img/qr-mostlynerdless.png"
+      alt="QR code for mostlynerdless.de"
+      class="mx-auto "
+      style="width: 50%"
+    />
+    <div class="mt-3 text-sm text-gray-300">
+      <a href="https://mostlynerdless.de">mostlynerdless.de</a>
+    </div>
+  </div>
+  <div>
+    <div class="text-lg font-bold mb-3">Project</div>
+    <img
+      src="./img/qr-project.png"
+      alt="QR code for tiny-llm-library-demo GitHub repo"
+      class="mx-auto"
+      style="width: 50%"
+    />
+    <div class="mt-3 text-sm text-gray-300">
+      <a href="https://github.com/parttimenerd/tiny-llm-library-demo">tiny-llm-library-demo</a>
+    </div>
+  </div>
+  <div>
+    <div class="text-lg font-bold mb-3">SapMachine</div>
+    <img
+      src="./img/qr-sapmachine.png"
+      alt="QR code for sapmachine.io"
+      class="mx-auto"
+      style="width: 50%"
+    />
+    <div class="mt-3 text-sm text-gray-300">
+      <a href="https://sapmachine.io">sapmachine.io</a>
+    </div>
+  </div>
 </div>
 
 <!--
 **[SHOW OF HANDS]** Final payoff. If most hands go up, the talk succeeded.
--->
-
----
-layout: center
----
-
-<div class="text-5xl font-bold">Thank you!</div>
-
-<div class="text-2xl mt-8 text-gray-400">
-
-Questions?
-
-</div>
-
-<div class="mt-12 text-lg text-gray-500">
-
-Johannes Bechberger · @parttimenerd · mostlynerdless.de
-
-</div>
-
-<!--
 **[~52:00]** Q&A time. Have the chatbot running in a terminal in case someone wants to see a live demo during questions.
 Expect questions about: model quality, production use, security edge cases, MCP adoption.
 -->
