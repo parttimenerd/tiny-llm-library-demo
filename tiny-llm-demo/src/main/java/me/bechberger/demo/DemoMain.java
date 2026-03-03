@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Small launcher for the shaded demo jar.
@@ -83,11 +84,7 @@ public final class DemoMain {
             System.exit(4);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
-            if (cause != null) {
-                cause.printStackTrace(System.err);
-            } else {
-                e.printStackTrace(System.err);
-            }
+            Objects.requireNonNullElse(cause, e).printStackTrace(System.err);
             System.exit(5);
         }
     }
@@ -117,10 +114,7 @@ public final class DemoMain {
         if (name.startsWith("me.")) {
             return name;
         }
-        if (name.contains(".")) {
-            // e.g. "solutions.ChatBot" -> "me.bechberger.demo.solutions.ChatBot"
-            return "me.bechberger.demo." + name;
-        }
+        // e.g. "solutions.ChatBot" -> "me.bechberger.demo.solutions.ChatBot"
         // e.g. "ToolChatBot" -> "me.bechberger.demo.ToolChatBot"
         return "me.bechberger.demo." + name;
     }

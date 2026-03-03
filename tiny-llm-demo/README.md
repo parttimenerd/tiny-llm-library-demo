@@ -21,40 +21,11 @@ llama-server -hf Qwen/Qwen3-1.7B-GGUF:Q8_0 -hf bartowski/Qwen_Qwen3.5-27B-GGUF:Q
 curl http://localhost:8080/v1/models | jq .
 ```
 
-## Project Structure
-
-```
-tiny-llm-demo/
-├── pom.xml                           # Java 21, shade plugin for fat JAR
-├── scripts/                          # Curl demo scripts (self-contained)
-│   ├── 01-list-models.sh
-│   ├── 02-simple-chat.sh
-│   ├── 03-conversation.sh
-│   ├── 04-streaming.sh
-│   └── 05-tool-call.sh
-└── src/main/java/me/bechberger/demo/
-    ├── http/
-    │   └── HttpHelper.java           # Pre-written HTTP helper (boring plumbing)
-    ├── LLMClient.java                # Skeleton — live-coded in Section 3
-    ├── ChatBot.java                  # Skeleton — live-coded in Section 3
-    ├── ToolSupport.java              # Skeleton — live-coded in Section 5
-    ├── FileTools.java                # Skeleton — live-coded in Section 5
-    ├── GrepTool.java                 # Skeleton — live-coded in Section 5
-    ├── ToolChatBot.java              # Skeleton — live-coded in Section 5
-    └── solutions/                    # Complete working implementations
-        ├── LLMClient.java
-        ├── ChatBot.java
-        ├── ToolSupport.java
-        ├── FileTools.java
-        ├── GrepTool.java
-        └── ToolChatBot.java
-```
-
 ## Build
 
 ```bash
 cd tiny-llm-demo
-mvn clean package -DskipTests
+mvn clean package
 ```
 
 This produces a fat JAR at `target/tiny-llm-demo-1.0-SNAPSHOT.jar` (~150KB).
@@ -91,10 +62,7 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Chat
 ### Solution: Tool Chatbot
 
 ```bash
-java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.ToolChatBot \
-  --model Qwen/Qwen3-1.7B-GGUF:Q8_0 \
-  --base-url http://localhost:8080 \
-  --root .
+java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.ToolChatBot
 ```
 
 ## Live Coding Sequence
@@ -111,7 +79,6 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Tool
 1. **ToolSupport.registerTool()** — store name + schema + handler
 2. **ToolSupport.buildToolsJson()** — build the `tools` array
 3. **ToolSupport.handleToolLoop()** — while loop: call LLM → execute tools → repeat
-4. **FileTools.ls()** + **FileTools.catPaged()** — sandboxed implementations
 5. Demo with **ToolChatBot**
 
 ## Dependencies

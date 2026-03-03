@@ -144,7 +144,7 @@ public class FileTools {
 
         // Reject any path segment starting with '.'
         for (String segment : path.split("[/\\\\]")) {
-            if (!segment.isEmpty() && segment.startsWith(".") && !segment.equals(".")) {
+            if (segment.startsWith(".") && !segment.equals(".")) {
                 throw new SecurityException("Access denied: hidden path segment '" + segment + "'");
             }
         }
@@ -244,7 +244,7 @@ public class FileTools {
                     .forEach(filePath -> {
                         if (matches.size() >= MAX_RESULTS) return;
                         try {
-                            String content = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+                            String content = Files.readString(filePath);
                             boolean matchesQuery;
 
                             if (finalPattern != null) {

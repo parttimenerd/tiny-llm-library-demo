@@ -7,7 +7,6 @@ import me.bechberger.util.femtoschema.Schemas;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
