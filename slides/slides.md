@@ -272,7 +272,7 @@ Johannes Bechberger &nbsp;&nbsp;·&nbsp;&nbsp; SAP SE
 
 Some of us already use <OrangeText>Spring AI</OrangeText> or <OrangeText>LangChain4j</OrangeText>.
 
-Some of us don't use AI in our apps yet — but want to.
+Some of us don't use AI in our apps yet, but want to.
 
 </div>
 
@@ -290,21 +290,26 @@ Either way: what <OrangeText>actually happens</OrangeText> under the hood?
 
 # The Gap: Why Understanding Matters
 
-<div class="mt-6 text-lg text-gray-400">
+<div class="mt-20 text-4xl text-gray-400">
 
-Libraries are designed to abstract away HTTP. But when something breaks — or you need to design something custom — that knowledge is invaluable.
+Libraries are designed to be abstractions. 
 
 </div>
 
-<Callout variant="orange">
-<b>Real example:</b> A colleague's app started failing with "context window exceeded." Without understanding token counting and message history, they couldn't debug it. With frameworks as a black box, they'd have been lost.
-</Callout>
+
 
 <div class="mt-6 text-xl text-gray-300">
 
-Let's lift the hood. <b>What's actually in the JSON?</b>
+Let's lift the hood. <b>What's actually in the API calls?</b>
 
 </div>
+
+<!--- 
+abstract away HTTP. But when something breaks — or you need to design something custom — that knowledge is invaluable.
+
+<Callout variant="orange">
+<b>Real example:</b> A colleague's app started failing with "context window exceeded." Without understanding token counting and message history, they couldn't debug it. With frameworks as a black box, they'd have been lost.
+</Callout> -->
 
 <!--
 **[~1:00]** Transition. "This is exactly what we're going to close today. By the end, you'll know what's underneath."
@@ -314,7 +319,7 @@ Let's lift the hood. <b>What's actually in the JSON?</b>
 layout: statement
 ---
 
-# LLM APIs are boring.
+# LLM APIs are <OrangeText>boring</OrangeText>.
 
 <!--
 **[~1:30]** The big reveal upfront. "LLM APIs are boring." Say it confidently.
@@ -353,6 +358,8 @@ It's not a bad thing — in fact, it's good news.
 
 </div>
 
+<!--
+
 <div class="mt-8 text-lg leading-relaxed">
 
 **Good news:**
@@ -362,6 +369,7 @@ It's not a bad thing — in fact, it's good news.
 - You're never trapped by framework limitations
 
 </div>
+-->
 
 <!--
 **[~2:10]** Positive reframe. "Boring is good. Boring means debuggable. Boring means predictable."
@@ -370,27 +378,7 @@ It's not a bad thing — in fact, it's good news.
 
 ---
 
-# What Frameworks Actually Give You
-
-<div class="mt-8 text-xl text-gray-400">
-
-LangChain4j, Spring AI, and similar libraries are <OrangeText>genuinely useful</OrangeText>.
-
-</div>
-
-<div class="mt-12 text-lg">
-
-They're not just wrappers — they add real production value.
-
-</div>
-
-<!--
-**[~2:30]** Setup slide. "These libraries aren't magic wrappers. They add real, measurable value on top of the boring REST layer."
--->
-
----
-
-# The Value They Add
+# Libraries add value
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 
@@ -432,33 +420,6 @@ flowchart TB
 "RAG (retrieval-augmented generation) and tracing? Those are hard problems they've solved for us."
 -->
 
----
-
-# Why We're Learning the Layer Below
-
-<Callout variant="blue">
-We're NOT saying "don't use them" — we're learning what they wrap so you can <b>debug</b> and <b>design</b> better.
-</Callout>
-
-<div class="mt-8 text-lg text-gray-400">
-
-Understanding the REST layer underneath means:
-
-</div>
-
-<div class="mt-3 text-base">
-
-- When a framework breaks, you can debug it
-- You can design better systems by knowing what's underneath
-- You can move between frameworks without fear
-
-</div>
-
-<Caption>LangChain4j docs: "The goal of LangChain4j is to simplify integrating LLMs into Java applications." — This is a <b>good goal</b>. We're just learning what gets simplified.</Caption>
-
-<!--
-**[~3:15]** Positive framing. "We respect these libraries. We're just pulling back the curtain so you can use them with confidence."
--->
 
 ---
 
@@ -468,11 +429,13 @@ Understanding the REST layer underneath means:
 
 <div>
 
-By the end of this hour:
+By the end of this hour you learned about
 
-- ✅ **A streaming chatbot** — ~50 lines of Java
-- ✅ **Tool calling** — LLM browses your filesystem
-- ✅ **MCP fundamentals** — the protocol tying it together
+- The REST API
+- Tool calling
+- Message compressiong
+- MCP
+- ... and built an LLM library and a chatbot
 
 ```java
 var client = new LLMClient(baseUrl, model,
@@ -486,8 +449,8 @@ client.chatStream(messages);
 
 ```mermaid
 flowchart TB
-  jdk["java.net.http"]
-  fj["femtojson<br>femtoschema"]
+  jdk["java.net.http<br>femtojson"]
+  fj["femtoschema"]
   lc["LLMClient"]
   cb["ChatBot"]
   ts["ToolSupport"]
@@ -504,7 +467,7 @@ flowchart TB
   style lc fill:#f97316,color:#000,stroke:none
   style cb fill:#f97316,color:#000,stroke:none
   style ts fill:#f97316,color:#000,stroke:none
-  style ft fill:#f97316,color:#000,stroke:none
+  style ft fill:#334155,color:#e2e8f0,stroke:none
 ```
 
 <div class="text-sm text-gray-500 text-center">Orange = what we build live</div>
@@ -589,6 +552,28 @@ Model: `Qwen/Qwen3-1.7B-GGUF:Q8_0` — small, fast, fits on any modern laptop.
 -->
 
 ---
+layout: center
+---
+
+<div class="section-header">Part 2</div>
+
+<div class="big-statement">
+
+The API
+
+</div>
+
+<div class="text-xl text-gray-400 mt-4">
+
+Let me show you what these libraries are actually doing.
+
+</div>
+
+<!--
+**[~6:00]** Transition to curl demos. "Enough slides. Let me prove it."
+-->
+
+---
 
 # It's All Just REST
 
@@ -644,28 +629,6 @@ SSE = Server-Sent Events — a simple HTTP standard where the server keeps the c
 -->
 
 ---
-layout: center
----
-
-<div class="section-header">Part 2</div>
-
-<div class="big-statement">
-
-The API
-
-</div>
-
-<div class="text-xl text-gray-400 mt-4">
-
-Let me show you what these libraries are actually doing.
-
-</div>
-
-<!--
-**[~6:00]** Transition to curl demos. "Enough slides. Let me prove it."
--->
-
----
 
 # List Models
 
@@ -680,11 +643,13 @@ curl http://localhost:8080/v1/models
 </template>
 </CodeWithScript>
 
+<!--
 <div class="mt-4 text-xl">
 
 One GET request. That's it. <OrangeText>Not very exciting, right?</OrangeText>
 
 </div>
+-->
 
 <!--
 **[~6:30]** **[REACTION]** Run the curl live. "One GET request. That's the entire model listing."
@@ -713,11 +678,13 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 </template>
 </CodeWithScript>
 
+<!--
 <div class="text-lg mt-2">
 
 The entire "AI call" is <OrangeText>one JSON POST</OrangeText>. Model name + messages array → response.
 
 </div>
+-->
 
 <!--
 **[~7:30]** Walk through the JSON. "model, messages array with role and content — that's the request."
@@ -768,7 +735,7 @@ layout: center
 
 <div class="big-statement">
 
-This is what your chatbot's "memory" actually looks like — a <OrangeText>growing list of messages</OrangeText>.
+This is what your chatbot's "memory" actually looks like: a <OrangeText>growing list of messages</OrangeText>.
 
 </div>
 
@@ -788,9 +755,9 @@ html.spec.whatwg.org/multipage/server-sent-events.html
 
 </div>
 
-Key idea: one long-lived HTTP response with <code>Content-Type: text/event-stream</code>, sending lines like <code>data: ...</code>.
-
 </div>
+
+<code>Content-Type: text/event-stream</code>
 
 ```json
 data: {"choices":[{"delta":{"content":"Hel"}}]}
@@ -799,14 +766,17 @@ data: {"choices":[{"delta":{"content":"lo"}}]}
 data: [DONE]
 ```
 
+<!--
+
+Key idea: one long-lived HTTP response with <code>Content-Type: text/event-stream</code>, sending lines like <code>data: ...</code>.
+
 A 2004 standard for live updates in browsers — now the backbone of streaming LLM responses.
-
-
+-->
 
 <!--
 "This is not an AI invention — it's a browser standard." 
 "The server keeps the HTTP connection open and pushes events." 
-"Events are framed as UTF-8 text lines; blank line separates events." 
+"Events are framed as UTF-8 text lines; blank line separates events."
 -->
 
 ---
@@ -835,11 +805,17 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 <div class="mt-2">
 
+<v-click>
+
 **[Quick poll]** Who's seen SSE before — Server-Sent Events?
 
-Token by token, in real time. Same endpoint, just add `"stream": true` to the request.
+</v-click>
 
 </div>
+
+<!--
+Token by token, in real time. Same endpoint, just add `"stream": true` to the request.
+-->
 
 <!--
 **[~10:30]** **[QUICK POLL]** "Who's seen SSE before?"
@@ -901,6 +877,7 @@ Vision requests are the same endpoint — the `content` field becomes an array:
 }
 ```
 
+<!--
 <div class="mt-4 text-lg">
 
 Same endpoint. Same response shape. Just a richer `content` field.
@@ -908,6 +885,7 @@ Same endpoint. Same response shape. Just a richer `content` field.
 <span class="text-gray-500">(We won't demo this live — but it's good to know it's not magic either.)</span>
 
 </div>
+-->
 
 <!--
 **[~12:30]** Quick mention only. "Vision is the same POST — content becomes an array with text and image_url."
@@ -1060,11 +1038,9 @@ layout: center
 <div class="text-xl mt-8">
 
 ```bash
-llama-server -hf Qwen/Qwen3-1.7B-GGUF:Q8_0   # in another terminal
+scripts/00-launch-llm.sh --fast
 
-java -jar tiny-llm-demo.jar ChatBot \
-  --model Qwen/Qwen3-1.7B-GGUF:Q8_0 \
-  --base-url http://localhost:8080
+java -jar tiny-llm-demo.jar ChatBot
 ```
 
 </div>
@@ -1104,20 +1080,10 @@ Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
 
 <!--
 **[~26:00]** Transition. "Our chatbot is nice, but it's trapped in its training data. What if it could actually interact with the world?"
--->
 
----
-
-# Tool Calling — Not Magic
-
-<div class="mt-12 text-2xl">
 
 "Tool calling sounds fancy, but it's built on old specs."
 
-</div>
-
-<!--
-**[~26:30]** **[SHOW OF HANDS]** "Who has used tool calling?"
 -->
 
 ---
@@ -1131,9 +1097,11 @@ Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
 
 </div>
 
+<!--
 <Callout variant="orange">
 "Function calling provides a powerful way for models to interface with external systems — but tools that shouldn't be called can still be called, and tools might be called with wrong parameters." — OpenAI docs
 </Callout>
+-->
 
 <!--
 "The entire mechanism is: describe your tools with JSON Schema, the model asks you to call one, you execute it, send the result back."
@@ -1217,11 +1185,13 @@ var schema = Schemas.object()
     .toMap();
 ```
 
+<!--
 <div class="mt-4 text-lg">
 
 Same JSON Schema, but <OrangeText>type-safe</OrangeText> and <OrangeText>readable</OrangeText>.
 
 </div>
+-->
 
 <!--
 **[~29:00]** "Hand-writing JSON Schema gets old fast. femtoschema lets you define schemas from Java records."
@@ -1499,9 +1469,9 @@ Same `/v1/chat/completions` endpoint. Just add a `tools` array.
 
 # Security — Tools Are Code Execution
 
-<Callout variant="red">
-The model is <b>untrusted</b>. You are the executor.
-</Callout>
+<div class="text-4xl text-red mt-20">
+The model is <OrangeText>untrusted</OrangeText>. You are the executor.
+</div>
 
 <!--
 **[~33:00]** "Read-only, sandboxed, canonical paths, no dotfiles, size limits."
@@ -1569,46 +1539,6 @@ Live code. Talk through each step.
 -->
 
 ---
-
-# Live Coding: FileTools
-
-<div class="mt-2 text-lg text-gray-400">
-
-These are <OrangeText>provided</OrangeText> for the demo — we’ll use them, not implement them live.
-
-</div>
-
-```java
-public class FileTools {
-    private final Path sandboxRoot;
-
-    @Tool(description = "List directory contents")
-    public String ls(@Description("Directory path") String path) {
-       // (provided) resolve path, enforce sandbox, list files
-    }
-
-    @Tool(description = "Read file contents (paged)")
-    public String catPaged(
-        @Description("File path") String path,
-        @Description("Page number (0-based)") int page) {
-        // (provided) resolve path, enforce sandbox, read page
-    }
-}
-```
-
-<div class="mt-2 text-lg">
-
-Straightforward Java. The <OrangeText>annotations become JSON Schema</OrangeText> via femtoschema.
-
-</div>
-
-<!--
-**[~40:00]** "Two tools: ls and catPaged. Both validate the path against the sandbox root."
-"The @Tool and @Description annotations get converted to JSON Schema by femtoschema."
-"For time, the implementations are provided — we’re focusing on registering and using tools."
--->
-
----
 layout: center
 ---
 
@@ -1618,9 +1548,7 @@ layout: center
 
 ```bash
 java -jar tiny-llm-demo.jar ToolChatBot \
-  --model Qwen/Qwen3-1.7B-GGUF:Q8_0 \
-  --base-url http://localhost:8080 \
-  --root .
+  --model fast
 ```
 
 </div>
@@ -1629,9 +1557,11 @@ java -jar tiny-llm-demo.jar ToolChatBot \
 
 "What files are in this project?"
 
-"Our chatbot can now <OrangeText>browse the filesystem</OrangeText>. With ~80 lines of tool support code."
-
 </div>
+
+<!--
+"Our chatbot can now <OrangeText>browse the filesystem</OrangeText>. With ~80 lines of tool support code."
+-->
 
 <!--
 **[~43:00]** **[FUN MOMENT]** Run the tool chatbot. "What files are in this project?"
@@ -2175,16 +2105,15 @@ Could the AI just call shell scripts directly?
 <div>
 
 ### ✨ Advantages
-- **Fewer tokens** — less overhead than MCP wrapping
-- **Faster execution** — direct subprocess calls
-
+- **Fewer tokens** 
+- **Faster execution**
 </div>
 
 <div>
 
 ### ⚠️ Disadvantages
 - **Unsafe** — unvalidated input = code injection risk
-- **No sandboxing** — AI can access anything on the system
+- **No sandboxing**
 - **Hard to audit** — what did the AI actually run?
 - **Error handling** — malformed commands crash the app
 
@@ -2211,14 +2140,6 @@ Implementing an MCP client is just wrapping our tool support in JSON-RPC message
 Full specification: <a href="https://modelcontextprotocol.io/specification/2024-11-05" target="_blank"><OrangeText>modelcontextprotocol.io/specification/2024-11-05</OrangeText></a>
 
 </div>
-
-<div class="mt-8 text-xl text-center text-gray-400">
-
-"The idea of a protocol that standardizes communication between LLMs and resources like tools, and decouples AI system components, is actually pretty good."
-
-</div>
-
-<Caption>— Reddit r/LocalLLaMA</Caption>
 
 <!--
 "You could build an MCP client by wrapping our ToolSupport. MCP is gaining traction. Check the spec."
@@ -2262,7 +2183,7 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 <div>
 
 - ✅ **REST API** — three endpoints, one JSON format
-- ✅ **Streaming chatbot** — SSE parsing, conversation history, ~50 lines
+- ✅ **Streaming chatbot** — SSE parsing, conversation history
 - ✅ **Tool calling** — JSON Schema, sandbox security, while loop
 
 </div>
@@ -2286,7 +2207,6 @@ flowchart TB
   style lc fill:#f97316,color:#000,stroke:none
   style cb fill:#f97316,color:#000,stroke:none
   style ts fill:#f97316,color:#000,stroke:none
-  style ft fill:#f97316,color:#000,stroke:none
 ```
 
 </div>

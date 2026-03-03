@@ -5,6 +5,11 @@
 
 set -euo pipefail
 
+# Configure HuggingFace cache to persist models forever
+export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
+export HF_HUB_CACHE="${HF_HUB_CACHE:-$HF_HOME/hub}"
+mkdir -p "$HF_HUB_CACHE"
+
 usage() {
   cat <<USAGE
 Usage: $0 [--slow] [--medium] [--fast]
@@ -48,6 +53,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Start the selected mode
+echo "Model cache directory: $HF_HUB_CACHE"
 if [[ "$MODE" == "fast" ]]; then
   echo "Starting llama-server (fast mode)..."
   llama-server -hf Qwen/Qwen3-1.7B-GGUF:Q8_0
