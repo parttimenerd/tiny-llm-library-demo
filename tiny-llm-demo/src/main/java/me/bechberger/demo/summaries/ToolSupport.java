@@ -44,12 +44,20 @@ public class ToolSupport {
 
     /**
      * Handle tool-calling loop, returning the final response with token usage.
+     * <p>
+     * Optional summarization callback: if provided and prompt tokens exceed threshold,
+     * the callback is invoked during the loop to allow the caller to summarize the
+     * conversation history before the next API call.
      *
-     * @param client   LLM client (summaries version with token tracking)
-     * @param messages Conversation history (mutated: tool calls and results are added)
+     * @param client              LLM client (summaries version with token tracking)
+     * @param messages            Conversation history (mutated: tool calls and results are added)
+     * @param tokenThreshold      If > 0, trigger summarization when prompt tokens exceed this value
+     * @param summarizationAction Callback invoked with (messages, currentPromptTokens) when threshold is exceeded
      * @return Final assistant response text paired with token usage from the last API call
      */
-    public LLMClient.ChatResult handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
+    public LLMClient.ChatResult handleToolLoop(LLMClient client, List<Map<String, Object>> messages,
+                                                int tokenThreshold,
+                                                java.util.function.BiConsumer<List<Map<String, Object>>, Integer> summarizationAction) {
         var toolsJson = buildToolsJson();
         int maxIterations = 100;
 
@@ -57,6 +65,15 @@ public class ToolSupport {
             var rawResult = client.chatRaw(messages, toolsJson);
             var choice = rawResult.choice();
             var finishReason = (String) choice.get("finish_reason");
+
+            // Check if we need to summarize during the tool loop
+            if (tokenThreshold > 0 && summarizationAction != null && rawResult.usage() != null) {
+                int promptTokens = rawResult.usage().promptTokens();
+                if (promptTokens > tokenThreshold) {
+                    System.out.println("  [tool loop] Prompt tokens (" + promptTokens + ") exceeded threshold (" + tokenThreshold + "), triggering summarization");
+                    summarizationAction.accept(messages, promptTokens);
+                }
+            }
 
             if (!"tool_calls".equals(finishReason)) {
                 var message = Util.asMap(choice.get("message"));
@@ -75,6 +92,13 @@ public class ToolSupport {
         }
 
         return new LLMClient.ChatResult("[Tool loop exceeded maximum iterations]", null);
+    }
+
+    /**
+     * Convenience overload: handle tool loop without summarization callback.
+     */
+    public LLMClient.ChatResult handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
+        return handleToolLoop(client, messages, 0, null);
     }
 
     private Map<String, Object> executeToolCall(Map<String, Object> toolCall) {
