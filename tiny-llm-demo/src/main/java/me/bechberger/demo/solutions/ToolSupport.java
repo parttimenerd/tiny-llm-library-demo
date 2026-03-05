@@ -24,7 +24,6 @@ public class ToolSupport {
     /**
      * Register a tool that the LLM can call.
      * <p>
-     * Implementation: Store tool definition in map keyed by name
      * @param name Tool function name (e.g. "ls", "grep")
      * @param description What the tool does (LLM uses this to decide when to use it)
      * @param parameterSchema JSON Schema defining the parameters (use Schemas.object()...toJsonSchema())
@@ -59,15 +58,11 @@ public class ToolSupport {
     public List<Map<String, Object>> buildToolsJson() {
         var result = new ArrayList<Map<String, Object>>();
         for (var tool : tools.values()) {
-            var fn = new LinkedHashMap<String, Object>();
-            fn.put("name", tool.name());
-            fn.put("description", tool.description());
-            fn.put("parameters", tool.parameterSchema());
-
-            var toolObj = new LinkedHashMap<String, Object>();
-            toolObj.put("type", "function");
-            toolObj.put("function", fn);
-            result.add(toolObj);
+            result.add(Map.of("type", "function",
+                    "function", Map.of(
+                            "name", tool.name(),
+                            "description", tool.description(),
+                            "parameters", tool.parameterSchema())));
         }
         return result;
     }
@@ -202,10 +197,11 @@ public class ToolSupport {
 
         String result = callTool(toolName, argumentsJson);
 
-        var toolResultMessage = new LinkedHashMap<String, Object>();
-        toolResultMessage.put("role", "tool");
-        toolResultMessage.put("tool_call_id", toolCallId);
-        toolResultMessage.put("content", result);
+        Map<String, Object> toolResultMessage = Map.of(
+                "role", "tool",
+                "tool_call_id", toolCallId,
+                "content", result
+        );
         System.out.println("Call: " + toolName + ", Arguments: " + argumentsJson + ", Result: " + result);
         return toolResultMessage;
     }

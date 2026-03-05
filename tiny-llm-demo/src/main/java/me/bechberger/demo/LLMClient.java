@@ -1,7 +1,14 @@
 package me.bechberger.demo;
 
 import me.bechberger.demo.http.HttpHelper;
+import me.bechberger.util.json.CompactPrinter;
+import me.bechberger.util.json.JSONParser;
+import me.bechberger.util.json.Util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -53,8 +60,7 @@ public class LLMClient {
      * Implementation: Parse JSON → extract "data" list → print each model's "id"
      */
     public void listModels() {
-        // TODO: implement listModels()
-        //   GET /v1/models, parse JSON, print model IDs
+        // TODO
         throw new UnsupportedOperationException("TODO: implement listModels()");
     }
 
@@ -94,10 +100,82 @@ public class LLMClient {
      * @return Complete response text accumulated from all tokens
      */
     public String chatStream(List<Map<String, Object>> messages) {
-        // TODO: implement chatStream(messages)
-        //   POST /v1/chat/completions with stream:true
-        //   Read SSE lines, extract delta.content, call onToken handler
-        //   Return the full assembled response
-        throw new UnsupportedOperationException("TODO: implement chatStream()");
+        try {
+            var stream = http.postJsonStream("/v1/chat/completions", buildRequest(messages, true, null));
+            var reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+            // TODO
+            return ""; // return the accumulated response text
+        } catch (Exception e) {
+            throw new RuntimeException("Streaming failed", e);
+        }
+    }
+
+    /**
+     * Process one SSE line and extract token content.
+     * <p>
+     * Format: {@code data: {"choices": [{ "delta": { "content": "token" } }]}}
+     * <p>
+     * Implementation: Strip "data: " prefix → parse JSON → extract delta.content
+     * @return Token string, empty string if no content, or null if [DONE]
+     */
+    private String processSSELine(String line) throws Exception {
+        if (!line.startsWith("data: ")) return "";
+
+        String data = line.substring(6).trim();
+        if (data.equals("[DONE]")) return null;
+
+        var chunk = Util.asMap(JSONParser.parse(data));
+        var choices = Util.asList(chunk.get("choices"));
+        if (choices.isEmpty()) return "";
+
+        var delta = Util.asMap(Util.asMap(choices.getFirst()).get("delta"));
+        var content = (String) delta.get("content");
+        if (delta.containsKey("thinking")) {
+            System.out.print(delta.get("thinking"));
+        }
+        return content != null ? content : "";
+    }
+
+    /**
+     * Send a message with tools and get the raw response (for tool-calling).
+     * <p>
+     * API: {@code POST /v1/chat/completions} with tools parameter
+     * <p>
+     * Request: {@code { "model": "...", "messages": [...], "tools": [{"type": "function", "function": {...}}] }}
+     * <p>
+     * Response: {@code { "choices": [{ "finish_reason": "tool_calls", "message": { "tool_calls": [...] } }] }}
+     * or {@code { "finish_reason": "stop", "message": { "content": "text" } }}
+     * <p>
+     * Implementation: POST with tools → parse response → extract and return choices[0]
+     * @param messages List of message maps
+     * @param tools List of tool definitions in OpenAI format
+     * @return The complete first choice object (check finish_reason and message structure)
+     */
+    public Map<String, Object> chatRaw(List<Map<String, Object>> messages, List<Map<String, Object>> tools) {
+        try {
+            var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, tools))));
+            return Util.asMap(Util.asList(response.get("choices")).getFirst());
+        } catch (Exception e) {
+            throw new RuntimeException("Chat with tools failed", e);
+        }
+    }
+
+    /**
+     * Build JSON request body for chat API.
+     * <p>
+     * Format: {@code { "model": "...", "messages": [...], "stream": true, "tools": [...], "tool_choice": "auto" }}
+     * <p>
+     * Implementation: Build map with required fields → add optional fields → serialize to JSON string
+     */
+    private String buildRequest(List<Map<String, Object>> messages, boolean stream, List<Map<String, Object>> tools) {
+        var req = new LinkedHashMap<String, Object>();
+        req.put("model", model);
+        req.put("messages", messages);
+        if (stream) req.put("stream", true);
+        if (tools != null && !tools.isEmpty()) {
+            req.put("tools", tools);
+            req.put("tool_choice", "auto");
+        }
+        return CompactPrinter.compactPrint(req);
     }
 }

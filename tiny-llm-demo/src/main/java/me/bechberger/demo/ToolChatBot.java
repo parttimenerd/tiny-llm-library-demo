@@ -1,5 +1,6 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.util.ModelSize;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Option;
@@ -31,9 +32,9 @@ import java.util.concurrent.Callable;
 @Command(name = "tool-chatbot", description = "A chatbot with file system tools", version = "1.0.0")
 public class ToolChatBot implements Callable<Integer> {
 
-    @Option(names = {"-m", "--model"}, description = "Model name (default: ${DEFAULT-VALUE})",
-            defaultValue = "Qwen/Qwen3-1.7B-GGUF:Q8_0")
-    String model;
+    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B) (default: ${DEFAULT-VALUE})",
+            defaultValue = "fast")
+    ModelSize modelSize;
 
     @Option(names = {"-u", "--base-url"}, description = "LLM API base URL (default: ${DEFAULT-VALUE})",
             defaultValue = "http://localhost:8080")
@@ -44,89 +45,75 @@ public class ToolChatBot implements Callable<Integer> {
     String root;
 
     /**
-     * Main application flow - PROVIDED (no need to live code this boilerplate).
+     * Main application flow.
      * <p>
      * Setup phase:
-    * 1. Create LLMClient, ToolSupport, FileTools
-     * 2. Register tools (YOU IMPLEMENT: registerTools method)
+     * 1. Create LLMClient, ToolSupport, FileTools
+     * 2. Register tools (extracted to helper methods)
      * 3. Add system message to guide LLM behavior
      * <p>
-     * REPL phase (YOU IMPLEMENT: runREPL method):
+     * REPL phase:
      * 1. Read user input
      * 2. Add user message to conversation
      * 3. Call toolSupport.handleToolLoop() - manages all tool interactions
      * 4. Add assistant response to conversation
+     * <p>
+     * Implementation: Setup tools → add system message → loop: user input → handleToolLoop → display response
      */
     @Override
     public Integer call() {
+        String model = modelSize.getModelId();
+
         var client = new LLMClient(baseUrl, model, System.out::print);
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));
-
         registerTools(toolSupport, fileTools);
 
         System.out.println("Connecting to " + baseUrl + "...");
         client.listModels();
-        System.out.println("\nTool Chatbot ready! Model: " + model);
+        System.out.println("\nTool Chatbot ready! Model: " + modelSize.name() + " (" + modelSize.getDescription() + ")");
         System.out.println("Sandbox root: " + Path.of(root).toAbsolutePath().normalize());
-        System.out.println("Available tools: ls, cat-paged, grep, find-file, run-command");
-        System.out.println("Type 'quit' to exit.\n");
 
-        var messages = new ArrayList<Map<String, Object>>();
-        messages.add(LLMClient.system(
-                "You are a helpful assistant with access to filesystem tools. " +
-                "Use the tools to answer questions about files and directories. " +
-                "Always use the tools rather than guessing about file contents."));
-
-        runREPL(client, toolSupport, messages);
+        // TODO add system message and call repl
         return 0;
     }
 
-        /**
-         * Register all tools with the tool support.
-         */
-        private void registerTools(ToolSupport toolSupport, FileTools fileTools) {
+    /**
+     * Register all tools with the tool support.
+     * <p>
+     * Implementation: Build JSON Schema for each tool → register with handler function
+     */
+    private void registerTools(ToolSupport toolSupport, FileTools fileTools) {
+        // ls tool
         var lsSchema = Schemas.object()
-            .required("path", Schemas.string().withDescription("Directory path relative to sandbox"))
-            .toJsonSchema();
+                .required("path", Schemas.string().withDescription("Directory path relative to sandbox"))
+                .toJsonSchema();
         toolSupport.registerTool("ls", "List directory contents, just their names", lsSchema,
-            args -> fileTools.ls((String) args.get("path")));
+                args -> fileTools.ls((String) args.get("path")));
 
+        // cat-paged tool
         var catSchema = Schemas.object()
-            .required("path", Schemas.string().withDescription("File path relative to sandbox"))
-            .required("page", Schemas.number().withDescription("Page number, 0-based"))
-            .toJsonSchema();
+                .required("path", Schemas.string().withDescription("File path relative to sandbox"))
+                .required("page", Schemas.number().withDescription("Page number, 0-based"))
+                .toJsonSchema();
         toolSupport.registerTool("cat-paged", "Read file contents, paged", catSchema,
-            args -> fileTools.catPaged((String) args.get("path"), ((Number) args.get("page")).intValue()));
+                args -> fileTools.catPaged((String) args.get("path"), ((Number) args.get("page")).intValue()));
 
+        // grep tool
         var grepSchema = Schemas.object()
-            .required("query", Schemas.string().withDescription("Search query (case-insensitive)"))
-            .required("path", Schemas.string().withDescription("File path relative to sandbox"))
-            .toJsonSchema();
+                .required("query", Schemas.string().withDescription("Search query (case-insensitive)"))
+                .required("path", Schemas.string().withDescription("File path relative to sandbox"))
+                .toJsonSchema();
         toolSupport.registerTool("grep", "Search for text in a file", grepSchema,
-            args -> fileTools.grep((String) args.get("query"), (String) args.get("path")));
+                args -> fileTools.grep((String) args.get("query"), (String) args.get("path")));
 
-        var findFileSchema = Schemas.object()
-                .required("query", Schemas.string().withDescription("Search text or regex pattern"))
-                .optional("useRegex", Schemas.bool().withDescription("If true, treat query as regex; if false, literal text search (default: false)"))
-                .toJsonSchema();
-        toolSupport.registerTool("find-file", "Find all files containing text or matching a regex pattern", findFileSchema,
-                args -> {
-                    String query = (String) args.get("query");
-                    boolean useRegex = args.containsKey("useRegex") && (Boolean) args.get("useRegex");
-                    return fileTools.findFiles(query, useRegex);
-                });
-
-        // run-command tool
-        var runCmdSchema = Schemas.object()
-                .required("command", Schemas.string().withDescription("Bash command to run (user must confirm via prompt)"))
-                .toJsonSchema();
-        toolSupport.registerTool("run-command", "Run arbitrary bash command (requires user confirmation)", runCmdSchema,
-                args -> fileTools.runCommand((String) args.get("command")));
+       //  TODO: find-file tool
     }
 
     /**
      * Run the REPL loop.
+     * <p>
+     * Implementation: Loop → read input → add user message → call handleToolLoop → add assistant message
      */
     private void runREPL(LLMClient client, ToolSupport toolSupport, ArrayList<Map<String, Object>> messages) {
         var scanner = new Scanner(System.in);
@@ -134,19 +121,12 @@ public class ToolChatBot implements Callable<Integer> {
             System.out.print("\nYou: ");
             String input = scanner.nextLine().trim();
             if (input.isEmpty()) continue;
-            if (input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit")) {
-                break;
-            }
 
             messages.add(LLMClient.user(input));
 
             System.out.print("\nAssistant: ");
-            String response = toolSupport.handleToolLoop(client, messages);
-            messages.add(LLMClient.assistant(response));
-
-            System.out.println(response);
+            // TODO
         }
-        scanner.close();
     }
 
     public static void main(String[] args) {
