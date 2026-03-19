@@ -111,9 +111,7 @@ public class SummarizingChatBot implements Callable<Integer> {
             messages.add(LLMClient.user(input));
 
             System.out.print("\nAssistant: ");
-            // Pass the threshold and summarization callback to handleToolLoop
-            ChatResult result = toolSupport.handleToolLoop(client, messages, threshold,
-                    (msgs, promptTokens) -> summarizeOlderMessages(client, msgs, promptTokens));
+            ChatResult result = toolSupport.handleToolLoop(client, messages);
             String response = result.content();
             messages.add(LLMClient.assistant(response));
 
@@ -127,7 +125,7 @@ public class SummarizingChatBot implements Callable<Integer> {
                         + ", completion=" + usage.completionTokens()
                         + ", total=" + usage.totalTokens() + "]");
 
-                // Check if summarization is needed after the final response
+                // Check if summarization is needed
                 if (usage.promptTokens() > threshold) {
                     summarizeOlderMessages(client, messages, usage.promptTokens());
                 }
@@ -149,7 +147,7 @@ public class SummarizingChatBot implements Callable<Integer> {
      * messages are included in the summary text, then dropped.
      */
     private void summarizeOlderMessages(LLMClient client,
-                                        List<Map<String, Object>> messages,
+                                        ArrayList<Map<String, Object>> messages,
                                         int previousPromptTokens) {
         // Need at least: system + something to summarize + MIN_RECENT_MESSAGES
         if (messages.size() <= 1 + MIN_RECENT_MESSAGES) {
@@ -161,6 +159,12 @@ public class SummarizingChatBot implements Callable<Integer> {
         int pinnedEnd = 1; // system prompt at index 0
         // If index 1 is already a prior summary, it will be re-summarized into the new one
         int recentStart = Math.max(pinnedEnd, messages.size() - MIN_RECENT_MESSAGES);
+
+        // Nothing to summarize?
+        if (recentStart <= pinnedEnd) {
+            System.out.println("[Cannot summarize — not enough middle messages]");
+            return;
+        }
 
         // Build the conversation text to summarize
         List<Map<String, Object>> middleMessages = messages.subList(pinnedEnd, recentStart);
