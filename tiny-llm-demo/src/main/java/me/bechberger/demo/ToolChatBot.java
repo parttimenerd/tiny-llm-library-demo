@@ -107,7 +107,18 @@ public class ToolChatBot implements Callable<Integer> {
         toolSupport.registerTool("grep", "Search for text in a file", grepSchema,
                 args -> fileTools.grep((String) args.get("query"), (String) args.get("path")));
 
-       //  TODO: find-file tool
+        // find-file tool
+        var findFileSchema = Schemas.object()
+                .required("query", Schemas.string().withDescription("Search text or regex pattern"))
+                .optional("useRegex", Schemas.bool().withDescription("If true, treat query as regex; if false, literal text search (default: false)"))
+                .toJsonSchema();
+        toolSupport.registerTool("find-file", "Find all files containing text or matching a regex pattern", findFileSchema,
+                args -> {
+                    String query = (String) args.get("query");
+                    boolean useRegex = args.containsKey("useRegex") && (Boolean) args.get("useRegex");
+                    return fileTools.findFiles(query, useRegex);
+                });
+        // TODO: run-command tool
     }
 
     /**
