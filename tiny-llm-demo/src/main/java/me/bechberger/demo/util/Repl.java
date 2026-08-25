@@ -63,6 +63,7 @@ public final class Repl {
             System.out.print(prompt);
             if (!scanner.hasNextLine()) break; // EOF (Ctrl-D / piped input exhausted)
             String input = scanner.nextLine().trim();
+            if (System.console() == null) System.out.println(input); // piped: echo, so logs stay readable
             if (input.isEmpty()) continue;
             if (commands.handle(input)) continue;
             chat.chat(input);

@@ -108,6 +108,7 @@ public class CodingAgent implements Callable<Integer> {
 
     protected String greeting() {
         return "Coding agent ready. Model: " + resolveModel()
+                + " (compacting above " + compactor.threshold() + " prompt tokens)"
                 + " - project root: " + Path.of(root).toAbsolutePath().normalize();
     }
 
@@ -120,7 +121,6 @@ public class CodingAgent implements Callable<Integer> {
         String model = resolveModel();
         int contextWindow = client.getContextWindowSize(ModelSize.defaultContextWindowFor(model));
         int threshold = maxTokens > 0 ? maxTokens : (int) (contextWindow * 0.8);
-        System.out.println("Context window: " + contextWindow + " tokens - compacting above " + threshold);
         return new Compactor(threshold, 6);
     }
 

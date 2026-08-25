@@ -111,10 +111,10 @@ public class LLMClient {
      * @return Complete response text accumulated from all tokens
      */
     public String chatStream(List<Map<String, Object>> messages) {
-        try {
-            var stream = http.postJsonStream("/v1/chat/completions", buildRequest(messages, true, null));
-            var reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            StringBuilder result = new StringBuilder();
+        try (var reader = new BufferedReader(new InputStreamReader(
+                http.postJsonStream("/v1/chat/completions", buildRequest(messages, true, null)),
+                StandardCharsets.UTF_8))) {
+            var result = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 String token = processSSELine(line);

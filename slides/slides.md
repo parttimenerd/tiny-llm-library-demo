@@ -2803,7 +2803,7 @@ You:  /skill viking
       Activated skill: viking - its instructions are now part of your system prompt.
 
 You:  In one sentence: what is a coding agent?
-Bot:  Skal, fellow shield-bearer of Java: a coding agent is an AI pair-programmer
+Bot:  Skål, fellow shield-bearer of Java: a coding agent is an AI pair-programmer
       that reads your saga, plans the raid, edits code, runs builds/tests, and
       iterates until the trolls are dead.
 
