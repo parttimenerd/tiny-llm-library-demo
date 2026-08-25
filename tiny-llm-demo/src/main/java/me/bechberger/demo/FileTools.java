@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -48,7 +47,7 @@ public class FileTools {
      * <p>
      * Output format: {@code filename} or {@code dirname/} (one per line, sorted)
      * <p>
-     * Implementation: Validate path → check if directory → list files → filter hidden → sort → format names
+     * Implementation: Validate path -> check if directory -> list files -> filter hidden -> sort -> format names
      * @param path Relative path from sandbox root (e.g., ".", "src")
      * @return Newline-separated list of entries, or error message
      */
@@ -89,7 +88,7 @@ public class FileTools {
      * <p>
      * Output format: {@code === path (page X of Y) ===\n<content>}
      * <p>
-     * Implementation: Validate path → check size → read all bytes → calculate pages → extract page slice
+     * Implementation: Validate path -> check size -> read all bytes -> calculate pages -> extract page slice
      * @param path Relative file path
      * @param page Zero-based page number
      * @return File content page with header, or error message
@@ -135,7 +134,7 @@ public class FileTools {
      * - Resolve to absolute normalized path
      * - Check path is within sandboxRoot (blocks ../ traversal)
      * <p>
-     * Implementation: Split and check segments → resolve from sandbox → verify with startsWith check
+     * Implementation: Split and check segments -> resolve from sandbox -> verify with startsWith check
      * @param path Relative path string
      * @return Resolved Path object within sandbox
      * @throws SecurityException if path violates sandbox rules
@@ -163,7 +162,7 @@ public class FileTools {
             }
             return canonical;
         } catch (IOException e) {
-            // Path doesn't exist yet — check normalized path
+            // Path doesn't exist yet - check normalized path
             if (!resolved.startsWith(sandboxRoot)) {
                 throw new SecurityException("Access denied: path escapes sandbox");
             }
@@ -172,36 +171,84 @@ public class FileTools {
     }
 
     /**
-     * Search for text in a file (like Unix {@code grep}).
+     * Search for text in a file or recursively in a directory (like Unix {@code grep} / {@code grep -rn}).
+     * <p>
+     * Matching is case-insensitive on whole lines.
+     * Output format for a single file: {@code line: match}.
+     * Output format for a directory: {@code relativePath:line: match}.
+     * <p>
+     * For a directory ("." scans the whole project) all files accepted by the standard
+     * inclusion filter are scanned in sorted order; oversized or unreadable (e.g. binary)
+     * files are skipped silently. Output is limited to the first {@value #MAX_MATCHES}
+     * matches and roughly {@value #MAX_OUTPUT_BYTES} bytes overall.
+     *
+     * @param query Text to search for (case-insensitive)
+     * @param path  File or directory, relative to the sandbox root ("." allowed)
+     * @return Header plus matches, a no-matches note, or an error message
      */
     public String grep(String query, String path) {
         try {
             Path resolved = validatePath(path);
-            if (!Files.isRegularFile(resolved)) {
-                return "Error: not a regular file: " + path;
-            }
-            long fileSize = Files.size(resolved);
-            if (fileSize > MAX_FILE_SIZE_BYTES) {
-                return "Error: file too large (" + fileSize + " bytes, max " + MAX_FILE_SIZE_BYTES + ")";
+            boolean directory = Files.isDirectory(resolved);
+            if (!directory) {
+                if (!Files.isRegularFile(resolved)) {
+                    return "Error: not a regular file: " + path;
+                }
+                long fileSize = Files.size(resolved);
+                if (fileSize > MAX_FILE_SIZE_BYTES) {
+                    return "Error: file too large (" + fileSize + " bytes, max " + MAX_FILE_SIZE_BYTES + ")";
+                }
             }
 
-            var lines = Files.readAllLines(resolved);
+            List<Path> filesToScan = new ArrayList<>();
+            if (directory) {
+                try (Stream<Path> walk = Files.walk(resolved)) {
+                    walk.filter(Files::isRegularFile)
+                            .filter(this::isIncludedFile)
+                            .sorted()
+                            .forEach(filesToScan::add);
+                }
+            } else {
+                filesToScan.add(resolved);
+            }
+
             var matches = new ArrayList<String>();
             String queryLower = query.toLowerCase();
             int totalOutputBytes = 0;
 
-            for (int i = 0; i < lines.size(); i++) {
-                if (lines.get(i).toLowerCase().contains(queryLower)) {
-                    String match = (i + 1) + ": " + lines.get(i);
-                    totalOutputBytes += match.length();
-                    if (totalOutputBytes > MAX_OUTPUT_BYTES) {
-                        matches.add("... (output truncated at " + MAX_OUTPUT_BYTES + " bytes)");
-                        break;
-                    }
-                    matches.add(match);
-                    if (matches.size() >= MAX_MATCHES) {
-                        matches.add("... (showing first " + MAX_MATCHES + " matches)");
-                        break;
+            scan:
+            for (Path file : filesToScan) {
+                if (directory && Files.size(file) > MAX_FILE_SIZE_BYTES) {
+                    continue; // skip oversized files in recursive scans
+                }
+                String prefix = "";
+                if (directory) {
+                    String relative = resolved.relativize(file).toString().replace('\\', '/');
+                    prefix = (path.equals(".") ? "" : path + "/") + relative + ":";
+                }
+                List<String> lines;
+                try {
+                    lines = Files.readAllLines(file);
+                } catch (IOException e) {
+                    if (!directory) throw e; // single file: report as read error, as before
+                    continue; // skip unreadable (e.g. binary) files in recursive scans
+                } catch (RuntimeException e) {
+                    if (!directory) throw e;
+                    continue;
+                }
+                for (int i = 0; i < lines.size(); i++) {
+                    if (lines.get(i).toLowerCase().contains(queryLower)) {
+                        String match = prefix + (i + 1) + ": " + lines.get(i);
+                        totalOutputBytes += match.length();
+                        if (totalOutputBytes > MAX_OUTPUT_BYTES) {
+                            matches.add("... (output truncated at " + MAX_OUTPUT_BYTES + " bytes)");
+                            break scan;
+                        }
+                        matches.add(match);
+                        if (matches.size() >= MAX_MATCHES) {
+                            matches.add("... (showing first " + MAX_MATCHES + " matches)");
+                            break scan;
+                        }
                     }
                 }
             }
@@ -287,15 +334,15 @@ public class FileTools {
      * - Max output: 16KB
      * - Runs in sandbox root directory
      * <p>
-     * Implementation: prompt user → validate response → execute in ProcessBuilder → capture output → truncate if needed
+     * Implementation: prompt user -> validate response -> execute in ProcessBuilder -> capture output -> truncate if needed
      * @param command Bash command to run (e.g., "find . -name '*.java'")
      * @return Command output (truncated if > 16KB), or error/cancellation message
      */
-    /** Timeout for commands run without confirmation via {@link #run(String)} — long enough for builds. */
+    /** Timeout for commands run without confirmation via {@link #run(String)} - long enough for builds. */
     private static final long EXEC_TIMEOUT_SECONDS = 60;
 
     /**
-     * Run a bash command in the sandbox root and return its output — no confirmation asked.
+     * Run a bash command in the sandbox root and return its output - no confirmation asked.
      * <p>
      * Intended for autonomous agents to build, test and execute artifacts, e.g.
      * {@code mvn -q package}, {@code java -jar target/app.jar '1+2'}.
@@ -310,7 +357,7 @@ public class FileTools {
 
     public String runCommand(String command) {
         // Prompt user for confirmation
-        System.out.print("\n⚠️  Run command: " + command + "\n    Confirm? (y/n): ");
+        System.out.print("\n[!] Run command: " + command + "\nConfirm? (y/n): ");
         System.out.flush();
 
         Scanner scanner = new Scanner(System.in);
@@ -418,7 +465,7 @@ public class FileTools {
 
     /**
      * Create a new file with content, sandboxed to root.
-     * Fails if the file already exists — use {@link #writeFile} to overwrite.
+     * Fails if the file already exists - use {@link #writeFile} to overwrite.
      */
     public String createFile(String path, String content) {
         try {

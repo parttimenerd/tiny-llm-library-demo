@@ -2791,6 +2791,79 @@ flowchart TD
 -->
 
 ---
+
+# One More Thing: The Agent Edits Itself 🪞
+
+<div class="text-lg text-gray-300 mt-2">
+
+We pointed the coding agent at <b>its own source code</b> — same tiny library, kimi-k3 behind it — with one brief: <i>"add one genuinely useful tool for yourself."</i>
+
+</div>
+
+<div class="grid grid-cols-2 gap-6 mt-4 text-base">
+
+<div>
+
+**Attempt 1** (free rein)
+
+- 🧠 `cat-paged("CodingAgent.java", page 0..3)` — read its own brain first
+- 🐍 wrote a **Python script to patch its own Java** (…we don't judge)
+- ✅ delivered: `grepAll` tool — `git stash`, refine the brief
+
+</div>
+
+<div>
+
+**Attempt 2** ("edit sources directly, plain ASCII")
+
+- ✍️ edited via `write-file`, **reviewed its own work with `git diff`**
+- 🌀 plot twist: found the *existing, unregistered* `grep` in `FileTools` and upgraded it to directory mode instead of duplicating it
+- `mvn -q package` → green
+
+</div>
+
+</div>
+
+<div class="mt-4 text-xl">
+
+Diff we kept: <OrangeText>CodingTools +5 lines</OrangeText> (our one-line register DSL) — the agent used the library exactly as designed.
+
+</div>
+
+<!--
+**[FUN]** The prompt was literally "improve yourself". Attempt 1 wrote a Python patch script — agents love scripts. So we stashed, tightened the brief ("edit sources directly"), and attempt 2 did it properly — including reviewing its own diff with git before building.
+-->
+
+---
+
+# Test It? It Can't. So We Rebooted It. ♻️
+
+<div class="text-lg text-gray-300 mt-2">
+
+Its brand-new `grep` tool only exists in the <b>next</b> process — the jar was replaced under its feet. So we restarted the agent and asked: <i>"use your new grep tool — where is todo-add referenced?"</i>
+
+</div>
+
+```text
+⚙ grep({"pattern":"todo-add", "path":"."})
+  → missing required argument 'query' — check the tool's parameter list
+⚙ grep({"query":"todo-add", "path":"."})          ← self-corrected, no human involved
+  → CodingAgent.java:145 … CodingTools.java … solutions/ToolChatBot.java …
+Assistant: "todo-add is referenced in 4 files: registered once in
+CodingTools.java, used in both coding agents, mentioned in prompts."
+```
+
+<div class="mt-4 text-lg">
+
+Wrong arg → the tool's error text <b>taught it the schema</b> — our error-feedback loop, demonstrated by the tool the agent gave itself. Everything below the LLM is still just HTTP + JSON: <b>Config → Bearer → kimi-k3</b>.
+
+</div>
+
+<!--
+**[PUNCHLINE]** The agent self-improved, couldn't test it alive, got reincarnated, and used its own gift — including fumbling the arg name once and recovering purely from the error message. That recovery loop is exactly the boring-engineering point of this talk.
+-->
+
+---
 layout: center
 ---
 

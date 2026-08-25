@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * Tool registrations for {@link CodingAgent} — the boring JSON-schema plumbing, kept out
+ * Tool registrations for {@link CodingAgent} - the boring JSON-schema plumbing, kept out
  * of the talk-visible agent class so it can focus on the interesting parts.
  * <p>
  * Provides the read-only file tools (also used in /plan mode), the full file/exec tool
@@ -19,7 +19,7 @@ final class CodingTools {
 
     /**
      * Register a tool whose parameters are all required strings,
-     * given as (name, description) pairs — keeps one tool one line.
+     * given as (name, description) pairs - keeps one tool one line.
      */
     static void register(ToolSupport ts, String name, String description,
                          Function<Map<String, Object>, String> handler, String... nameThenDescription) {
@@ -31,7 +31,7 @@ final class CodingTools {
         ts.registerTool(name, description, schema.toJsonSchema(), handler);
     }
 
-    /** Read-only exploration tools — the only file tools available in /plan mode. */
+    /** Read-only exploration tools - the only file tools available in /plan mode. */
     static void registerReadOnlyFileTools(ToolSupport ts, FileTools fileTools) {
         register(ts, "ls", "List directory contents",
                 args -> fileTools.ls(str(args, "path")),
@@ -40,6 +40,12 @@ final class CodingTools {
         register(ts, "cat-paged", "Read a file, paged (4KB per page, 0-based)",
                 args -> fileTools.catPaged(str(args, "path"), number(args, "page")),
                 "path", "File path relative to project root", "page", "Page number, 0-based");
+
+        register(ts, "grep",
+                "Search all project files for text (case-insensitive); returns 'path:line: match' lines, like grep -rn",
+                args -> fileTools.grep(str(args, "query"), str(args, "path")),
+                "query", "Text to search for (case-insensitive)",
+                "path", "File or directory relative to project root; use '.' for the whole project");
     }
 
     /**
@@ -49,7 +55,7 @@ final class CodingTools {
     static void registerFileTools(ToolSupport ts, FileTools fileTools, Predicate<String> approve) {
         registerReadOnlyFileTools(ts, fileTools);
 
-        register(ts, "create-file", "Create a new file with content (fails if it already exists — use write-file to overwrite)",
+        register(ts, "create-file", "Create a new file with content (fails if it already exists - use write-file to overwrite)",
                 args -> fileTools.createFile(str(args, "path"), str(args, "content")),
                 "path", "File path relative to project root", "content", "File content");
 
@@ -64,15 +70,15 @@ final class CodingTools {
         register(ts, "delete", "Delete a file or folder (folders are deleted recursively). Requires user confirmation.",
                 args -> approve.test("delete: " + args.get("path"))
                         ? fileTools.delete(str(args, "path"))
-                        : "User declined this deletion — ask for reasons, or suggest they enable /yolo mode.",
+                        : "User declined this deletion - ask for reasons, or suggest they enable /yolo mode.",
                 "path", "Path relative to project root");
 
-        register(ts, "run", "Run a bash command in the project root and return its output — use it to build and to " +
+        register(ts, "run", "Run a bash command in the project root and return its output - use it to build and to " +
                         "verify, e.g. \"mvn -q package\", \"java -jar target/app.jar '2+3*4'\" " +
                         "(60s timeout, output truncated at 16KB). Requires user confirmation.",
                 args -> approve.test("run: " + args.get("command"))
                         ? fileTools.run(str(args, "command"))
-                        : "User declined to run this command — ask for reasons, or suggest they enable /yolo mode. " +
+                        : "User declined to run this command - ask for reasons, or suggest they enable /yolo mode. " +
                           "The user can also execute it themselves with /run.",
                 "command", "Bash command to execute in the project root");
     }
@@ -86,14 +92,14 @@ final class CodingTools {
         register(ts, "todo-update", "Update the status of a TODO item",
                 args -> {
                     int id = number(args, "id");
-                    // models variously say "in_progress", "in-progress", "IN_PROGRESS", ... — normalize
+                    // models variously say "in_progress", "in-progress", "IN_PROGRESS", ... - normalize
                     String status = (str(args, "status")).toLowerCase().replace('-', '_');
                     var s = switch (status) {
                         case "in_progress" -> AgentState.Status.IN_PROGRESS;
                         case "completed"   -> AgentState.Status.COMPLETED;
                         default            -> AgentState.Status.PENDING;
                     };
-                    return state.updateTodo(id, s) ? "Updated TODO #" + id + " → " + status : "Unknown TODO #" + id;
+                    return state.updateTodo(id, s) ? "Updated TODO #" + id + " -> " + status : "Unknown TODO #" + id;
                 },
                 "id", "TODO id", "status", "pending, in_progress, or completed");
 
@@ -113,7 +119,7 @@ final class CodingTools {
     }
 
     /**
-     * Fetch a required string arg — or fail with a clear message that the tool loop feeds back
+     * Fetch a required string arg - or fail with a clear message that the tool loop feeds back
      * to the model, so it retries with the correct name instead of us silently storing nulls
      * (models occasionally invent arg names like "task" instead of "description").
      */
@@ -121,7 +127,7 @@ final class CodingTools {
         var value = args.get(name);
         if (value == null) {
             throw new IllegalArgumentException(
-                    "missing required argument '" + name + "' — check the tool's parameter list");
+                    "missing required argument '" + name + "' - check the tool's parameter list");
         }
         return value.toString();
     }
