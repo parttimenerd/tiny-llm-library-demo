@@ -158,46 +158,6 @@ public class CodingAgent implements Callable<Integer> {
         return toolSupport;
     }
 
-    /** Start the session transcript - everything you see also lands in the log file. */
-    private void startSessionLog() {
-        if (noLog) return;
-        try {
-            System.out.println("Session log: " + SessionLog.start(getClass().getSimpleName()));
-        } catch (IOException e) {
-            System.err.println("Could not start session log: " + e.getMessage());
-        }
-    }
-
-    private void printMode() {
-        System.out.println(switch (approval) {
-            case YOLO      -> "⚡ YOLO mode - everything is auto-approved";
-            case AUTO_EDIT -> "⏵ AUTO-EDIT mode - plans auto-approved, run/delete still ask";
-            case NORMAL    -> "🔒 NORMAL mode - risky actions need confirmation";
-        });
-    }
-
-    private void printTokens(LLMClient client, List<Map<String, Object>> messages) {
-        var u = client.lastUsage();
-        System.out.println(u == null ? "(no usage data yet)"
-                : "last call: prompt " + u.promptTokens() + " + completion " + u.completionTokens() + " tokens"
-                + " - history: " + messages.size() + " messages - compacting above " + compactor.threshold());
-    }
-
-    private void compactNow(LLMClient client, List<Map<String, Object>> messages) {
-        var outcome = compactor.compactNow(client, messages);
-        if (outcome.compacted()) stateMessageIndex = -1;
-        System.out.println(outcome.compacted()
-                ? "[compact] " + outcome.messagesBefore() + " -> " + outcome.messagesAfter() + " messages"
-                : "Nothing to compact yet (" + messages.size() + " messages).");
-    }
-
-    private void clearConversation(List<Map<String, Object>> messages) {
-        int dropped = Math.max(0, messages.size() - 1);
-        if (dropped > 0) messages.subList(1, messages.size()).clear(); // keep messages[0] (system prompt)
-        stateMessageIndex = -1; // pinned state is re-inserted on next sync
-        System.out.println("Conversation cleared (" + dropped + " messages dropped; goal/plan/TODOs stay pinned).");
-    }
-
     /**
      * The main system prompt. Re-synced into {@code messages[0]} before every LLM call
      * (via {@link #syncConversation}), so overrides that append dynamic sections —
@@ -365,6 +325,45 @@ public class CodingAgent implements Callable<Integer> {
 
     // ── user interactions: confirmations and user-initiated runs ─────────────
 
+    /** Start the session transcript - everything you see also lands in the log file. */
+    private void startSessionLog() {
+        if (noLog) return;
+        try {
+            System.out.println("Session log: " + SessionLog.start(getClass().getSimpleName()));
+        } catch (IOException e) {
+            System.err.println("Could not start session log: " + e.getMessage());
+        }
+    }
+
+    private void printMode() {
+        System.out.println(switch (approval) {
+            case YOLO      -> "⚡ YOLO mode - everything is auto-approved";
+            case AUTO_EDIT -> "⏵ AUTO-EDIT mode - plans auto-approved, run/delete still ask";
+            case NORMAL    -> "🔒 NORMAL mode - risky actions need confirmation";
+        });
+    }
+
+    private void printTokens(LLMClient client, List<Map<String, Object>> messages) {
+        var u = client.lastUsage();
+        System.out.println(u == null ? "(no usage data yet)"
+                : "last call: prompt " + u.promptTokens() + " + completion " + u.completionTokens() + " tokens"
+                + " - history: " + messages.size() + " messages - compacting above " + compactor.threshold());
+    }
+
+    private void compactNow(LLMClient client, List<Map<String, Object>> messages) {
+        var outcome = compactor.compactNow(client, messages);
+        if (outcome.compacted()) stateMessageIndex = -1;
+        System.out.println(outcome.compacted()
+                ? "[compact] " + outcome.messagesBefore() + " -> " + outcome.messagesAfter() + " messages"
+                : "Nothing to compact yet (" + messages.size() + " messages).");
+    }
+
+    private void clearConversation(List<Map<String, Object>> messages) {
+        int dropped = Math.max(0, messages.size() - 1);
+        if (dropped > 0) messages.subList(1, messages.size()).clear(); // keep messages[0] (system prompt)
+        stateMessageIndex = -1; // pinned state is re-inserted on next sync
+        System.out.println("Conversation cleared (" + dropped + " messages dropped; goal/plan/TODOs stay pinned).");
+    }
     /**
      * Ask the user to approve a risky agent action — auto-approved in YOLO mode (/yolo).
      *
@@ -394,7 +393,9 @@ public class CodingAgent implements Callable<Integer> {
         }
         System.out.println("  ⚙ " + command);
         String output = fileTools.run(command);
-        System.out.println(output);
+        System.out.println(output.length() > 2000
+                ? output.substring(0, 2000) + "\n … (" + (output.length() - 2000) + " more chars shown to agent)"
+                : output);
         messages.add(LLMClient.user("I ran `" + command + "` in the project root:\n" + output));
         syncStateMessage(messages);
     }

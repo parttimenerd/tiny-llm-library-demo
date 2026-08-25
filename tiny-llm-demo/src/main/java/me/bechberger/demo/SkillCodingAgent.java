@@ -83,12 +83,15 @@ public class SkillCodingAgent extends CodingAgent {
 
     @Override
     protected String greeting() {
-        return super.greeting() + " — " + availableSkills.size() + " skill(s) in .claude/skills";
+        // with no skills around, stay invisible - this class behaves exactly like CodingAgent
+        return availableSkills.isEmpty() ? super.greeting()
+                : super.greeting() + " — " + availableSkills.size() + " skill(s) in .claude/skills";
     }
 
     @Override
     protected ToolSupport createToolSupport(FileTools fileTools) {
         var ts = super.createToolSupport(fileTools);
+        if (availableSkills.isEmpty()) return ts;
         CodingTools.register(ts, "skill",
                 "Activate a skill from the Available Skills list to load its instructions",
                 args -> activate(CodingTools.str(args, "name")),
@@ -100,6 +103,7 @@ public class SkillCodingAgent extends CodingAgent {
     protected void registerCommands(Repl repl, LLMClient client, FileTools fileTools,
                                     List<Map<String, Object>> messages) {
         super.registerCommands(repl, client, fileTools, messages);
+        if (availableSkills.isEmpty()) return; // no /skill commands on skill-less projects
         repl.commands()
                 .on("skills", "list available and active (*) skills", args -> printSkills())
                 .on("skill", "toggle a skill for this conversation: /skill <name>",

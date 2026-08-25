@@ -30,6 +30,8 @@ public class FileTools {
     private static final int MAX_FIND_OUTPUT_BYTES = 16384;
     private static final int MAX_COMMAND_OUTPUT_BYTES = 16384;
     private static final long COMMAND_TIMEOUT_SECONDS = 10;
+    /** Timeout for agent-run commands - long enough for builds. */
+    private static final long EXEC_TIMEOUT_SECONDS = 60;
 
     public FileTools(Path sandboxRoot) {
         this.sandboxRoot = sandboxRoot.toAbsolutePath().normalize();
@@ -324,9 +326,6 @@ public class FileTools {
             return "Error searching files: " + e.getMessage();
         }
     }
-
-    /** Timeout for agent-run commands - long enough for builds. */
-    private static final long EXEC_TIMEOUT_SECONDS = 60;
 
     /**
      * Run a bash command in the sandbox root and return its output - no confirmation asked.
