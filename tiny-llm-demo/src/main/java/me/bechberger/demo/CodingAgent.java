@@ -17,21 +17,27 @@ import java.util.concurrent.Callable;
 
 /**
  * A coding chatbot with file/exec tools, a dynamic TODO list, and /plan mode.
- * The boring plumbing lives in helpers — {@link Repl} (prompt loop + Commands DSL),
- * {@link CodingTools} (JSON-schema tool registrations); this class keeps the interesting
- * parts: pinned context, plan mode, and the confirmation policy. Commands ({@code /help} lists them):
- *   /plan <goal>  — planning mode (read-only tools, focused planning prompt)
- *   /run <cmd>    — execute a shell command in the project, output shared with the agent
+ * <p>
+ * The boring plumbing lives in helpers — {@link Repl} (prompt loop + Commands DSL) and
+ * {@link CodingTools} (tool registrations); this class keeps the interesting parts:
+ * pinned context, plan mode, and the confirmation policy.
+ * <p>
+ * Reading guide — the file is laid out in the order a session unfolds:
+ * options → runtime state → the main loop as a composition of hooks → pinned context →
+ * /plan mode → user interactions. Subclasses extend it via those hooks (see
+ * {@link SkillCodingAgent}, which only overrides a few of them).
+ * <p>
+ * REPL commands ({@code /help} lists them):
+ *   /plan &lt;goal&gt;  — planning mode (read-only tools, focused planning prompt)
+ *   /run &lt;cmd&gt;    — execute a shell command in the project, output shared with the agent
  *   /todos        — print current TODO list
  *   /yolo         — toggle YOLO mode: auto-approve all actions (plan, run, delete)
  *   exit / quit   — exit
- * <p>
- * The agent state (goal, plan, TODOs) is injected as a pinned message at position 1
- * in the conversation and replaced in-place before every LLM call, so the model
- * always sees one current snapshot rather than an accumulating history of state versions.
  */
-@Command(name = "coding-agent", description = "A coding chatbot with file/Maven tools and plan/todo support", version = "1.0.0")
+@Command(name = "coding-agent", description = "A coding chatbot with file/exec tools and plan/todo support", version = "1.0.0")
 public class CodingAgent implements Callable<Integer> {
+
+    // ── femtocli options ─────────────────────────────────────────────────────
 
     @Option(names = {"-m", "--model"}, description = "Model: fast, medium, slow, gpt4o_mini, gpt4o (default: ${DEFAULT-VALUE})",
             defaultValue = "fast")
@@ -45,17 +51,7 @@ public class CodingAgent implements Callable<Integer> {
             defaultValue = ".")
     String root;
 
-    protected void printTodos() {
-        if (state.isEmpty()) {
-            System.out.println("(no plan or TODOs yet)");
-            return;
-        }
-        System.out.println("\n─── Agent State ──────────────────────────────────────────");
-        System.out.println(state.render());
-        System.out.println("──────────────────────────────────────────────────────────");
-    }
-
-    // ── agent state ──────────────────────────────────────────────────────────
+    // ── runtime state ────────────────────────────────────────────────────────
 
     /** Single shared Scanner for System.in — two Scanners on one stream swallow each other's input. */
     private final Scanner scanner = new Scanner(System.in);
@@ -68,27 +64,7 @@ public class CodingAgent implements Callable<Integer> {
     /** Index into messages[] where the pinned state message lives, or -1 if not yet inserted. */
     private int stateMessageIndex = -1;
 
-    /** Inject or replace the pinned state message right after the system prompt. */
-    private void syncStateMessage(List<Map<String, Object>> messages) {
-        if (state.isEmpty()) return;
-        var msg = stateMessage();
-        if (stateMessageIndex < 0) {
-            // Insert at index 1 (after system prompt)
-            messages.add(1, msg);
-            stateMessageIndex = 1;
-        } else {
-            messages.set(stateMessageIndex, msg);
-        }
-    }
-
-    private Map<String, Object> stateMessage() {
-        var m = new LinkedHashMap<String, Object>();
-        m.put("role", "assistant");
-        m.put("content", state.render());
-        return m;
-    }
-
-    // ── main loop — small composition of overridable hooks (see SkillCodingAgent) ──
+    // ── main loop: a small composition of overridable hooks ──────────────────
 
     @Override
     public Integer call() throws IOException, InterruptedException {
@@ -124,7 +100,7 @@ public class CodingAgent implements Callable<Integer> {
         var toolSupport = new ToolSupport();
         CodingTools.registerFileTools(toolSupport, fileTools, action -> confirm(action, false));
         CodingTools.registerStateTools(toolSupport, state);
-        // Re-render todos to terminal after every state-mutating tool call
+        // Re-render the state box whenever a tool call changes it
         toolSupport.setOnToolCall((toolName, result) -> {
             if (toolName.startsWith("todo-") || toolName.equals("update-plan")) {
                 printTodos();
@@ -185,7 +161,7 @@ public class CodingAgent implements Callable<Integer> {
         System.out.println(response);
         messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
-        if (!state.isEmpty()) printTodos();
+        // no banner re-print here: state changes already trigger printTodos via onToolCall
     }
 
     /** Refresh volatile context before every LLM call: current system prompt + pinned agent state. */
@@ -194,42 +170,50 @@ public class CodingAgent implements Callable<Integer> {
         syncStateMessage(messages);
     }
 
+    // ── pinned context: one state message, always current ────────────────────
+
     /**
-     * {@code /run <command>} — execute a shell command just like the agent's own "run" tool,
-     * print the output, and add it to the conversation so the agent can react to it.
+     * The agent state (goal, plan, TODOs) lives in ONE message pinned right after the
+     * system prompt and is replaced in place before every LLM call — the model always
+     * sees a single current snapshot instead of an accumulating history of versions.
      */
-    private void runForUser(String command, FileTools fileTools, List<Map<String, Object>> messages) {
-        if (command.isBlank()) {
-            System.out.println("Usage: /run <command>");
+    private void syncStateMessage(List<Map<String, Object>> messages) {
+        if (state.isEmpty()) return;
+        var msg = stateMessage();
+        if (stateMessageIndex < 0) {
+            messages.add(1, msg);
+            stateMessageIndex = 1;
+        } else {
+            messages.set(stateMessageIndex, msg);
+        }
+    }
+
+    /** The pinned message (assistant role keeps it stable across providers). */
+    private Map<String, Object> stateMessage() {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("role", "assistant");
+        m.put("content", state.render());
+        return m;
+    }
+
+    protected void printTodos() {
+        if (state.isEmpty()) {
+            System.out.println("(no plan or TODOs yet)");
             return;
         }
-        System.out.println("  ⚙ " + command);
-        String output = fileTools.run(command);
-        System.out.println(output);
-        messages.add(LLMClient.user("I ran `" + command + "` in the project root:\n" + output));
-        syncStateMessage(messages);
+        System.out.println("\n─── Agent State ──────────────────────────────────────────");
+        System.out.println(state.render());
+        System.out.println("──────────────────────────────────────────────────────────");
     }
+
+    // ── /plan mode: read-only tools, fresh conversation, user confirmation ────
 
     /**
-     * Ask the user to approve a risky agent action — auto-approved in YOLO mode (/yolo).
-     *
-     * @param action description of the action, e.g. "run: mvn package"
-     * @param defaultYes if true, pressing Enter approves (used for plan acceptance);
-     *                   if false, Enter declines (used for run/delete)
+     * /plan &lt;goal&gt; — a side conversation with a planning prompt and read-only tools.
+     * The model explores the project, records a plan and TODOs into the shared state,
+     * and the user then accepts or discards it. An accepted plan becomes visible to the
+     * main conversation (recorded as a message pair; the goal is pinned with the state).
      */
-    private boolean confirm(String action, boolean defaultYes) {
-        if (yolo) {
-            System.out.println("  ⚡ auto-approved (yolo): " + action);
-            return true;
-        }
-        System.out.print("\n⚠️  " + action + "\n    Allow? " + (defaultYes ? "[Y/n] " : "[y/N] "));
-        if (!scanner.hasNextLine()) return defaultYes; // EOF: stick with the default
-        String answer = scanner.nextLine().trim().toLowerCase();
-        return answer.isEmpty() ? defaultYes : answer.startsWith("y");
-    }
-
-    // ── /plan mode ───────────────────────────────────────────────────────────
-
     protected void handlePlanCommand(String goal, LLMClient client,
                                      List<Map<String, Object>> messages) throws IOException {
         if (goal.isBlank()) {
@@ -267,6 +251,42 @@ public class CodingAgent implements Callable<Integer> {
         state.setGoal(goal);
         messages.add(LLMClient.user("/plan " + goal));
         messages.add(LLMClient.assistant(response));
+        syncStateMessage(messages);
+    }
+
+    // ── user interactions: confirmations and user-initiated runs ─────────────
+
+    /**
+     * Ask the user to approve a risky agent action — auto-approved in YOLO mode (/yolo).
+     *
+     * @param action description of the action, e.g. "run: mvn package"
+     * @param defaultYes if true, pressing Enter approves (used for plan acceptance);
+     *                   if false, Enter declines (used for run/delete)
+     */
+    private boolean confirm(String action, boolean defaultYes) {
+        if (yolo) {
+            System.out.println("  ⚡ auto-approved (yolo): " + action);
+            return true;
+        }
+        System.out.print("\n⚠️  " + action + "\n    Allow? " + (defaultYes ? "[Y/n] " : "[y/N] "));
+        if (!scanner.hasNextLine()) return defaultYes; // EOF: stick with the default
+        String answer = scanner.nextLine().trim().toLowerCase();
+        return answer.isEmpty() ? defaultYes : answer.startsWith("y");
+    }
+
+    /**
+     * /run &lt;command&gt; — execute a shell command just like the agent's own "run" tool,
+     * print the output, and add it to the conversation so the agent can react to it.
+     */
+    private void runForUser(String command, FileTools fileTools, List<Map<String, Object>> messages) {
+        if (command.isBlank()) {
+            System.out.println("Usage: /run <command>");
+            return;
+        }
+        System.out.println("  ⚙ " + command);
+        String output = fileTools.run(command);
+        System.out.println(output);
+        messages.add(LLMClient.user("I ran `" + command + "` in the project root:\n" + output));
         syncStateMessage(messages);
     }
 
