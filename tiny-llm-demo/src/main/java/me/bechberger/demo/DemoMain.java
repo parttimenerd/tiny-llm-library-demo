@@ -98,16 +98,15 @@ public final class DemoMain {
                                 Usage: java -jar tiny-llm-demo.jar <ClassName> [args...]
 
                                 Examples:
-                                    java -jar tiny-llm-demo.jar ChatBot --model ... --base-url http://localhost:8080
-                                    java -jar tiny-llm-demo.jar ToolChatBot --model ... --root .
-                                    java -jar tiny-llm-demo.jar CodingAgent --root . --model fast
-                                    java -jar tiny-llm-demo.jar solutions.ChatBot --model ...
+                                    java -jar tiny-llm-demo.jar ChatBot --model fast --base-url http://localhost:8080
+                                    java -jar tiny-llm-demo.jar ToolChatBot --model fast --root .
+                                    java -jar tiny-llm-demo.jar CodingAgent --base-url gardener --root .
+                                    java -jar tiny-llm-demo.jar SkillCodingAgent --base-url gardener --root .
+                                    java -jar tiny-llm-demo.jar solutions.ChatBot --model fast
 
                                 Class name resolution:
-                                    - ChatBot               -> me.bechberger.demo.ChatBot
-                                    - ToolChatBot           -> me.bechberger.demo.ToolChatBot
-                                    - solutions.ChatBot     -> me.bechberger.demo.solutions.ChatBot
-                                    - solutions.ToolChatBot -> me.bechberger.demo.solutions.ToolChatBot
+                                    - ChatBot            -> me.bechberger.demo.ChatBot (any class in that package)
+                                    - solutions.ChatBot  -> me.bechberger.demo.solutions.ChatBot
                                 """);
     }
 

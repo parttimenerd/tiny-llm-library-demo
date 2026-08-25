@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -27,10 +28,10 @@ public class ToolSupport {
 
     private final Map<String, ToolDef> tools = new LinkedHashMap<>();
 
-    /** Called after each tool execution with (toolName, result). */
-    private java.util.function.BiConsumer<String, String> onToolCall = null;
+    /** Called after each tool execution with (toolName, result) — e.g. to re-render agent state. */
+    private BiConsumer<String, String> onToolCall = null;
 
-    public void setOnToolCall(java.util.function.BiConsumer<String, String> cb) {
+    public void setOnToolCall(BiConsumer<String, String> cb) {
         this.onToolCall = cb;
     }
 

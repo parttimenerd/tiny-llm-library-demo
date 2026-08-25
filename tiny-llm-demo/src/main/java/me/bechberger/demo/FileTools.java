@@ -325,20 +325,7 @@ public class FileTools {
         }
     }
 
-    /**
-     * Run an arbitrary bash command and return its output.
-     * <p>
-     * Security:
-     * - Prompts user for confirmation before execution (y/n via stdin)
-     * - Timeout: 10 seconds
-     * - Max output: 16KB
-     * - Runs in sandbox root directory
-     * <p>
-     * Implementation: prompt user -> validate response -> execute in ProcessBuilder -> capture output -> truncate if needed
-     * @param command Bash command to run (e.g., "find . -name '*.java'")
-     * @return Command output (truncated if > 16KB), or error/cancellation message
-     */
-    /** Timeout for commands run without confirmation via {@link #run(String)} - long enough for builds. */
+    /** Timeout for agent-run commands - long enough for builds. */
     private static final long EXEC_TIMEOUT_SECONDS = 60;
 
     /**
@@ -355,6 +342,14 @@ public class FileTools {
         return exec(List.of("bash", "-c", command), EXEC_TIMEOUT_SECONDS);
     }
 
+    /**
+     * Run a bash command after asking the user for confirmation (y/n) -
+     * the human-in-the-loop variant used by the interactive chatbots.
+     * Timeout: 10 seconds.
+     *
+     * @param command Bash command to run (e.g., "find . -name '*.java'")
+     * @return Command output (truncated if > 16KB), or a cancellation message
+     */
     public String runCommand(String command) {
         // Prompt user for confirmation
         System.out.print("\n[!] Run command: " + command + "\nConfirm? (y/n): ");

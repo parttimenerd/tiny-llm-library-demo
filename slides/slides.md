@@ -2792,6 +2792,108 @@ flowchart TD
 
 ---
 
+# Demo: Talk Like a Viking ⚔️
+
+<div class="text-base mt-2">
+
+A skill is just a Markdown file — so of course a `.claude/skills/viking/SKILL.md` exists (for JavaZone, Norway):
+
+</div>
+
+```text
+You:  /skill viking
+      Activated skill: viking - its instructions are now part of your system prompt.
+
+You:  In one sentence: what is a coding agent?
+Bot:  Skal, fellow shield-bearer of Java: a coding agent is an AI pair-programmer
+      that reads your saga, plans the raid, edits code, runs builds/tests, and
+      iterates until the trolls are dead.
+
+You:  /skill viking            (deactivate)
+Bot:  A coding agent is an AI that can modify, build, and test code…
+```
+
+<!--
+**[~55:30]** "The system prompt is rebuilt before every model call. Activating a skill takes effect on the *next* message. Deactivating too: plain English, instantly. That is the whole pinned-context trick paying off a second time."
+-->
+
+---
+
+# Agents Need Memory Limits: Compaction
+
+<div class="grid grid-cols-2 gap-6 mt-2 text-base">
+
+<div>
+
+**The problem:** tool-call transcripts inflate history fast — and context windows are finite.
+
+**Hybrid memory** (as in the summarizing chatbot):
+
+1. 📌 pin the system prompt (index 0)
+2. ✂️ fold the middle into one `[Conversation summary]`
+3. 🆕 keep the recent tail verbatim
+
+Driven by **real token usage** from the API, not char estimates — at 80% of the context window (`--max-tokens` to force).
+
+</div>
+
+<div>
+
+Live, with `--max-tokens 800`:
+
+```text
+Assistant: OK
+Assistant: Four
+Assistant: Paris
+Assistant: Six
+[compact] 9 -> 8 messages
+         (prompt was 1010 tokens)
+You: What codeword did I give you?
+Assistant: FJORD
+```
+
+The codeword from turn 1 survived compaction — inside the summary.
+
+</div>
+
+</div>
+
+<!--
+**[~56:00]** "Same strategy you saw in the summarizing chatbot, extracted into a Compactor helper so the coding agent gets it in three lines of its chat loop. If summarization fails, the turn just continues uncompacted."
+-->
+
+---
+
+# And Credentials: Named Endpoints
+
+<div class="text-base mt-2">
+
+One standard `Properties` file — `~/.config/tiny-llm-library/config.config`:
+
+```properties
+gardener.url   = https://models.answering-machine.utility.gardener.cloud.sap
+gardener.key   = <your-key>   # sent as Authorization: Bearer
+gardener.model = kimi-k3      # default model for the endpoint
+default.model  = kimi-k3      # global fallback
+```
+
+Then everywhere:
+
+```bash
+java -jar tiny-llm-demo.jar CodingAgent --base-url gardener
+# URL ✓  Bearer token ✓  model ✓
+java -jar tiny-llm-demo.jar CodingAgent --base-url banana
+# Error: Unknown endpoint 'banana' - known: [gardener]
+```
+
+</div>
+
+<!--
+**[~56:30]** "No keys in the repo, no env-var juggling in demos. It is deliberately java.util.Properties: URLs sit in values now, so their colons are safe."
+-->
+
+---
+
 # One More Thing: The Agent Edits Itself 🪞
 
 <div class="text-lg text-gray-300 mt-2">

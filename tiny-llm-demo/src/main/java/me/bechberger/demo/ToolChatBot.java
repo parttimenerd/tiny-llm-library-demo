@@ -1,5 +1,6 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.http.Config;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -33,8 +34,7 @@ import java.util.concurrent.Callable;
 @Command(name = "tool-chatbot", description = "A chatbot with file system tools", version = "1.0.0")
 public class ToolChatBot implements Callable<Integer> {
 
-    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B) (default: ${DEFAULT-VALUE})",
-            defaultValue = "fast")
+    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B), gpt4o_mini, gpt4o, kimi_k3 (default: the endpoint's model from the config file, else fast)")
     ModelSize modelSize;
 
     @Option(names = {"-u", "--base-url"}, description = "LLM API base URL (default: ${DEFAULT-VALUE})",
@@ -63,7 +63,8 @@ public class ToolChatBot implements Callable<Integer> {
      */
     @Override
     public Integer call() throws IOException, InterruptedException {
-        String model = modelSize.getModelId();
+        String model = modelSize != null ? modelSize.getModelId()
+                : Config.load().modelFor(baseUrl, ModelSize.FAST.getModelId());
         var client = new LLMClient(baseUrl, model, System.out::print);
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));
@@ -71,7 +72,7 @@ public class ToolChatBot implements Callable<Integer> {
 
         System.out.println("Connecting to " + baseUrl + "...");
         client.listModels();
-        System.out.println("\nTool Chatbot ready! Model: " + modelSize.name() + " (" + modelSize.getDescription() + ")");
+        System.out.println("\nTool Chatbot ready! Model: " + model);
         System.out.println("Sandbox root: " + Path.of(root).toAbsolutePath().normalize());
 
         // TODO add system message and call repl

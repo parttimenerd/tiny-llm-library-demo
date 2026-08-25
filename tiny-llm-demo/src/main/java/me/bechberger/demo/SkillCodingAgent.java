@@ -23,8 +23,11 @@ import java.util.Map;
 @Command(name = "skill-agent", description = "Coding agent with .claude skills support", version = "1.0.0")
 public class SkillCodingAgent extends CodingAgent {
 
-    /** name → path to SKILL.md, discovered in onStart. */
-    private final Map<String, Path> availableSkills = new LinkedHashMap<>();
+    /** A discovered skill: path + one-line description from the SKILL.md frontmatter. */
+    record Skill(Path path, String description) {}
+
+    /** name → skill, discovered in onStart. */
+    private final Map<String, Skill> availableSkills = new LinkedHashMap<>();
     /** name → skill content, loaded on activation. */
     private final Map<String, String> activeSkills = new LinkedHashMap<>();
 
@@ -36,11 +39,46 @@ public class SkillCodingAgent extends CodingAgent {
             dirs.filter(Files::isDirectory).forEach(dir -> {
                 Path md = dir.resolve("SKILL.md");
                 if (Files.isRegularFile(md)) {
-                    availableSkills.put(dir.getFileName().toString(), md);
+                    availableSkills.put(dir.getFileName().toString(),
+                            new Skill(md, descriptionOf(md)));
                 }
             });
         } catch (IOException ignored) {
         }
+    }
+
+    /**
+     * One-line preview of a skill, so we can list it without activating it:
+     * the {@code description:} line from the {@code ---} frontmatter if present,
+     * else the first non-heading, non-blank line of the body.
+     */
+    private static String descriptionOf(Path md) {
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(md); // SKILL.md files are tiny — eager read is fine
+        } catch (IOException e) {
+            return "";
+        }
+        int bodyStart = 0;
+        if (!lines.isEmpty() && lines.getFirst().equals("---")) {
+            for (int i = 1; i < lines.size(); i++) {
+                if (lines.get(i).equals("---")) {
+                    bodyStart = i + 1; // frontmatter ends here, body follows
+                    break;
+                }
+                if (lines.get(i).startsWith("description:")) {
+                    return lines.get(i).substring("description:".length()).strip();
+                }
+            }
+        }
+        // no frontmatter description — fall back to the first non-heading, non-blank body line
+        for (int i = bodyStart; i < lines.size(); i++) {
+            var line = lines.get(i).strip();
+            if (!line.isEmpty() && !line.startsWith("#")) {
+                return line;
+            }
+        }
+        return "";
     }
 
     @Override
@@ -73,7 +111,10 @@ public class SkillCodingAgent extends CodingAgent {
         var sb = new StringBuilder(super.buildSystemPrompt());
         if (!availableSkills.isEmpty()) {
             sb.append("\n\n## Available Skills\n");
-            availableSkills.keySet().forEach(name -> sb.append("- ").append(name).append("\n"));
+            availableSkills.forEach((name, skill) ->
+                    sb.append("- ").append(name)
+                      .append(skill.description().isEmpty() ? "" : " — " + skill.description())
+                      .append("\n"));
             sb.append("When the task matches one, activate it with the skill tool before starting.");
         }
         if (!activeSkills.isEmpty()) {
@@ -86,11 +127,11 @@ public class SkillCodingAgent extends CodingAgent {
 
     /** Tool entry point: load a skill's content into the active set. */
     private String activate(String name) {
-        Path md = availableSkills.get(name);
-        if (md == null) return "Unknown skill: " + name + " — available: " + availableSkills.keySet();
+        Skill skill = availableSkills.get(name);
+        if (skill == null) return "Unknown skill: " + name + " — available: " + availableSkills.keySet();
         if (activeSkills.containsKey(name)) return "Skill already active: " + name;
         try {
-            activeSkills.put(name, Files.readString(md));
+            activeSkills.put(name, Files.readString(skill.path()));
             return "Activated skill: " + name + " — its instructions are now part of your system prompt.";
         } catch (IOException e) {
             return "Error loading skill: " + e.getMessage();
@@ -108,8 +149,9 @@ public class SkillCodingAgent extends CodingAgent {
             return;
         }
         System.out.println("Skills:");
-        availableSkills.keySet().forEach(name ->
-                System.out.println("  " + (activeSkills.containsKey(name) ? "*" : " ") + " " + name));
+        availableSkills.forEach((name, skill) ->
+                System.out.println("  " + (activeSkills.containsKey(name) ? "*" : " ") + " " + name
+                        + (skill.description().isEmpty() ? "" : " — " + skill.description())));
     }
 
     public static void main(String[] args) {

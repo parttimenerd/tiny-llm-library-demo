@@ -89,7 +89,8 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Tool
 
 ## Key Design Decisions
 
-- **API keys per base URL** — `HttpHelper` automatically sends `Authorization: Bearer <key>` when the passed base URL has a key in `~/.config/tiny-llm-library/config.config` (one `<base-url>=<api-key>` per line; `$XDG_CONFIG_HOME` honored, override with `TINY_LLM_CONFIG`). No entry = no auth header, which is all local llama-server needs. A `#token` URL fragment still overrides the config file.
+- **Named endpoints, API keys and default models** — `~/.config/tiny-llm-library/config.config` is a standard Java properties file (`gardener.url`, optional `gardener.key` and `gardener.model`, plus global `default.model`), so `--base-url gardener` carries URL, key and default model in one go. The key is sent as `Authorization: Bearer <key>`; no entry = no auth header, which is all local llama-server needs. A `#token` URL fragment still overrides the config file, and `--model` overrides the configured default model. (`$XDG_CONFIG_HOME` honored; `TINY_LLM_CONFIG` overrides the location.)
+- **Context compaction in the coding agents** — once the prompt exceeds 80% of the model's context window (auto-detected; override with `--max-tokens`), old history is folded into a single `[Conversation summary]` message while the system prompt stays pinned and the recent turns verbatim — driven by real token-usage data from the API (`Compactor` helper; same "hybrid memory" strategy as the summarizing chatbot).
 - **Streaming by default** via `Consumer<String> onToken` callback
 - **No Jackson** — uses femtojson for JSON parsing, manual serialization for output
 - **Reasoning in separate field** — reasoning models return `reasoning_content` as a separate JSON field; no `<think>` parsing needed

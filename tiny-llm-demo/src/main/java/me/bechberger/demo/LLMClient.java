@@ -23,6 +23,16 @@ public class LLMClient {
     private final String model;
     private final Consumer<String> onToken;
 
+    /** Token usage statistics from an API response's "usage" object. */
+    public record TokenUsage(int completionTokens, int promptTokens, int totalTokens) {}
+
+    private TokenUsage lastUsage;
+
+    /** Usage of the most recent API call, or null if the server sent none (drives compaction). */
+    public TokenUsage lastUsage() {
+        return lastUsage;
+    }
+
     public LLMClient(String baseUrl, String model, Consumer<String> onToken) {
         this.http = new HttpHelper(baseUrl);
         this.model = model;
@@ -61,7 +71,8 @@ public class LLMClient {
      * Implementation: Parse JSON → extract "data" list → print each model's "id"
      */
     public void listModels() throws IOException, InterruptedException {
-         http.get("/v1/models").lines().forEach(System.out::println);
+        var response = Util.asMap(JSONParser.parse(http.get("/v1/models")));
+        Util.asList(response.get("data")).forEach(m -> System.out.println("  " + Util.asMap(m).get("id")));
     }
 
     /**
@@ -78,9 +89,10 @@ public class LLMClient {
      * @return The assistant's response text
      */
     public String chat(List<Map<String, Object>> messages) throws IOException, InterruptedException {
-        var request = buildRequest(messages, false, null);
-        var response = http.postJson("/v1/chat/completions", request);
-        return Util.asMap(Util.asList(Util.asMap(JSONParser.parse(response)).get("choices"))).get("message").toString();
+        var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, null))));
+        lastUsage = parseTokenUsage(response);
+        var choice = Util.asMap(Util.asList(response.get("choices")).getFirst());
+        return (String) Util.asMap(choice.get("message")).get("content");
     }
 
     /**
@@ -105,11 +117,10 @@ public class LLMClient {
             StringBuilder result = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
                 String token = processSSELine(line);
                 if (token == null) break;
                 if (!token.isEmpty()) {
-                //    onToken.accept(token);
+                    onToken.accept(token);
                     result.append(token);
                 }
             }
@@ -163,10 +174,44 @@ public class LLMClient {
     public Map<String, Object> chatRaw(List<Map<String, Object>> messages, List<Map<String, Object>> tools) {
         try {
             var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, tools))));
+            lastUsage = parseTokenUsage(response);
             return Util.asMap(Util.asList(response.get("choices")).getFirst());
         } catch (Exception e) {
             throw new RuntimeException("Chat with tools failed", e);
         }
+    }
+
+    /**
+     * Ask the server for the context window of the current model
+     * (llama-server exposes meta.n_ctx_train via GET /v1/models);
+     * falls back to defaultValue when the server reports nothing.
+     */
+    public int getContextWindowSize(int defaultValue) {
+        try {
+            for (var m : Util.asList(Util.asMap(JSONParser.parse(http.get("/v1/models"))).get("data"))) {
+                var modelMap = Util.asMap(m);
+                if (model.equals(modelMap.get("id")) && modelMap.containsKey("meta")) {
+                    var nCtx = Util.asMap(modelMap.get("meta")).get("n_ctx_train");
+                    if (nCtx instanceof Number n) {
+                        return n.intValue();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Warning: could not detect context window size: " + e.getMessage());
+        }
+        return defaultValue;
+    }
+
+    /** Parse the usage object of a response, tolerating missing usage entirely. */
+    private static TokenUsage parseTokenUsage(Map<String, Object> response) {
+        var usage = response.get("usage");
+        if (!(usage instanceof Map)) return null;
+        var u = Util.asMap(usage);
+        return new TokenUsage(
+                ((Number) u.get("completion_tokens")).intValue(),
+                ((Number) u.get("prompt_tokens")).intValue(),
+                ((Number) u.get("total_tokens")).intValue());
     }
 
     /**

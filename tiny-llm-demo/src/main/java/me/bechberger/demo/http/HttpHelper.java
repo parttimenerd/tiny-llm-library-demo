@@ -27,7 +27,8 @@ public class HttpHelper {
     public record StreamExchange(String requestBody, InputStream responseStream) {}
 
     /**
-     * Accepts URLs of the form {@code http://host/path} or {@code http://host/path#token}.
+     * Accepts an endpoint name from the {@link Config} file (e.g. {@code "gardener"}),
+     * a URL of the form {@code http://host/path}, or {@code http://host/path#token}.
      * The fragment is stripped from the URL and used as the Bearer token.
      * <p>
      * Without a fragment, the API key is looked up in the {@link Config} file
@@ -42,6 +43,7 @@ public class HttpHelper {
 
     /** Visible for testing — injects the config instead of loading it from disk. */
     HttpHelper(String baseUrl, Config config) {
+        baseUrl = config.resolveBaseUrl(baseUrl); // endpoint name or literal URL
         String key = null;
         int hash = baseUrl.indexOf('#');
         if (hash >= 0) {

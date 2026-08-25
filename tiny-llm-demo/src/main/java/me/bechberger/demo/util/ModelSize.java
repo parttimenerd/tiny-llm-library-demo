@@ -26,6 +26,14 @@ public enum ModelSize {
         this.defaultContextWindow = defaultContextWindow;
     }
 
+    /** The default context window for a model id, or 32768 when the id is unknown. */
+    public static int defaultContextWindowFor(String modelId) {
+        for (var size : values()) {
+            if (size.modelId.equals(modelId)) return size.defaultContextWindow;
+        }
+        return 32768;
+    }
+
     public String getModelId() { return modelId; }
     public String getDescription() { return description; }
     public int getDefaultContextWindow() { return defaultContextWindow; }

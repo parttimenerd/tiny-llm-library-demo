@@ -1,5 +1,7 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.http.Config;
+import me.bechberger.demo.util.Compactor;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
@@ -20,7 +22,7 @@ import java.util.concurrent.Callable;
  * <p>
  * The boring plumbing lives in helpers — {@link Repl} (prompt loop + Commands DSL) and
  * {@link CodingTools} (tool registrations); this class keeps the interesting parts:
- * pinned context, plan mode, and the confirmation policy.
+ * pinned context, plan mode, the confirmation policy, and compaction of old history.
  * <p>
  * Reading guide — the file is laid out in the order a session unfolds:
  * options → runtime state → the main loop as a composition of hooks → pinned context →
@@ -39,13 +41,16 @@ public class CodingAgent implements Callable<Integer> {
 
     // ── femtocli options ─────────────────────────────────────────────────────
 
-    @Option(names = {"-m", "--model"}, description = "Model: fast, medium, slow, gpt4o_mini, gpt4o (default: ${DEFAULT-VALUE})",
-            defaultValue = "fast")
+    @Option(names = {"-m", "--model"}, description = "Model size: fast, medium, slow, gpt4o_mini, gpt4o, kimi_k3 (default: the endpoint's model from the config file, else fast)")
     ModelSize modelSize;
 
-    @Option(names = {"-u", "--base-url"}, description = "LLM API base URL, optionally with token: url#token (default: ${DEFAULT-VALUE})",
+    @Option(names = {"-u", "--base-url"}, description = "LLM endpoint: a name from the config file (e.g. 'gardener'), a URL, or url#token (default: ${DEFAULT-VALUE})",
             defaultValue = "http://localhost:8080")
     String baseUrl;
+
+    @Option(names = {"--max-tokens"}, description = "Compact the conversation above this many prompt tokens (default: auto = 80%% of the model's context window)",
+            defaultValue = "0")
+    int maxTokens;
 
     @Option(names = {"-r", "--root"}, description = "Project root directory (default: ${DEFAULT-VALUE})",
             defaultValue = ".")
@@ -64,12 +69,16 @@ public class CodingAgent implements Callable<Integer> {
     /** Index into messages[] where the pinned state message lives, or -1 if not yet inserted. */
     private int stateMessageIndex = -1;
 
+    /** Compaction policy - folds old history once the prompt exceeds the threshold (built in {@link #createCompactor}). */
+    protected Compactor compactor;
+
     // ── main loop: a small composition of overridable hooks ──────────────────
 
     @Override
     public Integer call() throws IOException, InterruptedException {
         onStart();
         var client = createClient();
+        compactor = createCompactor(client);
         var fileTools = new FileTools(Path.of(root));
         var toolSupport = createToolSupport(fileTools);
 
@@ -88,11 +97,31 @@ public class CodingAgent implements Callable<Integer> {
     protected void onStart() {}
 
     protected LLMClient createClient() {
-        return new LLMClient(baseUrl, modelSize.getModelId(), System.out::print);
+        return new LLMClient(baseUrl, resolveModel(), System.out::print);
+    }
+
+    /** --model, else the endpoint's default model from the config file, else {@link ModelSize#FAST}. */
+    protected String resolveModel() {
+        return modelSize != null ? modelSize.getModelId()
+                : Config.load().modelFor(baseUrl, ModelSize.FAST.getModelId());
     }
 
     protected String greeting() {
-        return "Coding agent ready. Project root: " + Path.of(root).toAbsolutePath().normalize();
+        return "Coding agent ready. Model: " + resolveModel()
+                + " - project root: " + Path.of(root).toAbsolutePath().normalize();
+    }
+
+    /**
+     * Compaction trigger: above 80% of the model's context window (auto-detected via
+     * GET /v1/models, falling back to ModelSize defaults), or the --max-tokens override.
+     * Real token-usage data drives it - no character estimates.
+     */
+    protected Compactor createCompactor(LLMClient client) {
+        String model = resolveModel();
+        int contextWindow = client.getContextWindowSize(ModelSize.defaultContextWindowFor(model));
+        int threshold = maxTokens > 0 ? maxTokens : (int) (contextWindow * 0.8);
+        System.out.println("Context window: " + contextWindow + " tokens - compacting above " + threshold);
+        return new Compactor(threshold, 6);
     }
 
     /** All agent tools: file/exec tools (confirmation-gated) plus TODO/plan tools. */
@@ -162,6 +191,16 @@ public class CodingAgent implements Callable<Integer> {
         messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
         // no banner re-print here: state changes already trigger printTodos via onToolCall
+
+        // fold old history when the prompt got too big (the pinned state survives -
+        // index 1 is never summarized, and shifts trigger a re-insert next turn)
+        var compaction = compactor.maybeCompact(client, messages, 1);
+        if (compaction.compacted()) {
+            stateMessageIndex = -1; // indexes shifted - pinned state is re-inserted on next sync
+            System.out.println("[compact] " + compaction.messagesBefore() + " -> "
+                    + compaction.messagesAfter() + " messages (prompt was "
+                    + compaction.promptTokens() + " tokens)");
+        }
     }
 
     /** Refresh volatile context before every LLM call: current system prompt + pinned agent state. */

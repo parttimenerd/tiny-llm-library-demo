@@ -1,5 +1,6 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.http.Config;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -27,8 +28,7 @@ import java.util.concurrent.Callable;
 @Command(name = "chatbot", description = "A simple streaming chatbot", version = "1.0.0")
 public class ChatBot implements Callable<Integer> {
 
-    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B) (default: ${DEFAULT-VALUE})",
-            defaultValue = "fast")
+    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B), gpt4o_mini, gpt4o, kimi_k3 (default: the endpoint's model from the config file, else fast)")
     ModelSize modelSize;
 
     @Option(names = {"-u", "--base-url"}, description = "LLM API base URL (default: ${DEFAULT-VALUE})",
@@ -47,13 +47,15 @@ public class ChatBot implements Callable<Integer> {
      */
     @Override
     public Integer call() {
-        String model = modelSize.getModelId();
+        String model = modelSize != null ? modelSize.getModelId()
+                : Config.load().modelFor(baseUrl, ModelSize.FAST.getModelId());
         var client = new LLMClient(baseUrl, model, System.out::print);
         var messages = new ArrayList<Map<String, Object>>();
         var scanner = new Scanner(System.in);
 
         while (true) {
             System.out.print("\nYou: ");
+            if (!scanner.hasNextLine()) break; // Ctrl-D / piped input exhausted
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("quit")) {
                 break;
