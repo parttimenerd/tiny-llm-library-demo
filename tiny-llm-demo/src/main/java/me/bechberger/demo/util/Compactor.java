@@ -54,6 +54,17 @@ public final class Compactor {
             return new Outcome(false, messages.size(), messages.size(),
                     usage != null ? usage.promptTokens() : 0);
         }
+        return doCompact(client, messages, pinned);
+    }
+
+    /** Force compaction now, regardless of the threshold (the /compact command). */
+    public Outcome compactNow(LLMClient client, List<Map<String, Object>> messages) {
+        return doCompact(client, messages, 1);
+    }
+
+    private Outcome doCompact(LLMClient client, List<Map<String, Object>> messages, int pinned) {
+        var usage = client.lastUsage();
+        int promptTokens = usage != null ? usage.promptTokens() : 0;
 
         int recentStart = Math.max(pinned, messages.size() - keepRecent);
         // don't let the kept tail start with an orphaned tool result whose
@@ -62,7 +73,7 @@ public final class Compactor {
             recentStart++;
         }
         if (recentStart <= pinned) {
-            return new Outcome(false, messages.size(), messages.size(), usage.promptTokens());
+            return new Outcome(false, messages.size(), messages.size(), promptTokens);
         }
 
         var text = new StringBuilder();
@@ -88,13 +99,13 @@ public final class Compactor {
             // compaction must never kill a session - leave history as is, retry next turn
             if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             System.err.println("[compact] summarization failed: " + e.getMessage());
-            return new Outcome(false, before, messages.size(), usage.promptTokens());
+            return new Outcome(false, before, messages.size(), promptTokens);
         }
 
         messages.clear();
         messages.addAll(head);
         messages.add(LLMClient.system("[Conversation summary] " + summary));
         messages.addAll(tail);
-        return new Outcome(true, before, messages.size(), usage.promptTokens());
+        return new Outcome(true, before, messages.size(), promptTokens);
     }
 }

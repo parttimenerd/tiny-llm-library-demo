@@ -63,6 +63,13 @@ final class CodingTools {
                 args -> fileTools.writeFile(str(args, "path"), str(args, "content")),
                 "path", "File path relative to project root", "content", "Full file content to write");
 
+        register(ts, "edit", "Replace exact text in an existing file - 'old' must occur exactly once; " +
+                        "use for surgical changes instead of rewriting the whole file",
+                args -> fileTools.editFile(str(args, "path"), str(args, "old"), str(args, "new")),
+                "path", "File relative to project root",
+                "old", "Exact current text to replace (must occur exactly once - include surrounding lines if ambiguous)",
+                "new", "Replacement text");
+
         register(ts, "create-folder", "Create a folder (and any missing parents)",
                 args -> fileTools.createFolder(str(args, "path")),
                 "path", "Folder path relative to project root");
@@ -132,9 +139,16 @@ final class CodingTools {
         return value.toString();
     }
 
-    /** Numeric args arrive as numbers when the model obeys the schema, as strings when it doesn't. */
+    /**
+     * Numeric args arrive as numbers when the model obeys the schema, as strings when it doesn't.
+     * Missing args get the same feedback error as {@link #str} instead of an NPE.
+     */
     private static int number(Map<String, Object> args, String name) {
         var value = args.get(name);
+        if (value == null) {
+            throw new IllegalArgumentException(
+                    "missing required argument '" + name + "' - check the tool's parameter list");
+        }
         return value instanceof Number n ? n.intValue() : Integer.parseInt(value.toString().trim());
     }
 }

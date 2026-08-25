@@ -4,6 +4,7 @@ import me.bechberger.demo.http.Config;
 import me.bechberger.demo.util.Compactor;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.util.Repl;
+import me.bechberger.demo.util.SessionLog;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Option;
@@ -32,9 +33,11 @@ import java.util.concurrent.Callable;
  * REPL commands ({@code /help} lists them):
  *   /plan &lt;goal&gt;  — planning mode (read-only tools, focused planning prompt)
  *   /run &lt;cmd&gt;    — execute a shell command in the project, output shared with the agent
- *   /todos        — print current TODO list
- *   /yolo         — toggle YOLO mode: auto-approve all actions (plan, run, delete)
- *   exit / quit   — exit
+ *   /todos       — print current TODO list
+ *   /mode        — cycle approval policy (NORMAL → AUTO-EDIT → YOLO); /yolo toggles YOLO directly
+ *   /clear       — clear the conversation, keeping system prompt and pinned state
+ *   /compact     — fold old history into a summary now; /tokens shows usage + threshold
+ *   exit / quit  — exit (a trailing "\" continues input on the next line)
  */
 @Command(name = "coding-agent", description = "A coding chatbot with file/exec tools and plan/todo support", version = "1.0.0")
 public class CodingAgent implements Callable<Integer> {
@@ -52,6 +55,9 @@ public class CodingAgent implements Callable<Integer> {
             defaultValue = "0")
     int maxTokens;
 
+    @Option(names = {"--no-log"}, description = "Do not write a session transcript to ~/.tiny-llm-library/sessions/")
+    boolean noLog;
+
     @Option(names = {"-r", "--root"}, description = "Project root directory (default: ${DEFAULT-VALUE})",
             defaultValue = ".")
     String root;
@@ -61,8 +67,20 @@ public class CodingAgent implements Callable<Integer> {
     /** Single shared Scanner for System.in — two Scanners on one stream swallow each other's input. */
     private final Scanner scanner = new Scanner(System.in);
 
-    /** YOLO mode (/yolo): skip all confirmations and let the agent act autonomously. */
-    private boolean yolo = false;
+    /**
+     * Approval policy for risky actions - like Claude Code's Shift-Tab modes:
+     * NORMAL asks for run/delete, AUTO_EDIT additionally auto-approves plans, YOLO approves everything.
+     */
+    protected ApprovalMode approval = ApprovalMode.NORMAL;
+
+    /** The approval policies; the badge shows in the prompt when not NORMAL. */
+    protected enum ApprovalMode {
+        NORMAL(""), AUTO_EDIT("⏵ "), YOLO("⚡ ");
+        final String badge;
+        ApprovalMode(String badge) { this.badge = badge; }
+        String badge() { return badge; }
+        ApprovalMode next() { return values()[(ordinal() + 1) % values().length]; }
+    }
 
     private final AgentState state = new AgentState();
 
@@ -86,7 +104,9 @@ public class CodingAgent implements Callable<Integer> {
         messages.add(LLMClient.system(buildSystemPrompt()));
 
         var repl = new Repl("\nYou: ", scanner);
+        repl.setPrompt(() -> "\n" + approval.badge() + "You: ");
         registerCommands(repl, client, fileTools, messages);
+        startSessionLog();
 
         repl.greet(greeting());
         repl.run(input -> chat(client, toolSupport, messages, input));
@@ -138,6 +158,46 @@ public class CodingAgent implements Callable<Integer> {
         return toolSupport;
     }
 
+    /** Start the session transcript - everything you see also lands in the log file. */
+    private void startSessionLog() {
+        if (noLog) return;
+        try {
+            System.out.println("Session log: " + SessionLog.start(getClass().getSimpleName()));
+        } catch (IOException e) {
+            System.err.println("Could not start session log: " + e.getMessage());
+        }
+    }
+
+    private void printMode() {
+        System.out.println(switch (approval) {
+            case YOLO      -> "⚡ YOLO mode - everything is auto-approved";
+            case AUTO_EDIT -> "⏵ AUTO-EDIT mode - plans auto-approved, run/delete still ask";
+            case NORMAL    -> "🔒 NORMAL mode - risky actions need confirmation";
+        });
+    }
+
+    private void printTokens(LLMClient client, List<Map<String, Object>> messages) {
+        var u = client.lastUsage();
+        System.out.println(u == null ? "(no usage data yet)"
+                : "last call: prompt " + u.promptTokens() + " + completion " + u.completionTokens() + " tokens"
+                + " - history: " + messages.size() + " messages - compacting above " + compactor.threshold());
+    }
+
+    private void compactNow(LLMClient client, List<Map<String, Object>> messages) {
+        var outcome = compactor.compactNow(client, messages);
+        if (outcome.compacted()) stateMessageIndex = -1;
+        System.out.println(outcome.compacted()
+                ? "[compact] " + outcome.messagesBefore() + " -> " + outcome.messagesAfter() + " messages"
+                : "Nothing to compact yet (" + messages.size() + " messages).");
+    }
+
+    private void clearConversation(List<Map<String, Object>> messages) {
+        int dropped = Math.max(0, messages.size() - 1);
+        if (dropped > 0) messages.subList(1, messages.size()).clear(); // keep messages[0] (system prompt)
+        stateMessageIndex = -1; // pinned state is re-inserted on next sync
+        System.out.println("Conversation cleared (" + dropped + " messages dropped; goal/plan/TODOs stay pinned).");
+    }
+
     /**
      * The main system prompt. Re-synced into {@code messages[0]} before every LLM call
      * (via {@link #syncConversation}), so overrides that append dynamic sections —
@@ -156,8 +216,11 @@ public class CodingAgent implements Callable<Integer> {
                 "start by marking the first one in_progress, never re-add them. " +
                 "4. Work the list: todo-update to in_progress when you start a step and to completed as soon " +
                 "as it is done, without being asked. " +
-                "5. Implement with create-file/write-file, then ALWAYS verify with run: build the project and " +
-                "execute the artifact with realistic AND invalid inputs; fix and re-run until it works. " +
+                "5. Implement with create-file (new files), write-file (full rewrite) or edit (surgical " +
+                "change in an existing file), then ALWAYS verify with run: build the project and " +
+                "execute the produced artifact itself - for a jar that means java -jar target/*.jar " +
+                "(java -cp target/classes does NOT count), with realistic AND invalid inputs; " +
+                "fix and re-run until it works. " +
                 "When everything is completed, finish with a brief summary: what you built and how you " +
                 "verified it. Keep chat replies short; let the tools do the work.";
     }
@@ -173,10 +236,17 @@ public class CodingAgent implements Callable<Integer> {
                         args -> runForUser(args, fileTools, messages))
                 .on("yolo", "toggle YOLO mode — auto-approve all actions (plan acceptance, run, delete)",
                         args -> {
-                            yolo = !yolo;
-                            System.out.println(yolo ? "⚡ YOLO mode ON — everything is auto-approved"
-                                                    : "🔒 YOLO mode OFF — risky actions need confirmation");
-                        });
+                            approval = approval == ApprovalMode.YOLO ? ApprovalMode.NORMAL : ApprovalMode.YOLO;
+                            printMode();
+                        })
+                .on("mode", "cycle approval mode: NORMAL → AUTO-EDIT → YOLO (like Shift-Tab in Claude Code)",
+                        args -> { approval = approval.next(); printMode(); })
+                .on("clear", "clear the conversation, keeping system prompt and pinned state",
+                        args -> clearConversation(messages))
+                .on("compact", "fold old history into a summary now (usually automatic near the context limit)",
+                        args -> compactNow(client, messages))
+                .on("tokens", "show token usage of the last call and the compaction threshold",
+                        args -> printTokens(client, messages));
     }
 
     /** One chat round: append the user input, run the tool loop, print and record the reply. */
@@ -303,8 +373,8 @@ public class CodingAgent implements Callable<Integer> {
      *                   if false, Enter declines (used for run/delete)
      */
     private boolean confirm(String action, boolean defaultYes) {
-        if (yolo) {
-            System.out.println("  ⚡ auto-approved (yolo): " + action);
+        if (approval == ApprovalMode.YOLO || (approval == ApprovalMode.AUTO_EDIT && defaultYes)) {
+            System.out.println("  " + approval.badge() + "auto-approved (" + approval.name().toLowerCase().replace('_', '-') + "): " + action);
             return true;
         }
         System.out.print("\n⚠️  " + action + "\n    Allow? " + (defaultYes ? "[Y/n] " : "[y/N] "));

@@ -482,6 +482,38 @@ public class FileTools {
     }
 
     /**
+     * Replace exact text in a file - the surgical alternative to {@link #writeFile}
+     * for existing files (saves re-sending the whole content).
+     * {@code oldText} must occur exactly once, so the edit cannot hit the wrong spot.
+     */
+    public String editFile(String path, String oldText, String newText) {
+        try {
+            Path resolved = validatePath(path);
+            if (!Files.isRegularFile(resolved)) {
+                return "Error: not a regular file: " + path;
+            }
+            String content = Files.readString(resolved, StandardCharsets.UTF_8);
+            int first = content.indexOf(oldText);
+            if (first < 0) {
+                return "Error: text not found in " + path
+                        + " - check the current content with cat-paged or grep first";
+            }
+            if (content.indexOf(oldText, first + oldText.length()) >= 0) {
+                return "Error: text occurs multiple times in " + path
+                        + " - include more surrounding lines in 'old' to make it unique";
+            }
+            Files.writeString(resolved,
+                    content.substring(0, first) + newText + content.substring(first + oldText.length()),
+                    StandardCharsets.UTF_8);
+            return "Edited: " + path + " (replaced " + oldText.length() + " chars with " + newText.length() + ")";
+        } catch (SecurityException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error editing file: " + e.getMessage();
+        }
+    }
+
+    /**
      * Create a folder (and any missing parents), sandboxed to root.
      */
     public String createFolder(String path) {

@@ -2208,7 +2208,7 @@ messages.add(assistant(response));
 
 <div class="mt-8">
 
-Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `create-folder`, `delete`, `run` - any shell command, confirmed by the user.
+Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `edit` (surgical replace - no full rewrite), `create-folder`, `delete`, `run` - any shell command, user-confirmed.
 
 </div>
 
@@ -2251,6 +2251,44 @@ The model reads the Maven output and decides what to fix next. <b>That's the age
 <!--
 **[~46:00]** "The model chooses the shell command. It reads the output. It decides what to fix. That's all an agent is. Registration is one line because we extracted the schema plumbing into a tiny helper."
 -->
+
+---
+
+# The Agentic REPL — Claude Code affordances in miniature
+
+<div class="grid grid-cols-2 gap-6 mt-2 text-base">
+
+<div>
+
+**Session commands:**
+
+```
+/mode     cycle NORMAL → AUTO-EDIT → YOLO   (Shift-Tab!)
+/yolo     full auto        /clear   fresh context
+/compact  fold history     /tokens  usage + limits
+/plan <g> plan first       /run <c> user-side exec
+/skills   list skills      /skill <name>  toggle skill
+```
+
+</div>
+
+<div>
+
+**Plumbing, extracted** (`util/`):
+
+- `Repl` — prompt loop, multi-line `\` continuation, live mode badge in the prompt
+- `Commands` — slash-command DSL (auto `/help`; unknown `/x` rejected locally, no LLM roundtrip)
+- `Compactor` — hybrid memory at 80% of the context window
+- `SessionLog` — every run leaves a transcript
+
+</div>
+
+</div>
+
+<!--
+**[~46:30]** "Everything you know from Claude Code is here in miniature: mode badge cycling like Shift-Tab, /clear, /compact, /tokens - and every session writes a transcript. Those slide logs you saw? SessionLog captured them."
+-->
+
 
 ---
 layout: center
