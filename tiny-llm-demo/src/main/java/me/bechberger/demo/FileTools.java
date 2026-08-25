@@ -356,6 +356,9 @@ public class FileTools {
         System.out.flush();
 
         Scanner scanner = new Scanner(System.in);
+        if (!scanner.hasNextLine()) {
+            return "Command cancelled (no confirmation input)."; // EOF
+        }
         String response = scanner.nextLine().trim().toLowerCase();
 
         if (!response.equals("y") && !response.equals("yes")) {
