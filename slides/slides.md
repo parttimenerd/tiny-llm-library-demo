@@ -934,6 +934,8 @@ Or how to write a chatbot from scratch.
 <!--
 **[~13:00]** "Time to code. Let's turn those curl commands into Java."
 Switch to IDE. Make sure font size is 20pt+.
+"We'll use GitHub Copilot to help us write this — let's see how well it understands the OpenAI API."
+Note: .github/copilot-instructions.md blocks Copilot from reading our solutions/ folder.
 -->
 
 ---
@@ -993,7 +995,10 @@ Three methods + <OrangeText>three helper builders</OrangeText>. That's the entir
 
 <!--
 **[~14:30]** Start live coding. Constructor takes base URL, model name, and a Consumer<String>.
-**CHECKPOINT at ~19 min**: if behind, paste listModels + chat from solution. Focus on chatStream.
+Use Copilot inline completions to fill in listModels(), chat(), chatStream().
+"Let's see if Copilot gets this right" — verify each method as it's generated.
+Explain what the generated SSE parsing does. Correct if needed.
+**CHECKPOINT at ~18 min**: if Copilot struggles, paste from solution. Focus on chatStream.
 -->
 
 ---
@@ -1023,10 +1028,11 @@ The entire chatbot is a <OrangeText>while loop with a list</OrangeText>.
 </div>
 
 <!--
-**[~22:00]** "The chatbot is embarrassingly simple. Read input, append to messages, call the client, append the response, repeat."
+**[~20:00]** "The chatbot is embarrassingly simple. Read input, append to messages, call the client, append the response, repeat."
 "We use the helper methods — LLMClient.user() and LLMClient.assistant() — instead of building maps manually."
 "The conversation history is just a growing ArrayList. That's all the 'memory' a chatbot has."
-Live code the REPL loop. ~3 minutes.
+Type this one manually — it's only 8 lines and shows you understand the loop.
+~2 minutes.
 -->
 
 ---
@@ -1497,7 +1503,8 @@ Now we make our chatbot actually useful.
 </div>
 
 <!--
-**[~34:00]** Transition to live coding part 2. "We've seen the theory. Let's write it."
+**[~30:00]** Transition to live coding part 2. "We've seen the theory. Let's write it."
+"This time I'll let Copilot do the heavy lifting — the tool calling loop is a well-known pattern."
 -->
 
 ---
@@ -1533,9 +1540,11 @@ Tool calling is a <OrangeText>while loop</OrangeText>. That's the secret.
 </div>
 
 <!--
-**[~34:30]** "Register tools, build the JSON array, and then a while loop: as long as the model says tool_calls, we execute and send results back."
-Live code. Talk through each step.
-**CHECKPOINT at ~38 min**: if behind, paste registerTool + buildToolsJson from solution.
+**[~30:30]** "Register tools, build the JSON array, and then a while loop: as long as the model says tool_calls, we execute and send results back."
+Let Copilot generate each method via inline completions. Walk through what it produces.
+"Notice Copilot understands the tool-calling loop pattern — it knows the OpenAI API conventions."
+Verify the while-loop logic. Correct if needed (e.g., missing retry on malformed JSON).
+**CHECKPOINT at ~34 min**: if Copilot struggles, paste from solution.
 -->
 
 ---
@@ -1564,7 +1573,7 @@ java -jar tiny-llm-demo.jar ToolChatBot \
 -->
 
 <!--
-**[~43:00]** **[FUN MOMENT]** Run the tool chatbot. "What files are in this project?"
+**[~37:00]** **[FUN MOMENT]** Run the tool chatbot. "What files are in this project?"
 Watch it call ls, read files with catPaged. Take audience suggestions.
 "Let's see if we can trick it — try to access /etc/passwd." (Should be rejected by sandbox.)
 "~80 lines of tool support. That's it."
@@ -1590,7 +1599,7 @@ Context windows aren't infinite — here's how to manage them.
 </div>
 
 <!--
-**[~43:30]** Transition to the token management section. "Our chatbot works, but what happens after a long conversation? The context window fills up. Let's fix that."
+**[~38:00]** Transition to the token management section. "Our chatbot works, but what happens after a long conversation? The context window fills up. Let's fix that."
 -->
 
 ---
@@ -1642,7 +1651,7 @@ Every LLM has a fixed <OrangeText>context window</OrangeText> — and tool-calli
 </div>
 
 <!--
-**[~44:00]** "Every LLM has a fixed context window. Messages, tool calls, results — they all count toward it. Tool-calling conversations fill it up fast because every tool invocation adds both a request and a response message."
+**[~39:00]** "Every LLM has a fixed context window. Messages, tool calls, results — they all count toward it. Tool-calling conversations fill it up fast because every tool invocation adds both a request and a response message."
 -->
 
 ---
@@ -1679,7 +1688,7 @@ Auto-detect the limit via `GET /v1/models` → `meta.n_ctx_train`. E.g. 40960 fo
 </div>
 
 <!--
-**[~44:15]** "The good news: the API already tells us how many tokens we've used via the usage object. We can auto-detect the window size from the models endpoint. We trigger summarization at 80% — leaving headroom for the next response."
+**[~39:15]** "The good news: the API already tells us how many tokens we've used via the usage object. We can auto-detect the window size from the models endpoint. We trigger summarization at 80% — leaving headroom for the next response."
 -->
 
 ---
@@ -1755,7 +1764,7 @@ Auto-detect the limit via `GET /v1/models` → `meta.n_ctx_train`. E.g. 40960 fo
 </div>
 
 <!--
-**[~44:30]** "There are four common approaches. Dynamic Cutoff is simplest but loses context. Rolling Summaries compress periodically but details fade. Externalized Memory is most powerful but complex. We'll use Hybrid Memory — pin the important messages, summarize the middle, keep recent ones."
+**[~39:30]** "There are four common approaches. Dynamic Cutoff is simplest but loses context. Rolling Summaries compress periodically but details fade. Externalized Memory is most powerful but complex. We'll use Hybrid Memory — pin the important messages, summarize the middle, keep recent ones."
 -->
 
 ---
@@ -1792,14 +1801,14 @@ if prompt_tokens > 0.8 × contextWindow
 </div>
 
 <!--
-**[~45:30]** "Hybrid Memory has three tiers. The system prompt is pinned — it defines the bot's identity and rules. Everything in the middle gets summarized by the LLM itself. The last 4 messages stay verbatim for coherent follow-up. No external DB needed."
+**[~40:30]** "Hybrid Memory has three tiers. The system prompt is pinned — it defines the bot's identity and rules. Everything in the middle gets summarized by the LLM itself. The last 4 messages stay verbatim for coherent follow-up. No external DB needed."
 -->
 
 ---
 layout: center
 ---
 
-<div class="section-header">Part 6</div>
+<div class="section-header">Part 7</div>
 
 <div class="big-statement">
 
@@ -1814,7 +1823,7 @@ MCP is everywhere in the news — here's the boring protocol it's built on.
 </div>
 
 <!--
-**[~47:00]** Transition to MCP. "We just built tool calling from scratch. MCP standardizes this pattern."
+**[~42:00]** Transition to MCP. "We just built tool calling from scratch. MCP standardizes this pattern."
 Keep this to 3 minutes. Slides only, no demos.
 -->
 
@@ -1888,7 +1897,7 @@ Any AI app can connect to any tool server — <OrangeText>one protocol to rule t
 <Caption><a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank">https://modelcontextprotocol.io/docs/getting-started/intro</a></Caption>
 
 <!--
-**[~47:30]** "MCP uses JSON-RPC 2.0 for communication. Your app embeds the MCP Client, connects to servers that provide tools, and the LLM calls those tools through your app."
+**[~42:30]** "MCP uses JSON-RPC 2.0 for communication. Your app embeds the MCP Client, connects to servers that provide tools, and the LLM calls those tools through your app."
 -->
 
 ---
@@ -1932,7 +1941,7 @@ Client and server <b>negotiate capabilities</b> first — only use features both
 </div>
 
 <!--
-**[~48:00]** "MCP has a strict lifecycle. First the client and server negotiate what they can do, then they communicate, then they shut down cleanly."
+**[~43:00]** "MCP has a strict lifecycle. First the client and server negotiate what they can do, then they communicate, then they shut down cleanly."
 -->
 
 ---
@@ -1980,7 +1989,7 @@ Sub-capabilities: <code>listChanged</code> (change notifications) · <code>subsc
 </div>
 
 <!--
-**[~48:30]** "Client says: I support roots and sampling. Server says: I have tools, resources, and prompts. Then they only use what was negotiated."
+**[~43:30]** "Client says: I support roots and sampling. Server says: I have tools, resources, and prompts. Then they only use what was negotiated."
 -->
 
 ---
@@ -2036,7 +2045,7 @@ sequenceDiagram
 </div>
 
 <!--
-**[~49:00]** "Two transports: stdio is simplest — launch a subprocess, JSON on stdin/stdout. HTTP+SSE is for remote or multi-client setups."
+**[~44:00]** "Two transports: stdio is simplest — launch a subprocess, JSON on stdin/stdout. HTTP+SSE is for remote or multi-client setups."
 -->
 
 ---
@@ -2087,7 +2096,7 @@ JSON-RPC calls wrapping <OrangeText>tool definitions and results</OrangeText> �
 </div>
 
 <!--
-**[~49:30]** "Three capabilities: Tools (we built those), Resources (read-only data), Prompts (templates)."
+**[~44:30]** "Three capabilities: Tools (we built those), Resources (read-only data), Prompts (templates)."
 -->
 
 ---
@@ -2149,6 +2158,642 @@ Full specification: <a href="https://modelcontextprotocol.io/specification/2024-
 layout: center
 ---
 
+<div class="section-header">Part 8</div>
+
+<div class="big-statement">
+
+Coding Agent
+
+</div>
+
+<div class="text-xl text-gray-400 mt-4">
+
+A chatbot that can actually <OrangeText>change your code</OrangeText>.
+
+</div>
+
+<!--
+**[~45:00]** "We have a chatbot that can read files. Let's give it write access and Maven — and turn it into a coding agent."
+-->
+
+---
+
+# From Chatbot to Agent
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+**ChatBot** — talks, remembers
+
+```java
+messages.add(user(input));
+response = client.chatStream(messages);
+messages.add(assistant(response));
+```
+
+</div>
+
+<div>
+
+**CodingAgent** — talks, remembers, <OrangeText>acts</OrangeText>
+
+```java
+messages.add(user(input));
+response = toolSupport
+    .handleToolLoop(client, messages);
+messages.add(assistant(response));
+```
+
+</div>
+
+</div>
+
+<div class="mt-8">
+
+Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `create-folder`, `delete`, `run-maven`.
+
+</div>
+
+<!--
+**[~45:30]** "The only difference is the tools. The loop is identical."
+-->
+
+---
+
+# run-maven — the key tool
+
+```java
+toolSupport.registerTool("run-maven",
+    "Run a Maven command and return its output",
+    schema("args", "e.g. 'test', 'compile', 'clean install -q'"),
+    args -> fileTools.runMaven((String) args.get("args")));
+```
+
+<v-click>
+
+The model decides which Maven command to run:
+
+```
+run-maven("compile")        → fix compile errors first
+run-maven("test")           → check if tests pass
+run-maven("clean install")  → full build
+```
+
+</v-click>
+
+<v-click>
+
+<Callout variant="orange">
+The model reads the Maven output and decides what to fix next. <b>That's the agent loop.</b>
+</Callout>
+
+</v-click>
+
+<!--
+**[~46:00]** "The model chooses the Maven command. It reads the output. It decides what to fix. That's all an agent is."
+-->
+
+---
+layout: center
+---
+
+<div class="section-header">Part 9</div>
+
+<div class="big-statement">
+
+Plan & TODOs
+
+</div>
+
+<div class="text-xl text-gray-400 mt-4">
+
+How agents stay on track over long tasks.
+
+</div>
+
+<!--
+**[~47:00]** "Our agent works, but it has no memory of what it was trying to do. A long coding task means dozens of tool calls — the model loses track. Let's fix that."
+-->
+
+---
+
+# The Problem: Long Tasks
+
+<div class="mt-8 text-xl">
+
+After 20 tool calls, the model has forgotten:
+
+</div>
+
+<div class="grid grid-cols-3 gap-6 mt-6 text-center">
+
+<div class="strategy-box">
+<div class="strategy-label">What was I doing?</div>
+<div class="text-gray-400 mt-4 text-sm">Goal lost in conversation history</div>
+</div>
+
+<div class="strategy-box">
+<div class="strategy-label">What's left?</div>
+<div class="text-gray-400 mt-4 text-sm">No record of remaining steps</div>
+</div>
+
+<div class="strategy-box">
+<div class="strategy-label">What did I finish?</div>
+<div class="text-gray-400 mt-4 text-sm">No distinction between done and pending</div>
+</div>
+
+</div>
+
+<div class="mt-8 text-xl text-center">
+
+The fix: <OrangeText>externalize working memory</OrangeText> into the context.
+
+</div>
+
+<!--
+**[~47:30]** "The model has no persistent state. After 20 tool calls it can't remember what it was trying to do. We need to give it a compact current snapshot of task state."
+-->
+
+---
+
+# Agent State
+
+```java
+record AgentState(String goal, String plan, List<Todo> todos) {
+
+    enum Status { PENDING, IN_PROGRESS, COMPLETED }
+
+    record Todo(int id, String description, Status status) {}
+
+    String render() {
+        // ## Goal\n...\n## Plan\n...\n## TODOs\n[ ] #1 ...
+    }
+}
+```
+
+<div class="mt-6 text-lg">
+
+Three fields. One `render()` method. That's the entire state model.
+
+</div>
+
+<!--
+**[~48:00]** "Goal is what we're trying to achieve. Plan is how. TODOs are the steps. All mutable, all rendered into the prompt."
+-->
+
+---
+
+# The Pinned Message Trick
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+Instead of appending state to history:
+
+```
+SYS
+USER: fix the test
+ASST: ## Goal...  ← v1
+... tool calls ...
+ASST: ## Goal...  ← v2
+... more calls ...
+ASST: ## Goal...  ← v3
+```
+
+</div>
+
+<div v-click>
+
+**Replace** it in-place at index 1:
+
+```
+SYS
+ASST: ## Goal...  ← always current
+USER: fix the test
+... tool calls ...
+```
+
+```java
+messages.set(stateMessageIndex,
+    stateMessage()); // replace, not append
+```
+
+</div>
+
+</div>
+
+<v-click>
+
+<Callout variant="orange">
+One snapshot of state. Never accumulates. The model always sees the current picture.
+</Callout>
+
+</v-click>
+
+<!--
+**[~48:30]** "If you append state every time it changes, you get v1, v2, v3... polluting the context. Instead, replace the message in-place. The model sees one current state, always at the same position."
+-->
+
+---
+
+# TODOs as a Tool
+
+```json
+{
+  "name": "todo-add",
+  "parameters": { "description": "string" }
+}
+{
+  "name": "todo-update",
+  "parameters": { "id": "number", "status": "pending|in_progress|completed" }
+}
+```
+
+<v-click>
+
+The model maintains its own task list as it works:
+
+```
+[>] #1 Read failing test
+[x] #2 Fix compile error in Greeter.java
+[ ] #3 Run mvn test
+```
+
+</v-click>
+
+<v-click>
+
+<Callout variant="blue">
+TODOs are not proof of completion. If <code>mvn test</code> fails after marking #3 done, reopen it.
+The <b>tool output</b> is the source of truth.
+</Callout>
+
+</v-click>
+
+<!--
+**[~49:00]** "The model calls todo-add and todo-update just like any other tool. The agent runtime updates AgentState and injects it back into the context."
+"Important: if a test fails after the model marked a task complete, the task isn't complete. Tool output is truth."
+-->
+
+---
+
+# /plan Mode
+
+```bash
+You: /plan add a greet() method to Greeter.java and make mvn test pass
+```
+
+<div class="mt-6">
+
+```
+Planning mode: read-only tools only (no write-file, no run-maven)
+  → ls, cat-paged to explore
+  → update-plan, todo-add to capture the plan
+```
+
+</div>
+
+<v-click>
+
+```
+--- Plan ready ---
+## Goal
+add a greet() method to Greeter.java and make mvn test pass
+
+## Plan
+Greeter.java is missing greet(). GreeterTest expects greet("World") → "Hello, World!".
+Add the method, no other changes needed.
+
+## TODOs
+[ ] #1 Add greet(String name) to Greeter.java
+[ ] #2 Run mvn test to verify
+```
+
+</v-click>
+
+<!--
+**[~49:30]** "Before touching files, /plan makes the agent explore and write down what it intends to do. You can review and correct it before execution starts."
+-->
+
+---
+
+# The Agent Loop (Full Picture)
+
+```java
+// Before every LLM call:
+messages.set(stateIndex, stateMessage()); // inject current state
+
+// The tool loop runs as before — but now also handles:
+//   todo-add, todo-update, todo-remove, update-plan
+// Each call mutates AgentState, which is injected next turn.
+```
+
+<div class="mt-6">
+
+```mermaid
+flowchart LR
+  U["User input"] --> L["LLM + tools"]
+  L -->|"todo-add\ntodo-update\nupdate-plan"| S["AgentState"]
+  L -->|"write-file\nrun-maven\n..."| FS["Filesystem"]
+  S -->|"render() injected\nat index 1"| L
+```
+
+</div>
+
+<!--
+**[~50:00]** "State flows in a loop. The model updates it via tools, the runtime injects the rendered state back before the next call. The filesystem is still the source of truth."
+-->
+
+---
+layout: center
+---
+
+<div class="section-header">Part 10</div>
+
+<div class="big-statement">
+
+Skills
+
+</div>
+
+<div class="text-xl text-gray-400 mt-4">
+
+Reusable instructions the agent can load when they are relevant.
+
+</div>
+
+<!--
+**[~52:00]** "Our agent works, but every project has its own conventions and domain knowledge. Skills give us a way to package that knowledge and load it when we need it."
+-->
+
+---
+
+# Skills — Just Markdown
+
+```text
+.claude/skills/
+└── java/
+    └── SKILL.md
+```
+
+```markdown
+---
+name: java
+description: Java development best practices
+---
+
+# Java Development
+
+- Follow the project's existing code style.
+- Add a regression test for every behavioral change.
+- Run `mvn test` after modifications.
+```
+
+<div class="mt-6 text-lg">
+
+**No new format.** We use the existing `.claude/skills/<name>/SKILL.md` convention.
+
+</div>
+
+<!--
+**[~52:30]** "A skill is just a Markdown file. The frontmatter tells us what it is; the body contains the instructions."
+-->
+
+---
+
+# Discover, Don't Load
+
+```mermaid
+flowchart LR
+    A[".claude/skills/"] --> B["Find SKILL.md"]
+    B --> C["Read frontmatter"]
+    C --> D["Skill catalog"]
+    D --> E["name + description"]
+    B -.->|"not loaded yet"| F["Full instructions"]
+```
+
+<div class="grid grid-cols-2 gap-8 mt-6">
+
+<div>
+
+**At startup**
+
+* Find `SKILL.md`
+* Read `name`
+* Read `description`
+* Build the skill catalog
+
+</div>
+
+<div>
+
+**Not yet**
+
+* Don't load the full instructions
+* Don't put every skill into the prompt
+
+</div>
+
+</div>
+
+<!--
+**[~53:00]** "The important part is that discovering a skill doesn't mean loading it. We only need its name and description initially."
+-->
+
+---
+
+# Activation — Load on Demand
+
+```mermaid
+flowchart LR
+    U["User"] -->|" /skill java "| A["Agent"]
+    M["LLM"] -->|"skill('java')"| A
+    A -->|"read"| S[".claude/skills/java/SKILL.md"]
+    S -->|"instructions"| A
+    A --> C["Active Skills"]
+```
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+**User**
+
+```text
+/skill java
+```
+
+</div>
+
+<div>
+
+**Model**
+
+```json
+{
+  "name": "skill",
+  "arguments": {
+    "name": "java"
+  }
+}
+```
+
+</div>
+
+</div>
+
+<div class="mt-8">
+
+```java
+void activateSkill(String name) {
+    activeSkills.put(
+        name,
+        Files.readString(skills.get(name).path())
+    );
+}
+```
+
+</div>
+
+<div class="mt-6 text-lg text-gray-400">
+
+That's the whole activation mechanism: **read the Markdown file and remember that it's active.**
+
+</div>
+
+<!--
+**[~53:30]** "There are two ways to activate a skill: the user can explicitly request one, or the model can request one through a tool. Either way, the runtime just loads the file."
+-->
+
+---
+
+# Active Skills Become Context
+
+```mermaid
+flowchart TD
+    A["Available Skills<br/>name + description"]
+    B["Active Skills<br/>full SKILL.md"]
+    C["Context Renderer"]
+    D["System Prompt"]
+    E["LLM"]
+
+    A --> C
+    B --> C
+    C --> D
+    D --> E
+
+    E -->|"skill(name)"| B
+```
+
+```java
+String buildSystemPrompt() {
+    var sb = new StringBuilder(BASE_PROMPT);
+
+    sb.append("\n\n## Available Skills\n");
+    availableSkills.forEach(skill ->
+        sb.append("- ")
+          .append(skill.name())
+          .append(": ")
+          .append(skill.description())
+          .append('\n'));
+
+    for (var entry : activeSkills.entrySet()) {
+        sb.append("\n## Skill: ")
+          .append(entry.getKey())
+          .append('\n')
+          .append(entry.getValue());
+    }
+
+    return sb.toString();
+}
+```
+
+<div class="mt-6 text-lg">
+
+**Available:** cheap metadata
+**Active:** full instructions
+
+</div>
+
+<!--
+**[~54:00]** "The catalog stays cheap and visible. The full instructions only appear once a skill is active. Before each model call we rebuild the system prompt from the current agent state."
+-->
+
+---
+
+# Skills Can Be Deactivated
+
+```mermaid
+stateDiagram-v2
+    [*] --> Available
+
+    Available --> Active: skill(name)
+    Active --> Available: deactivate_skill(name)
+
+    Available --> [*]
+```
+
+```java
+void deactivateSkill(String name) {
+    activeSkills.remove(name);
+}
+```
+
+<div class="mt-6 text-lg">
+
+Skills stay active until explicitly deactivated or the agent state is reset.
+
+</div>
+
+<!--
+**[~54:30]** "And because active skills are state rather than conversation history, deactivation is trivial: remove the skill from the active set. The next system prompt simply doesn't contain it."
+-->
+
+---
+
+# The Whole Mechanism
+
+```mermaid
+flowchart TD
+    S[".claude/skills/*/SKILL.md"]
+    R["Skill Registry"]
+    C["Available Skills<br/>name + description"]
+    L["LLM"]
+    T["skill(name)"]
+    A["Active Skills"]
+    P["System Prompt"]
+    D["deactivate_skill(name)"]
+
+    S --> R
+    R --> C
+    C --> L
+
+    L --> T
+    T --> A
+    A --> P
+    C --> P
+    P --> L
+
+    L --> D
+    D --> A
+```
+
+<div class="mt-6 text-xl">
+
+**Discover → activate → inject → work → deactivate**
+
+</div>
+
+<!--
+**[~55:00]** "And that's really all Skills are in our agent: discover Markdown files, expose their metadata, load them on demand, and include active skills in the next model context."
+-->
+
+---
+layout: center
+---
+
 <div class="section-header">Wrap-Up</div>
 
 <div class="big-statement">
@@ -2170,7 +2815,7 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 </div>
 
 <!--
-**[~50:00]** Third time saying the tagline. "LLM APIs are boring. And that is the *best* news for Java developers."
+**[~48:00]** Third time saying the tagline. "LLM APIs are boring. And that is the *best* news for Java developers."
 "Boring means you can debug it. Boring means you can test it. Boring means it works at 3 AM."
 -->
 
@@ -2214,7 +2859,7 @@ flowchart TB
 </div>
 
 <!--
-**[~51:00]** Quick recap. Keep it fast — the audience remembers.
+**[~49:00]** Quick recap. Keep it fast — the audience remembers.
 -->
 
 ---
@@ -2268,6 +2913,6 @@ flowchart TB
 
 <!--
 **[SHOW OF HANDS]** Final payoff. If most hands go up, the talk succeeded.
-**[~52:00]** Q&A time. Have the chatbot running in a terminal in case someone wants to see a live demo during questions.
+**[~50:00]** Q&A time. Have the chatbot running in a terminal in case someone wants to see a live demo during questions.
 Expect questions about: model quality, production use, security edge cases, MCP adoption.
 -->

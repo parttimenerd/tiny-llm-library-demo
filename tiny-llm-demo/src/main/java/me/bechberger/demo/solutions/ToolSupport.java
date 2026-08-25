@@ -108,13 +108,19 @@ public class ToolSupport {
      * @param messages Conversation history (mutated: tool calls and results are added)
      * @return Final assistant response text
      */
+    /** Called after each tool execution: (toolName, arguments, result) → void. */
+    private java.util.function.BiConsumer<String, String> onToolCall = null;
+
+    public void setOnToolCall(java.util.function.BiConsumer<String, String> onToolCall) {
+        this.onToolCall = onToolCall;
+    }
+
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
         var toolsJson = buildToolsJson();
         int maxIterations = 100;
 
         for (int i = 0; i < maxIterations; i++) {
             var choice = client.chatRaw(messages, toolsJson);
-            System.out.println(choice);
             var finishReason = (String) choice.get("finish_reason");
 
             if (!"tool_calls".equals(finishReason)) {
@@ -197,13 +203,12 @@ public class ToolSupport {
 
         String result = callTool(toolName, argumentsJson);
 
-        Map<String, Object> toolResultMessage = Map.of(
-                "role", "tool",
-                "tool_call_id", toolCallId,
-                "content", result
-        );
-        System.out.println("Call: " + toolName + ", Arguments: " + argumentsJson + ", Result: " + result);
-        return toolResultMessage;
+        System.out.println("\n  ⚙ " + toolName + "(" + truncate(argumentsJson, 120) + ")");
+        System.out.println("    → " + truncate(result, 200));
+
+        if (onToolCall != null) onToolCall.accept(toolName, result);
+
+        return Map.of("role", "tool", "tool_call_id", toolCallId, "content", result);
     }
 
     /**
@@ -223,5 +228,11 @@ public class ToolSupport {
             return "Error executing tool '" + toolName + "': " + e.getMessage()
                     + "\nPlease try again with valid arguments.";
         }
+    }
+
+    private static String truncate(String s, int max) {
+        if (s == null) return "";
+        s = s.replace("\n", " ");
+        return s.length() <= max ? s : s.substring(0, max) + "…";
     }
 }

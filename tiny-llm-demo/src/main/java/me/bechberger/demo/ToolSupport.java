@@ -3,6 +3,7 @@ package me.bechberger.demo;
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,13 @@ public class ToolSupport {
                    Function<Map<String, Object>, String> handler) {}
 
     private final Map<String, ToolDef> tools = new LinkedHashMap<>();
+
+    /** Called after each tool execution with (toolName, result). */
+    private java.util.function.BiConsumer<String, String> onToolCall = null;
+
+    public void setOnToolCall(java.util.function.BiConsumer<String, String> cb) {
+        this.onToolCall = cb;
+    }
 
     /**
      * Register a tool that the LLM can call.
@@ -61,7 +69,14 @@ public class ToolSupport {
      * @return List of tool definition maps ready to send in the API request
      */
     public List<Map<String, Object>> buildToolsJson() {
-        throw new UnsupportedOperationException("TODO: implement buildToolsJson()");
+        return tools.values().stream().map(tool -> Map.of(
+                "type", "function",
+                "function", Map.of(
+                        "name", tool.name(),
+                        "description", tool.description(),
+                        "parameters", tool.parameterSchema()
+                )
+        )).toList();
     }
 
     /**
@@ -105,11 +120,20 @@ public class ToolSupport {
      * @param messages Conversation history (mutated: tool calls and results are added)
      * @return Final assistant response text
      */
-    public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
+    public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) throws IOException {
         var toolsJson = buildToolsJson();
         int maxIterations = 100;
 
-        // TODO
+        for (int i = 0; i < maxIterations; i++) {
+            var choice = client.chatRaw(messages, toolsJson);
+            var finishReason = (String) choice.get("finish_reason");
+
+            if (!"tool_calls".equals(finishReason)) {
+                return extractContent(choice);
+            }
+
+            processToolCalls(choice, messages);
+        }
 
         return "[Tool loop exceeded maximum iterations]";
     }
@@ -142,7 +166,14 @@ public class ToolSupport {
      */
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
         var assistantMessage = Util.asMap(choice.get("message"));
-        // TODO
+        messages.add(assistantMessage);
+
+        var toolCalls = Util.asList(assistantMessage.get("tool_calls"));
+        for (var toolCallObj : toolCalls) {
+            var toolCall = Util.asMap(toolCallObj);
+            var resultMessage = executeToolCall(toolCall);
+            messages.add(resultMessage);
+        }
     }
 
     /**
@@ -175,7 +206,15 @@ public class ToolSupport {
         var function = Util.asMap(toolCall.get("function"));
         var toolName = (String) function.get("name");
         var argumentsJson = (String) function.get("arguments");
-        throw new UnsupportedOperationException("TODO: implement executeToolCall() to call tool '" + toolName + "'");
+
+        String result = callTool(toolName, argumentsJson);
+
+        System.out.println("\n  ⚙ " + toolName + "(" + truncate(argumentsJson, 120) + ")");
+        System.out.println("    → " + truncate(result, 200));
+
+        if (onToolCall != null) onToolCall.accept(toolName, result);
+
+        return Map.of("role", "tool", "tool_call_id", toolCallId, "content", result);
     }
 
     /**
@@ -195,5 +234,11 @@ public class ToolSupport {
             return "Error executing tool '" + toolName + "': " + e.getMessage()
                    + "\nPlease try again with valid arguments.";
         }
+    }
+
+    private static String truncate(String s, int max) {
+        if (s == null) return "";
+        s = s.replace("\n", " ");
+        return s.length() <= max ? s : s.substring(0, max) + "…";
     }
 }

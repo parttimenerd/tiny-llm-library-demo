@@ -89,8 +89,14 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Tool
 
 ## Key Design Decisions
 
+- **API keys per base URL** — `HttpHelper` automatically sends `Authorization: Bearer <key>` when the passed base URL has a key in `~/.config/tiny-llm-library/config.config` (one `<base-url>=<api-key>` per line; `$XDG_CONFIG_HOME` honored, override with `TINY_LLM_CONFIG`). No entry = no auth header, which is all local llama-server needs. A `#token` URL fragment still overrides the config file.
 - **Streaming by default** via `Consumer<String> onToken` callback
 - **No Jackson** — uses femtojson for JSON parsing, manual serialization for output
 - **Reasoning in separate field** — reasoning models return `reasoning_content` as a separate JSON field; no `<think>` parsing needed
+- **Boring plumbing in helpers, interesting logic in the agent** — `util.Commands` (REPL command DSL: `/plan`, `/run`, `/yolo`, `/todos`, `/help`, `exit`/`quit` with aliases and auto-generated help; unknown slash commands rejected locally), `util.Repl` (prompt loop, EOF handling, command dispatch), `CodingTools` (tool registrations; robust arg access that feeds "missing argument" errors back to the model instead of storing nulls) — leaving CodingAgent itself with only the talk-worthy parts: pinned context, plan mode, confirmation policy. CodingAgent is a composition of protected hooks (`onStart`, `createClient`, `createToolSupport`, `buildSystemPrompt`, `registerCommands`, `chat`, `syncConversation`); SkillCodingAgent subclasses it adding only ~100 lines of skill discovery/activation (`.claude/skills/*/SKILL.md`, `skill` tool, `/skill(s)` commands), and since the system prompt is re-synced before every LLM call, skill (de)activation takes effect mid-conversation
 - **Solution files in `solutions/` package** — avoids compilation conflicts with skeletons
-- **Security-first tools** — sandboxed, read-only, no dotfiles, size-limited
+- **Security-first tools** — sandboxed to a root directory, no dotfiles, size- and time-limited; the coding agent additionally gets write tools and a `run` (shell exec) tool so it can build and verify its own work — all confined to the sandbox root with output caps and timeouts. Agent-initiated `run`/`delete` and plan acceptance ask the user for confirmation; `/yolo` toggles auto-approval of everything for autonomous sessions. ToolChatBot's variant of command execution still asks for interactive user confirmation
+
+Write a short, fun and nerdy opening monologue of my talk "Let's create a tiny AI library together, 
+Copilot powered" that I give at GitHub Copilot Dev Day Berlin at adesso SE (as the second talk in the evening). 
+Thank Sandra Ahlgrimm for inviting me and adesso SE for hosting us all.

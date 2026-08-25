@@ -5,7 +5,9 @@ import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Option;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
@@ -46,15 +48,22 @@ public class ChatBot implements Callable<Integer> {
     @Override
     public Integer call() {
         String model = modelSize.getModelId();
-        
         var client = new LLMClient(baseUrl, model, System.out::print);
         var messages = new ArrayList<Map<String, Object>>();
         var scanner = new Scanner(System.in);
 
-        // TODO: implement REPL loop
-        //   Read input → append user message (use LLMClient.user()) → stream response → append assistant message (use LLMClient.assistant()) → repeat
-
-        throw new UnsupportedOperationException("TODO: implement REPL loop");
+        while (true) {
+            System.out.print("\nYou: ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("quit")) {
+                break;
+            }
+            messages.add(LLMClient.user(input));
+            String response = client.chatStream(messages);
+            messages.add(LLMClient.assistant(response));
+            System.out.println();
+        }
+        return 0;
     }
 
     public static void main(String[] args) {

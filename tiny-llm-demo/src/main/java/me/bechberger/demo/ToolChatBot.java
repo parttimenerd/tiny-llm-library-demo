@@ -6,6 +6,7 @@ import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Option;
 import me.bechberger.util.femtoschema.Schemas;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
@@ -61,9 +62,8 @@ public class ToolChatBot implements Callable<Integer> {
      * Implementation: Setup tools → add system message → loop: user input → handleToolLoop → display response
      */
     @Override
-    public Integer call() {
+    public Integer call() throws IOException, InterruptedException {
         String model = modelSize.getModelId();
-
         var client = new LLMClient(baseUrl, model, System.out::print);
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));

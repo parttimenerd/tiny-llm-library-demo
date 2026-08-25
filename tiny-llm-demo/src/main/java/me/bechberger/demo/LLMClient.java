@@ -6,6 +6,7 @@ import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -30,7 +31,7 @@ public class LLMClient {
 
     /**
      * Build message objects for use in chat requests.
-     * Messages follow the OpenAI API format: {"role": "role", "content": "text"}
+     * Messages follow the OpenAI API format: {"role": "user", "content": "text"}
      */
     public static Map<String, Object> user(String content) {
         return Map.of("role", "user", "content", content);
@@ -59,9 +60,8 @@ public class LLMClient {
      * <p>
      * Implementation: Parse JSON → extract "data" list → print each model's "id"
      */
-    public void listModels() {
-        // TODO
-        throw new UnsupportedOperationException("TODO: implement listModels()");
+    public void listModels() throws IOException, InterruptedException {
+         http.get("/v1/models").lines().forEach(System.out::println);
     }
 
     /**
@@ -77,11 +77,10 @@ public class LLMClient {
      * @param messages List of message maps with "role" and "content" keys
      * @return The assistant's response text
      */
-    public String chat(List<Map<String, Object>> messages) {
-        // TODO: implement chat(messages)
-        //   POST /v1/chat/completions with model + messages
-        //   Parse response, return choices[0].message.content
-        throw new UnsupportedOperationException("TODO: implement chat()");
+    public String chat(List<Map<String, Object>> messages) throws IOException, InterruptedException {
+        var request = buildRequest(messages, false, null);
+        var response = http.postJson("/v1/chat/completions", request);
+        return Util.asMap(Util.asList(Util.asMap(JSONParser.parse(response)).get("choices"))).get("message").toString();
     }
 
     /**
@@ -103,8 +102,18 @@ public class LLMClient {
         try {
             var stream = http.postJsonStream("/v1/chat/completions", buildRequest(messages, true, null));
             var reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            // TODO
-            return ""; // return the accumulated response text
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                String token = processSSELine(line);
+                if (token == null) break;
+                if (!token.isEmpty()) {
+                //    onToken.accept(token);
+                    result.append(token);
+                }
+            }
+            return result.toString();
         } catch (Exception e) {
             throw new RuntimeException("Streaming failed", e);
         }

@@ -4,6 +4,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -288,25 +291,49 @@ public class FileTools {
      * @param command Bash command to run (e.g., "find . -name '*.java'")
      * @return Command output (truncated if > 16KB), or error/cancellation message
      */
+    /** Timeout for commands run without confirmation via {@link #run(String)} — long enough for builds. */
+    private static final long EXEC_TIMEOUT_SECONDS = 60;
+
+    /**
+     * Run a bash command in the sandbox root and return its output — no confirmation asked.
+     * <p>
+     * Intended for autonomous agents to build, test and execute artifacts, e.g.
+     * {@code mvn -q package}, {@code java -jar target/app.jar '1+2'}.
+     * Timeout: 60 seconds. Max output: 16KB.
+     *
+     * @param command Bash command to run
+     * @return "Exit N:\n" + command output, or error/timeout message
+     */
+    public String run(String command) {
+        return exec(List.of("bash", "-c", command), EXEC_TIMEOUT_SECONDS);
+    }
+
     public String runCommand(String command) {
         // Prompt user for confirmation
         System.out.print("\n⚠️  Run command: " + command + "\n    Confirm? (y/n): ");
         System.out.flush();
-        
+
         Scanner scanner = new Scanner(System.in);
         String response = scanner.nextLine().trim().toLowerCase();
-        
+
         if (!response.equals("y") && !response.equals("yes")) {
             return "Command cancelled by user.";
         }
+        return exec(List.of("bash", "-c", command), COMMAND_TIMEOUT_SECONDS);
+    }
 
+    /**
+     * Shared process runner: executes in the sandbox root, merges stdout/stderr
+     * (truncated at 16KB), kills after the timeout. Used by run/runMaven/runCommand.
+     */
+    private String exec(List<String> cmd, long timeoutSeconds) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("bash", "-c", command);
+            ProcessBuilder pb = new ProcessBuilder(cmd);
             pb.directory(sandboxRoot.toFile());
             pb.redirectErrorStream(true); // Merge stderr with stdout
 
             Process process = pb.start();
-            
+
             // Read output concurrently to prevent buffer deadlock
             StringBuilder output = new StringBuilder();
             Thread outputReader = new Thread(() -> {
@@ -315,11 +342,8 @@ public class FileTools {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         synchronized (output) {
-                            output.append(line).append("\n");
-                            if (output.length() > MAX_COMMAND_OUTPUT_BYTES) {
-                                output.setLength(MAX_COMMAND_OUTPUT_BYTES);
-                                output.append("\n... (output truncated at ").append(MAX_COMMAND_OUTPUT_BYTES).append(" bytes)");
-                                break;
+                            if (output.length() < MAX_COMMAND_OUTPUT_BYTES) {
+                                output.append(line).append("\n");
                             }
                         }
                     }
@@ -327,30 +351,25 @@ public class FileTools {
                 }
             });
             outputReader.start();
-            
-            boolean completed = process.waitFor(COMMAND_TIMEOUT_SECONDS, java.util.concurrent.TimeUnit.SECONDS);
 
+            boolean completed = process.waitFor(timeoutSeconds, java.util.concurrent.TimeUnit.SECONDS);
             if (!completed) {
                 process.destroyForcibly();
                 outputReader.interrupt();
-                return "Error: command timed out after " + COMMAND_TIMEOUT_SECONDS + " seconds";
+                return "Error: command timed out after " + timeoutSeconds + " seconds";
             }
-            
-            // Wait for output reader to finish
             outputReader.join(1000);
 
-            int exitCode = process.exitValue();
             String result;
             synchronized (output) {
                 result = output.toString().trim();
+                if (output.length() >= MAX_COMMAND_OUTPUT_BYTES) {
+                    result += "\n... (output truncated at " + MAX_COMMAND_OUTPUT_BYTES + " bytes)";
+                }
             }
-            
-            if (exitCode != 0) {
-                return "Exit code " + exitCode + ":\n" + result;
-            }
-            return result.isEmpty() ? "(no output)" : result;
+            return "Exit " + process.exitValue() + ":\n" + (result.isEmpty() ? "(no output)" : result);
         } catch (Exception e) {
-            return "Error running command: " + e.getMessage();
+            return "Error running " + String.join(" ", cmd) + ": " + e.getMessage();
         }
     }
 
@@ -377,5 +396,103 @@ public class FileTools {
     private boolean isHidden(Path p) {
         String name = p.getFileName().toString();
         return name.startsWith(".");
+    }
+
+    // === Write tools ===
+
+    /**
+     * Write content to a file (creates or overwrites), sandboxed to root.
+     */
+    public String writeFile(String path, String content) {
+        try {
+            Path resolved = validatePath(path);
+            Files.createDirectories(resolved.getParent());
+            Files.writeString(resolved, content, StandardCharsets.UTF_8);
+            return "Written: " + path + " (" + content.length() + " chars)";
+        } catch (SecurityException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error writing file: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Create a new file with content, sandboxed to root.
+     * Fails if the file already exists — use {@link #writeFile} to overwrite.
+     */
+    public String createFile(String path, String content) {
+        try {
+            Path resolved = validatePath(path);
+            if (Files.exists(resolved)) {
+                return "Error: file already exists (use write-file to overwrite): " + path;
+            }
+            Files.createDirectories(resolved.getParent());
+            Files.writeString(resolved, content, StandardCharsets.UTF_8);
+            return "Created file: " + path + " (" + content.length() + " chars)";
+        } catch (SecurityException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error creating file: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Create a folder (and any missing parents), sandboxed to root.
+     */
+    public String createFolder(String path) {
+        try {
+            Path resolved = validatePath(path);
+            Files.createDirectories(resolved);
+            return "Created folder: " + path;
+        } catch (SecurityException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error creating folder: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Delete a file or folder, sandboxed to root.
+     * Folders are deleted recursively (all contained files and subfolders).
+     * Refuses to delete the sandbox root itself.
+     */
+    public String delete(String path) {
+        try {
+            Path resolved = validatePath(path);
+            if (!Files.exists(resolved, LinkOption.NOFOLLOW_LINKS)) {
+                return "Error: no such file or folder: " + path;
+            }
+            if (Files.isSameFile(resolved, sandboxRoot)) {
+                return "Error: cannot delete sandbox root";
+            }
+            if (Files.isDirectory(resolved)) {
+                // Materialize the tree first, then delete children before parents.
+                // Symlinks are never followed (the link itself is deleted).
+                try (Stream<Path> walk = Files.walk(resolved)) {
+                    List<Path> entries = walk.sorted(Comparator.reverseOrder()).toList();
+                    for (Path entry : entries) {
+                        Files.delete(entry);
+                    }
+                }
+                return "Deleted folder (and all contents): " + path;
+            }
+            Files.delete(resolved);
+            return "Deleted: " + path;
+        } catch (SecurityException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error deleting: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Run a Maven command in the sandbox root and return its output.
+     * Output is truncated at 16KB. Timeout: 60 seconds.
+     */
+    public String runMaven(String args) {
+        var cmd = new ArrayList<String>();
+        cmd.add("mvn");
+        cmd.addAll(java.util.Arrays.asList(args.strip().split("\\s+")));
+        return exec(cmd, EXEC_TIMEOUT_SECONDS);
     }
 }

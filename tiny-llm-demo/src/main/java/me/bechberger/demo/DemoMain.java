@@ -100,6 +100,7 @@ public final class DemoMain {
                                 Examples:
                                     java -jar tiny-llm-demo.jar ChatBot --model ... --base-url http://localhost:8080
                                     java -jar tiny-llm-demo.jar ToolChatBot --model ... --root .
+                                    java -jar tiny-llm-demo.jar CodingAgent --root . --model fast
                                     java -jar tiny-llm-demo.jar solutions.ChatBot --model ...
 
                                 Class name resolution:

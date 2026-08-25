@@ -17,6 +17,7 @@ This talk uses a local LLM via **llama.cpp** (llama-server) and its **OpenAI-com
 2) Start the server with the launch script (models are cached indefinitely):
 
 ```bash
+cd tiny-llm-demo
 # Start with default fast model (1.7B)
 ./scripts/00-launch-llm.sh
 
