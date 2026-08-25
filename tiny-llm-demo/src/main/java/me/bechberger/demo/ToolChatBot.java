@@ -45,6 +45,12 @@ public class ToolChatBot implements Callable<Integer> {
             defaultValue = ".")
     String root;
 
+    /** Pre-written system prompt - the prompt text itself is not what this demo is about. */
+    private static final String SYSTEM_PROMPT =
+            "You are a helpful assistant with access to sandboxed file tools. " +
+            "Use ls, cat-paged, grep and find-file to explore the sandbox, " +
+            "answer from what you find, and keep replies short.";
+
     /**
      * Main application flow.
      * <p>
@@ -75,7 +81,10 @@ public class ToolChatBot implements Callable<Integer> {
         System.out.println("\nTool Chatbot ready! Model: " + model);
         System.out.println("Sandbox root: " + Path.of(root).toAbsolutePath().normalize());
 
-        // TODO add system message and call repl
+        // TODO live on stage: the conversation - one system message, then the loop
+        //   var messages = new ArrayList<Map<String, Object>>();
+        //   messages.add(LLMClient.system(SYSTEM_PROMPT));
+        //   runREPL(client, toolSupport, messages);
         return 0;
     }
 
@@ -85,41 +94,28 @@ public class ToolChatBot implements Callable<Integer> {
      * Implementation: Build JSON Schema for each tool → register with handler function
      */
     private void registerTools(ToolSupport toolSupport, FileTools fileTools) {
-        // ls tool
+        // the first one verbose, so the schema plumbing is visible...
         var lsSchema = Schemas.object()
                 .required("path", Schemas.string().withDescription("Directory path relative to sandbox"))
                 .toJsonSchema();
         toolSupport.registerTool("ls", "List directory contents, just their names", lsSchema,
                 args -> fileTools.ls((String) args.get("path")));
 
-        // cat-paged tool
-        var catSchema = Schemas.object()
-                .required("path", Schemas.string().withDescription("File path relative to sandbox"))
-                .required("page", Schemas.number().withDescription("Page number, 0-based"))
-                .toJsonSchema();
-        toolSupport.registerTool("cat-paged", "Read file contents, paged", catSchema,
-                args -> fileTools.catPaged((String) args.get("path"), ((Number) args.get("page")).intValue()));
+        // ...then the same pattern, one line per tool (boring parts extracted into CodingTools.register)
+        CodingTools.register(toolSupport, "cat-paged", "Read file contents, paged (4KB per page, 0-based)",
+                args -> fileTools.catPaged((String) args.get("path"), ((Number) args.get("page")).intValue()),
+                "path", "File path relative to sandbox", "page", "Page number, 0-based");
+        CodingTools.register(toolSupport, "grep", "Search for text in a file or directory",
+                args -> fileTools.grep((String) args.get("query"), (String) args.get("path")),
+                "query", "Search query (case-insensitive)", "path", "File or directory relative to sandbox");
+        CodingTools.register(toolSupport, "find-file", "Find all files containing the given text",
+                args -> fileTools.findFiles((String) args.get("query")),
+                "query", "Text to search for (literal, case-insensitive)");
 
-        // grep tool
-        var grepSchema = Schemas.object()
-                .required("query", Schemas.string().withDescription("Search query (case-insensitive)"))
-                .required("path", Schemas.string().withDescription("File path relative to sandbox"))
-                .toJsonSchema();
-        toolSupport.registerTool("grep", "Search for text in a file", grepSchema,
-                args -> fileTools.grep((String) args.get("query"), (String) args.get("path")));
-
-        // find-file tool
-        var findFileSchema = Schemas.object()
-                .required("query", Schemas.string().withDescription("Search text or regex pattern"))
-                .optional("useRegex", Schemas.bool().withDescription("If true, treat query as regex; if false, literal text search (default: false)"))
-                .toJsonSchema();
-        toolSupport.registerTool("find-file", "Find all files containing text or matching a regex pattern", findFileSchema,
-                args -> {
-                    String query = (String) args.get("query");
-                    boolean useRegex = args.containsKey("useRegex") && (Boolean) args.get("useRegex");
-                    return fileTools.findFiles(query, useRegex);
-                });
-        // TODO: run-command tool
+        // TODO live on stage: the run-command tool - shell access with the human in the loop
+        //   CodingTools.register(toolSupport, "run-command", "Run a bash command (asks the user first)",
+        //           args -> fileTools.runCommand((String) args.get("command")),
+        //           "command", "Bash command to run after user confirmation");
     }
 
     /**
@@ -137,7 +133,10 @@ public class ToolChatBot implements Callable<Integer> {
             messages.add(LLMClient.user(input));
 
             System.out.print("\nAssistant: ");
-            // TODO
+            // TODO live on stage: the tool loop + record the reply
+            //   String response = toolSupport.handleToolLoop(client, messages);
+            //   System.out.println(response);
+            //   messages.add(LLMClient.assistant(response));
         }
     }
 

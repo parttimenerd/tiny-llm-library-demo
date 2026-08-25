@@ -1186,18 +1186,15 @@ The LLM reads the schema and generates <OrangeText>matching JSON</OrangeText> wh
 ```java
 // Hand-writing JSON Schema maps is tedious. Use femtoschema:
 var schema = Schemas.object()
-    .description("List directory contents")
-    .required("path", Schemas.string().description("Directory path"))
-    .toMap();
+    .required("path", Schemas.string().withDescription("Directory path relative to sandbox"))
+    .toJsonSchema();
 ```
 
-<!--
 <div class="mt-4 text-lg">
 
 Same JSON Schema, but <OrangeText>type-safe</OrangeText> and <OrangeText>readable</OrangeText>.
 
 </div>
--->
 
 <!--
 **[~29:00]** "Hand-writing JSON Schema gets old fast. femtoschema lets you define schemas from Java records."
@@ -1523,7 +1520,7 @@ public class ToolSupport {
 
     // TODO: registerTool(name, description, schema, handler)
     // TODO: buildToolsJson() → JSON array for the API request
-    // TODO: handleResponse(response):
+    // TODO: handleToolLoop(client, messages):
     //   while finish_reason == "tool_calls":
     //     for each tool_call:
     //       find handler, execute, collect result
@@ -2211,7 +2208,7 @@ messages.add(assistant(response));
 
 <div class="mt-8">
 
-Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `create-folder`, `delete`, `run-maven`.
+Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `create-folder`, `delete`, `run` - any shell command, confirmed by the user.
 
 </div>
 
@@ -2221,23 +2218,24 @@ Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `create-
 
 ---
 
-# run-maven — the key tool
+# "run" — the key tool
 
 ```java
-toolSupport.registerTool("run-maven",
-    "Run a Maven command and return its output",
-    schema("args", "e.g. 'test', 'compile', 'clean install -q'"),
-    args -> fileTools.runMaven((String) args.get("args")));
+// one line per tool - the boring schema plumbing lives in CodingTools.register
+register(ts, "run",
+    "Run a bash command in the project root - use it to build and verify",
+    args -> fileTools.run(str(args, "command")),   // (confirmation elided)
+    "command", "Bash command to execute in the project root");
 ```
 
 <v-click>
 
-The model decides which Maven command to run:
+The model decides which commands to run - bash, not just Maven:
 
 ```
-run-maven("compile")        → fix compile errors first
-run-maven("test")           → check if tests pass
-run-maven("clean install")  → full build
+run("mvn -q package")         → fix compile errors first
+run("mvn test")               → check if tests pass
+run("java -jar target/x.jar '2+3*4'")  → verify the artifact really works
 ```
 
 </v-click>
@@ -2251,7 +2249,7 @@ The model reads the Maven output and decides what to fix next. <b>That's the age
 </v-click>
 
 <!--
-**[~46:00]** "The model chooses the Maven command. It reads the output. It decides what to fix. That's all an agent is."
+**[~46:00]** "The model chooses the shell command. It reads the output. It decides what to fix. That's all an agent is. Registration is one line because we extracted the schema plumbing into a tiny helper."
 -->
 
 ---
@@ -2448,7 +2446,7 @@ You: /plan add a greet() method to Greeter.java and make mvn test pass
 <div class="mt-6">
 
 ```
-Planning mode: read-only tools only (no write-file, no run-maven)
+Planning mode: read-only tools only (no write-file, no run)
   → ls, cat-paged to explore
   → update-plan, todo-add to capture the plan
 ```
@@ -2496,7 +2494,7 @@ messages.set(stateIndex, stateMessage()); // inject current state
 flowchart LR
   U["User input"] --> L["LLM + tools"]
   L -->|"todo-add\ntodo-update\nupdate-plan"| S["AgentState"]
-  L -->|"write-file\nrun-maven\n..."| FS["Filesystem"]
+  L -->|"write-file\nrun\n..."| FS["Filesystem"]
   S -->|"render() injected\nat index 1"| L
 ```
 
