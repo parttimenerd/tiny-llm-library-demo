@@ -83,8 +83,8 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Tool
 
 ## Dependencies
 
-- `me.bechberger.util:femtoschema:0.1.0` — JSON Schema from Java types
-- `me.bechberger.util:femtojson:0.2.1` — tiny JSON parser (transitive)
+- `me.bechberger.util:femtoschema:0.1.2` — JSON Schema from Java types
+- `me.bechberger.util:femtojson:0.4.2` — tiny JSON parser (pinned: 0.2.x mis-parses raw UTF-8 in strings)
 - JDK's `java.net.http.HttpClient` — no third-party HTTP client
 
 ## Key Design Decisions
