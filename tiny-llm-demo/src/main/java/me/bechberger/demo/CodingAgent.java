@@ -379,6 +379,8 @@ public class CodingAgent implements Callable<Integer> {
         System.out.print("\n⚠️  " + action + "\n    Allow? " + (defaultYes ? "[Y/n] " : "[y/N] "));
         if (!scanner.hasNextLine()) return defaultYes; // EOF: stick with the default
         String answer = scanner.nextLine().trim().toLowerCase();
+        if (System.console() == null) System.out.println(answer); // piped: keep logs readable
+        if (System.console() == null) System.out.println(answer); // piped: keep logs readable
         return answer.isEmpty() ? defaultYes : answer.startsWith("y");
     }
 

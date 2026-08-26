@@ -24,6 +24,13 @@
             <version>0.1.2</version>
         </dependency>
         <dependency>
+            <!-- pinned: 0.2.1 (transitive via femtoschema) mis-parses raw UTF-8 in JSON strings
+                 (fixed upstream in 'Fix emoji parsing'); 0.4.2 is correct -->
+            <groupId>me.bechberger.util</groupId>
+            <artifactId>femtojson</artifactId>
+            <version>0.4.2</version>
+        </dependency>
+        <dependency>
             <groupId>me.bechberger.util</groupId>
             <artifactId>femtocli</artifactId>
             <version>0.3.0</version>
