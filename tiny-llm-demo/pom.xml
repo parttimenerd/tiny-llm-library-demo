@@ -24,8 +24,8 @@
             <version>0.1.2</version>
         </dependency>
         <dependency>
-            <!-- pinned: 0.2.1 (transitive via femtoschema) mis-parses raw UTF-8 in JSON strings
-                 (fixed upstream in 'Fix emoji parsing'); 0.4.2 is correct -->
+            <!-- pinned: <= 0.2.2 (transitive via femtoschema) mis-parses raw UTF-8 in JSON strings
+                 (em-dashes arrive as mojibake); fixed in 0.3.0+ ('Fix emoji parsing') -->
             <groupId>me.bechberger.util</groupId>
             <artifactId>femtojson</artifactId>
             <version>0.4.2</version>
