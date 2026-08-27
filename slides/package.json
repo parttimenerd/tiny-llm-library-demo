@@ -12,13 +12,13 @@
     "launch:terminal": "./launch.sh --terminal"
   },
   "dependencies": {
-    "@slidev/cli": "^52.12.0",
-    "@slidev/theme-default": "latest",
     "@codemirror/commands": "^6.10.2",
     "@codemirror/lang-java": "^6.0.2",
     "@codemirror/language": "^6.12.2",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.15",
+    "@slidev/cli": "^52.12.0",
+    "@slidev/theme-default": "latest",
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/addon-search": "^0.16.0",
     "@xterm/addon-web-links": "^0.12.0",
@@ -26,6 +26,7 @@
     "codemirror": "^6.0.2"
   },
   "devDependencies": {
-    "@slidev/cli": "^52.12.0"
+    "@slidev/cli": "^52.12.0",
+    "playwright-chromium": "^1.62.1"
   }
 }

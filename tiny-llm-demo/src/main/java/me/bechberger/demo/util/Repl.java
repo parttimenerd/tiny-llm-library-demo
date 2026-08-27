@@ -436,6 +436,8 @@ public final class Repl {
         /** Pass to {@code LLMClient} as the token callback — prints each token. */
         public final Consumer<String> tokenCallback;
 
+        private Runnable pane = null;
+
         public Builder(String prompt, Scanner scanner) {
             this(prompt, scanner, null);
         }
@@ -462,61 +464,20 @@ public final class Repl {
         }
 
         /**
-         * Wire a {@link ToolSupport} so tool calls trigger the pane rerender for
-         * todo/plan tools.  No-op if no pane is registered yet.
+         * Wire a ToolSupport so the pane rerenders for todo/plan tools.
          */
         public Builder withTools(ToolSupport toolSupport) {
-            // no-op at Builder level; PaneBuilder overrides with pane wiring
+            if (pane != null) {
+                toolSupport.setOnToolCall((name, result) -> {
+                    if (name.startsWith("todo-") || name.equals("update-plan")) pane.run();
+                });
+            }
             return this;
         }
 
-        /** Register a pane supplier; returns a PaneBuilder carrying the pane Runnable. */
-        public PaneBuilder showPane(Supplier<String> pane) {
-            return new PaneBuilder(repl, this, pane);
-        }
-
-        public Repl build() {
-            return repl;
-        }
-    }
-
-    /**
-     * Continuation of {@link Builder} after {@link Builder#showPane} — carries the
-     * pane {@link Runnable} so callers can wire it into tool callbacks.
-     */
-    public static final class PaneBuilder {
-        private final Repl repl;
-        private final Builder builder;
-        public final Runnable pane;
-
-        private PaneBuilder(Repl repl, Builder builder, Supplier<String> paneSupplier) {
-            this.repl = repl;
-            this.builder = builder;
+        /** Register a pane supplier; stores the pane Runnable for use by {@link #withTools}. */
+        public Builder showPane(Supplier<String> paneSupplier) {
             this.pane = repl.showPane(paneSupplier);
-        }
-
-        public PaneBuilder on(String name, String description, Commands.Handler handler, String... aliases) {
-            repl.commands().on(name, description, handler, aliases);
-            return this;
-        }
-
-        /** Start a sub-command block; .end() returns this PaneBuilder. */
-        public SubBuilder<PaneBuilder> sub(String name, String description) {
-            return new SubBuilder<>(name, description, h -> on(name, description, h));
-        }
-
-        public PaneBuilder prompt(Supplier<String> prompt) {
-            repl.setPrompt(prompt);
-            return this;
-        }
-
-        /**
-         * Wire a {@link ToolSupport} so the pane rerenders for todo/plan tools.
-         */
-        public PaneBuilder withTools(ToolSupport toolSupport) {
-            toolSupport.setOnToolCall((name, result) -> {
-                if (name.startsWith("todo-") || name.equals("update-plan")) pane.run();
-            });
             return this;
         }
 
@@ -615,7 +576,7 @@ public final class Repl {
     // ── SubBuilder ────────────────────────────────────────────────────────────
 
     /**
-     * Fluent sub-command builder returned by {@link Builder#sub} / {@link PaneBuilder#sub}.
+     * Fluent sub-command builder returned by {@link Builder#sub}.
      * <pre>{@code
      * builder
      *     .sub("todo", "manage TODOs")

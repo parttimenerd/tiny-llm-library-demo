@@ -46,9 +46,9 @@ public class CodingAgent extends CodingAgentSupport {
         var toolSupport = createToolSupport(fileTools);
 
         registerCommands(builder, client, fileTools, toolSupport, messages);
-        var paneRepl = builder.showPane(() -> state.renderPane());
-        paneRepl.withTools(toolSupport);
-        this.repl = paneRepl.build();
+        builder.showPane(() -> state.renderPane());
+        builder.withTools(toolSupport);
+        this.repl = builder.build();
         startSessionLog();
 
         // Ctrl+C aborts current call; double Ctrl+C within 1.5 s exits.

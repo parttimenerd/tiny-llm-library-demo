@@ -10,5 +10,8 @@ export default defineConfig({
   },
   ssr: {
     noExternal: ['xterm']
+  },
+  optimizeDeps: {
+    exclude: ['fsevents']
   }
 })

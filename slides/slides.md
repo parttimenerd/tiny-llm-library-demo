@@ -15,9 +15,9 @@ mdc: true
 layout: default
 ---
 
-<img src="./img/loc-switchboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30" />
+<img src="./img/wiki-loc-catalog.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
 
-<div class="absolute inset-0 bg-black/55 z-0" />
+<div class="absolute inset-0 bg-black/50 z-0" />
 
 <div class="relative z-10 flex flex-col items-center justify-center h-full">
 
@@ -30,10 +30,9 @@ Johannes Bechberger &nbsp;&nbsp;·&nbsp;&nbsp; SAP SE
 
 </div>
 
-<div class="absolute bottom-2 right-4 text-xs text-gray-600">Image: Library of Congress, LCCN2014718418 · public domain</div>
-
 <!--
 **[~0:00]** Welcome! "We all want to do it — integrate AI into our tools. Today we're going to look behind the curtain and build one from scratch."
+Image: LOC librarians with card catalog, public domain via Wikimedia Commons.
 -->
 
 <JsonOverlay v-if="showOverlay" :json="selectedJson" @close="showOverlay = false" />
@@ -232,7 +231,9 @@ We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 
 layout: center
 ---
 
-<img src="./img/loc-telegraph-poles.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<img src="./img/wiki-agamemnon-cable.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" />
+
+<div class="absolute inset-0 bg-black/40 z-0" />
 
 <div class="relative z-10">
 
@@ -252,10 +253,9 @@ Five curl commands. That's the whole API.
 
 </div>
 
-<div class="absolute bottom-2 right-4 text-xs text-gray-600">Image: umbrellahead56, CC BY 2.0 via Wikimedia Commons</div>
-
 <!--
 **[~6:00]** "Enough slides. Let me prove it." Switch to terminal.
+Image: HMS Agamemnon laying the transatlantic telegraph cable, 1858. Worldwide public domain via Wikimedia Commons.
 -->
 
 ---
@@ -313,7 +313,7 @@ Teaser: <b>Tool calling</b> is just a structured request/response loop on the sa
 <!--
 **[~5:30]** "It's all just REST. Three rows in a table. That's the entire surface we need for everything today."
 "GET /v1/models tells you what's loaded. POST /v1/chat/completions sends a conversation and gets a reply. Add stream:true and you get tokens as they're generated — one HTTP response, kept open, lines arriving as the model thinks."
-"SSE = Server-Sent Events. A browser standard from 2004. The server keeps the connection open and sends lines prefixed with `data:`. Each line is one JSON chunk. The stream ends with `data: [DONE]`. Nothing AI-specific — same tech your browser uses for live notifications."
+"SSE = Server-Sent Events. A web standard, part of HTML5 — first specified by WHATWG in 2004, W3C Recommendation in 2015. The server keeps the connection open and sends lines prefixed with `data:`. Each line is one JSON chunk. The stream ends with `data: [DONE]`. Nothing AI-specific — same tech your browser uses for live notifications."
 "Tool calling, which we'll get to in Part 4, is just another POST to this same endpoint with an extra tools array. Same URL, same JSON, same response shape."
 Don't mention JSON-RPC or MCP here — save it for Part 7.
 -->
@@ -1128,8 +1128,7 @@ The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 </div>
 
 <div>
-<img src="./img/nasa-mission-control.jpg" class="rounded opacity-70 w-full object-cover" style="max-height: 280px;" />
-<div class="text-xs text-gray-600 mt-1 text-right">NASA S70-35368, Apollo 13 mission control · public domain</div>
+<img src="./img/wiki-fallout-shelter-sign.jpg" class="opacity-80 w-full object-cover" style="max-height: 280px;" />
 </div>
 
 </div>
@@ -1137,6 +1136,7 @@ The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 <!--
 **[~33:00]** "Read-only, sandboxed, canonical paths, no dotfiles, size limits."
 "And retry on bad JSON — because the model WILL sometimes return garbage."
+Image: U.S. fallout shelter sign, CC0 via Wikimedia Commons.
 -->
 
 ---
@@ -1281,6 +1281,12 @@ This is the 'aha moment': the model decides which tools to call, in what order, 
 layout: center
 ---
 
+<img src="./img/wiki-hollerith-leiden.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+
+<div class="absolute inset-0 bg-black/45 z-0" />
+
+<div class="relative z-10">
+
 <div class="section-header">Part 6</div>
 
 <div class="big-statement">
@@ -1295,8 +1301,11 @@ Context windows aren't infinite — here's how to manage them.
 
 </div>
 
+</div>
+
 <!--
 **[~38:00]** Transition to the token management section. "Our chatbot works, but what happens after a long conversation? The context window fills up. Let's fix that."
+Image: Hollerith tabulating machines, Leiden, early 20th century. CC0, Erfgoed Leiden en Omstreken via Wikimedia Commons.
 -->
 
 ---
@@ -1812,7 +1821,9 @@ Segue: connects the SSE parsing we just coded to the thinking demo.
 
 # Thinking Mode — When Models Reason Out Loud
 
-<div class="grid grid-cols-2 gap-8 mt-4">
+<img src="./img/wiki-fermi-blackboard.jpg" class="absolute right-0 top-0 h-full object-cover opacity-20 z-0" style="width: 45%;" />
+
+<div class="grid grid-cols-2 gap-8 mt-4 relative z-10">
 
 <div>
 
@@ -1831,9 +1842,6 @@ Let's build something."
 *Wait, I need to make it more fun.*
 ...
 ```
-
-<img src="./img/loc-scientist-chalkboard.jpg" class="rounded mt-4 opacity-60 w-full object-cover" style="max-height:140px;" />
-<div class="text-xs text-gray-600 mt-1">Peter Higgs at chalkboard · Hans G, CC BY-SA 2.0</div>
 
 </div>
 
@@ -1864,8 +1872,8 @@ Small models can spin forever — <b>detect repetition and kill the process</b>.
 | Provider | Parameter | Type |
 |---|---|---|
 | Qwen3 (llama.cpp) | `thinking_budget` | token count |
-| Anthropic Claude | `budget_tokens` | token count |
-| OpenAI o-series | `reasoning_effort` | low/medium/high |
+| Anthropic Claude | `thinking.budget_tokens` | token count |
+| OpenAI o-series | `reasoning.effort` | low/medium/high/max |
 
 ```json
 "chat_template_kwargs": {
@@ -1894,7 +1902,9 @@ Thinking budget caps the token spend proactively — better than detecting loops
 layout: center
 ---
 
-<img src="./img/nasa-mission-control.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+<img src="./img/wiki-apollo10-mission-control.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
+
+<div class="absolute inset-0 bg-black/45 z-0" />
 
 <div class="relative z-10">
 
@@ -1914,10 +1924,9 @@ A chatbot that can actually <OrangeText>change your code</OrangeText>.
 
 </div>
 
-<div class="absolute bottom-2 right-4 text-xs text-gray-600">NASA S70-35368, Apollo 13 mission control · public domain</div>
-
 <!--
 **[~45:00]** "We have a chatbot that can read files. Let's give it write access and Maven — and turn it into a coding agent."
+Image: Apollo 10 Mission Control, NASA, public domain.
 -->
 
 ---
@@ -2369,7 +2378,9 @@ Point out: we sandboxed the agent to its own source tree. It can't escape. It ca
 layout: center
 ---
 
-<img src="./img/nasa-apollo-moon.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<img src="./img/wiki-apollo10-mission-control.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+
+<div class="absolute inset-0 bg-black/50 z-0" />
 
 <div class="relative z-10">
 
@@ -2395,11 +2406,10 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 
 </div>
 
-<div class="absolute bottom-2 right-4 text-xs text-gray-600">NASA AS11-40-5931, Buzz Aldrin on the Moon, July 1969 · public domain</div>
-
 <!--
 **[~48:00]** Third time saying the tagline. "LLM APIs are boring. And that is the *best* news for Java developers."
 "Boring means you can debug it. Boring means you can test it. Boring means it works at 3 AM."
+Image: Apollo 10 Mission Control, NASA, public domain.
 -->
 
 ---
@@ -2414,9 +2424,6 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 - ✅ **Streaming chatbot** — SSE parsing, conversation history
 - ✅ **Tool calling** — JSON Schema, sandbox security, while loop
 - ✅ **Coding agent** — file tools, context management, /plan mode
-
-<img src="./img/nasa-apollo-moon.jpg" class="rounded mt-6 opacity-60 w-full object-cover" style="max-height:180px;" />
-<div class="text-xs text-gray-600 mt-1">NASA AS11-40-5931, Buzz Aldrin on the Moon, July 1969 · public domain</div>
 
 </div>
 
