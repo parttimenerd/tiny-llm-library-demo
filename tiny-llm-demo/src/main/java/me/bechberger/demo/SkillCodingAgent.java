@@ -3,6 +3,7 @@ package me.bechberger.demo;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.demo.util.Skills;
+import me.bechberger.demo.ToolSupport;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 
@@ -54,8 +55,8 @@ public class SkillCodingAgent extends CodingAgent {
 
     @Override
     protected void registerCommands(Repl.Builder builder, LLMClient client, FileTools fileTools,
-                                    List<Map<String, Object>> messages) {
-        super.registerCommands(builder, client, fileTools, messages);
+                                    ToolSupport toolSupport, List<Map<String, Object>> messages) {
+        super.registerCommands(builder, client, fileTools, toolSupport, messages);
         if (availableSkills.isEmpty()) return;
         builder
                 .on("skills", "list available and active (*) skills", args -> printSkills())

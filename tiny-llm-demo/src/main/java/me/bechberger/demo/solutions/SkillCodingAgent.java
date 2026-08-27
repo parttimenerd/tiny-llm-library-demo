@@ -82,8 +82,8 @@ public class SkillCodingAgent extends CodingAgent {
 
     @Override
     protected void registerCommands(Repl.Builder builder, LLMClient client, FileTools fileTools,
-                                    List<Map<String, Object>> messages) {
-        super.registerCommands(builder, client, fileTools, messages);
+                                    ToolSupport toolSupport, List<Map<String, Object>> messages) {
+        super.registerCommands(builder, client, fileTools, toolSupport, messages);
         if (availableSkills.isEmpty()) return;
         builder
                 .on("skills", "list available and active (*) skills", args -> printSkills())

@@ -41,7 +41,11 @@ public class ChatBot implements Callable<Integer> {
         var messages = new ArrayList<Map<String, Object>>();
         var builder = new Repl.Builder("\nYou: ", new Scanner(System.in), messages);
 
-        // TODO: call chatStream, print response (streaming via callback), append assistant message
+        // TODO: createClient, build repl, greet, run loop:
+        // TODO: messages.add(LLMClient.user(input));
+        // TODO: System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
+        // TODO: String response = client.chatStream(messages);
+        // TODO: messages.add(LLMClient.assistant(response));
         throw new UnsupportedOperationException("TODO: live code");
     }
 

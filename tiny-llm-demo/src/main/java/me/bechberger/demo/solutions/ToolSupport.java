@@ -162,6 +162,8 @@ public class ToolSupport {
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
         var assistantMessage = Util.asMap(choice.get("message"));
         messages.add(assistantMessage);
+        // notify after adding the assistant tool_calls message so sidebar shows it immediately
+        if (onToolCall != null) onToolCall.accept("", "");
 
         var toolCalls = Util.asList(assistantMessage.get("tool_calls"));
         for (var toolCall : toolCalls) {

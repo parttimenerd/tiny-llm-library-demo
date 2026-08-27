@@ -6,6 +6,7 @@ import me.bechberger.demo.FileTools;
 import me.bechberger.demo.LLMClient;
 import me.bechberger.demo.ToolSupport;
 import me.bechberger.demo.util.Ansi;
+import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Compactor;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.util.Repl;
@@ -16,6 +17,8 @@ import me.bechberger.femtocli.annotations.Mixin;
 import me.bechberger.femtocli.annotations.Option;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +121,7 @@ public class CodingAgent implements Callable<Integer> {
         var fileTools = new FileTools(rootPath);
         var toolSupport = createToolSupport(fileTools);
 
-        registerCommands(builder, client, fileTools, messages);
+        registerCommands(builder, client, fileTools, toolSupport, messages);
         var paneRepl = builder.showPane(() -> state.renderPane());
         paneRepl.withTools(toolSupport);
         this.repl = paneRepl.build();
@@ -191,10 +194,12 @@ public class CodingAgent implements Callable<Integer> {
 
     /** REPL commands beyond the built-in exit/quit and /help. */
     protected void registerCommands(Repl.Builder builder, LLMClient client, FileTools fileTools,
-                                    List<Map<String, Object>> messages) {
+                                    ToolSupport toolSupport, List<Map<String, Object>> messages) {
         builder
-                .on("state", "show the full conversation (messages truncated to 120 chars)",
-                        args -> printState(messages))
+                .sub("state", "show or edit conversation state")
+                    .on("show", "print messages (truncated)", (Commands.Handler) args -> printState(messages))
+                    .on("edit", "open full API JSON in vim to view/edit", (Commands.Handler) args -> editState(messages, toolSupport))
+                .end(() -> printState(messages))
                 .sub("todo", "manage TODOs (no args → show list)")
                     .on("add",    "<desc> — add a TODO",   (String desc) -> { int id = state.addTodo(desc); System.out.println(Ansi.green("Added #" + id + ": " + desc)); })
                     .on("done",   "<id> — mark completed", (int id) -> state.updateTodo(id, AgentState.Status.COMPLETED))
@@ -296,6 +301,54 @@ public class CodingAgent implements Callable<Integer> {
             System.out.println(label + "  " + Ansi.dim(preview));
         }
         System.out.println(Ansi.divider(58));
+    }
+
+    /**
+     * /state edit — write the full API context (messages + tools) as pretty JSON to a
+     * temp file, open it in nvim/vim, then read it back and replace messages in-place.
+     */
+    private void editState(List<Map<String, Object>> messages, ToolSupport toolSupport) {
+        try {
+            var obj = new java.util.LinkedHashMap<String, Object>();
+            obj.put("messages", new ArrayList<>(messages));
+            obj.put("tools", toolSupport.buildToolsJson());
+            String json = me.bechberger.util.json.PrettyPrinter.prettyPrint(obj);
+
+            Path tmp = Files.createTempFile("llm-state-", ".json");
+            Files.writeString(tmp, json, StandardCharsets.UTF_8);
+
+            // Prefer nvim, then vim, then vi
+            String editor = "vi";
+            for (String e : new String[]{"nvim", "vim", "vi"}) {
+                var p = new ProcessBuilder("which", e).start();
+                p.waitFor();
+                if (p.exitValue() == 0) { editor = e; break; }
+            }
+
+            int exit = new ProcessBuilder(editor, tmp.toString())
+                    .inheritIO()
+                    .start()
+                    .waitFor();
+
+            if (exit != 0) { System.out.println(Ansi.yellow("Editor exited with " + exit + " — no changes applied.")); return; }
+
+            String edited = Files.readString(tmp, StandardCharsets.UTF_8);
+            Files.deleteIfExists(tmp);
+
+            var parsed = (java.util.Map<?, ?>) me.bechberger.util.json.JSONParser.parse(edited);
+            var newMessages = (java.util.List<?>) parsed.get("messages");
+            if (newMessages == null) { System.out.println(Ansi.yellow("No 'messages' key — no changes applied.")); return; }
+
+            messages.clear();
+            for (var m : newMessages) {
+                @SuppressWarnings("unchecked")
+                var map = (Map<String, Object>) m;
+                messages.add(map);
+            }
+            System.out.println(Ansi.green("State updated — " + messages.size() + " messages."));
+        } catch (Exception e) {
+            System.out.println(Ansi.yellow("State edit failed: " + e.getMessage()));
+        }
     }
 
     // ── /plan mode ───────────────────────────────────────────────────────────

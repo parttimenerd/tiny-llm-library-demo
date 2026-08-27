@@ -41,11 +41,14 @@ public class ChatBot implements Callable<Integer> {
         var messages = new ArrayList<Map<String, Object>>();
         var builder = new Repl.Builder("\nYou: ", new Scanner(System.in), messages);
 
-        // @stub: call chatStream, print response (streaming via callback), append assistant message
+        // @stub: createClient, build repl, greet, run loop:
+        // @stub:   messages.add(LLMClient.user(input));
+        // @stub:   System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
+        // @stub:   String response = client.chatStream(messages);
+        // @stub:   messages.add(LLMClient.assistant(response));
         var client = options.createClient(builder);
         var repl = builder.build();
-        repl.greet("ChatBot ready. Model: " + options.resolveModel()
-                + (builder.isSidebarActive() ? " — sidebar active (see key hints in the box)" : ""));
+        repl.greet("ChatBot ready. Model: " + options.resolveModel());
         repl.run(input -> {
             messages.add(LLMClient.user(input));
             System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));

@@ -29,9 +29,6 @@ public class Options {
     @Option(names = {"--thinking-budget"}, description = "Cap thinking tokens (e.g. 1000)", defaultValue = "-1")
     int thinkingBudget;
 
-    @Option(names = {"--verbose"}, description = "Show the live message sidebar")
-    boolean verbose;
-
     /** Resolve --model (name or raw ID) against the config file, falling back to fast. */
     public String resolveModel() {
         return ModelSize.resolveModelId(
@@ -40,23 +37,11 @@ public class Options {
 
     /**
      * Create a fully configured {@link me.bechberger.demo.LLMClient} wired to
-     * {@code builder.tokenCallback} (which already handles pause when --verbose is active).
-     * Also calls {@link Repl.Builder#showSidebar} when --verbose is set.
+     * {@code builder.tokenCallback}.
      */
     public me.bechberger.demo.LLMClient createClient(Repl.Builder builder) {
-        var client = new me.bechberger.demo.LLMClient(baseUrl, resolveModel(), builder.tokenCallback)
+        return new me.bechberger.demo.LLMClient(baseUrl, resolveModel(), builder.tokenCallback)
                 .withThinking(!noThinking)
                 .withThinkingBudget(thinkingBudget);
-        if (verbose) {
-            // context window: detect once, then cache for sidebar footer
-            int[] ctxWindow = { 0 };
-            builder.showSidebar(client::lastUsage, () -> {
-                if (ctxWindow[0] == 0)
-                    ctxWindow[0] = client.getContextWindowSize(
-                            ModelSize.defaultContextWindowFor(resolveModel()));
-                return ctxWindow[0];
-            });
-        }
-        return client;
     }
 }

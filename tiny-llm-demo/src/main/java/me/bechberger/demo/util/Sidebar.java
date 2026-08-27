@@ -46,6 +46,8 @@ public final class Sidebar {
     // ── state ─────────────────────────────────────────────────────────────────
 
     private final List<Map<String, Object>> messages;
+    /** Raw System.out saved before installColumnClamp() — sidebar writes here directly. */
+    private PrintStream rawOut = System.out;
 
     private volatile boolean paused = false;
     private final Object pauseLock = new Object();
@@ -68,6 +70,12 @@ public final class Sidebar {
     private int promptTokens = 0;
     private int completionTokens = 0;
     private int contextWindow = 0;
+
+    // optional: tool names shown in header when tools are registered
+    private List<String> toolNames = List.of();
+
+    /** Set the list of registered tool names to display in the sidebar header. */
+    public void setToolNames(List<String> names) { this.toolNames = List.copyOf(names); }
 
     // ── construction ──────────────────────────────────────────────────────────
 
@@ -303,62 +311,88 @@ public final class Sidebar {
 
     /** Clear the screen and home the cursor — call once on sidebar startup. */
     public void clearScreen() {
-        System.out.print("\033[2J\033[H");
-        System.out.flush();
+        rawOut.print("\033[2J\033[H");
+        rawOut.flush();
         lastDrawnRows = 0;
     }
 
     /**
-     * Replace System.out with a column-clamping stream that wraps output at
-     * leftWidth-1 so it never overflows into the sidebar column.
-     * ANSI escape sequences are passed through without counting toward column width.
+     * Replace System.out with a column-clamping stream that wraps left-column output at
+     * leftWidth-1. Works character-by-character (handles multi-byte UTF-8 and wide chars).
+     * The original stream is saved as rawOut so sidebar rendering bypasses the clamp.
      */
     public void installColumnClamp() {
-        PrintStream original = System.out;
-        System.setOut(new PrintStream(new OutputStream() {
+        rawOut = System.out;
+        final PrintStream orig = rawOut;
+        final java.nio.charset.Charset cs = orig.charset();
+        System.setOut(new PrintStream(orig, true, cs) {
             private int col = 0;
-
-            @Override
-            public void write(int b) {
-                write(new byte[]{(byte) b}, 0, 1);
-            }
+            private boolean inEscape = false;
 
             @Override
             public void write(byte[] buf, int off, int len) {
-                // Process byte-by-byte to track column position.
-                // ANSI escapes (\033[...m or \033[...H etc.) don't advance the cursor.
-                int i = off;
-                int end = off + len;
-                while (i < end) {
-                    byte c = buf[i];
-                    if (c == 0x1B && i + 1 < end && buf[i + 1] == '[') {
-                        // ESC [ ... letter — pass through without column counting
-                        int j = i + 2;
-                        while (j < end && (buf[j] < 0x40 || buf[j] > 0x7E)) j++;
-                        if (j < end) j++; // include the final letter
-                        original.write(buf, i, j - i);
-                        i = j;
-                    } else if (c == '\n' || c == '\r') {
-                        original.write(c);
-                        col = 0;
-                        i++;
-                    } else {
-                        // Before printing, check if we'd overflow
-                        if (col >= leftWidth - 1) {
-                            original.print('\n');
-                            col = 0;
-                        }
-                        original.write(c);
-                        col++;
-                        i++;
-                    }
-                }
-                original.flush();
+                // Decode to chars so we count Unicode code points, not bytes.
+                String s = new String(buf, off, len, cs);
+                write(s);
             }
 
-            @Override public void flush() { original.flush(); }
-            @Override public void close() { original.close(); }
-        }, true, original.charset()));
+            @Override
+            public void print(String s) { write(s); }
+            @Override
+            public void print(char c)   { write(String.valueOf(c)); }
+            @Override
+            public void print(char[] s) { write(new String(s)); }
+
+            private synchronized void write(String s) {
+                var out = new StringBuilder(s.length() + 8);
+                for (int i = 0; i < s.length(); ) {
+                    int cp = s.codePointAt(i);
+                    i += Character.charCount(cp);
+
+                    if (cp == 0x1B) {                          // ESC — start of escape
+                        inEscape = true;
+                        out.appendCodePoint(cp);
+                        continue;
+                    }
+                    if (inEscape) {
+                        out.appendCodePoint(cp);
+                        if (cp >= 0x40 && cp <= 0x7E) inEscape = false; // final byte ends seq
+                        continue;
+                    }
+                    if (cp == '\n' || cp == '\r') {
+                        out.appendCodePoint(cp);
+                        col = 0;
+                        continue;
+                    }
+                    int w = charWidth(cp);
+                    if (col + w >= leftWidth) {           // would overflow into sidebar
+                        out.append('\n');
+                        col = 0;
+                    }
+                    out.appendCodePoint(cp);
+                    col += w;
+                }
+                orig.print(out.toString());
+                orig.flush();
+            }
+
+            /** Visible width of a code point: 2 for CJK/wide, 0 for combining, 1 otherwise. */
+            private int charWidth(int cp) {
+                // Box-drawing (U+2500-U+257F) and block elements (U+2580-U+259F) are 1-wide in most terminals
+                if (cp >= 0x2500 && cp <= 0x259F) return 1;
+                int type = Character.getType(cp);
+                if (type == Character.NON_SPACING_MARK || type == Character.ENCLOSING_MARK
+                    || type == Character.COMBINING_SPACING_MARK) return 0;
+                // Wide CJK block (rough check)
+                if (cp >= 0x1100 && (cp <= 0x115F || cp == 0x2329 || cp == 0x232A
+                    || (cp >= 0x2E80 && cp <= 0x303E) || (cp >= 0x3040 && cp <= 0xA4CF)
+                    || (cp >= 0xAC00 && cp <= 0xD7A3) || (cp >= 0xF900 && cp <= 0xFAFF)
+                    || (cp >= 0xFE10 && cp <= 0xFE19) || (cp >= 0xFE30 && cp <= 0xFE6F)
+                    || (cp >= 0xFF00 && cp <= 0xFF60) || (cp >= 0xFFE0 && cp <= 0xFFE6)
+                    || (cp >= 0x1F300 && cp <= 0x1F9FF))) return 2;
+                return 1;
+            }
+        });
     }
 
     /** Reset the draw anchor so the next redraw() starts from the current cursor position.
@@ -390,8 +424,8 @@ public final class Sidebar {
             }
 
             sb.append(Ansi.CURSOR_RESTORE);
-            System.out.print(sb);
-            System.out.flush();
+            rawOut.print(sb);
+            rawOut.flush();
             lastDrawnRows = rows.size();
         }
     }
