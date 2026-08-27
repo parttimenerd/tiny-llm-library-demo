@@ -13,5 +13,10 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['fsevents']
+  },
+  build: {
+    rollupOptions: {
+      external: ['fsevents']
+    }
   }
 })
