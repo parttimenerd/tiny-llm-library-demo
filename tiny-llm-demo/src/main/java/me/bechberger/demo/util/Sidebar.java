@@ -1,5 +1,7 @@
 package me.bechberger.demo.util;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -298,6 +300,66 @@ public final class Sidebar {
     }
 
     // ── rendering ─────────────────────────────────────────────────────────────
+
+    /** Clear the screen and home the cursor — call once on sidebar startup. */
+    public void clearScreen() {
+        System.out.print("\033[2J\033[H");
+        System.out.flush();
+        lastDrawnRows = 0;
+    }
+
+    /**
+     * Replace System.out with a column-clamping stream that wraps output at
+     * leftWidth-1 so it never overflows into the sidebar column.
+     * ANSI escape sequences are passed through without counting toward column width.
+     */
+    public void installColumnClamp() {
+        PrintStream original = System.out;
+        System.setOut(new PrintStream(new OutputStream() {
+            private int col = 0;
+
+            @Override
+            public void write(int b) {
+                write(new byte[]{(byte) b}, 0, 1);
+            }
+
+            @Override
+            public void write(byte[] buf, int off, int len) {
+                // Process byte-by-byte to track column position.
+                // ANSI escapes (\033[...m or \033[...H etc.) don't advance the cursor.
+                int i = off;
+                int end = off + len;
+                while (i < end) {
+                    byte c = buf[i];
+                    if (c == 0x1B && i + 1 < end && buf[i + 1] == '[') {
+                        // ESC [ ... letter — pass through without column counting
+                        int j = i + 2;
+                        while (j < end && (buf[j] < 0x40 || buf[j] > 0x7E)) j++;
+                        if (j < end) j++; // include the final letter
+                        original.write(buf, i, j - i);
+                        i = j;
+                    } else if (c == '\n' || c == '\r') {
+                        original.write(c);
+                        col = 0;
+                        i++;
+                    } else {
+                        // Before printing, check if we'd overflow
+                        if (col >= leftWidth - 1) {
+                            original.print('\n');
+                            col = 0;
+                        }
+                        original.write(c);
+                        col++;
+                        i++;
+                    }
+                }
+                original.flush();
+            }
+
+            @Override public void flush() { original.flush(); }
+            @Override public void close() { original.close(); }
+        }, true, original.charset()));
+    }
 
     /** Reset the draw anchor so the next redraw() starts from the current cursor position.
      *  Call this before each new LLM turn begins (content will push the cursor down). */

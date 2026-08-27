@@ -290,6 +290,8 @@ public final class Repl {
             if (messages == null) return this;
             sidebar = new Sidebar(messages);
             if (!sidebar.isUsable()) { sidebar = null; return this; }
+            sidebar.clearScreen();
+            sidebar.installColumnClamp();
 
             final Sidebar sb = sidebar;
             repl.sidebar = sb;  // give run() loop access for cooked/raw toggling
