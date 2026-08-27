@@ -16,7 +16,8 @@ Reset command before each demo: `bash scripts/reset-live-coding.sh && mvn -q pac
 1. `cd tiny-llm-demo && mvn -q package` — fat JAR must be fresh
 2. Verify endpoint: `java -jar target/tiny-llm-demo.jar solutions.ChatBot --base-url gardener`
    → should greet with "ChatBot ready. Model: kimi-k3"
-3. Font size up, terminal full-screen, slides on second display
+3. `bash scripts/reset-live-coding.sh` — restore ToolSupport stubs
+4. Font size up, terminal full-screen, slides on second display
 
 ---
 
@@ -120,6 +121,8 @@ return 0;
 ```bash
 mvn -q package
 java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
+# or with live message sidebar:
+java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener --verbose
 ```
 Ask: *"Write a short, fun opening monologue for a talk called 'Let's create a tiny LLM library together' at JavaZone"*
 
@@ -151,6 +154,8 @@ Six gaps — let Copilot generate, then walk through:
 ```bash
 mvn -q package
 java -jar target/tiny-llm-demo.jar ToolChatBot --base-url gardener
+# or with live message sidebar:
+java -jar target/tiny-llm-demo.jar ToolChatBot --base-url gardener --verbose
 ```
 Try:
 - *"What files are in this project?"* — watch it call `ls`, then `read-file`
@@ -183,6 +188,8 @@ Transport: stdio or HTTP+SSE. Protocol: JSON-RPC 2.0. Capabilities: Tools, Resou
 
 ```bash
 java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener
+# with sidebar:
+java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener --verbose
 ```
 
 Type `/yolo` then: *"Build a small calculator app with Maven in a subfolder"*
@@ -208,6 +215,18 @@ Skills live in `.claude/skills/<name>/SKILL.md`. Use `/skills` to list, `/skill 
 
 ---
 
+### Available flags (all commands)
+
+| Flag | Effect |
+|------|--------|
+| `--base-url <name\|url>` | endpoint — `gardener` or raw URL |
+| `--model <id>` | override model (default from config) |
+| `--verbose` | show live message sidebar |
+| `--no-thinking` | disable reasoning mode |
+| `--thinking-budget <n>` | cap thinking tokens |
+
+---
+
 ### Part 10 — Wrap-up (50 min)  ·  slides only
 
 Show the "realistic way" — give Copilot the full spec and watch it generate a Kotlin equivalent.
@@ -224,6 +243,7 @@ Final show of hands: *"Who thinks they could implement this themselves now?"*
 - [ ] Slides open on second display, presenter view on
 - [ ] Terminal font ~18pt, window maximised
 - [ ] `~/.config/tiny-llm-library/config.config` has valid `gardener.*` entries
+- [ ] Optional: test `--verbose` flag to confirm sidebar renders on your terminal width
 
 ---
 
