@@ -668,6 +668,7 @@ public final class Sidebar {
         var current = new StringBuilder();
         int visLen = 0;
         String activeAnsi = ""; // last non-reset ANSI code seen — carry to continuation lines
+        boolean firstSegment = true; // true for the original line start; false after a wrap
 
         for (var tok : tokens) {
             if (tok.ansi) {
@@ -676,9 +677,13 @@ public final class Sidebar {
                 continue;
             }
             if (tok.space) {
-                if (visLen > 0 && visLen + tok.text.length() <= width) {
-                    current.append(tok.text);
-                    visLen += tok.text.length();
+                // preserve leading indent on the original line start; skip on continuation lines
+                boolean leading = visLen == 0;
+                if (!leading || firstSegment) {
+                    if (visLen + tok.text.length() <= width) {
+                        current.append(tok.text);
+                        visLen += tok.text.length();
+                    }
                 }
                 continue;
             }
@@ -692,6 +697,7 @@ public final class Sidebar {
                     out.add(current.toString());
                     current.setLength(0);
                     visLen = 0;
+                    firstSegment = false;
                     if (!activeAnsi.isEmpty()) current.append(activeAnsi);
                     room = width;
                 }
@@ -710,6 +716,7 @@ public final class Sidebar {
                     out.add(current.toString());
                     current.setLength(0);
                     visLen = 0;
+                    firstSegment = false;
                     if (!activeAnsi.isEmpty()) current.append(activeAnsi);
                 }
             }
