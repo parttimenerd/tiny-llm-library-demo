@@ -1,9 +1,11 @@
 package me.bechberger.demo;
 
-import me.bechberger.demo.util.ModelSize;
+import me.bechberger.demo.LLMClient;
+import me.bechberger.demo.util.Ansi;
+import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
-import me.bechberger.femtocli.annotations.Option;
+import me.bechberger.femtocli.annotations.Mixin;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -23,19 +25,8 @@ import java.util.concurrent.Callable;
 @Command(name = "chatbot", description = "A simple streaming chatbot", version = "1.0.0")
 public class ChatBot implements Callable<Integer> {
 
-    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B) (default: ${DEFAULT-VALUE})",
-            defaultValue = "fast")
-    ModelSize modelSize;
-
-    @Option(names = {"-u", "--base-url"}, description = "LLM API base URL (default: ${DEFAULT-VALUE})",
-            defaultValue = "http://localhost:8080")
-    String baseUrl;
-
-    @Option(names = {"--no-thinking"}, description = "Disable thinking/reasoning mode")
-    boolean noThinking;
-
-    @Option(names = {"--thinking-budget"}, description = "Cap thinking tokens (e.g. 1000)", defaultValue = "-1")
-    int thinkingBudget;
+    @Mixin
+    Options options;
 
     /**
      * Main REPL loop.
@@ -47,28 +38,11 @@ public class ChatBot implements Callable<Integer> {
      */
     @Override
     public Integer call() {
-        String model = modelSize.getModelId();
-
-        var client = new LLMClient(baseUrl, model, System.out::print)
-                .withThinking(!noThinking)
-                .withThinkingBudget(thinkingBudget);
         var messages = new ArrayList<Map<String, Object>>();
-        var scanner = new Scanner(System.in);
+        var builder = new Repl.Builder("\nYou: ", new Scanner(System.in), messages);
 
-        while (true) {
-            System.out.print("\nYou: ");
-            if (!scanner.hasNextLine()) {
-                return 0;
-            }
-            String input = scanner.nextLine().trim();
-            if (input.isEmpty()) continue;
-
-            messages.add(LLMClient.user(input));
-
-            System.out.print("\nAssistant: ");
-            // TODO: call chatStream, print response (streaming via callback), append assistant message
-            throw new UnsupportedOperationException("TODO: live code");
-        }
+        // TODO: call chatStream, print response (streaming via callback), append assistant message
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     public static void main(String[] args) {

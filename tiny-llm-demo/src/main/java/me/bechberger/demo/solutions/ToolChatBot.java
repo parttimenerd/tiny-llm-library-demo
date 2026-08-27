@@ -46,7 +46,6 @@ public class ToolChatBot implements Callable<Integer> {
 
         var builder = new Repl.Builder("\nYou: ", new Scanner(System.in), messages);
         var client = options.createClient(builder);
-        String model = client.detectServerModelId();
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));
 
@@ -56,7 +55,7 @@ public class ToolChatBot implements Callable<Integer> {
         builder.withTools(toolSupport);
 
         var repl = builder.build();
-        repl.greet("Tool Chatbot ready. Model: " + model
+        repl.greet("Tool Chatbot ready. Model: " + options.resolveModel()
                 + (builder.isSidebarActive() ? " — sidebar active (see key hints in the box)" : ""));
         repl.run(input -> {
             messages.add(LLMClient.user(input));

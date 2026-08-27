@@ -5,15 +5,14 @@ import me.bechberger.demo.CodingTools;
 import me.bechberger.demo.FileTools;
 import me.bechberger.demo.LLMClient;
 import me.bechberger.demo.ToolSupport;
-import me.bechberger.demo.http.Config;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Compactor;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.demo.util.SessionLog;
-import me.bechberger.demo.util.Sidebar;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.femtocli.annotations.Mixin;
 import me.bechberger.femtocli.annotations.Option;
 
 import java.io.IOException;
@@ -50,12 +49,8 @@ public class CodingAgent implements Callable<Integer> {
 
     // ── femtocli options ─────────────────────────────────────────────────────
 
-    @Option(names = {"-m", "--model"}, description = "Model: enum name (fast/medium/slow/kimi_k3/…) or raw model ID like kimi-k3 (default: endpoint's model from config, else fast)")
-    String model;
-
-    @Option(names = {"-u", "--base-url"}, description = "LLM endpoint: a name from the config file (e.g. 'gardener'), a URL, or url#token (default: ${DEFAULT-VALUE})",
-            defaultValue = "http://localhost:8080")
-    String baseUrl;
+    @Mixin
+    Options options;
 
     @Option(names = {"--max-tokens"}, description = "Compact the conversation above this many prompt tokens (default: auto = 80%% of the model's context window)",
             defaultValue = "0")
@@ -70,15 +65,6 @@ public class CodingAgent implements Callable<Integer> {
     @Option(names = {"-r", "--root"}, description = "Project root directory (default: ${DEFAULT-VALUE})",
             defaultValue = ".")
     protected String root;
-
-    @Option(names = {"--no-thinking"}, description = "Disable thinking/reasoning mode")
-    boolean noThinking;
-
-    @Option(names = {"--thinking-budget"}, description = "Cap thinking tokens (e.g. 1000)", defaultValue = "-1")
-    int thinkingBudget;
-
-    @Option(names = {"--verbose"}, description = "Show the live message sidebar")
-    boolean verbose;
 
     // ── runtime state ────────────────────────────────────────────────────────
 
@@ -105,8 +91,8 @@ public class CodingAgent implements Callable<Integer> {
     /** Set once the REPL is built in {@link #call()} — used by confirmPlan for prompting. */
     private Repl repl;
 
-    /** Non-null when --verbose is active and the terminal is wide enough. */
-    private Sidebar sidebar;
+    /** True when --verbose was requested and the terminal is wide enough to show the sidebar. */
+    private boolean sidebarActive = false;
 
     /** Index into messages[] where the pinned state message lives, or -1 if not yet inserted. */
     private int stateMessageIndex = -1;
@@ -117,28 +103,25 @@ public class CodingAgent implements Callable<Integer> {
     // ── main loop: a small composition of overridable hooks ──────────────────
 
     @Override
-    public Integer call() throws IOException, InterruptedException {
+    public Integer call() {
         onStart();
-        var client = createClient();
-        compactor = createCompactor(client);
-        var fileTools = new FileTools(Path.of(root));
-        var toolSupport = createToolSupport(fileTools);
-
+        var rootPath = Path.of(root).toAbsolutePath().normalize();
+        try { java.nio.file.Files.createDirectories(rootPath); } catch (Exception ignored) {}
         var messages = new ArrayList<Map<String, Object>>();
         messages.add(LLMClient.system(buildSystemPrompt()));
 
-        var builder = new Repl.Builder("\n" + Ansi.bold(Ansi.blue("You: ")), scanner)
+        var builder = new Repl.Builder("\n" + Ansi.bold(Ansi.blue("You: ")), scanner, messages)
                 .prompt(() -> "\n" + approval.badge() + Ansi.bold(Ansi.blue("You: ")));
+        var client = createClient(builder);
+        sidebarActive = builder.isSidebarActive();
+        compactor = createCompactor(client);
+        var fileTools = new FileTools(rootPath);
+        var toolSupport = createToolSupport(fileTools);
+
         registerCommands(builder, client, fileTools, messages);
         var paneRepl = builder.showPane(() -> state.renderPane());
-        // wire the pane into tool calls too — todos update mid-turn
-        toolSupport.setOnToolCall((toolName, result) -> {
-            if (toolName.startsWith("todo-") || toolName.equals("update-plan")) {
-                paneRepl.pane.run();
-            }
-        });
-        var repl = paneRepl.build();
-        this.repl = repl;
+        paneRepl.withTools(toolSupport);
+        this.repl = paneRepl.build();
         startSessionLog();
 
         // Ctrl+C during an LLM call: interrupt the current thread so the HTTP call unblocks
@@ -162,34 +145,23 @@ public class CodingAgent implements Callable<Integer> {
     /** Hook for subclasses: runs once before the client, tools and commands are created. */
     protected void onStart() {}
 
-    protected LLMClient createClient() {
-        var client = new LLMClient(baseUrl, resolveModel(), System.out::print)
-                .withThinking(!noThinking)
-                .withThinkingBudget(thinkingBudget);
-        model = client.detectServerModelId();
-        return client;
+    protected LLMClient createClient(Repl.Builder builder) {
+        return options.createClient(builder);
     }
 
     /** --model, else the endpoint's default model from the config file, else server-detected, else {@link ModelSize#FAST}. */
     protected String resolveModel() {
-        return ModelSize.resolveModelId(model != null ? model
-                : Config.load().modelFor(baseUrl, ModelSize.FAST.getModelId()));
+        return options.resolveModel();
     }
 
     protected String greeting() {
         return "Coding agent ready. Model: " + resolveModel()
-                + " (compacting above " + compactor.threshold() + " prompt tokens)"
-                + " - project root: " + Path.of(root).toAbsolutePath().normalize();
+                + " — root: " + Path.of(root).toAbsolutePath().normalize()
+                + (sidebarActive ? " — sidebar active (see key hints in the box)" : "");
     }
 
-    /**
-     * Compaction trigger: above 80% of the model's context window (auto-detected via
-     * GET /v1/models, falling back to ModelSize defaults), or the --max-tokens override.
-     * Real token-usage data drives it - no character estimates.
-     */
     protected Compactor createCompactor(LLMClient client) {
-        String model = resolveModel();
-        int contextWindow = client.getContextWindowSize(ModelSize.defaultContextWindowFor(model));
+        int contextWindow = client.getContextWindowSize(ModelSize.defaultContextWindowFor(resolveModel()));
         int threshold = maxTokens > 0 ? maxTokens : (int) (contextWindow * 0.8);
         return new Compactor(threshold, 6);
     }
@@ -228,7 +200,7 @@ public class CodingAgent implements Callable<Integer> {
                     .on("done",   "<id> — mark completed", (int id) -> state.updateTodo(id, AgentState.Status.COMPLETED))
                     .on("undone", "<id> — mark pending",   (int id) -> state.updateTodo(id, AgentState.Status.PENDING))
                     .on("del",    "<id> — remove",         (int id) -> state.removeTodo(id))
-                .end(this::printTodos)
+                .end(() -> { if (state.isEmpty()) System.out.println(Ansi.dim("(no plan or TODOs yet)")); })
                 .on("plan", "enter planning mode for a goal: /plan <goal>",
                         args -> handlePlanCommand(args, client, messages))
                 .on("run", "execute a shell command in the project, output shared with the agent: /run <command>",
@@ -256,7 +228,7 @@ public class CodingAgent implements Callable<Integer> {
      * TODO: live code
      */
     protected void chat(LLMClient client, ToolSupport toolSupport,
-                        List<Map<String, Object>> messages, String input) throws IOException {
+                        List<Map<String, Object>> messages, String input) throws Exception {
         // TODO: live code
         throw new UnsupportedOperationException("TODO: live code");
     }
@@ -356,11 +328,15 @@ public class CodingAgent implements Callable<Integer> {
     }
 
     private void compactNow(LLMClient client, List<Map<String, Object>> messages) {
+        System.out.println(Ansi.dim("[compact] summarizing " + messages.size() + " messages…"));
         var outcome = compactor.compactNow(client, messages);
-        if (outcome.compacted()) stateMessageIndex = -1;
-        System.out.println(outcome.compacted()
-                ? "[compact] " + outcome.messagesBefore() + " -> " + outcome.messagesAfter() + " messages"
-                : "Nothing to compact yet (" + messages.size() + " messages).");
+        if (outcome.compacted()) {
+            stateMessageIndex = -1;
+            System.out.println(Ansi.dim("[compact] done — " + outcome.messagesBefore()
+                    + " → " + outcome.messagesAfter() + " messages"));
+        } else {
+            System.out.println(Ansi.dim("[compact] nothing to compact (" + messages.size() + " messages)."));
+        }
     }
 
     private void clearConversation(List<Map<String, Object>> messages) {
@@ -411,7 +387,7 @@ public class CodingAgent implements Callable<Integer> {
         return false;
     }
 
-    /** — execute a shell command just like the agent's own "run" tool,
+    /** Execute a shell command just like the agent's own "run" tool,
      * print the output, and add it to the conversation so the agent can react to it.
      */
     private void runForUser(String command, FileTools fileTools, List<Map<String, Object>> messages) {

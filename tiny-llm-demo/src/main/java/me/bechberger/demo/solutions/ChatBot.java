@@ -53,8 +53,8 @@ public class ChatBot implements Callable<Integer> {
             messages.add(LLMClient.assistant(response));
             System.out.println();
         });
-        // @end
         return 0;
+        // @end
     }
 
     public static void main(String[] args) {

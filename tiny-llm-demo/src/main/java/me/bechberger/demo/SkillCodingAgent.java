@@ -113,7 +113,13 @@ public class SkillCodingAgent extends CodingAgent {
     }
 
     public static void main(String[] args) {
-        System.exit(FemtoCli.run(new SkillCodingAgent(), args));
+        try {
+            System.exit(FemtoCli.run(new SkillCodingAgent(), args));
+        } catch (NoClassDefFoundError e) {
+            // The agent rebuilt the JAR during this session — the running JVM still has the old classes.
+            System.out.println("\n[JAR rebuilt — run the command again to use the updated version.]");
+            System.exit(0);
+        }
     }
 }
 

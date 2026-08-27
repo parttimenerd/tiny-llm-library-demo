@@ -146,9 +146,7 @@ public class CodingAgent implements Callable<Integer> {
     protected void onStart() {}
 
     protected LLMClient createClient(Repl.Builder builder) {
-        var client = options.createClient(builder);
-        options.model = client.detectServerModelId();
-        return client;
+        return options.createClient(builder);
     }
 
     /** --model, else the endpoint's default model from the config file, else server-detected, else {@link ModelSize#FAST}. */

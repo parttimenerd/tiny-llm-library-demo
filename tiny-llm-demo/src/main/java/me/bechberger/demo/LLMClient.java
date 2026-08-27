@@ -32,7 +32,7 @@ public class LLMClient {
     }
 
     private boolean thinking = true;
-    private int thinkingBudget = -1; // -1 = unlimited
+    private int thinkingBudget = -1;
 
     public LLMClient(String baseUrl, String model, Consumer<String> onToken) {
         this.http = new HttpHelper(baseUrl);
@@ -114,11 +114,8 @@ public class LLMClient {
      */
     public String chat(List<Map<String, Object>> messages) {
         try {
-            var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, null))));
-            lastUsage = parseTokenUsage(response);
-            var choice = Util.asMap(Util.asList(response.get("choices")).getFirst());
-            Object content = Util.asMap(choice.get("message")).get("content");
-            return content != null ? String.valueOf(content) : "";
+            // TODO: POST /v1/chat/completions → parse JSON → return choices[0].message.content
+            throw new UnsupportedOperationException("TODO: live code");
         } catch (Exception e) {
             throw new RuntimeException("Chat failed", e);
         }
@@ -142,12 +139,8 @@ public class LLMClient {
             var result = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                String token = processSSELine(line);
-                if (token == null) break;  // [DONE]
-                if (!token.isEmpty()) {
-                    onToken.accept(token);
-                    result.append(token);
-                }
+                    // TODO: processSSELine → skip empty/null([DONE]) → call onToken, append to result
+                    throw new UnsupportedOperationException("TODO: live code");
             }
             return result.toString();
         } catch (Exception e) {
@@ -157,27 +150,12 @@ public class LLMClient {
 
     /**
      * Process one SSE line.
-     * Return token string, "" if no content/non-data line, null if [DONE].
-     * Also captures usage from the final chunk when the server sends it.
+     * <p>
+     * Return: token string, "" if no content/non-data line, null if [DONE]
      */
     private String processSSELine(String line) throws Exception {
-        if (line == null || !line.startsWith("data: ")) return "";
-        String data = line.substring(6).trim();
-        if ("[DONE]".equals(data)) return null;
-        var parsed = Util.asMap(JSONParser.parse(data));
-        // capture usage if the server sends it in the final chunk
-        if (parsed.containsKey("usage")) {
-            var u = parseTokenUsage(parsed);
-            if (u != null) lastUsage = u;
-        }
-        var choices = Util.asList(parsed.get("choices"));
-        if (choices.isEmpty()) return "";
-        var choiceMap = Util.asMap(choices.get(0));
-        var deltaObj = choiceMap.get("delta");
-        if (!(deltaObj instanceof java.util.Map)) return "";
-        var delta = Util.asMap(deltaObj);
-        var content = delta.get("content");
-        return content != null ? String.valueOf(content) : "";
+        // TODO: skip non-"data: " lines; strip prefix; return null for "[DONE]"; parse JSON → delta.content
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     /**
@@ -225,28 +203,17 @@ public class LLMClient {
         try {
             for (var m : Util.asList(Util.asMap(JSONParser.parse(http.get("/v1/models"))).get("data"))) {
                 var modelMap = Util.asMap(m);
-                if (modelMap.containsKey("meta")) {
+                if (model.equals(modelMap.get("id")) && modelMap.containsKey("meta")) {
                     var nCtx = Util.asMap(modelMap.get("meta")).get("n_ctx_train");
-                    if (nCtx instanceof Number n) return n.intValue();
+                    if (nCtx instanceof Number n) {
+                        return n.intValue();
+                    }
                 }
             }
         } catch (Exception e) {
             System.err.println("Warning: could not detect context window size: " + e.getMessage());
         }
         return defaultValue;
-    }
-
-    /**
-     * Return the model ID reported by the server (first entry in GET /v1/models).
-     * llama-server returns the filename, not the HF repo — callers that need a
-     * human-readable name should prefer the configured model string instead.
-     */
-    public String detectServerModelId() {
-        try {
-            var data = Util.asList(Util.asMap(JSONParser.parse(http.get("/v1/models"))).get("data"));
-            if (!data.isEmpty()) return String.valueOf(Util.asMap(data.get(0)).get("id"));
-        } catch (Exception ignored) {}
-        return model;
     }
 
     /**
@@ -266,10 +233,7 @@ public class LLMClient {
             if (thinkingBudget > 0) tkw.put("thinking_budget", thinkingBudget);
             req.put("chat_template_kwargs", tkw);
         }
-        if (stream) {
-            req.put("stream", true);
-            req.put("stream_options", Map.of("include_usage", true));
-        }
+        if (stream) req.put("stream", true);
         if (tools != null && !tools.isEmpty()) {
             req.put("tools", tools);
             req.put("tool_choice", "auto");

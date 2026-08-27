@@ -553,7 +553,6 @@ public final class Sidebar {
                     var fn = (Map<?, ?>) tm.get("function");
                     if (fn == null) continue;
                     sb.append("⚙ ").append(fn.get("name")).append("\n");
-                    // pretty-print each arg on its own indented line (no ANSI — wordWrap strips it)
                     String argsJson = (String) fn.get("arguments");
                     if (argsJson != null && !argsJson.isBlank()) {
                         var pat = java.util.regex.Pattern.compile("\"([^\"]+)\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"");
@@ -622,7 +621,10 @@ public final class Sidebar {
                 pos = m.end();
             } else {
                 // visible character
-                if (vis >= cap) { sb.append('…'); return sb.toString(); }
+                if (vis >= cap) {
+                    sb.append('…').append(ESC_RESET); // reset so box border after is not colored
+                    return sb.toString();
+                }
                 sb.append(s.charAt(pos));
                 vis++;
                 pos++;

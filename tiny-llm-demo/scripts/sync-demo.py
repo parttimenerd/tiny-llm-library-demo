@@ -35,6 +35,7 @@ PAIRS = [
     ("ToolChatBot.java",  "ToolChatBot.java"),
     ("ChatBot.java",      "ChatBot.java"),
     ("LLMClient.java",    "LLMClient.java"),
+    ("Options.java",      "Options.java"),
     # ToolSupport.java: managed by reset-live-coding.sh
 ]
 
