@@ -8,6 +8,9 @@ import me.bechberger.demo.ToolSupport;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Compactor;
+import me.bechberger.util.json.CompactPrinter;
+import me.bechberger.util.json.JSONParser;
+import me.bechberger.util.json.PrettyPrinter;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.demo.util.SessionLog;
@@ -312,7 +315,8 @@ public class CodingAgent implements Callable<Integer> {
             var obj = new java.util.LinkedHashMap<String, Object>();
             obj.put("messages", new ArrayList<>(messages));
             obj.put("tools", toolSupport.buildToolsJson());
-            String json = me.bechberger.util.json.PrettyPrinter.prettyPrint(obj);
+            // CompactPrinter → JSONParser → PrettyPrinter: proper round-trip JSON
+            String json = PrettyPrinter.prettyPrint(JSONParser.parse(CompactPrinter.compactPrint(obj)));
 
             Path tmp = Files.createTempFile("llm-state-", ".json");
             Files.writeString(tmp, json, StandardCharsets.UTF_8);
@@ -335,7 +339,7 @@ public class CodingAgent implements Callable<Integer> {
             String edited = Files.readString(tmp, StandardCharsets.UTF_8);
             Files.deleteIfExists(tmp);
 
-            var parsed = (java.util.Map<?, ?>) me.bechberger.util.json.JSONParser.parse(edited);
+            var parsed = (java.util.Map<?, ?>) JSONParser.parse(edited);
             var newMessages = (java.util.List<?>) parsed.get("messages");
             if (newMessages == null) { System.out.println(Ansi.yellow("No 'messages' key — no changes applied.")); return; }
 
