@@ -1,4 +1,4 @@
-import { defineAppSetup } from '@slidev/cli'
+import { defineAppSetup } from '@slidev/types'
 import CodeWithScript from '../components/CodeWithScript.vue'
 import JsonOverlay from '../components/JsonOverlay.vue'
 import CtxWindow from '../components/CtxWindow.vue'

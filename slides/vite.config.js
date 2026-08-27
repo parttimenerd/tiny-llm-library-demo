@@ -11,12 +11,14 @@ export default defineConfig({
   ssr: {
     noExternal: ['xterm']
   },
-  optimizeDeps: {
-    exclude: ['fsevents']
-  },
   build: {
     rollupOptions: {
-      external: ['fsevents']
+      external: (id) => {
+        if (id.startsWith('node:') || id === 'module') return true
+        const nodeOnlyPkgs = ['fsevents', 'fdir', 'tinyglobby', 'tinyexec', 'vite', 'rollup',
+          'fast-glob', 'chokidar', 'glob', 'readdirp', '@iconify/utils', 'colorette', 'totalist']
+        return nodeOnlyPkgs.some(p => id === p || id.startsWith(p + '/'))
+      }
     }
   }
 })
