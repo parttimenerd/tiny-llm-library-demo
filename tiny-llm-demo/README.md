@@ -50,19 +50,20 @@ Non-streaming response:
 ```json
 {
   "choices": [{
-    "message": { "role": "assistant", "content": "Java is so verbose it takes three design patterns just to print 'Hello World'. ☕" },
+    "message": { "role": "assistant", "content": "Java is the programming language that treats the JVM like a separate, high-maintenance roommate who insists on running everything through a massive security check." },
     "finish_reason": "stop"
   }],
-  "usage": { "prompt_tokens": 31, "completion_tokens": 22, "total_tokens": 53 }
+  "usage": { "prompt_tokens": 20, "completion_tokens": 40, "total_tokens": 60 }
 }
 ```
 
-Streaming chunks (Qwen3.5-9B sends `content` directly — no `reasoning_content`):
+Streaming chunks (first chunk announces `role`, subsequent chunks carry `content`):
 ```
-data: {"choices":[{"delta":{"content":"Java","role":"assistant"}}]}
-data: {"choices":[{"delta":{"content":" is"}}]}
-data: {"choices":[{"delta":{"content":" so"}}]}
-data: {"choices":[{"delta":{"content":" verbose"}}]}
+data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
+data: {"choices":[{"delta":{"content":"Ah"}}]}
+data: {"choices":[{"delta":{"content":","}}]}
+data: {"choices":[{"delta":{"content":" Java"}}]}
+data: {"choices":[{"delta":{"content":"."}}]}
 ...
 data: [DONE]
 ```
@@ -75,7 +76,7 @@ Tool calling response:
     "message": {
       "role": "assistant",
       "tool_calls": [{
-        "id": "call_0",
+        "id": "kcll1P3OvIk6Ly6uArMrv8",
         "type": "function",
         "function": { "name": "ls", "arguments": "{\"path\":\".\"}"}
       }]

@@ -366,11 +366,11 @@ curl -X POST http://localhost:8080/v1/chat/completions \
   "choices": [{
     "message": {
       "role": "assistant",
-      "content": "Java is the only language where writing Hello World requires a PhD in boilerplate. \uD83D\uDC0D\uD83D\uDE02"
+      "content": "Java is the programming language that treats the JVM like a separate, high-maintenance roommate who insists on running everything through a massive security check."
     },
     "finish_reason": "stop"
   }],
-  "usage": { "prompt_tokens": 16, "completion_tokens": 24 }
+  "usage": { "prompt_tokens": 20, "completion_tokens": 40, "total_tokens": 60 }
 }
 ```
 
@@ -464,8 +464,10 @@ SSE = <OrangeText>Server-Sent Events</OrangeText> — a browser standard (WHATWG
 <code>Content-Type: text/event-stream</code>
 
 ```json
-data: {"choices":[{"delta":{"content":"Hel"}}]}
-data: {"choices":[{"delta":{"content":"lo"}}]}
+data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
+data: {"choices":[{"delta":{"content":"Ah"}}]}
+data: {"choices":[{"delta":{"content":","}}]}
+data: {"choices":[{"delta":{"content":" Java"}}]}
 ...
 data: [DONE]
 ```
@@ -515,9 +517,11 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 ```
 
 ```
-data: {"choices":[{"delta":{"content":"Java"}},...]}
-data: {"choices":[{"delta":{"content":" is"}},...]}
-data: {"choices":[{"delta":{"content":" verbose"}},...]}
+data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
+data: {"choices":[{"delta":{"content":"Ah"}}]}
+data: {"choices":[{"delta":{"content":","}}]}
+data: {"choices":[{"delta":{"content":" Java"}}]}
+data: {"choices":[{"delta":{"content":"."}}]}
 ...
 data: [DONE]
 ```
@@ -1079,7 +1083,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
     "message": {
       "role": "assistant",
       "tool_calls": [{
-        "id": "call_123",
+        "id": "kcll1P3OvIk6Ly6uArMrv8",
         "type": "function",
         "function": {
           "name": "ls",
@@ -1100,7 +1104,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 ```json
 {
   "role": "tool",
-  "tool_call_id": "call_123",
+  "tool_call_id": "kcll1P3OvIk6Ly6uArMrv8",
   "content": "LICENSE\nREADME.md\n..."
 }
 ```
