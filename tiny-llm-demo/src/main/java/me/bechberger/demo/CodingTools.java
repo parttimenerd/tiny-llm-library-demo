@@ -85,13 +85,23 @@ public final class CodingTools {
 
     /** Read-only exploration tools - the only file tools available in /plan mode. */
     public static void registerReadOnlyFileTools(ToolSupport ts, FileTools fileTools) {
-        register(ts, "ls", "List directory contents",
+        register(ts, "ls", "List directory contents (one level). Use tree for a recursive overview.",
                 args -> fileTools.ls(str(args, "path")),
                 r -> System.out.println("    " + Ansi.dim("→ ") + Ansi.dim(r.replace("\n", "  "))),
                 "path", "Directory path relative to project root");
 
-        register(ts, "read-file", "Read a file's full contents (up to 20KB)",
-                args -> fileTools.readFile(str(args, "path")),
+        ts.registerTool("read-file",
+                "Read a file's contents. Large files are capped at 20 000 chars — use start_line/end_line to paginate.",
+                Schemas.object()
+                        .required("path", Schemas.string().withDescription("File path relative to project root"))
+                        .optional("start_line", Schemas.number().withDescription("First line to read (1-based, inclusive)"))
+                        .optional("end_line",   Schemas.number().withDescription("Last line to read (1-based, inclusive)"))
+                        .toJsonSchema(),
+                args -> {
+                    int start = args.containsKey("start_line") ? ((Number) args.get("start_line")).intValue() : -1;
+                    int end   = args.containsKey("end_line")   ? ((Number) args.get("end_line")).intValue()   : -1;
+                    return fileTools.readFile(str(args, "path"), start, end);
+                },
                 (args, r) -> {
                     String path = str(args, "path");
                     String[] lines = Highlight.file(r, path).split("\n", -1);
@@ -99,8 +109,7 @@ public final class CodingTools {
                     for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
                     if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
                 },
-                null,
-                "path", "File path relative to project root");
+                null);
 
         ts.registerTool("grep",
                 "Search project files for text (case-insensitive), like grep -rn. Omit path to search the whole project.",
@@ -115,6 +124,30 @@ public final class CodingTools {
                     for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
                     if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
                 });
+
+        ts.registerTool("tree",
+                "Recursive directory tree (default depth 3, max 5). Use to get a project overview before reading individual files.",
+                Schemas.object()
+                        .optional("path",  Schemas.string().withDescription("Directory relative to project root (default: '.')"))
+                        .optional("depth", Schemas.number().withDescription("Tree depth 1–5 (default 3)"))
+                        .toJsonSchema(),
+                args -> fileTools.tree(
+                        args.containsKey("path")  ? str(args, "path")  : ".",
+                        args.containsKey("depth") ? ((Number) args.get("depth")).intValue() : 3),
+                r -> {
+                    String[] lines = r.split("\n", -1);
+                    int shown = Math.min(lines.length, 25);
+                    for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
+                    if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
+                });
+
+        ts.registerTool("find-file",
+                "Find files whose path or name contains the given text. Faster than grep when you know the filename.",
+                Schemas.object()
+                        .required("query", Schemas.string().withDescription("Text to match against file paths (case-insensitive)"))
+                        .toJsonSchema(),
+                args -> fileTools.findFiles(str(args, "query")),
+                r -> System.out.println("    " + Ansi.dim("→ ") + Ansi.dim(r.replace("\n", "  "))));
     }
 
     /**

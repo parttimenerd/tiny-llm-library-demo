@@ -30,7 +30,7 @@ public class FileTools {
     private static final int MAX_FIND_OUTPUT_BYTES = 16384;
     private static final int MAX_COMMAND_OUTPUT_BYTES = 16384;
     private static final long COMMAND_TIMEOUT_SECONDS = 10;
-    private static final long EXEC_TIMEOUT_SECONDS = 60;
+    private static final long EXEC_TIMEOUT_SECONDS = 120;
     private static final String[] BINARY_EXTENSIONS = {
         ".jar", ".class", ".so", ".dylib", ".dll", ".o", ".exe", ".bin",
         ".png", ".jpg", ".jpeg", ".gif", ".zip", ".tar", ".gz"
@@ -74,26 +74,112 @@ public class FileTools {
         }
     }
 
-    // === readFile: Read file contents (up to 20KB) ===
+    // === readFile: Read file contents with optional line range ===
 
     public String readFile(String path) {
+        return readFile(path, -1, -1);
+    }
+
+    /**
+     * Read a file, optionally restricted to [startLine, endLine] (1-based, inclusive).
+     * Pass -1/-1 to read the whole file (capped at 20 000 chars).
+     * When a range is given the cap applies to the extracted slice.
+     * The header line reports total line count so the caller knows if more pages exist.
+     */
+    public String readFile(String path, int startLine, int endLine) {
         try {
             Path resolved = validatePath(path);
             if (!Files.isRegularFile(resolved)) {
                 return "Error: not a regular file: " + path
                         + " (use paths relative to sandbox root " + sandboxRoot + ", e.g. README.md)";
             }
-            byte[] content = Files.readAllBytes(resolved);
-            String text = new String(content, StandardCharsets.UTF_8);
+            List<String> allLines = Files.readAllLines(resolved, StandardCharsets.UTF_8);
+            int totalLines = allLines.size();
+
+            boolean ranged = startLine > 0 || endLine > 0;
+            int from = ranged ? Math.max(1, startLine) : 1;
+            int to   = ranged ? (endLine > 0 ? Math.min(endLine, totalLines) : totalLines) : totalLines;
+
+            List<String> slice = allLines.subList(from - 1, to);
+            String text = String.join("\n", slice);
+            String header = path + " (lines " + from + "–" + to + " of " + totalLines + "):\n";
+
             if (text.length() > 20_000) {
-                return text.substring(0, 20_000) + "\n... (truncated at 20000 chars, file has " + text.length() + " total)";
+                // Hard-truncate but tell the model exactly where it stopped
+                String truncated = text.substring(0, 20_000);
+                int lastNewline = truncated.lastIndexOf('\n');
+                int lastFullLine = from + (int) truncated.substring(0, lastNewline < 0 ? 0 : lastNewline)
+                        .chars().filter(c -> c == '\n').count();
+                return header + truncated + "\n... (truncated at 20 000 chars; shown lines "
+                        + from + "–" + lastFullLine + " of " + totalLines
+                        + " — use start_line/end_line to read later sections)";
             }
-            return text;
+            return header + text;
         } catch (SecurityException e) {
             return "Error: " + e.getMessage();
         } catch (IOException e) {
             return "Error reading file: " + e.getMessage();
         }
+    }
+
+    // === tree: Recursive directory listing ===
+
+    /**
+     * Render a compact tree of the sandbox (or a sub-path), like Unix {@code tree}.
+     * Hidden files/dirs and build artefacts are excluded.
+     * Depth defaults to 3; hard-capped at 5.
+     */
+    public String tree(String path, int depth) {
+        depth = Math.max(1, Math.min(5, depth));
+        try {
+            Path resolved = validatePath(path);
+            if (!Files.isDirectory(resolved)) {
+                return "Error: not a directory: " + path;
+            }
+            var sb = new StringBuilder();
+            sb.append(path).append('\n');
+            appendTree(sb, resolved, "", depth);
+            String result = sb.toString();
+            if (result.length() > MAX_FIND_OUTPUT_BYTES) {
+                result = result.substring(0, MAX_FIND_OUTPUT_BYTES) + "\n... (truncated)";
+            }
+            return result;
+        } catch (SecurityException e) {
+            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return "Error listing directory: " + e.getMessage();
+        }
+    }
+
+    private void appendTree(StringBuilder sb, Path dir, String prefix, int depth) throws IOException {
+        if (depth == 0) return;
+        List<Path> entries;
+        try (Stream<Path> s = Files.list(dir)) {
+            entries = s.filter(p -> !isHidden(p) && isTreeIncluded(p))
+                       .sorted(Comparator.comparing(p -> (Files.isDirectory(p) ? "0" : "1") + p.getFileName()))
+                       .limit(MAX_DIR_ENTRIES)
+                       .toList();
+        }
+        for (int i = 0; i < entries.size(); i++) {
+            Path p = entries.get(i);
+            boolean last = i == entries.size() - 1;
+            String branch = last ? "└── " : "├── ";
+            String name = p.getFileName().toString();
+            sb.append(prefix).append(branch).append(Files.isDirectory(p) ? name + "/" : name).append('\n');
+            if (Files.isDirectory(p)) {
+                appendTree(sb, p, prefix + (last ? "    " : "│   "), depth - 1);
+            }
+        }
+    }
+
+    private boolean isTreeIncluded(Path p) {
+        String name = p.getFileName().toString();
+        if (name.startsWith(".")) return false;
+        if (Files.isDirectory(p)) {
+            return !name.equals("target") && !name.equals("node_modules")
+                    && !name.equals("build") && !name.equals("dist") && !name.equals(".gradle");
+        }
+        return true;
     }
 
     // === Security: Validate and resolve path ===
@@ -312,7 +398,51 @@ public class FileTools {
             return "Error: command references paths outside the sandbox root. "
                     + "Use relative paths or '.' — e.g. 'find . -name Calculator.java' instead of 'find / ...'";
         }
-        return exec(List.of("bash", "-c", command), EXEC_TIMEOUT_SECONDS);
+        String raw = exec(List.of("bash", "-c", command), EXEC_TIMEOUT_SECONDS);
+        return postProcessOutput(command, raw);
+    }
+
+    /**
+     * For Maven/Gradle failures extract the signal (BUILD FAILURE + test errors + last N lines)
+     * so the model doesn't need to parse 16KB of verbose output.
+     */
+    private static String postProcessOutput(String command, String raw) {
+        if (!raw.contains("BUILD FAILURE") && !raw.contains("BUILD SUCCESS")) return raw;
+
+        String[] lines = raw.split("\n", -1);
+        var signal = new ArrayList<String>();
+
+        // First line = "Exit N:" — keep it
+        if (lines.length > 0) signal.add(lines[0]);
+
+        // Extract [ERROR] lines and test failure blocks
+        boolean inFailureBlock = false;
+        for (int i = 1; i < lines.length; i++) {
+            String l = lines[i];
+            if (l.startsWith("[ERROR]") || l.contains("FAILURE") || l.contains("Tests run:")
+                    || l.contains("BUILD SUCCESS") || l.contains("BUILD FAILURE")) {
+                signal.add(l);
+                inFailureBlock = true;
+            } else if (inFailureBlock && !l.isBlank()) {
+                signal.add(l);
+            } else {
+                inFailureBlock = false;
+            }
+        }
+
+        // Always include last 15 lines for context
+        int tail = Math.max(0, lines.length - 15);
+        for (int i = tail; i < lines.length; i++) {
+            String l = lines[i];
+            if (!signal.contains(l)) signal.add(l);
+        }
+
+        String summary = String.join("\n", signal);
+        if (summary.length() < raw.length() / 2) {
+            // Only substitute if we saved substantial space
+            return summary + "\n[full output truncated — " + lines.length + " lines total]";
+        }
+        return raw;
     }
 
     private static final java.util.regex.Pattern OUTSIDE_SANDBOX_PATTERN =

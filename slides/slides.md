@@ -15,6 +15,7 @@ mdc: true
 layout: default
 ---
 
+<img src="./img/loc-switchboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30" />
 
 <div class="absolute inset-0 bg-black/55 z-0" />
 
@@ -28,6 +29,8 @@ Johannes Bechberger &nbsp;&nbsp;·&nbsp;&nbsp; SAP SE
 </div>
 
 </div>
+
+<div class="absolute bottom-2 right-4 text-xs text-gray-600">Image: Library of Congress, LCCN2014718418 · public domain</div>
 
 <!--
 **[~0:00]** Welcome! "We all want to do it — integrate AI into our tools. Today we're going to look behind the curtain and build one from scratch."
@@ -58,65 +61,26 @@ What's actually happening under the hood?
 
 ---
 
-# The Illusion
-
-<div class="mt-8 text-xl leading-relaxed">
-
-Some of us already use <OrangeText>Spring AI</OrangeText> or <OrangeText>LangChain4j</OrangeText>.
-
-Some of us don't use AI in our apps yet, but want to.
-
-</div>
-
-<div class="text-2xl mt-8 font-semibold">
-
-Either way: what <OrangeText>actually happens</OrangeText> under the hood?
-
-</div>
-
-<div class="mt-6 text-xl text-gray-400">
-
-Libraries abstract away HTTP. But once you see it, you can debug anything.
-
-</div>
-
-<!--
-**[~0:30]** "Whether you use Spring AI or are starting fresh — today you'll see exactly what these libraries do."
-"Libraries abstract away HTTP. But when something breaks — or you need custom behaviour — that knowledge is invaluable."
-"Boring is good. Boring means debuggable. Boring means predictable. If you understand REST, you can troubleshoot any LLM library."
--->
-
----
-layout: statement
----
-
 # LLM APIs are <OrangeText>boring</OrangeText>.
 
-<!--
-**[~1:30]** The big reveal upfront. "LLM APIs are boring." Say it confidently.
-"The magic is just HTTP + JSON. And once you see it, you can't unsee it."
-First time saying the tagline — will repeat it two more times.
--->
+<div class="mt-8 text-xl leading-relaxed text-gray-300">
 
----
-layout: center
----
-
-<div class="text-2xl text-gray-300">
-
-Frameworks like <OrangeText>LangChain4j</OrangeText> and <OrangeText>Spring AI</OrangeText> just wrap
+Whether you use <OrangeText>Spring AI</OrangeText>, <OrangeText>LangChain4j</OrangeText>, or nothing yet —
+today you'll see exactly what those libraries do under the hood.
 
 </div>
 
-<div class="text-3xl font-bold text-orange-400 mt-6">
+<div class="mt-6 text-xl">
 
-simple REST calls*
+Boring means <OrangeText>debuggable</OrangeText>. Boring means <OrangeText>predictable</OrangeText>. If you understand REST, you can troubleshoot any LLM library.
 
 </div>
 
 <!--
-**[~1:50]** "These are sophisticated libraries, but they're wrapping simple HTTP + JSON underneath."
-"The frameworks handle retries, tracing, adapters. But the core is REST."
+**[~0:30]** The big reveal upfront. "LLM APIs are boring." Say it confidently — first time.
+"Whether you use Spring AI or are starting fresh — today you'll see exactly what these libraries do."
+"Boring is good. Boring means debuggable. Boring means predictable."
+First time saying the tagline — will repeat at the Wrap-Up.
 -->
 
 ---
@@ -159,7 +123,7 @@ flowchart TB
 </div>
 
 <!--
-**[~2:50]** "Provider adapters, retries, tracing — that's real engineering work. We're not replacing that. We're learning what's underneath so you can understand, debug, and extend it."
+**[~1:30]** "Provider adapters, retries, tracing — that's real engineering work. We're not replacing that. We're learning what's underneath so you can understand, debug, and extend it."
 -->
 
 
@@ -268,6 +232,10 @@ We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 
 layout: center
 ---
 
+<img src="./img/loc-telegraph-poles.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+
+<div class="relative z-10">
+
 <div class="section-header">Part 2</div>
 
 <div class="big-statement">
@@ -281,6 +249,10 @@ Time to prove it
 Five curl commands. That's the whole API.
 
 </div>
+
+</div>
+
+<div class="absolute bottom-2 right-4 text-xs text-gray-600">Image: umbrellahead56, CC BY 2.0 via Wikimedia Commons</div>
 
 <!--
 **[~6:00]** "Enough slides. Let me prove it." Switch to terminal.
@@ -459,7 +431,7 @@ This is what your chatbot's "memory" actually looks like: a <OrangeText>growing 
 
 <div>
 
-SSE = <OrangeText>Server-Sent Events</OrangeText> — a browser standard (WHATWG, 2004).
+SSE = <OrangeText>Server-Sent Events</OrangeText> — a web standard, part of HTML5.
 
 <code>Content-Type: text/event-stream</code>
 
@@ -497,7 +469,7 @@ sequenceDiagram
 </div>
 
 <!--
-**[~10:00]** "This is not an AI invention — it's a browser standard from 2004."
+**[~10:00]** "This is not an AI invention — it's a web standard, part of HTML5."
 "The server keeps the HTTP connection open and pushes events, one token at a time."
 "Your InputStream delivers these lines one at a time. Parse delta.content, print it, repeat until [DONE]."
 -->
@@ -617,7 +589,7 @@ Let's Build It
 
 <div class="text-xl text-gray-400 mt-4">
 
-Or how to write a chatbot from scratch.
+LLMClient + ChatBot · <OrangeText>~12 min</OrangeText>
 
 </div>
 
@@ -769,7 +741,7 @@ No magic. Just strings and sockets.
 
 After the live coding demo, run the chatbot with the 9B model and take an audience suggestion.
 "We just built ChatGPT. Well, a very tiny ChatGPT. With no dependencies beyond the JDK."
-**Safety net**: if it fails, show pre-recorded output. Laugh it off.
+**[FALLBACK]** show pre-recorded output — laugh it off.
 -->
 
 ---
@@ -922,6 +894,9 @@ JSON Schema describes the <OrangeText>shape</OrangeText> of data — what keys e
 
 </div>
 
+<div class="grid grid-cols-2 gap-8 mt-4">
+<div>
+
 ```json
 {
   "type": "object",
@@ -932,50 +907,28 @@ JSON Schema describes the <OrangeText>shape</OrangeText> of data — what keys e
 }
 ```
 
-<div class="mt-4 text-lg">
-
 This is how we tell the LLM <OrangeText>what arguments our tools accept</OrangeText>.
 
 </div>
-
-<!--
-**[~28:00]** "JSON Schema — it's a way to say 'this object has a path field, which is a string, and it's required.'"
-"The LLM reads this schema and generates matching JSON when it wants to call our tool."
--->
-
----
-
-# JSON Schema — Valid vs. Invalid
-
-<div class="grid grid-cols-2 gap-8 mt-8">
-<div>
+<div class="mt-4">
 
 ### ✅ Valid
-
 ```json
 { "path": "/src/main" }
 ```
 
-</div>
-<div>
-
 ### ❌ Invalid
-
 ```json
 { "path": 42 }
 ```
 
+`path` must be a string. The model generates matching JSON.
+
 </div>
-</div>
-
-<div class="mt-12 text-xl text-center">
-
-The LLM reads the schema and generates <OrangeText>matching JSON</OrangeText> when it wants to call a tool.
-
 </div>
 
 <!--
-"path must be a string, not a number. The model learns these constraints from the schema."
+**[~28:00]** "JSON Schema — say 'this object has a path field, it's a string, it's required.' The LLM reads this and generates matching JSON when it wants to call the tool. Path must be a string, not 42."
 -->
 
 ---
@@ -1168,13 +1121,63 @@ Same `/v1/chat/completions` endpoint. Just add a `tools` array.
 
 # Security — Tools Are Code Execution
 
-<div class="text-4xl text-red mt-20">
-The model is <OrangeText>untrusted</OrangeText>. You are the executor.
+<div class="grid grid-cols-2 gap-8 mt-4 items-center">
+
+<div class="text-4xl text-red leading-relaxed">
+The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
+</div>
+
+<div>
+<img src="./img/nasa-mission-control.jpg" class="rounded opacity-70 w-full object-cover" style="max-height: 280px;" />
+<div class="text-xs text-gray-600 mt-1 text-right">NASA S70-35368, Apollo 13 mission control · public domain</div>
+</div>
+
 </div>
 
 <!--
 **[~33:00]** "Read-only, sandboxed, canonical paths, no dotfiles, size limits."
 "And retry on bad JSON — because the model WILL sometimes return garbage."
+-->
+
+---
+
+# The Shell Script Tradeoff
+
+<div class="mt-8 text-lg">
+
+Could the AI just call shell scripts directly?
+
+</div>
+
+<div class="grid grid-cols-2 gap-8 mt-12">
+
+<div>
+
+### ✨ Advantages
+- **Fewer tokens** 
+- **Faster execution**
+</div>
+
+<div>
+
+### ⚠️ Disadvantages
+- **Unsafe** — unvalidated input = code injection risk
+- **No sandboxing**
+- **Hard to audit** — what did the AI actually run?
+- **Error handling** — malformed commands crash the app
+
+</div>
+
+</div>
+
+<div class="mt-12 text-center text-gray-400">
+
+JSON Schema + typed tool calls: <OrangeText>safe, auditable, validated</OrangeText>. This is why we don't just exec strings.
+
+</div>
+
+<!--
+**[~33:30]** "Shell scripts seem simpler — but every string the model emits is untrusted input. No validation, no sandbox, no audit trail. Our JSON Schema approach gives us all three for free."
 -->
 
 ---
@@ -1191,12 +1194,12 @@ Adding Tools
 
 <div class="text-xl text-gray-400 mt-4">
 
-Now we make our chatbot actually useful.
+ToolSupport + ToolChatBot · <OrangeText>~5 min</OrangeText>
 
 </div>
 
 <!--
-**[~30:00]** Transition to live coding part 2. "We've seen the theory. Let's write it."
+**[~33:00]** Transition to live coding part 2. "We've seen the theory. Let's write it."
 "This time I'll let Copilot do the heavy lifting — the tool calling loop is a well-known pattern."
 -->
 
@@ -1235,7 +1238,7 @@ Tool calling is a <OrangeText>while loop</OrangeText>. That's the secret.
 Let Copilot generate each method via inline completions. Walk through what it produces.
 "Notice Copilot understands the tool-calling loop pattern — it knows the OpenAI API conventions."
 Verify the while-loop logic. Correct if needed (e.g., missing retry on malformed JSON).
-**CHECKPOINT at ~34 min**: if Copilot struggles, paste from solution.
+**[FALLBACK]** paste from solution if Copilot struggles — checkpoint at ~34 min.
 -->
 
 ---
@@ -1271,7 +1274,7 @@ Then escalate: "Describe what this project does." — watch it chain ls + read-f
 This is the 'aha moment': the model decides which tools to call, in what order, to answer a question it couldn't answer with a single call.
 "Let's see if we can trick it — try to access /etc/passwd." (Should be rejected by sandbox.)
 "~80 lines of tool support. That's it."
-**Safety net**: solution files ready to paste.
+**[FALLBACK]** paste from solution files.
 -->
 
 ---
@@ -1768,43 +1771,6 @@ JSON-RPC calls wrapping <OrangeText>tool definitions and results</OrangeText> �
 
 ---
 
-# The Shell Script Tradeoff
-
-<div class="mt-8 text-lg">
-
-Could the AI just call shell scripts directly?
-
-</div>
-
-<div class="grid grid-cols-2 gap-8 mt-12">
-
-<div>
-
-### ✨ Advantages
-- **Fewer tokens** 
-- **Faster execution**
-</div>
-
-<div>
-
-### ⚠️ Disadvantages
-- **Unsafe** — unvalidated input = code injection risk
-- **No sandboxing**
-- **Hard to audit** — what did the AI actually run?
-- **Error handling** — malformed commands crash the app
-
-</div>
-
-</div>
-
-<div class="mt-12 text-center text-gray-400">
-
-<OrangeText>This is why MCP exists.</OrangeText> The protocol layer ensures safety, auditing, and capability negotiation.
-
-</div>
-
----
-
 # MCP — Your Homework
 
 <Callout variant="blue">
@@ -1827,13 +1793,20 @@ layout: center
 
 <div class="big-statement">
 
-And now for something<br/><OrangeText>completely different</OrangeText>
+One more thing about models:
 
 </div>
 
-<div class="text-xl text-gray-400 mt-6">
-🎺 &nbsp; <em>toot toot</em>
+<div class="text-2xl text-gray-400 mt-6">
+
+You saw reasoning_content appear in the SSE stream — here's what that actually is.
+
 </div>
+
+<!--
+**[~45:00]** "Before we build the agent — one thing worth knowing about models themselves. You saw `reasoning_content` appear in the SSE stream. Here's what that is."
+Segue: connects the SSE parsing we just coded to the thinking demo.
+-->
 
 ---
 
@@ -1858,6 +1831,9 @@ Let's build something."
 *Wait, I need to make it more fun.*
 ...
 ```
+
+<img src="./img/loc-scientist-chalkboard.jpg" class="rounded mt-4 opacity-60 w-full object-cover" style="max-height:140px;" />
+<div class="text-xs text-gray-600 mt-1">Peter Higgs at chalkboard · Hans G, CC BY-SA 2.0</div>
 
 </div>
 
@@ -1918,6 +1894,10 @@ Thinking budget caps the token spend proactively — better than detecting loops
 layout: center
 ---
 
+<img src="./img/nasa-mission-control.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+
+<div class="relative z-10">
+
 <div class="section-header">Part 8</div>
 
 <div class="big-statement">
@@ -1931,6 +1911,10 @@ Coding Agent
 A chatbot that can actually <OrangeText>change your code</OrangeText>.
 
 </div>
+
+</div>
+
+<div class="absolute bottom-2 right-4 text-xs text-gray-600">NASA S70-35368, Apollo 13 mission control · public domain</div>
 
 <!--
 **[~45:00]** "We have a chatbot that can read files. Let's give it write access and Maven — and turn it into a coding agent."
@@ -2385,6 +2369,10 @@ Point out: we sandboxed the agent to its own source tree. It can't escape. It ca
 layout: center
 ---
 
+<img src="./img/nasa-apollo-moon.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+
+<div class="relative z-10">
+
 <div class="section-header">Wrap-Up</div>
 
 <div class="big-statement">
@@ -2405,6 +2393,10 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 
 </div>
 
+</div>
+
+<div class="absolute bottom-2 right-4 text-xs text-gray-600">NASA AS11-40-5931, Buzz Aldrin on the Moon, July 1969 · public domain</div>
+
 <!--
 **[~48:00]** Third time saying the tagline. "LLM APIs are boring. And that is the *best* news for Java developers."
 "Boring means you can debug it. Boring means you can test it. Boring means it works at 3 AM."
@@ -2421,6 +2413,10 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 - ✅ **REST API** — three endpoints, one JSON format
 - ✅ **Streaming chatbot** — SSE parsing, conversation history
 - ✅ **Tool calling** — JSON Schema, sandbox security, while loop
+- ✅ **Coding agent** — file tools, context management, /plan mode
+
+<img src="./img/nasa-apollo-moon.jpg" class="rounded mt-6 opacity-60 w-full object-cover" style="max-height:180px;" />
+<div class="text-xs text-gray-600 mt-1">NASA AS11-40-5931, Buzz Aldrin on the Moon, July 1969 · public domain</div>
 
 </div>
 
@@ -2428,22 +2424,30 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 
 ```mermaid
 flowchart TB
-  subgraph "What we built"
-    lc["LLMClient<br>chat · stream"]
-    cb["ChatBot<br>REPL loop"]
-    ts["ToolSupport<br>while loop"]
-    ft["FileTools<br>ls · read-file"]
-  end
+  jdk["dependencies<br>(pre-written)"]
+  lc["LLMClient"]
+  cb["ChatBot"]
+  ts["ToolSupport"]
+  ft["FileTools"]
+  ca["CodingAgent<br>SkillCodingAgent"]
 
-  cb --> lc
-  ts --> lc
+  jdk --> lc
+  jdk --> ts
+  lc --> cb
+  lc --> ts
   ts --> ft
-  lc -->|"HTTP + JSON"| llm["Local LLM"]
+  ts --> ca
+  lc --> ca
 
+  style jdk fill:#334155,color:#e2e8f0,stroke:none
   style lc fill:#f97316,color:#000,stroke:none
   style cb fill:#f97316,color:#000,stroke:none
   style ts fill:#f97316,color:#000,stroke:none
+  style ft fill:#334155,color:#e2e8f0,stroke:none
+  style ca fill:#f97316,color:#000,stroke:none
 ```
+
+<div class="text-sm text-gray-500 text-center">Orange = what we built</div>
 
 </div>
 
