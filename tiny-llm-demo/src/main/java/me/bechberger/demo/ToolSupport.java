@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -24,7 +25,24 @@ public class ToolSupport {
 
     /** Internal record for a registered tool */
     record ToolDef(String name, String description, Map<String, Object> parameterSchema,
-                   Function<Map<String, Object>, String> handler) {}
+                   Function<Map<String, Object>, String> handler,
+                   Consumer<String> printer,
+                   Function<Map<String, Object>, String> argSummarizer,
+                   BiConsumer<Map<String, Object>, String> argsPrinter) {
+        ToolDef(String name, String description, Map<String, Object> parameterSchema,
+                Function<Map<String, Object>, String> handler) {
+            this(name, description, parameterSchema, handler, null, null, null);
+        }
+        ToolDef(String name, String description, Map<String, Object> parameterSchema,
+                Function<Map<String, Object>, String> handler, Consumer<String> printer) {
+            this(name, description, parameterSchema, handler, printer, null, null);
+        }
+        ToolDef(String name, String description, Map<String, Object> parameterSchema,
+                Function<Map<String, Object>, String> handler, Consumer<String> printer,
+                Function<Map<String, Object>, String> argSummarizer) {
+            this(name, description, parameterSchema, handler, printer, argSummarizer, null);
+        }
+    }
 
     private final Map<String, ToolDef> tools = new LinkedHashMap<>();
 
@@ -47,6 +65,32 @@ public class ToolSupport {
                              Map<String, Object> parameterSchema,
                              Function<Map<String, Object>, String> handler) {
         tools.put(name, new ToolDef(name, description, parameterSchema, handler));
+    }
+
+    /** Register a tool with a custom result printer for the REPL display. */
+    public void registerTool(String name, String description,
+                             Map<String, Object> parameterSchema,
+                             Function<Map<String, Object>, String> handler,
+                             Consumer<String> printer) {
+        tools.put(name, new ToolDef(name, description, parameterSchema, handler, printer));
+    }
+
+    /** Register a tool with a custom result printer and arg summarizer for the REPL display. */
+    public void registerTool(String name, String description,
+                             Map<String, Object> parameterSchema,
+                             Function<Map<String, Object>, String> handler,
+                             Consumer<String> printer,
+                             Function<Map<String, Object>, String> argSummarizer) {
+        tools.put(name, new ToolDef(name, description, parameterSchema, handler, printer, argSummarizer));
+    }
+
+    /** Register a tool with an args-aware printer (receives parsed args + result). */
+    public void registerTool(String name, String description,
+                             Map<String, Object> parameterSchema,
+                             Function<Map<String, Object>, String> handler,
+                             BiConsumer<Map<String, Object>, String> argsPrinter,
+                             Function<Map<String, Object>, String> argSummarizer) {
+        tools.put(name, new ToolDef(name, description, parameterSchema, handler, null, argSummarizer, argsPrinter));
     }
 
     /**
@@ -155,7 +199,8 @@ public class ToolSupport {
      */
     private String extractContent(Map<String, Object> choice) {
         var message = Util.asMap(choice.get("message"));
-        return (String) message.get("content");
+        Object content = message.get("content");
+        return content != null ? String.valueOf(content) : "";
     }
 
     /**
@@ -209,9 +254,22 @@ public class ToolSupport {
         var argumentsJson = (String) function.get("arguments");
 
         String result = callTool(toolName, argumentsJson);
+        var def = tools.get(toolName);
 
-        System.out.println("\n  ⚙ " + toolName + "(" + truncate(argumentsJson, 120) + ")");
-        System.out.println("    → " + truncate(result, 200));
+        String argDisplay = truncate(argumentsJson, 120);
+        if (def != null && def.argSummarizer() != null) {
+            try { argDisplay = def.argSummarizer().apply(Util.asMap(JSONParser.parse(argumentsJson))); }
+            catch (Exception ignored) {}
+        }
+        System.out.println("\n  ⚙ " + toolName + "(" + argDisplay + ")");
+        if (def != null && def.argsPrinter() != null) {
+            try { def.argsPrinter().accept(Util.asMap(JSONParser.parse(argumentsJson)), result); }
+            catch (Exception ignored) { printResult(result); }
+        } else if (def != null && def.printer() != null) {
+            def.printer().accept(result);
+        } else {
+            printResult(result);
+        }
 
         if (onToolCall != null) onToolCall.accept(toolName, result);
 
@@ -234,6 +292,18 @@ public class ToolSupport {
         } catch (Exception e) {
             return "Error executing tool '" + toolName + "': " + e.getMessage()
                    + "\nPlease try again with valid arguments.";
+        }
+    }
+
+    private static void printResult(String result) {
+        if (result == null) return;
+        String[] lines = result.split("\n", -1);
+        if (lines.length <= 1) {
+            System.out.println("    → " + truncate(result, 200));
+        } else {
+            int shown = Math.min(lines.length, 30);
+            for (int i = 0; i < shown; i++) System.out.println("    " + truncate(lines[i], 120));
+            if (lines.length > shown) System.out.println("    … (" + (lines.length - shown) + " more lines)");
         }
     }
 

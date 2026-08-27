@@ -1,6 +1,7 @@
 package me.bechberger.demo.solutions;
 
 import me.bechberger.demo.http.HttpHelper;
+import me.bechberger.demo.util.Ansi;
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.CompactPrinter;
 import me.bechberger.util.json.Util;
@@ -20,10 +21,33 @@ public class LLMClient {
     private final String model;
     private final Consumer<String> onToken;
 
+    /** Token usage statistics from an API response's "usage" object. */
+    public record TokenUsage(int completionTokens, int promptTokens, int totalTokens) {}
+
+    private TokenUsage lastUsage;
+
+    /** Usage of the most recent API call, or null if the server sent none (drives compaction). */
+    public TokenUsage lastUsage() {
+        return lastUsage;
+    }
+
+    private boolean thinking = true;
+    private int thinkingBudget = -1;
+
     public LLMClient(String baseUrl, String model, Consumer<String> onToken) {
         this.http = new HttpHelper(baseUrl);
         this.model = model;
         this.onToken = onToken;
+    }
+
+    public LLMClient withThinking(boolean thinking) {
+        this.thinking = thinking;
+        return this;
+    }
+
+    public LLMClient withThinkingBudget(int tokens) {
+        this.thinkingBudget = tokens;
+        return this;
     }
 
     /**
@@ -46,6 +70,14 @@ public class LLMClient {
      */
     public static Map<String, Object> system(String content) {
         return Map.of("role", "system", "content", content);
+    }
+
+    /** Convenience factory: create a two-message conversation list [system, user]. */
+    public static List<Map<String, Object>> conversation(String systemPrompt, String userMessage) {
+        var msgs = new java.util.ArrayList<Map<String, Object>>();
+        msgs.add(system(systemPrompt));
+        msgs.add(user(userMessage));
+        return msgs;
     }
 
     /**
@@ -82,10 +114,13 @@ public class LLMClient {
      */
     public String chat(List<Map<String, Object>> messages) {
         try {
-            var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, null))));
-            var choice = Util.asMap(Util.asList(response.get("choices")).getFirst());
-            var message = Util.asMap(choice.get("message"));
-            return (String) message.get("content");
+            // @stub: POST /v1/chat/completions → parse JSON → return choices[0].message.content
+            var response = Util.asMap(JSONParser.parse(
+                    http.postJson("/v1/chat/completions", buildRequest(messages, false, null))));
+            lastUsage = parseTokenUsage(response);
+            return (String) Util.asMap(Util.asMap(
+                    Util.asList(response.get("choices")).getFirst()).get("message")).get("content");
+            // @end
         } catch (Exception e) {
             throw new RuntimeException("Chat failed", e);
         }
@@ -98,60 +133,50 @@ public class LLMClient {
      * <p>
      * Request: {@code { "model": "...", "messages": [...], "stream": true }}
      * <p>
-     * Response: Server-Sent Events (SSE) stream with lines like:
+     * Response: Server-Sent Events (SSE) stream:
      * {@code data: {"choices": [{ "delta": { "content": "token" } }]}}
      * {@code data: [DONE]}
-     * <p>
-     * Implementation: Open stream → wrap in reader → process each SSE line → extract tokens → call onToken callback
-     * @param messages List of message maps
-     * @return Complete response text accumulated from all tokens
      */
     public String chatStream(List<Map<String, Object>> messages) {
-        try {
-            var stream = http.postJsonStream("/v1/chat/completions", buildRequest(messages, true, null));
-            var reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            try (reader) {
-                var result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
+        try (var reader = new BufferedReader(new InputStreamReader(
+                http.postJsonStream("/v1/chat/completions", buildRequest(messages, true, null)),
+                StandardCharsets.UTF_8))) {
+            var result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                    // @stub: processSSELine → skip empty/null([DONE]) → call onToken, append to result
                     var token = processSSELine(line);
-                    if (token == null) break; // [DONE] signal
+                    if (token == null) break;
                     if (!token.isEmpty()) {
                         onToken.accept(token);
                         result.append(token);
                     }
-                }
-                return result.toString();
+                    // @end
             }
+            return result.toString();
         } catch (Exception e) {
             throw new RuntimeException("Streaming failed", e);
         }
     }
 
     /**
-     * Process one SSE line and extract token content.
+     * Process one SSE line.
      * <p>
-     * Format: {@code data: {"choices": [{ "delta": { "content": "token" } }]}}
-     * <p>
-     * Implementation: Strip "data: " prefix → parse JSON → extract delta.content
-     * @return Token string, empty string if no content, or null if [DONE]
+     * Return: token string, "" if no content/non-data line, null if [DONE]
      */
     private String processSSELine(String line) throws Exception {
+        // @stub: skip non-"data: " lines; strip prefix; return null for "[DONE]"; parse JSON → delta.content
         if (!line.startsWith("data: ")) return "";
-        
         String data = line.substring(6).trim();
         if (data.equals("[DONE]")) return null;
-        
-        var chunk = Util.asMap(JSONParser.parse(data));
-        var choices = Util.asList(chunk.get("choices"));
-        if (choices.isEmpty()) return "";
-        
-        var delta = Util.asMap(Util.asMap(choices.getFirst()).get("delta"));
+        var delta = Util.asMap(Util.asMap(
+                Util.asList(Util.asMap(JSONParser.parse(data)).get("choices")).getFirst()).get("delta"));
+        var thinking = (String) delta.get("reasoning_content");
+        if (thinking == null) thinking = (String) delta.get("thinking");
+        if (thinking != null && System.console() != null) System.err.print(Ansi.dim(thinking));
         var content = (String) delta.get("content");
-        if (delta.containsKey("thinking")) {
-            System.out.print(delta.get("thinking"));
-        }
         return content != null ? content : "";
+        // @end
     }
 
     /**
@@ -172,10 +197,44 @@ public class LLMClient {
     public Map<String, Object> chatRaw(List<Map<String, Object>> messages, List<Map<String, Object>> tools) {
         try {
             var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, tools))));
+            lastUsage = parseTokenUsage(response);
             return Util.asMap(Util.asList(response.get("choices")).getFirst());
         } catch (Exception e) {
             throw new RuntimeException("Chat with tools failed", e);
         }
+    }
+
+    /** Parse the usage object of a response, tolerating missing usage entirely. */
+    private static TokenUsage parseTokenUsage(Map<String, Object> response) {
+        var usage = response.get("usage");
+        if (!(usage instanceof Map)) return null;
+        var u = Util.asMap(usage);
+        return new TokenUsage(
+                ((Number) u.get("completion_tokens")).intValue(),
+                ((Number) u.get("prompt_tokens")).intValue(),
+                ((Number) u.get("total_tokens")).intValue());
+    }
+
+    /**
+     * Ask the server for the context window of the current model
+     * (llama-server exposes meta.n_ctx_train via GET /v1/models);
+     * falls back to defaultValue when the server reports nothing.
+     */
+    public int getContextWindowSize(int defaultValue) {
+        try {
+            for (var m : Util.asList(Util.asMap(JSONParser.parse(http.get("/v1/models"))).get("data"))) {
+                var modelMap = Util.asMap(m);
+                if (model.equals(modelMap.get("id")) && modelMap.containsKey("meta")) {
+                    var nCtx = Util.asMap(modelMap.get("meta")).get("n_ctx_train");
+                    if (nCtx instanceof Number n) {
+                        return n.intValue();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Warning: could not detect context window size: " + e.getMessage());
+        }
+        return defaultValue;
     }
 
     /**
@@ -189,6 +248,12 @@ public class LLMClient {
         var req = new LinkedHashMap<String, Object>();
         req.put("model", model);
         req.put("messages", messages);
+        if (thinking) {
+            var tkw = new LinkedHashMap<String, Object>();
+            tkw.put("enable_thinking", true);
+            if (thinkingBudget > 0) tkw.put("thinking_budget", thinkingBudget);
+            req.put("chat_template_kwargs", tkw);
+        }
         if (stream) req.put("stream", true);
         if (tools != null && !tools.isEmpty()) {
             req.put("tools", tools);

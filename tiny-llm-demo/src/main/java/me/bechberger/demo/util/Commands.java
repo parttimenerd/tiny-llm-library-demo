@@ -1,6 +1,5 @@
 package me.bechberger.demo.util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ public final class Commands {
     /** Receives the text after the command name ({@code ""} if there is none). */
     @FunctionalInterface
     public interface Handler {
-        void handle(String args) throws IOException;
+        void handle(String args);
     }
 
     private final Map<String, Handler> byName = new LinkedHashMap<>();
@@ -70,7 +69,7 @@ public final class Commands {
      * @return true if the input was consumed as a command — including an unknown
      *         slash command, which is rejected with a help hint here
      */
-    public boolean handle(String input) throws IOException {
+    public boolean handle(String input) {
         String s = input.trim();
         if (s.isEmpty()) return false;
         String name, args;
@@ -86,7 +85,7 @@ public final class Commands {
         var handler = byName.get(name.toLowerCase());
         if (handler == null) {
             if (s.startsWith("/")) {
-                System.out.println("Unknown command: /" + name + "\n" + help());
+                System.out.println(Ansi.dim("Unknown command: /" + name + "  (try /help)"));
                 return true;
             }
             return false; // not a command — let the caller treat it as a chat message

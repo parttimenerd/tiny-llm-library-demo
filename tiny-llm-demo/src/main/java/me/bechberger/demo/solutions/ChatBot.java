@@ -1,6 +1,7 @@
 package me.bechberger.demo.solutions;
 
 import me.bechberger.demo.LLMClient;
+import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -43,14 +44,15 @@ public class ChatBot implements Callable<Integer> {
         // @stub: call chatStream, print response (streaming via callback), append assistant message
         var client = options.createClient(builder);
         var repl = builder.build();
-        repl.greet("ChatBot ready. Model: " + options.resolveModel());
-        Repl.io(() -> repl.run(input -> {
+        repl.greet("ChatBot ready. Model: " + options.resolveModel()
+                + (options.verbose ? " — sidebar active (see key hints in the box)" : ""));
+        repl.run(input -> {
             messages.add(LLMClient.user(input));
-            System.out.print("\nAssistant: ");
+            System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
             String response = client.chatStream(messages);
             messages.add(LLMClient.assistant(response));
             System.out.println();
-        }));
+        });
         // @end
         return 0;
     }

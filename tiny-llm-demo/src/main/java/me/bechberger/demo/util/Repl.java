@@ -3,6 +3,7 @@ package me.bechberger.demo.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 
 import me.bechberger.demo.LLMClient;
+import me.bechberger.demo.ToolSupport;
 
 
 /**
@@ -42,7 +44,7 @@ public final class Repl {
     /** Receives one non-command input (possibly multi-line). */
     @FunctionalInterface
     public interface Chat {
-        void chat(String input) throws IOException;
+        void chat(String input) throws Exception;
     }
 
     final Scanner scanner;
@@ -51,6 +53,10 @@ public final class Repl {
     private Runnable onResponse;
     private Runnable prePrompt;
     private boolean stopped = false;
+    private volatile String pendingInput = null;  // injected by sidebar rerun; bypasses stdin
+    final History history = new History();
+    /** Sidebar reference for raw/cooked mode toggling during run loop. */
+    Sidebar sidebar = null;
 
     /**
      * @param prompt  printed before every input line, e.g. "\nYou: "
@@ -61,7 +67,11 @@ public final class Repl {
         this.scanner = scanner;
         this.prompt = () -> prompt;
         commands.on("exit", "leave the chat", args -> stop(), "quit");
+        commands.on("history", "show input history", args -> history.print());
     }
+
+    /** Ordered list of non-command inputs sent to chat, most-recent last. */
+    public List<String> getHistory() { return history.entries(); }
 
     /** Dynamic prompt - evaluated before every input line (mode badges, cwd, ...). */
     public Repl setPrompt(Supplier<String> prompt) {
@@ -104,7 +114,10 @@ public final class Repl {
             var s = pane.get();
             if (s != null && !s.isBlank()) System.out.println(s);
         };
-        return onResponse(r).onResponse;
+        Runnable prev = this.onResponse;
+        Runnable chained = prev == null ? r : () -> { prev.run(); r.run(); };
+        this.onResponse = chained;
+        return r;
     }
 
     /** Wrap a checked-IO call for use in a lambda — rethrows as {@link java.io.UncheckedIOException}. */
@@ -137,21 +150,47 @@ public final class Repl {
         return answer;
     }
 
-    /** Print a one-line greeting followed by the command help. */
+    /** Print a one-line greeting with a slim hint to discover commands. */
     public void greet(String line) {
         System.out.println(Ansi.bold(line));
-        System.out.println(Ansi.dim(commands.help()));
+        System.out.println(Ansi.dim("Type /help for commands, exit to quit."));
     }
 
     /** Run prompt - dispatch commands - chat, until exit/quit or EOF. */
-    public void run(Chat chat) throws IOException {
+    public void run(Chat chat) {
         while (!stopped) {
             if (prePrompt != null) prePrompt.run();
+            // sidebar rerun injects input directly, bypassing stdin
+            String injected = pendingInput;
+            if (injected != null) {
+                pendingInput = null;
+                System.out.println(prompt.get() + Ansi.dim("[rerun] ") + injected.replace("\n", " ↵ "));
+                history.add(injected);
+                if (sidebar != null) sidebar.setCookedMode(false); // raw mode during chat
+                try {
+                    chat.chat(injected);
+                } catch (java.io.UncheckedIOException e) {
+                    if (e.getCause() instanceof java.io.InterruptedIOException) {
+                        Thread.interrupted(); System.out.println("\n[interrupted]"); continue;
+                    }
+                    throw e;
+                } catch (Exception e) {
+                    if (e instanceof java.io.InterruptedIOException) {
+                        Thread.interrupted(); System.out.println("\n[interrupted]"); continue;
+                    }
+                    throw new RuntimeException(e);
+                }
+                if (Thread.interrupted()) { System.out.println("\n[interrupted]"); continue; }
+                if (onResponse != null) onResponse.run();
+                continue;
+            }
             System.out.print(prompt.get());
             if (!scanner.hasNextLine()) break;
             String input = readLogicalLine().trim();
             if (input.isEmpty()) continue;
-            if (commands.handle(input)) { if (onResponse != null) onResponse.run(); continue; }
+            if (commands.handle(input)) { if (onResponse != null && !stopped) onResponse.run(); continue; }
+            history.add(input);
+            if (sidebar != null) sidebar.setCookedMode(false); // raw mode during chat
             try {
                 chat.chat(input);
             } catch (java.io.UncheckedIOException e) {
@@ -161,6 +200,13 @@ public final class Repl {
                     continue;
                 }
                 throw e;
+            } catch (Exception e) {
+                if (e instanceof java.io.InterruptedIOException) {
+                    Thread.interrupted();
+                    System.out.println("\n[interrupted]");
+                    continue;
+                }
+                throw new RuntimeException(e);
             }
             if (Thread.interrupted()) { System.out.println("\n[interrupted]"); continue; }
             if (onResponse != null) onResponse.run();
@@ -232,21 +278,39 @@ public final class Repl {
          * @param usageSupplier returns the latest usage, or {@code null}
          */
         public Builder showSidebar(Supplier<LLMClient.TokenUsage> usageSupplier) {
+            return showSidebar(usageSupplier, () -> 0);
+        }
+
+        /**
+         * Enable the live sidebar with a context-window size supplier for the
+         * progress-bar footer.  The supplier is called once after each response;
+         * pass {@code client::lastContextWindow} or a cached value.
+         */
+        public Builder showSidebar(Supplier<LLMClient.TokenUsage> usageSupplier, java.util.function.IntSupplier contextWindowSupplier) {
             if (messages == null) return this;
             sidebar = new Sidebar(messages);
             if (!sidebar.isUsable()) { sidebar = null; return this; }
 
+            final Sidebar sb = sidebar;
+            repl.sidebar = sb;  // give run() loop access for cooked/raw toggling
             var prev = repl.onResponse;
             repl.onResponse = () -> {
                 if (prev != null) prev.run();
                 if (usageSupplier != null) {
                     var u = usageSupplier.get();
-                    if (u != null) sidebar.updateUsage(u.promptTokens(), u.completionTokens(), 0);
+                    if (u != null) sb.updateUsage(u.promptTokens(), u.completionTokens(),
+                            contextWindowSupplier.getAsInt());
                 }
-                sidebar.redraw();
+                sb.redraw();
             };
             repl.prePrompt = () -> {
-                if (sidebar.isEditRequested()) sidebar.runEdit(repl.scanner);
+                // switch to cooked mode so the "You:" prompt shows typed characters
+                sb.setCookedMode(true);
+                if (sb.isEditRequested())   sb.runEdit(repl.scanner);
+                if (sb.isInsertRequested()) sb.runInsert(repl.scanner);
+                String rerun = sb.hasPendingRerun() ? sb.takePendingRerun() : null;
+                if (rerun != null) repl.pendingInput = rerun;
+                sb.redraw();
             };
             startKeyThread(sidebar);
             return this;
@@ -267,6 +331,15 @@ public final class Repl {
 
         public Builder on(String name, String description, Commands.Handler handler, String... aliases) {
             repl.commands().on(name, description, handler, aliases);
+            return this;
+        }
+
+        /**
+         * Wire a {@link ToolSupport} so the sidebar redraws on every tool call.
+         * Must be called before {@link #build()}.
+         */
+        public Builder withTools(ToolSupport toolSupport) {
+            toolSupport.setOnToolCall((name, result) -> redrawSidebar());
             return this;
         }
 
@@ -321,8 +394,26 @@ public final class Repl {
             return this;
         }
 
+        /** Enable the live sidebar with context window — delegates to {@link Builder#showSidebar}. */
+        public PaneBuilder showSidebar(Supplier<LLMClient.TokenUsage> usageSupplier, java.util.function.IntSupplier contextWindowSupplier) {
+            builder.showSidebar(usageSupplier, contextWindowSupplier);
+            return this;
+        }
+
         /** Trigger a sidebar redraw — delegates to {@link Builder#redrawSidebar}. */
         public void redrawSidebar() { builder.redrawSidebar(); }
+
+        /**
+         * Wire a {@link ToolSupport} so the sidebar redraws on every tool call,
+         * and the pane rerenders for todo/plan tools.
+         */
+        public PaneBuilder withTools(ToolSupport toolSupport) {
+            toolSupport.setOnToolCall((name, result) -> {
+                if (name.startsWith("todo-") || name.equals("update-plan")) pane.run();
+                redrawSidebar();
+            });
+            return this;
+        }
 
         public Repl build() {
             return repl;
@@ -333,33 +424,102 @@ public final class Repl {
 
     private static void startKeyThread(Sidebar sidebar) {
         var t = new Thread(() -> {
+            // Use "sane" as the restore target — captures the initial good state.
+            // We toggle between raw and cooked depending on whether the main thread
+            // is waiting at the prompt (cookedMode=true) or processing a response.
             try {
-                new ProcessBuilder("stty", "-icanon", "-echo").inheritIO()
-                        .redirectInput(ProcessBuilder.Redirect.from(new java.io.File("/dev/tty")))
-                        .start().waitFor();
                 try (InputStream tty = new java.io.FileInputStream("/dev/tty")) {
+                    boolean rawNow = false;
                     int b;
-                    while ((b = tty.read()) != -1) {
+                    while (true) {
+                        // Only switch to raw mode when sidebar is in charge of input
+                        // (i.e. not when the main thread is waiting at the "You:" prompt).
+                        boolean shouldBeRaw = !sidebar.isCookedMode() && sidebar.isUsable();
+                        if (shouldBeRaw != rawNow) {
+                            rawNow = shouldBeRaw;
+                            runStty(rawNow ? new String[]{"stty", "-icanon", "-echo"}
+                                           : new String[]{"stty", "sane"});
+                        }
+                        if (!shouldBeRaw) {
+                            Thread.sleep(20);
+                            continue;
+                        }
+                        if (tty.available() == 0) { Thread.sleep(5); continue; }
+                        b = tty.read();
+                        if (b == -1) break;
                         if (b == 27) {
-                            int b2 = tty.read();
-                            if (b2 == '[') {
-                                int b3 = tty.read();
-                                if (b3 == 'A')      sidebar.scrollUp();
-                                else if (b3 == 'B') sidebar.scrollDown();
+                            long deadline = System.currentTimeMillis() + 20;
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) {
+                                Thread.sleep(2);
+                            }
+                            if (tty.available() > 0) {
+                                int b2 = tty.read();
+                                if (b2 == '[' && tty.available() > 0) {
+                                    int b3 = tty.read();
+                                    if (b3 == 'A')      sidebar.scrollUp();
+                                    else if (b3 == 'B') sidebar.scrollDown();
+                                }
+                            } else {
+                                sidebar.detach(); break;
                             }
                         } else if (b == ' ')                         sidebar.togglePause();
                         else if (b == '\r' || b == '\n' || b == 'x') sidebar.toggleExpand();
                         else if (b == 'X')                           sidebar.toggleExpandAll();
                         else if (b == 'd')                           sidebar.dropSelected();
                         else if (b == 'e')                           sidebar.requestEdit();
+                        else if (b == 'i')                           sidebar.requestInsert();
+                        else if (b == 'r')                           sidebar.rerunSelected();
+                        else if (b == 'q')                           { sidebar.detach(); break; }
                         sidebar.redraw();
                     }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            } finally {
+                runStty(new String[]{"stty", "sane"});
+            }
         });
         t.setDaemon(true);
         t.setName("sidebar-keys");
         t.start();
+    }
+
+    private static void runStty(String[] cmd) {
+        try {
+            new ProcessBuilder(cmd).inheritIO()
+                    .redirectInput(ProcessBuilder.Redirect.from(new java.io.File("/dev/tty")))
+                    .start().waitFor();
+        } catch (Exception ignored) {}
+    }
+
+    // ── SubBuilder ────────────────────────────────────────────────────────────
+
+    // ── History ───────────────────────────────────────────────────────────────
+
+    /** Per-session input history (non-command turns only). */
+    static final class History {
+        private final List<String> entries = new ArrayList<>();
+
+        void add(String input) {
+            // de-duplicate consecutive identical inputs
+            if (!entries.isEmpty() && entries.get(entries.size() - 1).equals(input)) return;
+            entries.add(input);
+        }
+
+        List<String> entries() { return Collections.unmodifiableList(entries); }
+
+        /** Print numbered history to stdout. */
+        void print() {
+            if (entries.isEmpty()) { System.out.println("(no history)"); return; }
+            for (int i = 0; i < entries.size(); i++) {
+                String line = entries.get(i).replace("\n", " ↵ ");
+                System.out.printf("  %3d  %s%n", i + 1, line);
+            }
+        }
+
+        /** Return the most recent entry, or null if empty. */
+        String last() { return entries.isEmpty() ? null : entries.get(entries.size() - 1); }
+
+        int size() { return entries.size(); }
     }
 
     // ── SubBuilder ────────────────────────────────────────────────────────────

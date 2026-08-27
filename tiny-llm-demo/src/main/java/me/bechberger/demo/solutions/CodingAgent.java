@@ -100,7 +100,7 @@ public class CodingAgent implements Callable<Integer> {
     // ── main loop: a small composition of overridable hooks ──────────────────
 
     @Override
-    public Integer call() throws IOException, InterruptedException {
+    public Integer call() {
         onStart();
         var messages = new ArrayList<Map<String, Object>>();
         messages.add(LLMClient.system(buildSystemPrompt()));
@@ -114,10 +114,7 @@ public class CodingAgent implements Callable<Integer> {
 
         registerCommands(builder, client, fileTools, messages);
         var paneRepl = builder.showPane(() -> state.renderPane());
-        toolSupport.setOnToolCall((toolName, result) -> {
-            if (toolName.startsWith("todo-") || toolName.equals("update-plan")) paneRepl.pane.run();
-            paneRepl.redrawSidebar();
-        });
+        paneRepl.withTools(toolSupport);
         this.repl = paneRepl.build();
         startSessionLog();
 
@@ -155,8 +152,8 @@ public class CodingAgent implements Callable<Integer> {
 
     protected String greeting() {
         return "Coding agent ready. Model: " + resolveModel()
-                + " (compacting above " + compactor.threshold() + " prompt tokens)"
-                + " - project root: " + Path.of(root).toAbsolutePath().normalize();
+                + " — root: " + Path.of(root).toAbsolutePath().normalize()
+                + (options.verbose ? " — sidebar active (see key hints in the box)" : "");
     }
 
     protected Compactor createCompactor(LLMClient client) {
@@ -199,7 +196,7 @@ public class CodingAgent implements Callable<Integer> {
                     .on("done",   "<id> — mark completed", (int id) -> state.updateTodo(id, AgentState.Status.COMPLETED))
                     .on("undone", "<id> — mark pending",   (int id) -> state.updateTodo(id, AgentState.Status.PENDING))
                     .on("del",    "<id> — remove",         (int id) -> state.removeTodo(id))
-                .end(this::printTodos)
+                .end(() -> { if (state.isEmpty()) System.out.println(Ansi.dim("(no plan or TODOs yet)")); })
                 .on("plan", "enter planning mode for a goal: /plan <goal>",
                         args -> handlePlanCommand(args, client, messages))
                 .on("run", "execute a shell command in the project, output shared with the agent: /run <command>",
@@ -227,13 +224,14 @@ public class CodingAgent implements Callable<Integer> {
      * TODO: live code
      */
     protected void chat(LLMClient client, ToolSupport toolSupport,
-                        List<Map<String, Object>> messages, String input) throws IOException {
+                        List<Map<String, Object>> messages, String input) throws Exception {
         // @stub
         messages.add(LLMClient.user(input));
         syncConversation(messages);
         System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
         String response = toolSupport.handleToolLoop(client, messages);
-        System.out.println(response);
+        if (response != null && !response.isBlank()) System.out.println(response);
+        else System.out.println(Ansi.dim("(no text response)"));
         messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
         var compaction = compactor.maybeCompact(client, messages, 1);
@@ -359,11 +357,15 @@ public class CodingAgent implements Callable<Integer> {
     }
 
     private void compactNow(LLMClient client, List<Map<String, Object>> messages) {
+        System.out.println(Ansi.dim("[compact] summarizing " + messages.size() + " messages…"));
         var outcome = compactor.compactNow(client, messages);
-        if (outcome.compacted()) stateMessageIndex = -1;
-        System.out.println(outcome.compacted()
-                ? "[compact] " + outcome.messagesBefore() + " -> " + outcome.messagesAfter() + " messages"
-                : "Nothing to compact yet (" + messages.size() + " messages).");
+        if (outcome.compacted()) {
+            stateMessageIndex = -1;
+            System.out.println(Ansi.dim("[compact] done — " + outcome.messagesBefore()
+                    + " → " + outcome.messagesAfter() + " messages"));
+        } else {
+            System.out.println(Ansi.dim("[compact] nothing to compact (" + messages.size() + " messages)."));
+        }
     }
 
     private void clearConversation(List<Map<String, Object>> messages) {

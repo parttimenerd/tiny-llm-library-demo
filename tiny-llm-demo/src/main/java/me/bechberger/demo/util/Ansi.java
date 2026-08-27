@@ -76,8 +76,11 @@ public final class Ansi {
 
     /** True when System.out is connected to a real terminal (not redirected). */
     public static boolean isTerminal() {
-        return System.console() != null;
+        return forceTerminal || System.console() != null;
     }
+
+    /** Package-private: set to true in tests to enable colour output without a real TTY. */
+    static boolean forceTerminal = false;
 
     private static String code(String n) {
         return "[" + n + "m";

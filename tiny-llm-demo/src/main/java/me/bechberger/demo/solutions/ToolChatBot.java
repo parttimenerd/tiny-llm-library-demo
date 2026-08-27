@@ -3,13 +3,13 @@ package me.bechberger.demo.solutions;
 import me.bechberger.demo.FileTools;
 import me.bechberger.demo.LLMClient;
 import me.bechberger.demo.ToolSupport;
+import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Mixin;
 import me.bechberger.femtocli.annotations.Option;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class ToolChatBot implements Callable<Integer> {
             "answer from what you find, and keep replies short.";
 
     @Override
-    public Integer call() throws IOException {
+    public Integer call() {
         var messages = new ArrayList<Map<String, Object>>();
         messages.add(LLMClient.system(SYSTEM_PROMPT));
 
@@ -53,13 +53,14 @@ public class ToolChatBot implements Callable<Integer> {
         // Tool registration: name + description + JSON schema + handler.
         // This is pre-written boilerplate — see FileTools.registerTools for the details.
         fileTools.registerTools(toolSupport);
-        toolSupport.setOnToolCall((name, result) -> builder.redrawSidebar());
+        builder.withTools(toolSupport);
 
         var repl = builder.build();
-        repl.greet("Tool Chatbot ready. Model: " + model);
+        repl.greet("Tool Chatbot ready. Model: " + model
+                + (options.verbose ? " — sidebar active (see key hints in the box)" : ""));
         repl.run(input -> {
             messages.add(LLMClient.user(input));
-            System.out.print("\nAssistant: ");
+            System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
             // @stub: call handleToolLoop, print the response, add it to messages
             String response = toolSupport.handleToolLoop(client, messages);
             System.out.println(response);

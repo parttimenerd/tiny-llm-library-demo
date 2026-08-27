@@ -47,7 +47,16 @@ public class Options {
         var client = new me.bechberger.demo.LLMClient(baseUrl, resolveModel(), builder.tokenCallback)
                 .withThinking(!noThinking)
                 .withThinkingBudget(thinkingBudget);
-        if (verbose) builder.showSidebar(client::lastUsage);
+        if (verbose) {
+            // context window: detect once, then cache for sidebar footer
+            int[] ctxWindow = { 0 };
+            builder.showSidebar(client::lastUsage, () -> {
+                if (ctxWindow[0] == 0)
+                    ctxWindow[0] = client.getContextWindowSize(
+                            ModelSize.defaultContextWindowFor(resolveModel()));
+                return ctxWindow[0];
+            });
+        }
         return client;
     }
 }
