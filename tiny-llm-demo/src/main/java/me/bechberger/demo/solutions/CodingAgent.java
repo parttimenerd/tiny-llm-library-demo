@@ -389,7 +389,9 @@ public class CodingAgent implements Callable<Integer> {
      *                   if false, Enter declines (used for run/delete)
      */
     private boolean confirm(String action, boolean defaultYes) {
-        if (approval == ApprovalMode.YOLO || (approval == ApprovalMode.AUTO_EDIT && defaultYes)) {
+        boolean autoApprove = approval == ApprovalMode.YOLO
+                || (approval == ApprovalMode.AUTO_EDIT && action.startsWith("run:"));
+        if (autoApprove) {
             System.out.println("  " + approval.badge() + Ansi.dim("auto-approved (" + approval.name().toLowerCase().replace('_', '-') + "): " + action));
             return true;
         }

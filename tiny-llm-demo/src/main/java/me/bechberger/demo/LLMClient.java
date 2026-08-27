@@ -266,7 +266,10 @@ public class LLMClient {
             if (thinkingBudget > 0) tkw.put("thinking_budget", thinkingBudget);
             req.put("chat_template_kwargs", tkw);
         }
-        if (stream) req.put("stream", true);
+        if (stream) {
+            req.put("stream", true);
+            req.put("stream_options", Map.of("include_usage", true));
+        }
         if (tools != null && !tools.isEmpty()) {
             req.put("tools", tools);
             req.put("tool_choice", "auto");
