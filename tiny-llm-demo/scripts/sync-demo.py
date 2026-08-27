@@ -34,8 +34,8 @@ PAIRS = [
     ("CodingAgent.java",  "CodingAgent.java"),
     ("ToolChatBot.java",  "ToolChatBot.java"),
     ("ChatBot.java",      "ChatBot.java"),
-    ("LLMClient.java",    "LLMClient.java"),
     ("Options.java",      "Options.java"),
+    # LLMClient.java: pre-written full implementation (solutions classes depend on it)
     # ToolSupport.java: managed by reset-live-coding.sh
 ]
 
