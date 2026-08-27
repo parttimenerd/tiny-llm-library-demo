@@ -218,7 +218,7 @@ public class SummarizingChatBot implements Callable<Integer> {
                 .required("page", Schemas.number().withDescription("Page number, 0-based"))
                 .toJsonSchema();
         toolSupport.registerTool("cat-paged", "Read file contents, paged", catSchema,
-                args -> fileTools.catPaged((String) args.get("path"), ((Number) args.get("page")).intValue()));
+                args -> fileTools.readFile((String) args.get("path")));
 
         var grepSchema = Schemas.object()
                 .required("query", Schemas.string().withDescription("Search query (case-insensitive)"))

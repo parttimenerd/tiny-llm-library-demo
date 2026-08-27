@@ -1,13 +1,11 @@
 package me.bechberger.demo;
 
-import me.bechberger.demo.http.Config;
 import me.bechberger.demo.util.ModelSize;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Option;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
@@ -21,18 +19,23 @@ import java.util.concurrent.Callable;
  * - REPL loop: read user input → add to messages → stream response → add to messages → repeat
  * <p>
  * Message history format: {@code [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]}
- * <p>
- * Uses femtocli for CLI argument parsing.
  */
 @Command(name = "chatbot", description = "A simple streaming chatbot", version = "1.0.0")
 public class ChatBot implements Callable<Integer> {
 
-    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B), gpt4o_mini, gpt4o, kimi_k3 (default: the endpoint's model from the config file, else fast)")
+    @Option(names = {"-m", "--model"}, description = "Model size: fast (1.7B), medium (9B), slow (27B) (default: ${DEFAULT-VALUE})",
+            defaultValue = "fast")
     ModelSize modelSize;
 
     @Option(names = {"-u", "--base-url"}, description = "LLM API base URL (default: ${DEFAULT-VALUE})",
             defaultValue = "http://localhost:8080")
     String baseUrl;
+
+    @Option(names = {"--no-thinking"}, description = "Disable thinking/reasoning mode")
+    boolean noThinking;
+
+    @Option(names = {"--thinking-budget"}, description = "Cap thinking tokens (e.g. 1000)", defaultValue = "-1")
+    int thinkingBudget;
 
     /**
      * Main REPL loop.
@@ -41,30 +44,31 @@ public class ChatBot implements Callable<Integer> {
      * 1. Create LLMClient with streaming callback (System.out::print for live output)
      * 2. Initialize empty messages list for conversation history
      * 3. Loop: read user input → append user message → call chatStream → append assistant message
-     * <p>
-     * Implementation: Use LLMClient.user() and LLMClient.assistant() helpers to build message maps
      */
     @Override
     public Integer call() {
-        String model = modelSize != null ? modelSize.getModelId()
-                : Config.load().modelFor(baseUrl, ModelSize.FAST.getModelId());
-        var client = new LLMClient(baseUrl, model, System.out::print);
+        String model = modelSize.getModelId();
+
+        var client = new LLMClient(baseUrl, model, System.out::print)
+                .withThinking(!noThinking)
+                .withThinkingBudget(thinkingBudget);
         var messages = new ArrayList<Map<String, Object>>();
         var scanner = new Scanner(System.in);
 
         while (true) {
             System.out.print("\nYou: ");
-            if (!scanner.hasNextLine()) break; // Ctrl-D / piped input exhausted
-            String input = scanner.nextLine().trim();
-            if (input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("quit")) {
-                break;
+            if (!scanner.hasNextLine()) {
+                return 0;
             }
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue;
+
             messages.add(LLMClient.user(input));
-            String response = client.chatStream(messages);
-            messages.add(LLMClient.assistant(response));
-            System.out.println();
+
+            System.out.print("\nAssistant: ");
+            // TODO: call chatStream, print response (streaming via callback), append assistant message
+            throw new UnsupportedOperationException("TODO: live code");
         }
-        return 0;
     }
 
     public static void main(String[] args) {

@@ -1,0 +1,3 @@
+{"version":3,"term":{"cols":80,"rows":24},"timestamp":1787745073,"command":"java -jar /Users/i560383_1/code/experiments/tiny-llm-library-demo/tiny-llm-demo/target/tiny-llm-demo.jar solutions.ChatBot --base-url http://localhost:8099","env":{"SHELL":"/bin/zsh"}}
+[0.144, "o", "\r\nYou: "]
+[449.365, "x", "143"]

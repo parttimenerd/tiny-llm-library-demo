@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 00-launch-llm.sh — Launch local LLM server (background)
-# Usage: ./00-launch-llm.sh [--fast|--slow]
-# Default: fast
+# Usage: ./00-launch-llm.sh [--fast|--medium|--slow]
+# Default: medium (9B)
 
 set -euo pipefail
 
@@ -16,14 +16,14 @@ Usage: $0 [--slow] [--medium] [--fast]
 
 Options:
   --slow         Use the slower, larger model (bartowski/Qwen_Qwen3.5-27B-GGUF:Q8_0)
-  --medium       Use the medium model (AaryanK/Qwen3.5-9B-GGUF:Q8_0)
-  --fast         Use the faster default model (Qwen/Qwen3-1.7B-GGUF:Q8_0)
+  --medium       Use the medium model — default (AaryanK/Qwen3.5-9B-GGUF:Q8_0)
+  --fast         Use the faster, small model (bartowski/Qwen3.5-2B-Instruct-GGUF:Q8_0)
   -h, --help     Show this help and exit
 USAGE
 }
 
 # Default mode
-MODE="fast"
+MODE="medium"
 
 # CLI parsing
 while [[ $# -gt 0 ]]; do
@@ -56,7 +56,7 @@ done
 echo "Model cache directory: $HF_HUB_CACHE"
 if [[ "$MODE" == "fast" ]]; then
   echo "Starting llama-server (fast mode)..."
-  llama-server -hf Qwen/Qwen3-1.7B-GGUF:Q8_0
+  llama-server -hf bartowski/Qwen3.5-2B-Instruct-GGUF:Q8_0
 elif [[ "$MODE" == "medium" ]]; then
   echo "Starting llama-server (medium mode)..."
   llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0

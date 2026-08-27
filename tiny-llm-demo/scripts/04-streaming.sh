@@ -11,7 +11,7 @@ Usage: $0 [--slow] [--medium] [--fast] [--model MODEL] [--verbose]
 Options:
   --slow         Use the slower, larger model (Qwen/Qwen3.5-27B-GGUF:Q8_0)
   --medium       Use the medium model (AaryanK/Qwen3.5-9B-GGUF:Q8_0)
-  --fast         Use the faster default model (Qwen/Qwen3-1.7B-GGUF:Q8_0)
+  --fast         Use the faster, small model (bartowski/Qwen3.5-2B-Instruct-GGUF:Q8_0)
   --model MODEL  Explicit model override (takes precedence)
   -v, --verbose  Print raw SSE lines only (no token parsing)
   -h, --help     Show this help and exit
@@ -19,7 +19,7 @@ USAGE
 }
 
 # Defaults
-MODEL="Qwen/Qwen3-1.7B-GGUF:Q8_0" # fast default
+MODEL="AaryanK/Qwen3.5-9B-GGUF:Q8_0" # medium default
 VERBOSE=false
 
 # CLI parsing (simple)
@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --fast)
-      MODEL="Qwen/Qwen3-1.7B-GGUF:Q8_0"
+      MODEL="bartowski/Qwen3.5-2B-Instruct-GGUF:Q8_0"
       shift
       ;;
     -m|--model)

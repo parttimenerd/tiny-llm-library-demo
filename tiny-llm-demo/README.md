@@ -2,7 +2,27 @@
 
 A minimal Java 21+ project that demonstrates calling **llama-server's OpenAI-compatible** local endpoints from scratch — no LLM framework required.
 
-Built for the JUG talk: **"Let's create a tiny AI library together"**
+Built for the talk: **"Let's create a tiny LLM library together"**
+
+## Opening Monologue Prompts
+
+Prompts for generating a short, fun opening monologue (adapt per venue):
+
+JavaZone:
+```
+Write a short (3-4 sentence), fun and nerdy opening monologue for a talk called
+"Let's create a tiny LLM library together" at JavaZone Oslo (the largest Java
+conference in Scandinavia). Thank the organizers for the excellent food and hospitality.
+Tone: enthusiastic, slightly self-deprecating, technical crowd.
+```
+
+GitHub Copilot Dev Day:
+```
+Write a short (3-4 sentence), fun and nerdy opening monologue for a talk called
+"Let's create a tiny AI library together, Copilot powered" at GitHub Copilot Dev Day
+Berlin at adesso SE (second talk of the evening). Thank Sandra Ahlgrimm for inviting
+and adesso SE for hosting.
+```
 
 ## Prerequisites
 
@@ -28,7 +48,33 @@ cd tiny-llm-demo
 mvn clean package
 ```
 
-This produces a fat JAR at `target/tiny-llm-demo-1.0-SNAPSHOT.jar` (~150KB).
+This produces a fat JAR at `target/tiny-llm-demo.jar` (~150KB).
+
+## Configuration
+
+Named endpoints with API keys and default models live in a standard Java properties file:
+
+```
+~/.config/tiny-llm-library/config.config
+```
+
+(`$XDG_CONFIG_HOME` is honored; `TINY_LLM_CONFIG` env var overrides the path entirely.)
+
+**Format:**
+
+```properties
+# Named endpoint — url is required, key and model are optional
+gardener.url   = https://models.answering-machine.utility.gardener.cloud.sap
+gardener.key   = sk-...          # sent as Authorization: Bearer; omit for local servers
+gardener.model = kimi-k3         # default model for this endpoint
+
+# Global fallback model (used when --model is not passed and endpoint has none)
+default.model  = kimi-k3
+```
+
+Once configured, `--base-url gardener` resolves to the URL + key + default model in one go. A raw URL still works (`--base-url http://localhost:8080`), and `--model` always overrides the default. A `#token` URL fragment can inline a key without the config file: `--base-url https://api.example.com#mykey`.
+
+A missing config file is fine — local llama.cpp servers need no credentials.
 
 ## Running the Demos
 
@@ -54,7 +100,7 @@ This produces a fat JAR at `target/tiny-llm-demo-1.0-SNAPSHOT.jar` (~150KB).
 ### Solution: Basic Chatbot
 
 ```bash
-java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.ChatBot \
+java -cp target/tiny-llm-demo.jar me.bechberger.demo.solutions.ChatBot \
   --model Qwen/Qwen3-1.7B-GGUF:Q8_0 \
   --base-url http://localhost:8080
 ```
@@ -62,7 +108,19 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Chat
 ### Solution: Tool Chatbot
 
 ```bash
-java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.ToolChatBot
+java -cp target/tiny-llm-demo.jar me.bechberger.demo.solutions.ToolChatBot
+```
+
+### Solution: Coding Agent
+
+```bash
+java -cp target/tiny-llm-demo.jar me.bechberger.demo.solutions.CodingAgent
+```
+
+### Demo: Skill Coding Agent (live-coding + skill demo)
+
+```bash
+java -cp target/tiny-llm-demo.jar me.bechberger.demo.SkillCodingAgent
 ```
 
 ## Live Coding Sequence
@@ -89,17 +147,13 @@ java -cp target/tiny-llm-demo-1.0-SNAPSHOT.jar me.bechberger.demo.solutions.Tool
 
 ## Key Design Decisions
 
-- **Named endpoints, API keys and default models** — `~/.config/tiny-llm-library/config.config` is a standard Java properties file (`gardener.url`, optional `gardener.key` and `gardener.model`, plus global `default.model`), so `--base-url gardener` carries URL, key and default model in one go. The key is sent as `Authorization: Bearer <key>`; no entry = no auth header, which is all local llama-server needs. A `#token` URL fragment still overrides the config file, and `--model` overrides the configured default model. (`$XDG_CONFIG_HOME` honored; `TINY_LLM_CONFIG` overrides the location.)
+- **Named endpoints** — `--base-url <name>` resolves to URL + key + default model from the config file (see [Configuration](#configuration)). A raw URL, `url#token` fragment, and `--model` override all still work.
 - **Live-coding gaps on stage** — `ToolChatBot` keeps its TODOs (system prompt, tool loop, run-command tool) with the boring parts pre-extracted (`SYSTEM_PROMPT` constant, one-verbose-then-one-line tool registrations via `CodingTools.register`). `scripts/reset-live-coding.sh` additionally restores the `ToolSupport` skeleton.
 - **Context compaction in the coding agents** — once the prompt exceeds 80% of the model's context window (auto-detected; override with `--max-tokens`), old history is folded into a single `[Conversation summary]` message while the system prompt stays pinned and the recent turns verbatim — driven by real token-usage data from the API (`Compactor` helper; same "hybrid memory" strategy as the summarizing chatbot).
 - **Streaming by default** via `Consumer<String> onToken` callback
 - **No Jackson** — uses femtojson for JSON parsing, manual serialization for output
 - **Reasoning in separate field** — reasoning models return `reasoning_content` as a separate JSON field; no `<think>` parsing needed
-- **An agentic REPL framework in `util/`** — `Repl` (dynamic prompt with live mode badge, backslash-continued multi-line input, echo when piped), `Commands` (slash-command DSL), `Compactor` (hybrid-memory compaction), `SessionLog` (a transcript per session in `~/.tiny-llm-library/sessions/`). CodingAgent surfaces them as Claude-Code-style affordances: `/mode` cycles NORMAL → AUTO-EDIT → YOLO (`/yolo` toggles) with a badge in the prompt, `/clear` resets the conversation, `/compact` folds history manually, `/tokens` shows usage.
+- **An agentic REPL framework in `util/`** — `Repl` (dynamic prompt with live mode badge, backslash-continued multi-line input, echo when piped), `Commands` (slash-command DSL), `Compactor` (hybrid-memory compaction), `SessionLog` (a transcript per session in `~/.tiny-llm-library/sessions/`). CodingAgent surfaces them as Claude-Code-style affordances: `/mode` cycles NORMAL → AUTO-EDIT → YOLO (`/yolo` toggles) with a badge in the prompt, `/clear` resets the conversation, `/compact` folds history manually, `/tokens` shows usage. Plans always require user confirmation; pass `--approve-plans` to skip for scripted sessions.
 - **Boring plumbing in helpers, interesting logic in the agent** — `util.Commands` (REPL command DSL: `/plan`, `/run`, `/yolo`, `/todos`, `/help`, `exit`/`quit` with aliases and auto-generated help; unknown slash commands rejected locally), `util.Repl` (prompt loop, EOF handling, command dispatch), `CodingTools` (tool registrations; robust arg access that feeds "missing argument" errors back to the model instead of storing nulls) — leaving CodingAgent itself with only the talk-worthy parts: pinned context, plan mode, confirmation policy. CodingAgent is a composition of protected hooks (`onStart`, `createClient`, `createToolSupport`, `buildSystemPrompt`, `registerCommands`, `chat`, `syncConversation`); SkillCodingAgent subclasses it adding only a small delta of skill discovery/activation code (`.claude/skills/*/SKILL.md`, `skill` tool, `/skill(s)` commands), and since the system prompt is re-synced before every LLM call, skill (de)activation takes effect mid-conversation
 - **Solution files in `solutions/` package** — avoids compilation conflicts with skeletons
 - **Security-first tools** — sandboxed to a root directory, no dotfiles, size- and time-limited; the coding agent additionally gets write tools (create-file/write-file/create-folder plus `edit` for surgical replacements) and a `run` (shell exec) tool so it can build and verify its own work — all confined to the sandbox root with output caps and timeouts. Agent-initiated `run`/`delete` and plan acceptance ask the user for confirmation; `/yolo` toggles auto-approval of everything for autonomous sessions. ToolChatBot's variant of command execution still asks for interactive user confirmation
-
-Write a short, fun and nerdy opening monologue of my talk "Let's create a tiny AI library together, 
-Copilot powered" that I give at GitHub Copilot Dev Day Berlin at adesso SE (as the second talk in the evening). 
-Thank Sandra Ahlgrimm for inviting me and adesso SE for hosting us all.

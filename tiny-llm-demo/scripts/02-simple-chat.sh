@@ -10,7 +10,7 @@ echo
 curl -s http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
+    "model": "AaryanK/Qwen3.5-9B-GGUF:Q8_0",
     "messages": [
       {"role": "user", "content": "Make fun of Java in one sentence."}
     ]

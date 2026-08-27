@@ -1,5 +1,7 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.util.Ansi;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +16,18 @@ public class AgentState {
 
         public String symbol() {
             return switch (this) {
-                case PENDING    -> "[ ]";
+                case PENDING     -> "[ ]";
                 case IN_PROGRESS -> "[>]";
-                case COMPLETED  -> "[x]";
+                case COMPLETED   -> "[x]";
+            };
+        }
+
+        /** Coloured symbol for terminal output. */
+        public String colorSymbol() {
+            return switch (this) {
+                case PENDING     -> Ansi.pending();
+                case IN_PROGRESS -> Ansi.inProgress();
+                case COMPLETED   -> Ansi.checked();
             };
         }
     }
@@ -35,7 +46,7 @@ public class AgentState {
     public List<Todo> getTodos()   { return List.copyOf(todos); }
 
     public void setGoal(String goal) { this.goal = goal; }
-    public void setPlan(String plan) { this.plan = plan; }
+    public void setPlan(String plan) { this.plan = plan != null ? plan : ""; }
 
     public int addTodo(String description) {
         int id = nextId++;
@@ -86,5 +97,28 @@ public class AgentState {
             }
         }
         return sb.toString().stripTrailing();
+    }
+
+    /**
+     * Compact after-response panel — like Claude Code's todo list below the response.
+     * Returns null when the state is empty (caller should suppress display).
+     */
+    public String renderPane() {
+        if (isEmpty()) return null;
+        var sb = new StringBuilder();
+        sb.append(Ansi.divider(58)).append("\n");
+        if (!goal.isBlank()) {
+            sb.append(Ansi.bold(Ansi.cyan("Goal: "))).append(goal).append("\n");
+        }
+        if (!todos.isEmpty()) {
+            for (var t : todos) {
+                sb.append(t.status().colorSymbol()).append(" ")
+                  .append(Ansi.dim("#" + t.id())).append(" ").append(t.description()).append("\n");
+            }
+        } else if (!plan.isBlank()) {
+            sb.append(Ansi.dim(plan)).append("\n");
+        }
+        sb.append(Ansi.divider(58));
+        return sb.toString();
     }
 }

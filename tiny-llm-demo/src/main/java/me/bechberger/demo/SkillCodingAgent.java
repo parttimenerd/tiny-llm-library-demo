@@ -1,6 +1,8 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
+import me.bechberger.demo.util.Skills;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 
@@ -23,67 +25,18 @@ import java.util.Map;
 @Command(name = "skill-agent", description = "Coding agent with .claude skills support", version = "1.0.0")
 public class SkillCodingAgent extends CodingAgent {
 
-    /** A discovered skill: path + one-line description from the SKILL.md frontmatter. */
-    record Skill(Path path, String description) {}
-
     /** name → skill, discovered in onStart. */
-    private final Map<String, Skill> availableSkills = new LinkedHashMap<>();
+    private final Map<String, Skills.Skill> availableSkills = new LinkedHashMap<>();
     /** name → skill content, loaded on activation. */
     private final Map<String, String> activeSkills = new LinkedHashMap<>();
 
     @Override
     protected void onStart() {
-        Path skillsDir = Path.of(root, ".claude", "skills");
-        if (!Files.isDirectory(skillsDir)) return;
-        try (var dirs = Files.list(skillsDir)) {
-            dirs.filter(Files::isDirectory).forEach(dir -> {
-                Path md = dir.resolve("SKILL.md");
-                if (Files.isRegularFile(md)) {
-                    availableSkills.put(dir.getFileName().toString(),
-                            new Skill(md, descriptionOf(md)));
-                }
-            });
-        } catch (IOException ignored) {
-        }
-    }
-
-    /**
-     * One-line preview of a skill, so we can list it without activating it:
-     * the {@code description:} line from the {@code ---} frontmatter if present,
-     * else the first non-heading, non-blank line of the body.
-     */
-    private static String descriptionOf(Path md) {
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(md); // SKILL.md files are tiny — eager read is fine
-        } catch (IOException e) {
-            return "";
-        }
-        int bodyStart = 0;
-        if (!lines.isEmpty() && lines.getFirst().equals("---")) {
-            for (int i = 1; i < lines.size(); i++) {
-                if (lines.get(i).equals("---")) {
-                    bodyStart = i + 1; // frontmatter ends here, body follows
-                    break;
-                }
-                if (lines.get(i).startsWith("description:")) {
-                    return lines.get(i).substring("description:".length()).strip();
-                }
-            }
-        }
-        // no frontmatter description — fall back to the first non-heading, non-blank body line
-        for (int i = bodyStart; i < lines.size(); i++) {
-            var line = lines.get(i).strip();
-            if (!line.isEmpty() && !line.startsWith("#")) {
-                return line;
-            }
-        }
-        return "";
+        availableSkills.putAll(Skills.discover(Path.of(root, ".claude", "skills")));
     }
 
     @Override
     protected String greeting() {
-        // with no skills around, stay invisible - this class behaves exactly like CodingAgent
         return availableSkills.isEmpty() ? super.greeting()
                 : super.greeting() + " — " + availableSkills.size() + " skill(s) in .claude/skills";
     }
@@ -100,11 +53,11 @@ public class SkillCodingAgent extends CodingAgent {
     }
 
     @Override
-    protected void registerCommands(Repl repl, LLMClient client, FileTools fileTools,
+    protected void registerCommands(Repl.Builder builder, LLMClient client, FileTools fileTools,
                                     List<Map<String, Object>> messages) {
-        super.registerCommands(repl, client, fileTools, messages);
-        if (availableSkills.isEmpty()) return; // no /skill commands on skill-less projects
-        repl.commands()
+        super.registerCommands(builder, client, fileTools, messages);
+        if (availableSkills.isEmpty()) return;
+        builder
                 .on("skills", "list available and active (*) skills", args -> printSkills())
                 .on("skill", "toggle a skill for this conversation: /skill <name>",
                         args -> System.out.println(args.isBlank() ? "Usage: /skill <name>" : toggle(args)));
@@ -112,15 +65,17 @@ public class SkillCodingAgent extends CodingAgent {
 
     @Override
     protected String buildSystemPrompt() {
-        var sb = new StringBuilder(super.buildSystemPrompt());
+        var sb = new StringBuilder();
         if (!availableSkills.isEmpty()) {
-            sb.append("\n\n## Available Skills\n");
+            sb.append("## Available Skills\n");
             availableSkills.forEach((name, skill) ->
                     sb.append("- ").append(name)
                       .append(skill.description().isEmpty() ? "" : " — " + skill.description())
                       .append("\n"));
-            sb.append("When the task matches one, activate it with the skill tool before starting.");
+            sb.append("IMPORTANT: Before answering any user request, check whether a skill applies. ");
+            sb.append("If it does, you MUST call the skill tool to activate it first, then proceed.\n\n");
         }
+        sb.append(super.buildSystemPrompt());
         if (!activeSkills.isEmpty()) {
             sb.append("\n\n## Active Skills — follow their instructions\n");
             activeSkills.forEach((name, content) ->
@@ -131,7 +86,7 @@ public class SkillCodingAgent extends CodingAgent {
 
     /** Tool entry point: load a skill's content into the active set. */
     private String activate(String name) {
-        Skill skill = availableSkills.get(name);
+        var skill = availableSkills.get(name);
         if (skill == null) return "Unknown skill: " + name + " — available: " + availableSkills.keySet();
         if (activeSkills.containsKey(name)) return "Skill already active: " + name;
         try {
@@ -148,17 +103,17 @@ public class SkillCodingAgent extends CodingAgent {
     }
 
     private void printSkills() {
-        if (availableSkills.isEmpty()) {
-            System.out.println("(no skills found in .claude/skills)");
-            return;
-        }
-        System.out.println("Skills:");
-        availableSkills.forEach((name, skill) ->
-                System.out.println("  " + (activeSkills.containsKey(name) ? "*" : " ") + " " + name
-                        + (skill.description().isEmpty() ? "" : " — " + skill.description())));
+        if (availableSkills.isEmpty()) { System.out.println(Ansi.dim("(no skills found in .claude/skills)")); return; }
+        availableSkills.forEach((name, skill) -> {
+            boolean active = activeSkills.containsKey(name);
+            String marker = active ? Ansi.boldGreen("* ") : "  ";
+            String desc = skill.description().isEmpty() ? "" : Ansi.dim(" — " + skill.description());
+            System.out.println(marker + (active ? Ansi.green(name) : name) + desc);
+        });
     }
 
     public static void main(String[] args) {
         System.exit(FemtoCli.run(new SkillCodingAgent(), args));
     }
 }
+
