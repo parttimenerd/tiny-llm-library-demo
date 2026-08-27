@@ -696,29 +696,23 @@ Then chatStream() — POST with stream:true, BufferedReader line loop, call proc
 
 ```java
 public class ChatBot implements Callable<Integer> {
-    // @Option: --model (ModelSize), --base-url (pre-written)
+    @Mixin Options options;  // --model, --base-url, --verbose (pre-written)
 
     @Override
     public Integer call() {
-        var client = new LLMClient(baseUrl, modelSize.getModelId(), System.out::print);
         var messages = new ArrayList<Map<String, Object>>();
-        var scanner = new Scanner(System.in);
-        while (true) {
-            System.out.print("\nYou: ");
-            if (!scanner.hasNextLine()) return 0;
-            String input = scanner.nextLine().trim();
-            if (input.isEmpty()) continue;
-            messages.add(LLMClient.user(input));
-            System.out.print("\nAssistant: ");
-            // TODO: call chatStream, append assistant message to messages
-        }
+        var builder = new Repl.Builder("\nYou: ", new Scanner(System.in), messages);
+        // TODO: createClient, build repl, greet, run loop:
+        //   messages.add(LLMClient.user(input));
+        //   String response = client.chatStream(messages);
+        //   messages.add(LLMClient.assistant(response));
     }
 }
 ```
 
 <div class="mt-2 text-lg">
 
-The entire chatbot is a <OrangeText>while loop with a list</OrangeText>.
+The entire chatbot is a <OrangeText>growing list</OrangeText> + a <OrangeText>streaming loop</OrangeText>.
 
 </div>
 
@@ -726,7 +720,8 @@ The entire chatbot is a <OrangeText>while loop with a list</OrangeText>.
 **[~20:00]** "The chatbot is embarrassingly simple. Read input, append to messages, call the client, append the response, repeat."
 "We use the helper methods — LLMClient.user() and LLMClient.assistant() — instead of building maps manually."
 "The conversation history is just a growing ArrayList. That's all the 'memory' a chatbot has."
-Type this one manually — it's only 2 lines to fill in. ~2 minutes.
+"The Repl.Builder is pre-written scaffolding — it handles /help, sidebar, and Ctrl+C so we can focus on the LLM part."
+Type this one manually — it's only 4 lines to fill in. ~2 minutes.
 **[FALLBACK]** paste from solution.
 -->
 
@@ -739,9 +734,7 @@ layout: center
 <div class="text-xl mt-8">
 
 ```bash
-llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
-
-java -jar tiny-llm-demo.jar ChatBot
+java -jar tiny-llm-demo.jar ChatBot --base-url gardener
 ```
 
 </div>
@@ -764,7 +757,7 @@ No magic. Just strings and sockets.
 **[~25:00]** **[FUN MOMENT / INTRO CALLBACK]** This is also the intro demo. Open the talk by running the pre-recorded intro:
   Before the first slide, open a terminal and run:
   ```
-  java -jar tiny-llm-demo.jar ChatBot --base-url kimi-k3
+  java -jar tiny-llm-demo.jar ChatBot --base-url gardener
   ```
   Type: "Write a short, fun and nerdy opening monologue for a talk called 'Let's create a tiny LLM library together' at JavaZone Oslo"
   Use the benchmarked response — it's been pre-run with kimi-k3 (a strong model) so the output is good.
@@ -1251,7 +1244,7 @@ layout: center
 
 ```bash
 java -jar tiny-llm-demo.jar ToolChatBot \
-  --model fast
+  --base-url gardener
 ```
 
 </div>
