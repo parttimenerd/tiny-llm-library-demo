@@ -117,7 +117,7 @@ public class ToolSupport {
 
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
         var toolsJson = buildToolsJson();
-        int maxIterations = 100;
+        int maxIterations = 100; // @stub: loop up to 100 times: chatRaw → if finish_reason=="stop" return extractContent, else processToolCalls and continue
 
         for (int i = 0; i < maxIterations; i++) {
             var choice = client.chatRaw(messages, toolsJson);
@@ -161,7 +161,7 @@ public class ToolSupport {
      */
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
         var assistantMessage = Util.asMap(choice.get("message"));
-        messages.add(assistantMessage);
+        messages.add(assistantMessage); // @stub: add assistant message first, then for each tool_call: executeToolCall and add result to messages
         // notify after adding the assistant tool_calls message so sidebar shows it immediately
         if (onToolCall != null) onToolCall.accept("", "");
 

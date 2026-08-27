@@ -738,7 +738,7 @@ layout: center
 <div class="text-xl mt-8">
 
 ```bash
-java -jar tiny-llm-demo.jar ChatBot --base-url gardener
+java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
 ```
 
 </div>
@@ -761,7 +761,7 @@ No magic. Just strings and sockets.
 **[~25:00]** **[FUN MOMENT / INTRO CALLBACK]** This is also the intro demo. Open the talk by running the pre-recorded intro:
   Before the first slide, open a terminal and run:
   ```
-  java -jar tiny-llm-demo.jar ChatBot --base-url gardener
+  java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
   ```
   Type: "Write a short, fun and nerdy opening monologue for a talk called 'Let's create a tiny LLM library together' at JavaZone Oslo"
   Use the benchmarked response — it's been pre-run with kimi-k3 (a strong model) so the output is good.
@@ -1247,7 +1247,7 @@ layout: center
 <div class="text-2xl mt-8">
 
 ```bash
-java -jar tiny-llm-demo.jar ToolChatBot \
+java -jar target/tiny-llm-demo.jar ToolChatBot \
   --base-url gardener
 ```
 
@@ -2101,7 +2101,7 @@ layout: center
 <div class="text-xl mt-8 text-gray-300">
 
 ```bash
-java -jar tiny-llm-demo.jar CodingAgent --base-url gardener
+java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener
 ```
 
 </div>
@@ -2218,7 +2218,7 @@ layout: center
 <div class="text-xl mt-8 text-gray-300">
 
 ```bash
-java -jar tiny-llm-demo.jar SkillCodingAgent --base-url gardener
+java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url gardener
 ```
 
 </div>

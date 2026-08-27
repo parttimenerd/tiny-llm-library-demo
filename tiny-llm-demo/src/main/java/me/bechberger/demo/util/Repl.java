@@ -2,6 +2,11 @@ package me.bechberger.demo.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -54,7 +59,7 @@ public final class Repl {
     private Runnable prePrompt;
     private boolean stopped = false;
     private volatile String pendingInput = null;  // injected by sidebar rerun; bypasses stdin
-    final History history = new History();
+    final History history = new History(System.console() != null);
     /** Sidebar reference for raw/cooked mode toggling during run loop. */
     Sidebar sidebar = null;
 
@@ -146,7 +151,7 @@ public final class Repl {
         System.out.print(promptText);
         if (!scanner.hasNextLine()) return defaultValue;
         String answer = scanner.nextLine().trim();
-        echoIfPiped(answer);
+        if (System.console() == null) System.out.println(answer); // echo for piped input
         return answer;
     }
 
@@ -185,8 +190,11 @@ public final class Repl {
                 continue;
             }
             System.out.print(prompt.get());
-            if (!scanner.hasNextLine()) break;
-            String input = readLogicalLine().trim();
+            // On a real TTY the line editor handles raw input directly; on piped input fall back to scanner
+            if (System.console() == null && !scanner.hasNextLine()) break;
+            String raw = readLogicalLine();
+            if (raw == null) break; // EOF from line editor (Ctrl-D on empty line)
+            String input = raw.trim();
             if (input.isEmpty()) continue;
             if (commands.handle(input)) { if (onResponse != null && !stopped) onResponse.run(); continue; }
             history.add(input);
@@ -214,22 +222,236 @@ public final class Repl {
     }
 
     private String readLogicalLine() {
+        if (System.console() != null) {
+            // Real TTY: use raw-mode line editor with history navigation.
+            // Strip leading newlines — they're spacing, not part of the input line.
+            String line = lineEditor.readLine(prompt.get().stripLeading().replace("\n", ""));
+            if (line == null) return null; // EOF (Ctrl-D on empty line)
+            var sb = new StringBuilder(line);
+            while (sb.toString().endsWith("\\")) {
+                sb.setLength(sb.length() - 1);
+                System.out.print("  ... ");
+                String cont = lineEditor.readLine("  ... ");
+                if (cont == null) break;
+                sb.append('\n').append(cont);
+            }
+            return sb.toString();
+        }
+        // Piped input: fall back to scanner
         String line = scanner.nextLine();
-        echoIfPiped(line);
+        System.out.println(line); // echo for logs
         var sb = new StringBuilder(line);
         while (sb.toString().endsWith("\\")) {
             sb.setLength(sb.length() - 1);
             System.out.print("  ... ");
             if (!scanner.hasNextLine()) break;
             line = scanner.nextLine();
-            echoIfPiped(line);
+            System.out.println(line);
             sb.append('\n').append(line);
         }
         return sb.toString();
     }
 
-    private static void echoIfPiped(String line) {
-        if (System.console() == null) System.out.println(line);
+    /** Raw-mode line editor: ↑/↓ history, Ctrl-R search, basic editing. */
+    private final LineEditor lineEditor = new LineEditor();
+
+    final class LineEditor {
+        private InputStream tty;
+        private OutputStream out;
+        private String currentPrompt = "";
+        /** Visible (non-ANSI) length of currentPrompt, for cursor math. */
+        private int promptVisibleLen = 0;
+
+        LineEditor() {}
+
+        /** Read a line using raw terminal mode. Returns null on EOF/Ctrl-D. */
+        String readLine(String promptText) {
+            currentPrompt = promptText;
+            promptVisibleLen = stripAnsi(promptText).length();
+            try {
+                if (tty == null) {
+                    tty = new java.io.FileInputStream("/dev/tty");
+                    out = System.out;
+                }
+                boolean rawOk = tryStty(new String[]{"stty", "-icanon", "-echo"});
+                try {
+                    if (rawOk) return readRaw();
+                    return readCooked();
+                } finally {
+                    if (rawOk) runStty(new String[]{"stty", "sane"});
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        private static String stripAnsi(String s) {
+            return s.replaceAll("\033\\[[^a-zA-Z]*[a-zA-Z]", "");
+        }
+
+        private boolean tryStty(String[] cmd) {
+            try {
+                int exit = new ProcessBuilder(cmd).inheritIO()
+                        .redirectInput(ProcessBuilder.Redirect.from(new java.io.File("/dev/tty")))
+                        .start().waitFor();
+                return exit == 0;
+            } catch (Exception e) { return false; }
+        }
+
+        /** Simple byte-by-byte cooked read (when stty is unavailable). */
+        private String readCooked() throws Exception {
+            var buf = new StringBuilder();
+            int b;
+            while ((b = tty.read()) != -1) {
+                if (b == '\n' || b == '\r') { out.write(new byte[]{'\r', '\n'}); out.flush(); return buf.toString(); }
+                if (b == 4 && buf.length() == 0) return null; // Ctrl-D
+                if (b >= 32) buf.append((char) b);
+            }
+            return null;
+        }
+
+        private String readRaw() throws Exception {
+            var buf = new StringBuilder();
+            int cursor = 0;          // insertion point in buf
+            int histIdx = -1;        // -1 = not browsing history
+            String savedLine = "";   // line typed before ↑ pressed
+            boolean searchMode = false;
+            var searchBuf = new StringBuilder();
+
+            while (true) {
+                int b = tty.read();
+                if (b == -1) return null;  // EOF
+
+                if (searchMode) {
+                    if (b == 18) { // Ctrl-R again → search backwards further
+                        String found = history.searchBackward(searchBuf.toString(),
+                                histIdx < 0 ? history.size() : histIdx);
+                        if (found != null) {
+                            histIdx = history.entries().indexOf(found);
+                            buf = new StringBuilder(found);
+                            cursor = buf.length();
+                        }
+                        printSearchLine(searchBuf, buf);
+                        continue;
+                    } else if (b == 27 || b == 7) { // Esc or Ctrl-G: cancel search
+                        searchMode = false;
+                        buf = new StringBuilder(savedLine); cursor = buf.length(); histIdx = -1;
+                        redrawLine(buf, cursor);
+                        continue;
+                    } else if (b == 13 || b == 10) { // Enter: accept
+                        searchMode = false;
+                        out.write(new byte[]{'\r', '\n'});
+                        out.flush();
+                        return buf.toString();
+                    } else if (b == 127 || b == 8) { // Backspace in search
+                        if (searchBuf.length() > 0) searchBuf.deleteCharAt(searchBuf.length() - 1);
+                        String found = history.searchBackward(searchBuf.toString(), history.size());
+                        if (found != null) { histIdx = history.entries().indexOf(found); buf = new StringBuilder(found); cursor = buf.length(); }
+                        printSearchLine(searchBuf, buf);
+                        continue;
+                    } else if (b >= 32 && b < 127) { // printable: extend search query
+                        searchBuf.append((char) b);
+                        String found = history.searchBackward(searchBuf.toString(), history.size());
+                        if (found != null) { histIdx = history.entries().indexOf(found); buf = new StringBuilder(found); cursor = buf.length(); }
+                        printSearchLine(searchBuf, buf);
+                        continue;
+                    } else { // any other control key: exit search, fall through
+                        searchMode = false;
+                        redrawLine(buf, cursor);
+                        // fall through to handle the key normally
+                    }
+                }
+
+                if (b == 13 || b == 10) {         // Enter — \r\n needed in raw mode
+                    out.write(new byte[]{'\r', '\n'});
+                    out.flush();
+                    return buf.toString();
+                } else if (b == 3) {               // Ctrl-C
+                    out.write(new byte[]{'\r', '\n'});
+                    out.flush();
+                    return "";
+                } else if (b == 4 && buf.length() == 0) {  // Ctrl-D on empty line = EOF
+                    return null;
+                } else if (b == 18) {              // Ctrl-R: start reverse search
+                    searchMode = true;
+                    searchBuf = new StringBuilder();
+                    savedLine = buf.toString();
+                    histIdx = -1;
+                    printSearchLine(searchBuf, buf);
+                } else if (b == 1) {               // Ctrl-A: start of line
+                    cursor = 0; redrawLine(buf, cursor);
+                } else if (b == 5) {               // Ctrl-E: end of line
+                    cursor = buf.length(); redrawLine(buf, cursor);
+                } else if (b == 11) {              // Ctrl-K: kill to end
+                    buf.delete(cursor, buf.length()); redrawLine(buf, cursor);
+                } else if (b == 21) {              // Ctrl-U: kill to start
+                    buf.delete(0, cursor); cursor = 0; redrawLine(buf, cursor);
+                } else if (b == 127 || b == 8) {   // Backspace / Ctrl-H
+                    if (cursor > 0) { buf.deleteCharAt(--cursor); redrawLine(buf, cursor); }
+                } else if (b == 27) {              // Escape sequence
+                    long deadline = System.currentTimeMillis() + 30;
+                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                    if (tty.available() == 0) continue; // bare Esc — ignore
+                    int b2 = tty.read();
+                    if (b2 == '[') {
+                        while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                        if (tty.available() == 0) continue;
+                        int b3 = tty.read();
+                        if (b3 == 'A') {           // ↑ — older history
+                            if (histIdx == -1) { savedLine = buf.toString(); histIdx = history.size(); }
+                            if (histIdx > 0) {
+                                histIdx--;
+                                buf = new StringBuilder(history.entries().get(histIdx));
+                                cursor = buf.length();
+                                redrawLine(buf, cursor);
+                            }
+                        } else if (b3 == 'B') {    // ↓ — newer history / restore
+                            if (histIdx >= 0 && histIdx < history.size() - 1) {
+                                histIdx++;
+                                buf = new StringBuilder(history.entries().get(histIdx));
+                                cursor = buf.length();
+                                redrawLine(buf, cursor);
+                            } else if (histIdx == history.size() - 1 || histIdx == history.size()) {
+                                histIdx = -1;
+                                buf = new StringBuilder(savedLine);
+                                cursor = buf.length();
+                                redrawLine(buf, cursor);
+                            }
+                        } else if (b3 == 'C') {    // →
+                            if (cursor < buf.length()) { cursor++; redrawLine(buf, cursor); }
+                        } else if (b3 == 'D') {    // ←
+                            if (cursor > 0) { cursor--; redrawLine(buf, cursor); }
+                        } else if (b3 == '3') {    // Delete key (ESC [ 3 ~)
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                            if (tty.available() > 0) tty.read(); // consume '~'
+                            if (cursor < buf.length()) { buf.deleteCharAt(cursor); redrawLine(buf, cursor); }
+                        }
+                    }
+                } else if (b >= 32) {              // printable character
+                    buf.insert(cursor++, (char) b);
+                    redrawLine(buf, cursor);
+                }
+            }
+        }
+
+        /** Redraw prompt + buffer, placing the cursor at `cursor` offset within the buffer. */
+        private void redrawLine(StringBuilder buf, int cursor) throws IOException {
+            // \r to column 0, erase to EOL, reprint prompt + buffer, then reposition cursor
+            out.write('\r');
+            out.write(("\033[K" + currentPrompt + buf).getBytes(StandardCharsets.UTF_8));
+            int charsAfterCursor = buf.length() - cursor;
+            if (charsAfterCursor > 0) {
+                out.write(("\033[" + charsAfterCursor + "D").getBytes(StandardCharsets.UTF_8));
+            }
+            out.flush();
+        }
+
+        private void printSearchLine(StringBuilder search, StringBuilder match) throws IOException {
+            String display = "(reverse-i-search)`" + search + "': " + match;
+            out.write('\r');
+            out.write(("\033[K" + display).getBytes(StandardCharsets.UTF_8));
+            out.flush();
+        }
     }
 
     // ── Builder ──────────────────────────────────────────────────────────────
@@ -500,19 +722,45 @@ public final class Repl {
 
     // ── History ───────────────────────────────────────────────────────────────
 
-    /** Per-session input history (non-command turns only). */
+    static final Path HISTORY_FILE = Path.of(System.getProperty("user.home"), ".config", "tiny-llm", "history");
+
+    /** Per-session input history (non-command turns only). File-backed only on a real TTY. */
     static final class History {
         private final List<String> entries = new ArrayList<>();
+        private final boolean persist;
+
+        History(boolean persist) {
+            this.persist = persist;
+            if (persist) load();
+        }
+
+        private void load() {
+            try {
+                if (Files.exists(HISTORY_FILE)) {
+                    Files.readAllLines(HISTORY_FILE, StandardCharsets.UTF_8).forEach(line -> {
+                        if (!line.isBlank()) entries.add(line.replace(" ↵ ", "\n"));
+                    });
+                }
+            } catch (IOException ignored) {}
+        }
 
         void add(String input) {
-            // de-duplicate consecutive identical inputs
             if (!entries.isEmpty() && entries.get(entries.size() - 1).equals(input)) return;
             entries.add(input);
+            if (persist) append(input);
+        }
+
+        private void append(String input) {
+            try {
+                Files.createDirectories(HISTORY_FILE.getParent());
+                String line = input.replace("\n", " ↵ ") + "\n";
+                Files.writeString(HISTORY_FILE, line, StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            } catch (IOException ignored) {}
         }
 
         List<String> entries() { return Collections.unmodifiableList(entries); }
 
-        /** Print numbered history to stdout. */
         void print() {
             if (entries.isEmpty()) { System.out.println("(no history)"); return; }
             for (int i = 0; i < entries.size(); i++) {
@@ -521,10 +769,22 @@ public final class Repl {
             }
         }
 
-        /** Return the most recent entry, or null if empty. */
         String last() { return entries.isEmpty() ? null : entries.get(entries.size() - 1); }
 
         int size() { return entries.size(); }
+
+        /**
+         * Find the most recent entry containing {@code query}, starting backwards
+         * from {@code beforeIndex} (exclusive). Returns null if not found.
+         */
+        String searchBackward(String query, int beforeIndex) {
+            if (query.isEmpty()) return entries.isEmpty() ? null : entries.get(entries.size() - 1);
+            int start = Math.min(beforeIndex, entries.size()) - 1;
+            for (int i = start; i >= 0; i--) {
+                if (entries.get(i).contains(query)) return entries.get(i);
+            }
+            return null;
+        }
     }
 
     // ── SubBuilder ────────────────────────────────────────────────────────────

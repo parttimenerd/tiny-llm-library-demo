@@ -165,7 +165,7 @@ public class LLMClient {
      * Return: token string, "" if no content/non-data line, null if [DONE]
      */
     private String processSSELine(String line) throws Exception {
-        // @stub: skip non-"data: " lines; strip prefix; return null for "[DONE]"; parse JSON → delta.content
+        // @stub: skip non-"data: " lines; strip prefix; return null for "[DONE]"; parse JSON → delta.content (also print dim delta.reasoning_content/thinking if present)
         if (!line.startsWith("data: ")) return "";
         String data = line.substring(6).trim();
         if (data.equals("[DONE]")) return null;

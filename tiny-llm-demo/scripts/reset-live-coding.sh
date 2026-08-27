@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 # Restore the live-coding gaps for the talk.
 #
-#  - ToolSupport.java  → method bodies blanked to TODO stubs (what the talk live-codes)
-#  - ToolChatBot keeps its in-file TODOs (system message, tool loop).
-#  - ChatBot is typed manually on stage (~8 lines); LLMClient filled over "Implementation:" javadoc.
+#  - LLMClient.java   → chat(), chatStream(), processSSELine() stubbed (Part 3)
+#  - ToolSupport.java → method bodies blanked to TODO stubs (Part 5)
+#  - ChatBot, ToolChatBot, CodingAgent → regenerated from solutions via sync-demo.py
 #
-# Undo: git checkout -- src/main/java/me/bechberger/demo/ToolSupport.java
+# Undo: git checkout -- src/main/java/me/bechberger/demo/
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-DEST=src/main/java/me/bechberger/demo/ToolSupport.java
+# Regenerate demo stubs from solutions (ChatBot, ToolChatBot, CodingAgent, LLMClient, Options)
+python3 scripts/sync-demo.py generate
 
+# Regenerate the print cheat sheet
+python3 scripts/sync-demo.py cheatsheet
+
+# ToolSupport is not managed by sync-demo (too different from solutions) — restore manually
+DEST=src/main/java/me/bechberger/demo/ToolSupport.java
 cat > "$DEST" <<'JAVA'
 package me.bechberger.demo;
 
@@ -127,7 +133,7 @@ public class ToolSupport {
      * @return List of tool definition maps ready to send in the API request
      */
     public List<Map<String, Object>> buildToolsJson() {
-        // TODO: live code
+        // TODO: for each tool: Map.of("type","function", "function", Map.of("name",…,"description",…,"parameters",…))
         throw new UnsupportedOperationException("TODO: live code");
     }
 
@@ -173,7 +179,7 @@ public class ToolSupport {
      * @return Final assistant response text
      */
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) throws IOException {
-        // TODO: live code
+        // TODO: loop up to 100 times: chatRaw → if finish_reason=="stop" return extractContent, else processToolCalls and continue
         throw new UnsupportedOperationException("TODO: live code");
     }
 
@@ -204,7 +210,7 @@ public class ToolSupport {
      * Implementation: Get assistant message → extract tool_calls list → execute each → add results
      */
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
-        // TODO: live code
+        // TODO: add assistant message first, then for each tool_call: executeToolCall and add result
         throw new UnsupportedOperationException("TODO: live code");
     }
 

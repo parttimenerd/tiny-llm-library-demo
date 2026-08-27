@@ -1,6 +1,5 @@
 package me.bechberger.demo;
 
-import me.bechberger.demo.util.Ansi;
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
 
@@ -22,7 +21,6 @@ import java.util.function.Function;
  * with name, description, JSON Schema for parameters, and a handler function.
  */
 public class ToolSupport {
-
 
     /** Internal record for a registered tool */
     record ToolDef(String name, String description, Map<String, Object> parameterSchema,
@@ -56,7 +54,7 @@ public class ToolSupport {
 
     /**
      * Register a tool that the LLM can call.
-     * <p>
+     *
      * @param name Tool function name (e.g. "ls", "grep")
      * @param description What the tool does (LLM uses this to decide when to use it)
      * @param parameterSchema JSON Schema defining the parameters (use Schemas.object()...toJsonSchema())
@@ -115,14 +113,8 @@ public class ToolSupport {
      * @return List of tool definition maps ready to send in the API request
      */
     public List<Map<String, Object>> buildToolsJson() {
-        return tools.values().stream().map(tool -> Map.of(
-                "type", "function",
-                "function", Map.of(
-                        "name", tool.name(),
-                        "description", tool.description(),
-                        "parameters", tool.parameterSchema()
-                )
-        )).toList();
+        // TODO: for each tool: Map.of("type","function", "function", Map.of("name",…,"description",…,"parameters",…))
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     /**
@@ -167,25 +159,8 @@ public class ToolSupport {
      * @return Final assistant response text
      */
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) throws IOException {
-        var toolsJson = buildToolsJson();
-        int maxIterations = 100;
-
-        for (int i = 0; i < maxIterations; i++) {
-            var choice = client.chatRaw(messages, toolsJson);
-            var finishReason = (String) choice.get("finish_reason");
-
-            if (!"tool_calls".equals(finishReason)) {
-                return extractContent(choice);
-            }
-
-            // Print any narration text the model sent alongside tool calls (e.g. viking skill)
-            var content = extractContent(choice);
-            if (content != null && !content.isBlank()) System.out.println(content);
-
-            processToolCalls(choice, messages);
-        }
-
-        return "[Tool loop exceeded maximum iterations]";
+        // TODO: loop up to 100 times: chatRaw → if finish_reason=="stop" return extractContent, else processToolCalls and continue
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     /**
@@ -203,9 +178,8 @@ public class ToolSupport {
      * Implementation: Extract choice.message.content
      */
     private String extractContent(Map<String, Object> choice) {
-        var message = Util.asMap(choice.get("message"));
-        Object content = message.get("content");
-        return content != null ? String.valueOf(content) : "";
+        // TODO: live code
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     /**
@@ -216,15 +190,8 @@ public class ToolSupport {
      * Implementation: Get assistant message → extract tool_calls list → execute each → add results
      */
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
-        var assistantMessage = Util.asMap(choice.get("message"));
-        messages.add(assistantMessage);
-
-        var toolCalls = Util.asList(assistantMessage.get("tool_calls"));
-        for (var toolCallObj : toolCalls) {
-            var toolCall = Util.asMap(toolCallObj);
-            var resultMessage = executeToolCall(toolCall);
-            messages.add(resultMessage);
-        }
+        // TODO: add assistant message first, then for each tool_call: executeToolCall and add result
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     /**
@@ -253,32 +220,8 @@ public class ToolSupport {
      * Implementation: Extract id and function → parse arguments → call handler → build result message
      */
     private Map<String, Object> executeToolCall(Map<String, Object> toolCall) {
-        var toolCallId = (String) toolCall.get("id");
-        var function = Util.asMap(toolCall.get("function"));
-        var toolName = (String) function.get("name");
-        var argumentsJson = (String) function.get("arguments");
-
-        String result = callTool(toolName, argumentsJson);
-        var def = tools.get(toolName);
-
-        String argDisplay = truncate(argumentsJson, 120);
-        if (def != null && def.argSummarizer() != null) {
-            try { argDisplay = def.argSummarizer().apply(Util.asMap(JSONParser.parse(argumentsJson))); }
-            catch (Exception ignored) {}
-        }
-        System.out.println("\n  " + Ansi.cyan("⚙ " + toolName) + Ansi.dim("(" + argDisplay + ")"));
-        if (def != null && def.argsPrinter() != null) {
-            try { def.argsPrinter().accept(Util.asMap(JSONParser.parse(argumentsJson)), result); }
-            catch (Exception ignored) { printResult(result); }
-        } else if (def != null && def.printer() != null) {
-            def.printer().accept(result);
-        } else {
-            printResult(result);
-        }
-
-        if (onToolCall != null) onToolCall.accept(toolName, result);
-
-        return Map.of("role", "tool", "tool_call_id", toolCallId, "content", result);
+        // TODO: live code
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     /**
@@ -287,28 +230,19 @@ public class ToolSupport {
      * Implementation: Parse arguments JSON → lookup tool → call handler (or return error)
      */
     private String callTool(String toolName, String argumentsJson) {
-        try {
-            var arguments = Util.asMap(JSONParser.parse(argumentsJson));
-            var toolDef = tools.get(toolName);
-            if (toolDef == null) {
-                return "Error: unknown tool '" + toolName + "'";
-            }
-            return toolDef.handler().apply(arguments);
-        } catch (Exception e) {
-            return "Error executing tool '" + toolName + "': " + e.getMessage()
-                   + "\nPlease try again with valid arguments.";
-        }
+        // TODO: live code
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     private static void printResult(String result) {
         if (result == null) return;
         String[] lines = result.split("\n", -1);
         if (lines.length <= 1) {
-            System.out.println("    " + Ansi.dim("→ ") + truncate(result, 200));
+            System.out.println("    → " + truncate(result, 200));
         } else {
             int shown = Math.min(lines.length, 30);
-            for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + truncate(lines[i], 120));
-            if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
+            for (int i = 0; i < shown; i++) System.out.println("    " + truncate(lines[i], 120));
+            if (lines.length > shown) System.out.println("    … (" + (lines.length - shown) + " more lines)");
         }
     }
 

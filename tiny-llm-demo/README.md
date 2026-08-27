@@ -187,10 +187,11 @@ Transport: stdio or HTTP+SSE. Protocol: JSON-RPC 2.0. Capabilities: Tools, Resou
 ### Part 8 — CodingAgent demo (45–48 min)
 
 ```bash
-java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener
-# with sidebar:
-java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener --verbose
+java -jar target/tiny-llm-demo.jar solutions.CodingAgent --base-url gardener
 ```
+
+**Opening trick (meta moment):** start with the intro prompt from below — the audience watches
+the coding agent write the talk intro they just heard. Then continue with the calculator.
 
 Type `/yolo` then: *"Build a small calculator app with Maven in a subfolder"*
 
@@ -249,13 +250,15 @@ Final show of hands: *"Who thinks they could implement this themselves now?"*
 
 ## Opening Monologue Prompt (JavaZone)
 
-Run this with `solutions.ChatBot` as the opening of the talk:
+Run this with `solutions.CodingAgent` as the very first thing on stage — the agent writes the
+intro the audience just heard, live, which is the point of the whole talk.
 
 ```
 Write a short (3-4 sentence), fun and nerdy opening monologue for a talk called
 "Let's create a tiny LLM library together" at JavaZone Oslo (the largest Java
-conference in Scandinavia). Thank the organizers for the excellent food and hospitality.
-Tone: enthusiastic, slightly self-deprecating, technical crowd.
+conference in Scandinavia). Thank the organizers for the excellent food and
+hospitality. Tone: enthusiastic, slightly self-deprecating, technical crowd.
+Save it as intro.md.
 ```
 
 ---
