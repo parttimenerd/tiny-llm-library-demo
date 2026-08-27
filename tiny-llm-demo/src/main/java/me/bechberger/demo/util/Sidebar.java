@@ -36,10 +36,10 @@ public final class Sidebar {
 
     // ── layout ────────────────────────────────────────────────────────────────
 
-    private final int termWidth;
-    private final int termHeight;
-    private final int leftWidth;   // left column + 1 separator column
-    private final int sideWidth;   // usable content width inside the box
+    private int termWidth;
+    private int termHeight;
+    private int leftWidth;   // left column + 1 separator column
+    private int sideWidth;   // usable content width inside the box
 
     // ── state ─────────────────────────────────────────────────────────────────
 
@@ -71,10 +71,14 @@ public final class Sidebar {
 
     public Sidebar(List<Map<String, Object>> messages) {
         this.messages = messages;
-        this.termWidth = detectTermWidth();
+        refreshLayout();
+    }
+
+    private void refreshLayout() {
+        this.termWidth  = detectTermWidth();
         this.termHeight = detectTermHeight();
-        this.leftWidth = termWidth / 2 + 1;        // +1 for the separator column
-        this.sideWidth = termWidth - leftWidth - 2; // 2 for '║' borders
+        this.leftWidth  = termWidth / 2 + 1;        // +1 for the separator column
+        this.sideWidth  = termWidth - leftWidth - 2; // 2 for '║' borders
     }
 
     /** True when the terminal is wide enough and stdout is a real TTY. */
@@ -308,6 +312,7 @@ public final class Sidebar {
     public void redraw() {
         if (!isUsable()) return;
         synchronized (redrawLock) {
+            refreshLayout();
             var rows = buildRows();
             var sb = new StringBuilder();
             sb.append(Ansi.CURSOR_SAVE);
