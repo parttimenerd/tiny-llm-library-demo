@@ -59,7 +59,9 @@ public final class Repl {
     private Runnable prePrompt;
     private boolean stopped = false;
     private volatile String pendingInput = null;  // injected by sidebar rerun; bypasses stdin
-    final History history = new History(System.console() != null);
+    /** True only when running interactively on a real TTY with stdin as input source. */
+    final boolean interactive;
+    final History history;
     /** Sidebar reference for raw/cooked mode toggling during run loop. */
     Sidebar sidebar = null;
 
@@ -70,6 +72,8 @@ public final class Repl {
      */
     public Repl(String prompt, Scanner scanner) {
         this.scanner = scanner;
+        this.interactive = System.console() != null && isStdinScanner(scanner);
+        this.history = new History(interactive);
         this.prompt = () -> prompt;
         commands.on("exit", "leave the chat", args -> stop(), "quit");
         commands.on("history", "show input history", args -> history.print());
@@ -151,7 +155,7 @@ public final class Repl {
         System.out.print(promptText);
         if (!scanner.hasNextLine()) return defaultValue;
         String answer = scanner.nextLine().trim();
-        if (System.console() == null) System.out.println(answer); // echo for piped input
+        if (!interactive) System.out.println(answer); // echo for piped input
         return answer;
     }
 
@@ -190,8 +194,8 @@ public final class Repl {
                 continue;
             }
             System.out.print(prompt.get());
-            // On a real TTY the line editor handles raw input directly; on piped input fall back to scanner
-            if (System.console() == null && !scanner.hasNextLine()) break;
+            // On a real interactive TTY the line editor handles raw input; otherwise fall back to scanner
+            if (!interactive && !scanner.hasNextLine()) break;
             String raw = readLogicalLine();
             if (raw == null) break; // EOF from line editor (Ctrl-D on empty line)
             String input = raw.trim();
@@ -222,7 +226,7 @@ public final class Repl {
     }
 
     private String readLogicalLine() {
-        if (System.console() != null) {
+        if (interactive) {
             // Real TTY: use raw-mode line editor with history navigation.
             // Strip leading newlines — they're spacing, not part of the input line.
             String line = lineEditor.readLine(prompt.get().stripLeading().replace("\n", ""));
@@ -719,6 +723,16 @@ public final class Repl {
     }
 
     // ── SubBuilder ────────────────────────────────────────────────────────────
+
+    private static boolean isStdinScanner(Scanner scanner) {
+        try {
+            var f = Scanner.class.getDeclaredField("source");
+            f.setAccessible(true);
+            return f.get(scanner) == System.in;
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
 
     // ── History ───────────────────────────────────────────────────────────────
 
