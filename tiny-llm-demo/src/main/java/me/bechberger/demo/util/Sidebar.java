@@ -295,6 +295,12 @@ public final class Sidebar {
 
     // ── rendering ─────────────────────────────────────────────────────────────
 
+    /** Reset the draw anchor so the next redraw() starts from the current cursor position.
+     *  Call this before each new LLM turn begins (content will push the cursor down). */
+    public void resetAnchor() {
+        synchronized (redrawLock) { lastDrawnRows = 0; }
+    }
+
     /**
      * Redraw the sidebar.  Saves cursor → jumps to right column → paints rows →
      * restores cursor.  Synchronized so the key thread and token callback don't race.

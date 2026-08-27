@@ -166,7 +166,7 @@ public final class Repl {
                 pendingInput = null;
                 System.out.println(prompt.get() + Ansi.dim("[rerun] ") + injected.replace("\n", " ↵ "));
                 history.add(injected);
-                if (sidebar != null) sidebar.setCookedMode(false); // raw mode during chat
+                if (sidebar != null) { sidebar.setCookedMode(false); sidebar.resetAnchor(); } // raw mode during chat
                 try {
                     chat.chat(injected);
                 } catch (java.io.UncheckedIOException e) {
@@ -190,7 +190,7 @@ public final class Repl {
             if (input.isEmpty()) continue;
             if (commands.handle(input)) { if (onResponse != null && !stopped) onResponse.run(); continue; }
             history.add(input);
-            if (sidebar != null) sidebar.setCookedMode(false); // raw mode during chat
+            if (sidebar != null) { sidebar.setCookedMode(false); sidebar.resetAnchor(); } // raw mode during chat
             try {
                 chat.chat(input);
             } catch (java.io.UncheckedIOException e) {

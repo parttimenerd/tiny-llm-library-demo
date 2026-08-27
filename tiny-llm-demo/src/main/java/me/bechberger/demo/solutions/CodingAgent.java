@@ -102,6 +102,8 @@ public class CodingAgent implements Callable<Integer> {
     @Override
     public Integer call() {
         onStart();
+        var rootPath = Path.of(root).toAbsolutePath().normalize();
+        try { java.nio.file.Files.createDirectories(rootPath); } catch (Exception ignored) {}
         var messages = new ArrayList<Map<String, Object>>();
         messages.add(LLMClient.system(buildSystemPrompt()));
 
@@ -109,7 +111,7 @@ public class CodingAgent implements Callable<Integer> {
                 .prompt(() -> "\n" + approval.badge() + Ansi.bold(Ansi.blue("You: ")));
         var client = createClient(builder);
         compactor = createCompactor(client);
-        var fileTools = new FileTools(Path.of(root));
+        var fileTools = new FileTools(rootPath);
         var toolSupport = createToolSupport(fileTools);
 
         registerCommands(builder, client, fileTools, messages);
