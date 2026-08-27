@@ -44,26 +44,26 @@ Key points to make:
 - SSE is a 2004 browser standard, not AI magic. Lines prefixed `data:`, ends with `data: [DONE]`.
 - Tool calling is just **3 JSON shapes** — offer (tools in request), request (model returns `finish_reason: tool_calls`), result (`role: tool` message back).
 
-**What the real API responses look like (kimi-k3):**
+**What the real API responses look like (Qwen3.5-9B, local llama-server):**
 
 Non-streaming response:
 ```json
 {
   "choices": [{
-    "message": { "role": "assistant", "content": "Java: the language..." },
+    "message": { "role": "assistant", "content": "Java is so verbose it takes three design patterns just to print 'Hello World'. ☕" },
     "finish_reason": "stop"
   }],
-  "usage": { "prompt_tokens": 95, "completion_tokens": 462, "total_tokens": 557 }
+  "usage": { "prompt_tokens": 31, "completion_tokens": 22, "total_tokens": 53 }
 }
 ```
 
-Streaming chunks (kimi-k3 sends `reasoning_content` first, then `content`):
+Streaming chunks (Qwen3.5-9B sends `content` directly — no `reasoning_content`):
 ```
-data: {"choices":[{"delta":{"reasoning_content":"The","role":"assistant"}}]}
-data: {"choices":[{"delta":{"reasoning_content":" user just said"}}]}
+data: {"choices":[{"delta":{"content":"Java","role":"assistant"}}]}
+data: {"choices":[{"delta":{"content":" is"}}]}
+data: {"choices":[{"delta":{"content":" so"}}]}
+data: {"choices":[{"delta":{"content":" verbose"}}]}
 ...
-data: {"choices":[{"delta":{"content":"Hi"}}]}
-data: {"choices":[{"delta":{"content":" there!"}}]}
 data: [DONE]
 ```
 
@@ -75,7 +75,7 @@ Tool calling response:
     "message": {
       "role": "assistant",
       "tool_calls": [{
-        "id": "call_adae4708cff94c13b34ef634",
+        "id": "call_0",
         "type": "function",
         "function": { "name": "ls", "arguments": "{\"path\":\".\"}"}
       }]
