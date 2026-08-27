@@ -483,4 +483,37 @@ class SidebarTest {
         assertEquals(1, widths.length, "all rows including hints must have equal visible width: "
                 + java.util.Arrays.toString(widths));
     }
+
+    // ── ANSI-preserving wordWrap ──────────────────────────────────────────────
+
+    @Test void expandedRowWithHighlightedContentHasEqualWidth() {
+        // A tool-result message with ANSI-highlighted content (simulated via embedded codes).
+        // The rows should still have equal visible width after word-wrap.
+        Ansi.forceTerminal = true;
+        messages.clear();
+        String highlighted = "\033[34mpublic\033[0m \033[34mclass\033[0m Foo {\n    \033[34mint\033[0m x = 1;\n}";
+        messages.add(msg("assistant", highlighted));
+        sidebar = new Sidebar(messages);
+        sidebar.toggleExpand();
+        var rows = sidebar.buildRows();
+        int[] widths = rows.stream()
+                .map(r -> r.replaceAll("\033\\[[^m]*m", ""))
+                .mapToInt(String::length)
+                .distinct()
+                .toArray();
+        assertEquals(1, widths.length,
+                "highlighted content must produce equal-width rows: " + java.util.Arrays.toString(widths));
+    }
+
+    @Test void ansiCodesPreservedAfterWordWrap() {
+        // After wrap, content rows should still contain ANSI codes (not stripped).
+        Ansi.forceTerminal = true;
+        messages.clear();
+        messages.add(msg("assistant", "\033[34mpublic\033[0m class Foo {}"));
+        sidebar = new Sidebar(messages);
+        sidebar.toggleExpand();
+        var rows = sidebar.buildRows();
+        boolean anyAnsi = rows.stream().anyMatch(r -> r.contains("\033["));
+        assertTrue(anyAnsi, "expanded rows should preserve ANSI escape codes");
+    }
 }
