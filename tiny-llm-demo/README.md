@@ -1,14 +1,235 @@
 # tiny-llm-demo
 
-A minimal Java 21+ project that demonstrates calling **llama-server's OpenAI-compatible** local endpoints from scratch — no LLM framework required.
+A minimal Java 21+ project for the talk **"Let's create a tiny LLM library together"**.
 
-Built for the talk: **"Let's create a tiny LLM library together"**
+---
 
-## Opening Monologue Prompts
+## Talk Cheat Sheet
 
-Prompts for generating a short, fun opening monologue (adapt per venue):
+Quick reference for on-stage. Everything assumes `--base-url gardener` (the SAP endpoint).
+Reset command before each demo: `bash scripts/reset-live-coding.sh && mvn -q package`
 
-JavaZone:
+---
+
+### Before you go on stage
+
+1. `cd tiny-llm-demo && mvn -q package` — fat JAR must be fresh
+2. Verify endpoint: `java -jar target/tiny-llm-demo.jar solutions.ChatBot --base-url gardener`
+   → should greet with "ChatBot ready. Model: kimi-k3"
+3. Font size up, terminal full-screen, slides on second display
+
+---
+
+### Part 1 — Intro (0–3 min)  ·  slides only
+
+"What actually happens under the hood?" — frameworks wrap simple REST calls.
+Tagline you'll repeat three times: **"LLM APIs are boring."**
+
+---
+
+### Part 2 — The API (3–13 min)  ·  curl scripts
+
+Five curl commands, three endpoints. Run from `tiny-llm-demo/`:
+
+```bash
+./scripts/01-list-models.sh        # GET /v1/models
+./scripts/02-simple-chat.sh        # POST /v1/chat/completions (blocking)
+./scripts/03-conversation.sh       # same, multi-turn — show the growing messages array
+./scripts/04-streaming.sh          # POST + stream:true → SSE
+./scripts/05-tool-call.sh          # 3-step tool loop: offer → request → result
+```
+
+Key points to make:
+- Server is **stateless** — you resend the full history every time. Memory = `List<Message>`.
+- SSE is a 2004 browser standard, not AI magic. Lines prefixed `data:`, ends with `data: [DONE]`.
+- Tool calling is just **3 JSON shapes** — offer (tools in request), request (model returns `finish_reason: tool_calls`), result (`role: tool` message back).
+
+**What the real API responses look like (kimi-k3):**
+
+Non-streaming response:
+```json
+{
+  "choices": [{
+    "message": { "role": "assistant", "content": "Java: the language..." },
+    "finish_reason": "stop"
+  }],
+  "usage": { "prompt_tokens": 95, "completion_tokens": 462, "total_tokens": 557 }
+}
+```
+
+Streaming chunks (kimi-k3 sends `reasoning_content` first, then `content`):
+```
+data: {"choices":[{"delta":{"reasoning_content":"The","role":"assistant"}}]}
+data: {"choices":[{"delta":{"reasoning_content":" user just said"}}]}
+...
+data: {"choices":[{"delta":{"content":"Hi"}}]}
+data: {"choices":[{"delta":{"content":" there!"}}]}
+data: [DONE]
+```
+
+Tool calling response:
+```json
+{
+  "choices": [{
+    "finish_reason": "tool_calls",
+    "message": {
+      "role": "assistant",
+      "tool_calls": [{
+        "id": "call_adae4708cff94c13b34ef634",
+        "type": "function",
+        "function": { "name": "ls", "arguments": "{\"path\":\".\"}"}
+      }]
+    }
+  }]
+}
+```
+
+---
+
+### Part 3 — Live Coding: LLMClient + ChatBot (13–25 min)
+
+**Reset first:** `bash scripts/reset-live-coding.sh && mvn -q package`
+
+Open `src/main/java/me/bechberger/demo/LLMClient.java`.  
+Three `@stub` gaps to fill — Copilot does most of the work:
+
+| Method | What to type / accept from Copilot |
+|--------|-------------------------------------|
+| `chat()` | POST → parse `choices[0].message.content` |
+| `processSSELine()` | strip `"data: "`, return null on `[DONE]`, parse `delta.content` |
+| `chatStream()` | loop `readLine()` → call `processSSELine` → accumulate → return |
+
+Then open `src/main/java/me/bechberger/demo/ChatBot.java` — fill in the stub:
+
+```java
+var client = options.createClient(builder);
+var repl = builder.build();
+repl.greet("ChatBot ready. Model: " + options.resolveModel());
+repl.run(input -> {
+    messages.add(LLMClient.user(input));
+    System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
+    String response = client.chatStream(messages);
+    messages.add(LLMClient.assistant(response));
+    System.out.println();
+});
+return 0;
+```
+
+**Build & demo:**
+```bash
+mvn -q package
+java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
+```
+Ask: *"Write a short, fun opening monologue for a talk called 'Let's create a tiny LLM library together' at JavaZone"*
+
+Fallback if Copilot struggles: paste from `src/main/java/me/bechberger/demo/solutions/ChatBot.java`.
+
+---
+
+### Part 4 — Tool Calling theory (25–33 min)  ·  slides only
+
+Show the three JSON shapes. Run `./scripts/05-tool-call.sh` for the live curl demo.
+
+---
+
+### Part 5 — Live Coding: ToolSupport + ToolChatBot (33–38 min)
+
+Open `src/main/java/me/bechberger/demo/ToolSupport.java` (already stubbed by reset script).  
+Six gaps — let Copilot generate, then walk through:
+
+| Method | Key idea to point out |
+|--------|----------------------|
+| `registerTool()` | stores in a `Map<String, ToolDef>` |
+| `buildToolsJson()` | maps each tool to `{type:"function", function:{name,description,parameters}}` |
+| `handleToolLoop()` | **the while loop** — `chatRaw` → check `finish_reason` → execute tools → repeat |
+| `extractContent()` | `choice.message.content` |
+| `processToolCalls()` | add assistant message, execute each tool_call, add tool results |
+| `executeToolCall()` | extract id+name+arguments → call handler → return `{role:tool, tool_call_id, content}` |
+
+**Build & demo:**
+```bash
+mvn -q package
+java -jar target/tiny-llm-demo.jar ToolChatBot --base-url gardener
+```
+Try:
+- *"What files are in this project?"* — watch it call `ls`, then `read-file`
+- *"Describe what this project does"* — chains ls + grep to synthesise
+- *"Show me /etc/passwd"* — sandbox rejects it
+
+Fallback: paste from `src/main/java/me/bechberger/demo/solutions/ToolSupport.java`.
+
+---
+
+### Part 6 — Token Tracking & Compaction (38–42 min)  ·  slides only
+
+Context windows aren't infinite. Show the hybrid memory strategy:
+- 📌 **Pinned** — system prompt, always fresh
+- 🗜️ **Summarized** — old middle turns, folded by the LLM itself
+- 💬 **Recent** — last few turns verbatim
+
+Trigger at 80% of context window (auto-detected from `/v1/models` → `meta.n_ctx_train`).
+
+---
+
+### Part 7 — MCP (42–45 min)  ·  slides only
+
+"We just built tool calling from scratch. MCP is the protocol wrapper around what we already know."
+Transport: stdio or HTTP+SSE. Protocol: JSON-RPC 2.0. Capabilities: Tools, Resources, Prompts.
+
+---
+
+### Part 8 — CodingAgent demo (45–48 min)
+
+```bash
+java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener
+```
+
+Type `/yolo` then: *"Build a small calculator app with Maven in a subfolder"*
+
+Watch: plan proposal → you approve → TODOs created → files written → `mvn package` → verify.
+
+Key commands to mention: `/mode` (NORMAL→AUTO-EDIT→YOLO), `/plan <goal>`, `/todo`, `/clear`, `/tokens`.
+
+---
+
+### Part 9 — SkillCodingAgent demo (48–50 min)
+
+```bash
+java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url gardener
+```
+
+Just ask: *"Tell me about this project like a viking"*  
+The model discovers the viking skill on its own and activates it via the `skill` tool.
+
+Then: *"Let's write a new skill together"* — ask the audience what it should do.
+
+Skills live in `.claude/skills/<name>/SKILL.md`. Use `/skills` to list, `/skill <name>` to toggle.
+
+---
+
+### Part 10 — Wrap-up (50 min)  ·  slides only
+
+Show the "realistic way" — give Copilot the full spec and watch it generate a Kotlin equivalent.
+Third and final: **"LLM APIs are boring."** — boring means predictable, debuggable, works at 3am.
+Final show of hands: *"Who thinks they could implement this themselves now?"*
+
+---
+
+## Pre-Talk Checklist
+
+- [ ] `mvn -q package` succeeds
+- [ ] `java -jar target/tiny-llm-demo.jar solutions.ChatBot --base-url gardener` — responds
+- [ ] `bash scripts/reset-live-coding.sh` — ToolSupport stubs restored
+- [ ] Slides open on second display, presenter view on
+- [ ] Terminal font ~18pt, window maximised
+- [ ] `~/.config/tiny-llm-library/config.config` has valid `gardener.*` entries
+
+---
+
+## Opening Monologue Prompt (JavaZone)
+
+Run this with `solutions.ChatBot` as the opening of the talk:
+
 ```
 Write a short (3-4 sentence), fun and nerdy opening monologue for a talk called
 "Let's create a tiny LLM library together" at JavaZone Oslo (the largest Java
@@ -16,30 +237,7 @@ conference in Scandinavia). Thank the organizers for the excellent food and hosp
 Tone: enthusiastic, slightly self-deprecating, technical crowd.
 ```
 
-GitHub Copilot Dev Day:
-```
-Write a short (3-4 sentence), fun and nerdy opening monologue for a talk called
-"Let's create a tiny AI library together, Copilot powered" at GitHub Copilot Dev Day
-Berlin at adesso SE (second talk of the evening). Thank Sandra Ahlgrimm for inviting
-and adesso SE for hosting.
-```
-
-## Prerequisites
-
-- **Java 21+** (tested with Java 21 LTS)
-- **Maven 3.9+**
-- **llama-server** (llama.cpp) running at `http://localhost:8080`
-- **jq** (for curl scripts)
-
-### Model Setup
-
-```bash
-# Start the server with both demo models
-llama-server -hf Qwen/Qwen3-1.7B-GGUF:Q8_0 -hf bartowski/Qwen_Qwen3.5-27B-GGUF:Q8_0
-
-# Verify it's available (in another terminal)
-curl http://localhost:8080/v1/models | jq .
-```
+---
 
 ## Build
 
@@ -48,112 +246,56 @@ cd tiny-llm-demo
 mvn clean package
 ```
 
-This produces a fat JAR at `target/tiny-llm-demo.jar` (~150KB).
+Produces `target/tiny-llm-demo.jar` (~150KB fat JAR). All commands use:
+```bash
+java -jar target/tiny-llm-demo.jar <ClassName> [options]
+```
+Short class names resolve automatically: `ChatBot` → `me.bechberger.demo.ChatBot`,
+`solutions.ChatBot` → `me.bechberger.demo.solutions.ChatBot`.
 
 ## Configuration
 
-Named endpoints with API keys and default models live in a standard Java properties file:
-
-```
-~/.config/tiny-llm-library/config.config
-```
-
-(`$XDG_CONFIG_HOME` is honored; `TINY_LLM_CONFIG` env var overrides the path entirely.)
-
-**Format:**
+Named endpoints live in `~/.config/tiny-llm-library/config.config`:
 
 ```properties
-# Named endpoint — url is required, key and model are optional
 gardener.url   = https://models.answering-machine.utility.gardener.cloud.sap
-gardener.key   = sk-...          # sent as Authorization: Bearer; omit for local servers
-gardener.model = kimi-k3         # default model for this endpoint
+gardener.key   = sk-...
+gardener.model = kimi-k3
 
-# Global fallback model (used when --model is not passed and endpoint has none)
 default.model  = kimi-k3
 ```
 
-Once configured, `--base-url gardener` resolves to the URL + key + default model in one go. A raw URL still works (`--base-url http://localhost:8080`), and `--model` always overrides the default. A `#token` URL fragment can inline a key without the config file: `--base-url https://api.example.com#mykey`.
+`--base-url gardener` resolves URL + key + model in one go.
+Raw URLs, `url#token` fragments, and `--model` overrides all work too.
 
-A missing config file is fine — local llama.cpp servers need no credentials.
-
-## Running the Demos
-
-### Curl Scripts
+## Live-Coding Reset
 
 ```bash
-# List models
-./scripts/01-list-models.sh
-
-# Simple chat (non-streaming)
-./scripts/02-simple-chat.sh
-
-# Multi-turn conversation
-./scripts/03-conversation.sh
-
-# Streaming via SSE
-./scripts/04-streaming.sh
-
-# Tool calling (3-step flow)
-./scripts/05-tool-call.sh
+bash scripts/reset-live-coding.sh
 ```
 
-### Solution: Basic Chatbot
+Restores `ToolSupport.java` to its TODO-stub skeleton (the part live-coded during Part 5).
+`git checkout -- src/main/java/me/bechberger/demo/ToolSupport.java` undoes it.
 
+Demo files (`ChatBot.java`, `ToolChatBot.java`, etc.) are generated from solutions:
 ```bash
-java -cp target/tiny-llm-demo.jar me.bechberger.demo.solutions.ChatBot \
-  --model Qwen/Qwen3-1.7B-GGUF:Q8_0 \
-  --base-url http://localhost:8080
+python3 scripts/sync-demo.py generate   # regenerate stubs from solutions
+python3 scripts/sync-demo.py check      # verify they're in sync
 ```
-
-### Solution: Tool Chatbot
-
-```bash
-java -cp target/tiny-llm-demo.jar me.bechberger.demo.solutions.ToolChatBot
-```
-
-### Solution: Coding Agent
-
-```bash
-java -cp target/tiny-llm-demo.jar me.bechberger.demo.solutions.CodingAgent
-```
-
-### Demo: Skill Coding Agent (live-coding + skill demo)
-
-```bash
-java -cp target/tiny-llm-demo.jar me.bechberger.demo.SkillCodingAgent
-```
-
-## Live Coding Sequence
-
-### Section 3: Basic Chat Client (~16 min)
-
-1. **LLMClient.listModels()** — GET `/v1/models`, parse JSON
-2. **LLMClient.chat()** — POST with messages, return content
-3. **LLMClient.chatStream()** — POST with `stream:true`, parse SSE, call `onToken`
-4. **ChatBot.main()** — REPL loop with conversation history
-
-### Section 5: Tool Support (~13 min)
-
-1. **ToolSupport.registerTool()** — store name + schema + handler
-2. **ToolSupport.buildToolsJson()** — build the `tools` array
-3. **ToolSupport.handleToolLoop()** — while loop: call LLM → execute tools → repeat
-4. Demo with **ToolChatBot**
 
 ## Dependencies
 
-- `me.bechberger.util:femtoschema:0.1.2` — JSON Schema from Java types
-- `me.bechberger.util:femtojson:0.4.2` — tiny JSON parser (pinned: 0.2.x mis-parses raw UTF-8 in strings)
-- JDK's `java.net.http.HttpClient` — no third-party HTTP client
+- `me.bechberger.util:femtoschema:0.1.2` — JSON Schema builder
+- `me.bechberger.util:femtojson:0.4.2` — tiny JSON parser (0.2.x had UTF-8 bug)
+- `java.net.http.HttpClient` — no third-party HTTP client
 
-## Key Design Decisions
+## Prerequisites (local server alternative)
 
-- **Named endpoints** — `--base-url <name>` resolves to URL + key + default model from the config file (see [Configuration](#configuration)). A raw URL, `url#token` fragment, and `--model` override all still work.
-- **Live-coding gaps on stage** — `ToolChatBot` keeps its TODOs (system prompt, tool loop, run-command tool) with the boring parts pre-extracted (`SYSTEM_PROMPT` constant, one-verbose-then-one-line tool registrations via `CodingTools.register`). `scripts/reset-live-coding.sh` additionally restores the `ToolSupport` skeleton.
-- **Context compaction in the coding agents** — once the prompt exceeds 80% of the model's context window (auto-detected; override with `--max-tokens`), old history is folded into a single `[Conversation summary]` message while the system prompt stays pinned and the recent turns verbatim — driven by real token-usage data from the API (`Compactor` helper; same "hybrid memory" strategy as the summarizing chatbot).
-- **Streaming by default** via `Consumer<String> onToken` callback
-- **No Jackson** — uses femtojson for JSON parsing, manual serialization for output
-- **Reasoning in separate field** — reasoning models return `reasoning_content` as a separate JSON field; no `<think>` parsing needed
-- **An agentic REPL framework in `util/`** — `Repl` (dynamic prompt with live mode badge, backslash-continued multi-line input, echo when piped), `Commands` (slash-command DSL), `Compactor` (hybrid-memory compaction), `SessionLog` (a transcript per session in `~/.tiny-llm-library/sessions/`). CodingAgent surfaces them as Claude-Code-style affordances: `/mode` cycles NORMAL → AUTO-EDIT → YOLO (`/yolo` toggles) with a badge in the prompt, `/clear` resets the conversation, `/compact` folds history manually, `/tokens` shows usage. Plans always require user confirmation; pass `--approve-plans` to skip for scripted sessions.
-- **Boring plumbing in helpers, interesting logic in the agent** — `util.Commands` (REPL command DSL: `/plan`, `/run`, `/yolo`, `/todos`, `/help`, `exit`/`quit` with aliases and auto-generated help; unknown slash commands rejected locally), `util.Repl` (prompt loop, EOF handling, command dispatch), `CodingTools` (tool registrations; robust arg access that feeds "missing argument" errors back to the model instead of storing nulls) — leaving CodingAgent itself with only the talk-worthy parts: pinned context, plan mode, confirmation policy. CodingAgent is a composition of protected hooks (`onStart`, `createClient`, `createToolSupport`, `buildSystemPrompt`, `registerCommands`, `chat`, `syncConversation`); SkillCodingAgent subclasses it adding only a small delta of skill discovery/activation code (`.claude/skills/*/SKILL.md`, `skill` tool, `/skill(s)` commands), and since the system prompt is re-synced before every LLM call, skill (de)activation takes effect mid-conversation
-- **Solution files in `solutions/` package** — avoids compilation conflicts with skeletons
-- **Security-first tools** — sandboxed to a root directory, no dotfiles, size- and time-limited; the coding agent additionally gets write tools (create-file/write-file/create-folder plus `edit` for surgical replacements) and a `run` (shell exec) tool so it can build and verify its own work — all confined to the sandbox root with output caps and timeouts. Agent-initiated `run`/`delete` and plan acceptance ask the user for confirmation; `/yolo` toggles auto-approval of everything for autonomous sessions. ToolChatBot's variant of command execution still asks for interactive user confirmation
+If running without `gardener`, start llama-server locally:
+
+```bash
+llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
+curl http://localhost:8080/v1/models | jq .
+```
+
+Then use `--base-url http://localhost:8080 --model AaryanK/Qwen3.5-9B-GGUF:Q8_0`.
