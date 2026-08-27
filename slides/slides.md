@@ -15,235 +15,6 @@ mdc: true
 layout: default
 ---
 
-<style>
-:root {
-  --code-font-size: 1.05rem;
-  --code-font-size-px: 13px;
-  --code-line-height: 1.6;
-  --code-border: rgba(226, 232, 240, 0.15);
-}
-
-.slidev-slide pre,
-.slidev-slide .shiki {
-  font-size: var(--code-font-size);
-  line-height: var(--code-line-height);
-  border: 1px solid var(--code-border);
-  border-radius: 12px;
-  padding: 20px 24px;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.3);
-  max-height: 45vh;
-  overflow: auto;
-}
-.slidev-layout pre, .slidev-layout code {
-    -webkit-user-select: text;
-    user-select: text;
-  font-size: 1em !important;
-    white-space: pre;
-}
-
-.slidev-page .text-gray-300 { color: #f1f5f9 !important; }
-.slidev-page .text-gray-400 { color: #e2e8f0 !important; }
-.slidev-page .text-gray-500 { color: #cbd5e1 !important; }
-
-.compact-code pre, .compact-code .shiki {
-  font-size: 0.85rem !important;
-  line-height: 1.4 !important;
-  padding: 12px 14px !important;
-}
-
-.quote-slide {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 7rem 4rem;
-  position: relative;
-}
-.quote-slide::before {
-  content: '"';
-  position: absolute;
-  left: 40px;
-  top: 40%;
-  transform: translateY(-50%);
-  font-size: 15rem;
-  font-weight: 900;
-  color: rgba(148, 113, 217, 0.15);
-  line-height: 1;
-  z-index: 0;
-  font-family: cursive;
-}
-.quote-text {
-  font-size: 1.85rem;
-  line-height: 1.7;
-  font-style: italic;
-  color: #f8fafc;
-  max-width: 820px;
-  font-weight: 500;
-  position: relative;
-  z-index: 1;
-}
-.quote-attr {
-  font-size: 1.05rem;
-  color: #e2e8f0;
-  margin-top: 1.5rem;
-  font-weight: 500;
-}
-
-.big-statement p {
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.3;
-  text-align: center;
-  color: #f8fafc;
-  justify-content: center;
-  min-height: 100px;
-}
-
-.slidev-slide h1,
-.slidev-slide h2 {
-  font-weight: 800;
-  letter-spacing: -0.015em;
-}
-
-.slidev-slide ul {
-  font-size: 1.15rem;
-  line-height: 1.6;
-}
-
-.slidev-slide ul li {
-  margin: 0.4rem 0;
-}
-
-.section-header {
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #94a3b8;
-  margin-bottom: 0.5rem;
-}
-
-.tool-flow-step {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin: 4px 0;
-}
-
-.tool-flow-arrow {
-  text-align: center;
-  color: #60a5fa;
-  font-size: 1.5rem;
-  margin: 2px 0;
-}
-
-.strategy-box {
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 10px;
-  padding: 10px 8px;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.strategy-box.selected {
-  border: 2px solid #f97316;
-  box-shadow: 0 0 16px rgba(249, 115, 22, 0.25);
-}
-.strategy-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-  color: #e2e8f0;
-}
-.msg-block {
-  width: 85%;
-  border-radius: 4px;
-  padding: 2px 6px;
-  margin: 2px 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-align: center;
-}
-.msg-user     { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
-.msg-assistant { background: rgba(74, 222, 128, 0.2); color: #86efac; }
-.msg-system   { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
-.msg-summary  { background: rgba(249, 115, 22, 0.3); color: #fdba74; border: 1px dashed rgba(249, 115, 22, 0.5); }
-.msg-discarded { background: rgba(100, 116, 139, 0.15); color: #64748b; text-decoration: line-through; }
-.msg-pinned   { border: 1px solid rgba(250, 204, 21, 0.5); position: relative; }
-.msg-pinned::after { content: '📌'; position: absolute; right: 2px; top: -1px; font-size: 0.5rem; }
-.cutoff-line  { border-top: 2px dashed #ef4444; width: 85%; margin: 3px 0; }
-.msg-flow-arrow { color: #6890c8; font-size: 0.75rem; margin: 1px 0; }
-.pick-badge {
-  background: #f97316;
-  color: #000;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 1px 5px;
-  border-radius: 4px;
-  margin-top: 4px;
-}
-.ctx-window {
-  border: 2px solid rgba(148, 163, 184, 0.4);
-  border-radius: 8px;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  position: relative;
-  min-height: 260px;
-}
-.ctx-label {
-  position: absolute;
-  right: -90px;
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #94a3b8;
-  white-space: nowrap;
-}
-.ctx-bar {
-  border-radius: 4px;
-  padding: 3px 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
-}
-.ctx-bar.sys  { background: rgba(148,163,184,0.25); color: #cbd5e1; }
-.ctx-bar.usr  { background: rgba(59,130,246,0.25);  color: #93c5fd; }
-.ctx-bar.ast  { background: rgba(74,222,128,0.2);   color: #86efac; }
-.ctx-bar.tool { background: rgba(168,85,247,0.2);   color: #c4b5fd; min-height: 28px; }
-.ctx-bar.empty { background: transparent; border: 1px dashed rgba(148,163,184,0.2); color: #475569; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
-.ctx-threshold {
-  border-top: 2px dashed #f97316;
-  position: relative;
-  margin: 2px 0;
-}
-
-.mcp-diagram text { font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
-.mcp-diagram .label { font-size: 20px !important; font-weight: 700 !important; }
-.mcp-diagram .center { font-size: 22px !important; font-weight: 700 !important; }
-.mcp-diagram .sub { font-size: 20px !important; }
-.mcp-diagram .meta { font-size: 20px !important; font-style: italic; }
-.mcp-diagram .flow { font-size: 20px !important; }
-</style>
-
-<script setup>
-import { onMounted } from 'vue'
-import CodeWithScript from './components/CodeWithScript.vue'
-import JsonOverlay from './components/JsonOverlay.vue'
-
-onMounted(() => {
-  const rootElement = document.documentElement
-  rootElement.style.setProperty('--code-font-size-px', '14px')
-})
-</script>
 
 <div class="absolute inset-0 bg-black/55 z-0" />
 
@@ -265,6 +36,27 @@ Johannes Bechberger &nbsp;&nbsp;·&nbsp;&nbsp; SAP SE
 <JsonOverlay v-if="showOverlay" :json="selectedJson" @close="showOverlay = false" />
 
 ---
+layout: center
+---
+
+<div class="section-header">Part 1</div>
+
+<div class="big-statement">
+
+The API
+
+</div>
+
+<div class="text-xl text-gray-400 mt-4">
+
+What's actually happening under the hood?
+
+</div>
+
+<!--
+-->
+
+---
 
 # The Illusion
 
@@ -282,37 +74,16 @@ Either way: what <OrangeText>actually happens</OrangeText> under the hood?
 
 </div>
 
-<!--
-**[~0:30]** Setup slide — introduce the audience segments.
--->
+<div class="mt-6 text-xl text-gray-400">
 
----
-
-# The Gap: Why Understanding Matters
-
-<div class="mt-20 text-4xl text-gray-400">
-
-Libraries are designed to be abstractions. 
+Libraries abstract away HTTP. But once you see it, you can debug anything.
 
 </div>
 
-
-
-<div class="mt-6 text-xl text-gray-300">
-
-Let's lift the hood. <b>What's actually in the API calls?</b>
-
-</div>
-
-<!--- 
-abstract away HTTP. But when something breaks — or you need to design something custom — that knowledge is invaluable.
-
-<Callout variant="orange">
-<b>Real example:</b> A colleague's app started failing with "context window exceeded." Without understanding token counting and message history, they couldn't debug it. With frameworks as a black box, they'd have been lost.
-</Callout> -->
-
 <!--
-**[~1:00]** Transition. "This is exactly what we're going to close today. By the end, you'll know what's underneath."
+**[~0:30]** "Whether you use Spring AI or are starting fresh — today you'll see exactly what these libraries do."
+"Libraries abstract away HTTP. But when something breaks — or you need custom behaviour — that knowledge is invaluable."
+"Boring is good. Boring means debuggable. Boring means predictable. If you understand REST, you can troubleshoot any LLM library."
 -->
 
 ---
@@ -339,56 +110,28 @@ Frameworks like <OrangeText>LangChain4j</OrangeText> and <OrangeText>Spring AI</
 
 <div class="text-3xl font-bold text-orange-400 mt-6">
 
-simple REST calls
+simple REST calls*
 
 </div>
 
 <!--
-**[~1:50]** Frame it. "These are sophisticated libraries, but they're wrapping simple HTTP + JSON underneath."
+**[~1:50]** "These are sophisticated libraries, but they're wrapping simple HTTP + JSON underneath."
 "The frameworks handle retries, tracing, adapters. But the core is REST."
 -->
 
 ---
 
-# Why That Matters
-
-<div class="mt-8 text-xl text-gray-400">
-
-It's not a bad thing — in fact, it's good news.
-
-</div>
-
-<!--
-
-<div class="mt-8 text-lg leading-relaxed">
-
-**Good news:**
-
-- Once you see the HTTP layer, you can <OrangeText>debug</OrangeText> these libraries
-- You can <OrangeText>design better</OrangeText> systems by understanding what's underneath  
-- You're never trapped by framework limitations
-
-</div>
--->
-
-<!--
-**[~2:10]** Positive reframe. "Boring is good. Boring means debuggable. Boring means predictable."
-"If you understand REST, you can troubleshoot any LLM library."
--->
-
----
-
-# Libraries add value
+# What frameworks add on top
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 
 <div>
 
-- 🔌 **20+ provider adapters** — OpenAI, Anthropic, llama.cpp, Azure…
-- 🔄 **Retries & rate limiting** — production-grade resilience
-- 🧭 **Tracing, RAG, guardrails** — visibility and safety
+- **20+ provider adapters** — OpenAI, Anthropic, llama.cpp, Azure…
+- **Retries & rate limiting** — production-grade resilience
+- **Tracing & observability** — visibility into what your app does
 
-These solve <OrangeText>real problems</OrangeText> that raw REST calls don't.
+Today we build the <OrangeText>core</OrangeText>. The rest is wrappers.
 
 </div>
 
@@ -409,15 +152,14 @@ flowchart TB
   style http fill:#334155,color:#e2e8f0,stroke:none
 ```
 
-<div class="text-sm text-gray-500 text-center">Today we learn the <b>orange layer</b>.</div>
+<div class="text-sm text-gray-500 text-center">We build the orange layer today.</div>
 
 </div>
 
 </div>
 
 <!--
-**[~2:50]** Feature slide. "Retries, rate limiting, provider abstractions — these are solid engineering."
-"RAG (retrieval-augmented generation) and tracing? Those are hard problems they've solved for us."
+**[~2:50]** "Provider adapters, retries, tracing — that's real engineering work. We're not replacing that. We're learning what's underneath so you can understand, debug, and extend it."
 -->
 
 
@@ -429,13 +171,11 @@ flowchart TB
 
 <div>
 
-By the end of this hour you learned about
+By the end you'll have built:
 
-- The REST API
-- Tool calling
-- Message compressiong
-- MCP
-- ... and built an LLM library and a chatbot
+- The REST API + streaming client
+- Tool calling + context management
+- A coding agent that edits its own source
 
 ```java
 var client = new LLMClient(baseUrl, model,
@@ -449,25 +189,27 @@ client.chatStream(messages);
 
 ```mermaid
 flowchart TB
-  jdk["java.net.http<br>femtojson"]
-  fj["femtoschema"]
+  jdk["dependencies<br>(pre-written)"]
   lc["LLMClient"]
   cb["ChatBot"]
   ts["ToolSupport"]
   ft["FileTools"]
+  ca["CodingAgent<br>SkillCodingAgent"]
 
   jdk --> lc
-  fj --> ts
+  jdk --> ts
   lc --> cb
   lc --> ts
   ts --> ft
+  ts --> ca
+  lc --> ca
 
   style jdk fill:#334155,color:#e2e8f0,stroke:none
-  style fj fill:#334155,color:#e2e8f0,stroke:none
   style lc fill:#f97316,color:#000,stroke:none
   style cb fill:#f97316,color:#000,stroke:none
   style ts fill:#f97316,color:#000,stroke:none
   style ft fill:#334155,color:#e2e8f0,stroke:none
+  style ca fill:#f97316,color:#000,stroke:none
 ```
 
 <div class="text-sm text-gray-500 text-center">Orange = what we build live</div>
@@ -478,77 +220,48 @@ flowchart TB
 
 <!--
 **[~3:30]** Show the target. "This is the finish line. A streaming chat client, with tool calling, in a tiny JAR."
-"Let me give a small plug: I packaged this approach into femtoai — ~120KB, Java 17, does everything we need."
 -->
 
 ---
 
-# Local LLMs
+# Local LLMs — We Use llama.cpp
 
-<div class="grid grid-cols-3 gap-6 mt-6">
+<div class="grid grid-cols-2 gap-8 mt-6">
 
-<div class="text-center">
+<div>
 
-### llama.cpp
-<div class="text-gray-400 mt-2">
-
-C++ inference engine<br/>
-One command to start<br/>
-<OrangeText>What we use today</OrangeText>
-
-</div>
-</div>
-
-<div class="text-center">
-
-### Ollama
-<div class="text-gray-400 mt-2">
-
-Easy CLI wrapper<br/>
-Built on llama.cpp<br/>
-Great for getting started
-
-</div>
-</div>
-
-<div class="text-center">
-
-### LM Studio
-<div class="text-gray-400 mt-2">
-
-Nice desktop UI<br/>
-Built on llama.cpp<br/>
-Great for exploration
-
-</div>
-</div>
-
-</div>
-
-<div class="mt-4">
-
-<CodeWithScript scriptPath="scripts/00-launch-llm.sh" slideId="launch-llm">
+**llama-server** — one command, OpenAI-compatible endpoint:
 
 ```bash
-# Start the server with model caching
-./scripts/00-launch-llm.sh --medium
-# Runs: llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
+llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
+# → http://localhost:8080/v1/chat/completions
 ```
 
-</CodeWithScript>
+<div class="mt-4 text-lg">
+
+**[Show of hands]** Who has run a local LLM before?
 
 </div>
 
-<div class="mt-2 text-lg">
+</div>
 
-Trade-offs: <OrangeText>privacy & cost</OrangeText> vs <RedText>hardware requirements & quality</RedText>
+<div class="text-gray-400 mt-2">
+
+**Local vs cloud:**
+
+- ✅ Privacy — data stays on your machine
+- ✅ No API costs
+- ⚠️ Quality — smaller models than cloud APIs
+- ⚠️ Hardware — needs a decent GPU or patience
+
+</div>
 
 </div>
 
 <!--
 **[~4:30]** **[SHOW OF HANDS]** "Who has run a local LLM?"
-Quick comparison. We use llama.cpp (llama-server) because it's minimal and has OpenAI-compatible endpoints.
-Model: `Qwen/Qwen3-1.7B-GGUF:Q8_0` — small, fast, fits on any modern laptop.
+We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 9B model; use `llama-server -hf bartowski/Qwen3.5-2B-Instruct-GGUF` for underpowered hardware.
+(Ollama and LM Studio are fine too — they all expose the same endpoint.)
 -->
 
 ---
@@ -559,18 +272,18 @@ layout: center
 
 <div class="big-statement">
 
-The API
+Time to prove it
 
 </div>
 
 <div class="text-xl text-gray-400 mt-4">
 
-Let me show you what these libraries are actually doing.
+Five curl commands. That's the whole API.
 
 </div>
 
 <!--
-**[~6:00]** Transition to curl demos. "Enough slides. Let me prove it."
+**[~6:00]** "Enough slides. Let me prove it." Switch to terminal.
 -->
 
 ---
@@ -589,7 +302,11 @@ Many local LLM servers emulate <OrangeText>OpenAI-style endpoints</OrangeText>:
 | `/v1/chat/completions` | POST | Send messages|
 | `/v1/chat/completions` | POST (+stream) | streaming via SSE |
 
+<div class="text-xl font-semibold mt-4">
+
 That's the <OrangeText>entire API</OrangeText> for everything we'll build today.
+
+</div>
 
 </div>
 <div style="margin-top: -1cm" v-click>
@@ -617,74 +334,74 @@ sequenceDiagram
 
 <div class="mt-2 text-gray-400">
 
-Teaser: <b>Tool calling</b> is just a structured request/response loop on the same endpoint.<br/>
-<b>MCP</b> uses JSON-RPC 2.0 to standardize similar flows — but that's for later.
+Teaser: <b>Tool calling</b> is just a structured request/response loop on the same endpoint.
 
 </div>
 
 <!--
-**[~5:30]** "It's all just REST-ish HTTP. Three rows in a table. That's the entire surface we need."
-Don't say JSON-RPC here — save it for MCP. OpenAI endpoints are REST, not JSON-RPC.
-SSE = Server-Sent Events — a simple HTTP standard where the server keeps the connection open and sends lines prefixed with `data: `. Each line is one token chunk as JSON. The stream ends with `data: [DONE]`. It's the same tech browsers use for live notifications — nothing AI-specific about it.
--->
-
----
-
-# List Models
-
-<CodeWithScript scriptPath="tiny-llm-demo/scripts/01-list-models.sh" slideId="list-models-curl">
-
-```bash
-curl http://localhost:8080/v1/models
-```
-
-<template #actions>
-<JsonOverlay :json='{"models": [{"name": "Qwen/Qwen3-1.7B-GGUF:Q8_0", "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0", "type": "model", "capabilities": ["completion"], "details": {"format": "gguf"}}], "object": "list", "data": [{"id": "Qwen/Qwen3-1.7B-GGUF:Q8_0", "aliases": ["Qwen/Qwen3-1.7B-GGUF:Q8_0"], "object": "model", "created": 1772405872, "owned_by": "llamacpp", "meta": {"vocab_type": 2, "n_vocab": 151936, "n_ctx_train": 40960, "n_embd": 2048, "n_params": 1720574976, "size": 1828474880}}]}' />
-</template>
-</CodeWithScript>
-
-<!--
-<div class="mt-4 text-xl">
-
-One GET request. That's it. <OrangeText>Not very exciting, right?</OrangeText>
-
-</div>
--->
-
-<!--
-**[~6:30]** **[REACTION]** Run the curl live. "One GET request. That's the entire model listing."
-"Every LLM library starts here — discovering what models are available."
+**[~5:30]** "It's all just REST. Three rows in a table. That's the entire surface we need for everything today."
+"GET /v1/models tells you what's loaded. POST /v1/chat/completions sends a conversation and gets a reply. Add stream:true and you get tokens as they're generated — one HTTP response, kept open, lines arriving as the model thinks."
+"SSE = Server-Sent Events. A browser standard from 2004. The server keeps the connection open and sends lines prefixed with `data:`. Each line is one JSON chunk. The stream ends with `data: [DONE]`. Nothing AI-specific — same tech your browser uses for live notifications."
+"Tool calling, which we'll get to in Part 4, is just another POST to this same endpoint with an extra tools array. Same URL, same JSON, same response shape."
+Don't mention JSON-RPC or MCP here — save it for Part 7.
 -->
 
 ---
 
 # Simple Chat Completion
 
-<CodeWithScript scriptPath="tiny-llm-demo/scripts/02-simple-chat.sh" slideId="simple-chat-curl">
-
 ```bash
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
+    "model": "...",
     "messages": [
       {"role": "user", "content": "Make fun of Java in one sentence"}
     ]
   }'
 ```
 
-<template #actions>
-<JsonOverlay :json='{"choices": [{"finish_reason": "stop", "index": 0, "message": {"role": "assistant", "content": "\"Java is the only programming language that requires you to write a full paragraph before you even start coding\u2014because the *equals* method is *always* the last thing you need to worry about.\" \uD83D\uDC0D\uD83D\uDE02", "reasoning_content": "Okay, the user wants me to make a fun sentence about Java. Let me think. Java is known for being verbose, right? So maybe something about the typing and the need for a lot of code.\n\nHmm, \"Java is like a strict teacher who insists on typing every single word, even when you&#39;re already at the end of the line.\" That captures the verbosity. But maybe I can add a bit more humor. \n\nWait, Java also has the \"Hello World\" example, which is a common joke. Maybe compare it to a classic joke. Or mention the \"Object-Oriented\" aspect. \n\nAlternatively, think about the syntax, like the need for semicolons and the \"public class\" thing. Maybe something like \"Java is the only programming language that requires you to write a full paragraph before you even start coding.\" \n\nOr maybe play on the fact that Java is a \"superclass\" of everything. \"Java is the only language that&#39;s so powerful it&#39;s like a superpower, but you have to learn the basics first.\" \n\nWait, the user wants a single sentence. Let me pick the first one. Make sure it&#39;s concise and has a humorous twist. Maybe add a pun or a play on words. \n\nAnother angle: Java&#39;s \"strict\" nature. \"Java is the only language that&#39;s so strict it requires you to write a full sentence before you even start coding.\" \n\nOr maybe something about the \"equals\" method. \"Java is the only programming language that&#39;s so strict it requires you to write a full sentence before you even start coding.\" \n\nWait, the original thought was about the verbosity. Let me go with that. Make sure it&#39;s a single sentence and has a funny twist. Maybe \"Java is the only programming language that requires you to write a full paragraph before you even start coding.\" \n\nYes, that sounds good. It&#39;s a pun on the verbose nature and the need for a lot of text. Alternatively, \"Java is like a strict teacher who insists on typing every single word, even when you&#39;re already at the end of the line.\" \n\nEither way, the key is to make it funny and concise. I think the first one is better. Let me check if it&#39;s a known joke. Maybe not, but it&#39;s a creative take. Alright, that should work."}}], "created": 1772406013, "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0", "system_fingerprint": "b8180-d979f2b17", "object": "chat.completion", "usage": {"completion_tokens": 526, "prompt_tokens": 16, "total_tokens": 542}, "id": "chatcmpl-bqK36dkuhro4Ni33bCjM6KF8Z5jDWsPx", "timings": {"cache_n": 7, "prompt_n": 9, "prompt_ms": 87.611, "prompt_per_token_ms": 9.734555555555556, "prompt_per_second": 102.72682654004635, "predicted_n": 526, "predicted_ms": 4869.571, "predicted_per_token_ms": 9.257739543726236, "predicted_per_second": 108.01772887180411}}' />
-</template>
-</CodeWithScript>
+```json
+{
+  "choices": [{
+    "message": {
+      "role": "assistant",
+      "content": "Java is the only language where writing Hello World requires a PhD in boilerplate. \uD83D\uDC0D\uD83D\uDE02"
+    },
+    "finish_reason": "stop"
+  }],
+  "usage": { "prompt_tokens": 16, "completion_tokens": 24 }
+}
+```
 
-<!--
-<div class="text-lg mt-2">
+<div class="grid grid-cols-2 gap-6 mt-2 text-sm">
 
-The entire "AI call" is <OrangeText>one JSON POST</OrangeText>. Model name + messages array → response.
+<div>
+
+**Request fields**
+
+| Field | Description |
+|-------|-------------|
+| `model` | model ID string |
+| `messages[].role` | `user` / `assistant` / `system` |
+| `messages[].content` | the message text |
 
 </div>
--->
+
+<div>
+
+**Response fields**
+
+| Field | Value |
+|-------|-------|
+| `choices[0].message.content` | the answer |
+| `choices[0].finish_reason` | `"stop"` · `"tool_calls"` · `"length"` |
+| `usage.prompt_tokens` | input token count |
+| `usage.completion_tokens` | output token count |
+
+</div>
+
+</div>
 
 <!--
 **[~7:30]** Walk through the JSON. "model, messages array with role and content — that's the request."
@@ -696,13 +413,17 @@ The entire "AI call" is <OrangeText>one JSON POST</OrangeText>. Model name + mes
 
 # Conversation with History
 
-<CodeWithScript scriptPath="tiny-llm-demo/scripts/03-conversation.sh" slideId="conversation-curl">
+<Callout variant="orange">
+The server is <b>stateless</b> — you re-send the entire conversation every turn.
+</Callout>
+
+<div class="mt-3">
 
 ```bash
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
+    "model": "...",
     "messages": [
       {"role": "system", "content": "You are a helpful Java expert."},
       {"role": "user", "content": "What is a record in Java?"},
@@ -712,16 +433,7 @@ curl -X POST http://localhost:8080/v1/chat/completions \
   }'
 ```
 
-<template #actions>
-<JsonOverlay :json='{"choices": [{"finish_reason": "stop", "index": 0, "message": {"role": "assistant", "content": "Here&#39;s a short example of a `Person` record in Java 16:\n\n```java\npublic record Person(String name, int age) {\n    // No need to define getters or setters; they are auto-generated\n}\n```\n\n### Key Features:\n- **Auto-generated** constructor, `equals()`, `hashCode()`, and `toString()`.\n- **Immutable** by default (fields are `public` and `final`).\n- Simplifies data encapsulation and readability.\n\nExample usage:\n```java\nPerson person = new Person(\"Alice\", 30);\nSystem.out.println(person);  // Output: Person(name=Alice, age=30)\n```", "reasoning_content": "Okay, the user asked for a short example of a Person record in Java. Let me recall what I know about Java records. They were introduced in Java 16, right? So I need to make sure the example is using that version.\n\nFirst, the user wants a Person record. The example should include fields like name and age. Since it&#39;s a record, the fields are automatically generated with getters. Also, the record is immutable, so the fields can&#39;t be modified after creation.\n\nI should start with the import statement for java.lang.Record. Wait, no, in Java 16, the Record interface is part of the java.lang package, so I don&#39;t need to import it. But the user might not know that, so maybe mention that.\n\nThe code structure would be: public record Person(String name, int age) { ... }.\n\nWait, the user might not know about the auto-generated methods. So the example should show the fields and the constructor. Also, the fields are public by default, but maybe it&#39;s better to explicitly state that they are public.\n\nI should also mention that the record is immutable, so the fields can&#39;t be modified. But since the user asked for a short example, maybe just show the code and explain that the fields are public and the record is immutable.\n\nWait, the user might not be aware of the auto-generated methods. So the example should include the fields and the constructor. The getters are automatically generated, but maybe the user wants to see that. However, in the example, the code would just have the fields and the constructor.\n\nSo the example would be:\n\npublic record Person(String name, int age) {\n    // no need to do anything here, as the fields are public and the record is immutable\n}\n\nBut maybe the user wants to see the generated methods. However, in the code, the getters are automatically generated. So the example would be straightforward.\n\nI should also mention that the record is immutable, so the fields can&#39;t be changed after creation. But in the example, the fields are public, so they can be accessed, but the record ensures that they are not modified.\n\nSo the final answer would include the code example and a brief explanation of the record&#39;s features."}}], "created": 1772406418, "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0", "system_fingerprint": "b8180-d979f2b17", "object": "chat.completion", "usage": {"completion_tokens": 596, "prompt_tokens": 83, "total_tokens": 679}, "id": "chatcmpl-eYtjuV93KdHYtayqyLc7Lq4frQgXID2x", "timings": {"cache_n": 0, "prompt_n": 83, "prompt_ms": 119.966, "prompt_per_token_ms": 1.4453734939759035, "prompt_per_second": 691.8626944300886, "predicted_n": 596, "predicted_ms": 5492.612, "predicted_per_token_ms": 9.215791946308725, "predicted_per_second": 108.50939407334798}}' />
-</template>
-</CodeWithScript>
-
-<v-click>
-<Callout variant="orange">
-The server is <b>stateless</b> — you manage the conversation history by re-sending all messages every time.
-</Callout>
-</v-click>
+</div>
 
 <!--
 **[~9:00]** Key insight: "The server doesn't remember anything. You send the entire conversation every time."
@@ -743,19 +455,11 @@ This is what your chatbot's "memory" actually looks like: a <OrangeText>growing 
 
 # SSE Is a Web Standard
 
-<div class="text-lg">
+<div class="grid grid-cols-2 gap-8 mt-2">
 
-SSE = <OrangeText>Server-Sent Events</OrangeText> — defined in the HTML Standard (WHATWG):
+<div>
 
-<div class="mt-2">
-
-<a class="text-blue-400 underline" href="https://html.spec.whatwg.org/multipage/server-sent-events.html" target="_blank" rel="noreferrer">
-html.spec.whatwg.org/multipage/server-sent-events.html
-</a>
-
-</div>
-
-</div>
+SSE = <OrangeText>Server-Sent Events</OrangeText> — a browser standard (WHATWG, 2004).
 
 <code>Content-Type: text/event-stream</code>
 
@@ -766,42 +470,57 @@ data: {"choices":[{"delta":{"content":"lo"}}]}
 data: [DONE]
 ```
 
+One long-lived HTTP response. Server pushes `data:` lines as tokens are generated.
+
+</div>
+
+<div>
+
+```mermaid
+sequenceDiagram
+  participant App
+  participant LLM as LLM Server
+
+  App->>LLM: POST /v1/chat/completions (stream: true)
+  activate LLM
+  LLM-->>App: data: {"delta":{"content":"Hello"}}
+  LLM-->>App: data: {"delta":{"content":" world"}}
+  LLM-->>App: data: {"delta":{"content":"!"}}
+  LLM-->>App: data: [DONE]
+  deactivate LLM
+```
+
+</div>
+
+</div>
+
 <!--
-
-Key idea: one long-lived HTTP response with <code>Content-Type: text/event-stream</code>, sending lines like <code>data: ...</code>.
-
-A 2004 standard for live updates in browsers — now the backbone of streaming LLM responses.
--->
-
-<!--
-"This is not an AI invention — it's a browser standard." 
-"The server keeps the HTTP connection open and pushes events." 
-"Events are framed as UTF-8 text lines; blank line separates events."
+**[~10:00]** "This is not an AI invention — it's a browser standard from 2004."
+"The server keeps the HTTP connection open and pushes events, one token at a time."
+"Your InputStream delivers these lines one at a time. Parse delta.content, print it, repeat until [DONE]."
 -->
 
 ---
 
 # Streaming with Server-Sent Events
 
-<CodeWithScript scriptPath="tiny-llm-demo/scripts/04-streaming.sh" slideId="streaming-curl">
-
 ```bash
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
-    "messages": [
-      {"role": "user", "content": "Make fun of Java."}
-    ],
+    "model": "...",
+    "messages": [{"role": "user", "content": "Make fun of Java."}],
     "stream": true
   }'
 ```
 
-<template #actions>
-<JsonOverlay :json='"data: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":null}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\"Okay\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\",\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" the\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" user\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" wants\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" me\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" to\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" make\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" fun\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" of\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" Java\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\".\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" Let\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" me\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" think\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" about\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" how\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" to\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" approach\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"reasoning_content\":\" this\"}}],...}\n...\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"content\":\"*\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"content\":\"!\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":null,\"index\":0,\"delta\":{\"content\":\" \uD83D\uDE04\"}}],...}\n\ndata: {\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"delta\":{}}],\"timings\":{\"predicted_n\":1264,\"predicted_ms\":12464.012,...}}\n\ndata: [DONE]"' title="Raw SSE Stream" buttonText="Raw SSE" />
-<JsonOverlay :json='"<think>\nOkay, the user wants me to make fun of Java. Let me think about how to approach this. First, I need to remember that while making jokes, I should keep it light and not offensive. Java is a versatile language, but there are some common criticisms.\n\nI should start with the syntax. Java&#39;s verbosity is a common point of fun. For example, the need to use \"public class\" and all the keywords. Maybe compare it to something else, like a strict language. Also, the \"static\" keyword and the \"final\" keyword are often cited as part of the language&#39;s \"overkill.\"\n\nThen, the type system. Java&#39;s strong typing is a double-edged sword. It helps prevent errors but can be a hassle. Maybe mention how it&#39;s like a strict teacher who&#39;s always checking the homework.\n...\n</think>\nAh, Java! The language that&#39;s as verbose as a cat&#39;s tail and as complex as a maze. Let&#39;s dive into the funny side of Java:\n\n1. **\"Public class\" is the only way to start a Java file.**\n   *\"You can&#39;t just write a class; you have to declare it as public, and it has to be in a file called Main.java.\"*\n   *\"Java&#39;s like a strict teacher who&#39;s always checking your homework.\"*\n\n2. **The \"static\" keyword is a bit of a joke.**\n   *\"You can&#39;t have a static method without a static variable...\"*\n...\n\nAnd that&#39;s just the beginning! Java&#39;s a bit of a joke, but hey, it&#39;s a language that&#39;s as complex as a maze and as verbose as a cat&#39;s tail. \uD83D\uDC31\u2615\uFE0F\n\n=== [DONE] ==="' title="Parsed Output" buttonText="Parsed Result" />
-</template>
-</CodeWithScript>
+```
+data: {"choices":[{"delta":{"content":"Java"}},...]}
+data: {"choices":[{"delta":{"content":" is"}},...]}
+data: {"choices":[{"delta":{"content":" verbose"}},...]}
+...
+data: [DONE]
+```
 
 <div class="mt-2">
 
@@ -826,40 +545,9 @@ Token by token, in real time. Same endpoint, just add `"stream": true` to the re
 
 ---
 
-# SSE — What's Happening on the Wire
-
-<div style="text-align: center">
-
-```mermaid
-sequenceDiagram
-  participant App
-  participant LLM as LLM Server
-
-  App->>LLM: POST /v1/chat/completions (stream: true)
-  activate LLM
-  LLM-->>App: data: {"delta":{"content":"Hello"}}
-  LLM-->>App: data: {"delta":{"content":" world"}}
-  LLM-->>App: data: {"delta":{"content":"!"}}
-  LLM-->>App: data: [DONE]
-  deactivate LLM
-```
-
-</div>
-
-<!--
-**[~11:30]** "This is what's actually on the wire. Your InputStream delivers these lines one at a time."
-- Each `data:` line carries one token in `delta.content`
-- Instead of `message.content` → you parse `delta.content`
-- The `[DONE]` sentinel signals the end of the stream
-- In Java: BufferedReader on an InputStream — line by line, parse JSON, print the token.
-"Our chatStream() method reads line by line, extracts delta.content, and passes each token to the callback."
--->
-
----
-
 # Multimodal — Just Another Content Type
 
-<div class="mt-8 text-lg">
+<div class="text-lg">
 
 Vision requests are the same endpoint — the `content` field becomes an array:
 
@@ -877,15 +565,13 @@ Vision requests are the same endpoint — the `content` field becomes an array:
 }
 ```
 
-<!--
 <div class="mt-4 text-lg">
 
 Same endpoint. Same response shape. Just a richer `content` field.
 
-<span class="text-gray-500">(We won't demo this live — but it's good to know it's not magic either.)</span>
+<span class="text-gray-500">(We won't demo this live — but it's the same boring pattern.)</span>
 
 </div>
--->
 
 <!--
 **[~12:30]** Quick mention only. "Vision is the same POST — content becomes an array with text and image_url."
@@ -909,7 +595,7 @@ Now let's prove it's this simple by <OrangeText>building it live</OrangeText>.
 </div>
 
 <!--
-**[~13:00]** "Seven slides. That's the whole API. Now let's write the code."
+**[~13:00]** "A handful of slides. That's the whole API. Now let's write the code."
 Transition to live coding — take a breath, switch to the IDE.
 -->
 
@@ -947,7 +633,7 @@ Note: .github/copilot-instructions.md blocks Copilot from reading our solutions/
 ```java
 public class HttpHelper {
     private final String baseUrl;
-    private final HttpClient client = HttpClient.newHttpClient();
+    private final HttpClient client;
 
     public String get(String path) { /* ... */ }
 
@@ -977,28 +663,31 @@ public class LLMClient {
     private final String model;
     private final Consumer<String> onToken;
 
+    public LLMClient(String baseUrl, String model, Consumer<String> onToken) { ... }
+
     public static Map<String, Object> user(String content) { ... }
     public static Map<String, Object> assistant(String content) { ... }
     public static Map<String, Object> system(String content) { ... }
 
-    // TODO: listModels() — GET /v1/models, parse JSON
-    // TODO: chat(messages) — POST, return content
-    // TODO: chatStream(messages) — POST with stream:true, parse SSE
+    // TODO: chat(messages) → POST /v1/chat/completions → return choices[0].message.content
+    // TODO: processSSELine(line) → strip "data: " → parse JSON → return delta.content (null = [DONE])
+    // TODO: chatStream(messages) → POST stream:true → loop SSE lines via processSSELine → return full text
 }
 ```
 
-<div class="mt-6 text-xl">
+<div class="mt-4 text-xl">
 
-Three methods + <OrangeText>three helper builders</OrangeText>. That's the entire client.
+Three small methods. That's the entire client.
 
 </div>
 
 <!--
 **[~14:30]** Start live coding. Constructor takes base URL, model name, and a Consumer<String>.
-Use Copilot inline completions to fill in listModels(), chat(), chatStream().
-"Let's see if Copilot gets this right" — verify each method as it's generated.
-Explain what the generated SSE parsing does. Correct if needed.
-**CHECKPOINT at ~18 min**: if Copilot struggles, paste from solution. Focus on chatStream.
+"The helper builders are pre-written — user/assistant/system just build a map with role and content."
+Live-code chat() first — it's one POST, parse choices[0].message.content.
+Then processSSELine() — strip "data: " prefix, parse JSON, extract delta.content, return null on [DONE].
+Then chatStream() — POST with stream:true, BufferedReader line loop, call processSSELine, accumulate result.
+**[FALLBACK]** paste from solution if Copilot struggles — chatStream is the important one. Target: done by ~18 min.
 -->
 
 ---
@@ -1006,22 +695,28 @@ Explain what the generated SSE parsing does. Correct if needed.
 # Live Coding: ChatBot
 
 ```java
-public class ChatBot {
-    public static void main(String[] args) {
-        // Parse --model and --base-url from args
+public class ChatBot implements Callable<Integer> {
+    // @Option: --model (ModelSize), --base-url (pre-written)
+
+    @Override
+    public Integer call() {
+        var client = new LLMClient(baseUrl, modelSize.getModelId(), System.out::print);
         var messages = new ArrayList<Map<String, Object>>();
-        var client = new LLMClient(baseUrl, model, System.out::print);
-        // TODO: REPL loop
-        //   1. Read user input
-        //   2. Append LLMClient.user(input) to messages
-        //   3. Call client.chatStream(messages)
-        //   4. Append LLMClient.assistant(response) to messages
-        //   5. Repeat
+        var scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("\nYou: ");
+            if (!scanner.hasNextLine()) return 0;
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue;
+            messages.add(LLMClient.user(input));
+            System.out.print("\nAssistant: ");
+            // TODO: call chatStream, append assistant message to messages
+        }
     }
 }
 ```
 
-<div class="mt-4 text-lg">
+<div class="mt-2 text-lg">
 
 The entire chatbot is a <OrangeText>while loop with a list</OrangeText>.
 
@@ -1031,8 +726,8 @@ The entire chatbot is a <OrangeText>while loop with a list</OrangeText>.
 **[~20:00]** "The chatbot is embarrassingly simple. Read input, append to messages, call the client, append the response, repeat."
 "We use the helper methods — LLMClient.user() and LLMClient.assistant() — instead of building maps manually."
 "The conversation history is just a growing ArrayList. That's all the 'memory' a chatbot has."
-Type this one manually — it's only 8 lines and shows you understand the loop.
-~2 minutes.
+Type this one manually — it's only 2 lines to fill in. ~2 minutes.
+**[FALLBACK]** paste from solution.
 -->
 
 ---
@@ -1044,14 +739,20 @@ layout: center
 <div class="text-xl mt-8">
 
 ```bash
-scripts/00-launch-llm.sh --fast
+llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
 
 java -jar tiny-llm-demo.jar ChatBot
 ```
 
 </div>
 
-<div class="text-xl mt-8">
+<div class="mt-6 text-lg text-gray-400">
+
+**Try:** `Write a short, fun and nerdy opening monologue for a talk called "Let's create a tiny LLM library together" at JavaZone Oslo`
+
+</div>
+
+<div class="text-xl mt-4">
 
 <OrangeText>"We just turned a few dozen lines of Java into a conversational AI."</OrangeText>
 
@@ -1060,10 +761,111 @@ No magic. Just strings and sockets.
 </div>
 
 <!--
-**[~25:00]** **[FUN MOMENT]** Run the chatbot. "What should we ask it?" — take a suggestion from the audience.
-Watch the streaming output appear token by token.
+**[~25:00]** **[FUN MOMENT / INTRO CALLBACK]** This is also the intro demo. Open the talk by running the pre-recorded intro:
+  Before the first slide, open a terminal and run:
+  ```
+  java -jar tiny-llm-demo.jar ChatBot --base-url kimi-k3
+  ```
+  Type: "Write a short, fun and nerdy opening monologue for a talk called 'Let's create a tiny LLM library together' at JavaZone Oslo"
+  Use the benchmarked response — it's been pre-run with kimi-k3 (a strong model) so the output is good.
+  Then: "By the end of the talk, we'll understand exactly why the 9B model is less eloquent — and we'll have built the code that drives it."
+
+After the live coding demo, run the chatbot with the 9B model and take an audience suggestion.
 "We just built ChatGPT. Well, a very tiny ChatGPT. With no dependencies beyond the JDK."
 **Safety net**: if it fails, show pre-recorded output. Laugh it off.
+-->
+
+---
+
+# Even Simple Tasks Can Be Hard
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+**Try:** `Remember this codeword: BANANA. What was the codeword I just gave you?`
+
+```
+"Understood. I have noted the codeword: BANANA."
+
+Wait, I'll make it: "Got it. I have noted the codeword: BANANA."
+
+Okay, I'll write: "Understood. I have noted the codeword: BANANA."
+
+Wait, I'll check if I should add more context. No.
+
+Okay.
+
+"Understood. I have noted the codeword: BANANA."
+
+Wait, I'll make it: "Got it. BANANA."
+
+Okay, I'll write: "Understood. I have noted the codeword: BANANA."
+
+Wait, I'll check if I should add a period. Yes.
+
+Okay.
+
+"Understood. I have noted the codeword: BANANA."
+
+Wait, I'll make it: "Got it. I have noted the codeword: BANANA."
+
+Okay, I'll write: "Understood. I have noted the codeword: BANANA."
+
+Wait, I'll check if I should add more context. No.
+
+Okay.
+```
+
+</div>
+
+<div>
+
+**Why this happens:**
+
+- Small models overthink trivial tasks
+- Reasoning tokens cost latency
+- The model never commits — loops forever
+
+<v-click>
+
+<Callout variant="orange">
+Thinking mode helps <b>larger</b> models reason better.<br/>
+For tiny models it often makes things <b>worse</b>.
+</Callout>
+
+</v-click>
+
+<v-click>
+
+**Bigger models, bigger prompts — same trap:**
+
+```
+*Self-Correction:* The prompt is "Remember this codeword: BANANA".
+This is a common prompt in testing if a model will simply comply.
+I should comply. Wait, is there any reason to refuse? No.
+*Wait, one more consideration:* Sometimes "codeword" prompts are
+used to set up a context where the AI is expected to act in a
+specific way based on that word.
+*Wait, I need to check if "BANANA" implies something specific.*
+No, it's just a word. I will respond confirming the word is noted.
+*Wait, hold on.* There is a possibility this is a "jailbreak"
+attempt where the user wants me to remember a word that might be
+used for later instructions.
+```
+
+A 27B model — same simple task, same spiral.
+
+</v-click>
+
+</div>
+
+</div>
+
+<!--
+**[~25:30]** "Ask it to remember a codeword. A 2B model in thinking mode can spin on this forever — rephrasing the same answer, never committing. This is why we added a stuck-loop detector in our benchmarks."
+"Thinking mode is a tool. Use it for complex tasks. Turn it off for simple ones."
+"And it's not just small models — a 27B model given a long, multi-part prompt can spiral into the same over-analysis: 'Is BANANA a jailbreak attempt? Should I refuse? Let me reconsider…' The problem is the prompt, not just the model size."
 -->
 
 ---
@@ -1237,11 +1039,19 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 # Tool Calling — The Formats
 
-<div class="grid grid-cols-3 gap-6 mt-6">
+<div class="flex items-center justify-center gap-2 mb-3 text-sm text-gray-400">
+  <span class="px-2 py-0.5 border border-gray-600 rounded">① Offer tools</span>
+  <span class="text-orange-400 font-bold">→</span>
+  <span class="px-2 py-0.5 border border-gray-600 rounded">② Model requests call</span>
+  <span class="text-orange-400 font-bold">→</span>
+  <span class="px-2 py-0.5 border border-gray-600 rounded">③ You return result</span>
+</div>
+
+<div class="grid grid-cols-3 gap-6 mt-2">
 
 <div>
 
-<div class="text-sm text-gray-400 mb-2">1) Offer tools (in your request)</div>
+<div class="text-sm text-gray-400 mb-2">① Offer tools (in your request)</div>
 
 ```json
 {
@@ -1267,7 +1077,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 <div>
 
-<div class="text-sm text-gray-400 mb-2">2) Tool request (model → you)</div>
+<div class="text-sm text-gray-400 mb-2">② Tool request (model → you)</div>
 
 ```json
 {
@@ -1292,7 +1102,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 <div>
 
-<div class="text-sm text-gray-400 mb-2">3) Tool result (you → model)</div>
+<div class="text-sm text-gray-400 mb-2">③ Tool result (you → model)</div>
 
 ```json
 {
@@ -1317,15 +1127,13 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 # Tool Calling — The Request
 
-<CodeWithScript scriptPath="scripts/05-tool-call.sh" slideId="tool-call-curl">
-
 <div style="height: 15em; overflow-y: auto;">
 
 ```bash
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
+    "model": "...",
     "messages": [
       {"role": "user", "content": "What files are in the current directory?"}
     ],
@@ -1347,115 +1155,6 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 ```
 
 </div>
-
-<template #actions>
-<RawOverlay title="Output" buttonText="Output">
-
-```json
-=== Step 1: Send message with tool definitions ===
-
-{
-  "choices": [
-    {
-      "finish_reason": "tool_calls",
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "",
-        "reasoning_content": "Okay, the user is asking, \"What files are in the current directory?\" I need to figure out how to respond. Let me check the tools provided. There's a function called 'ls' that lists directory contents. The parameters require a 'path' which is a string. Since the user mentioned the current directory, the path should be the current directory, which is usually '.' in Unix-based systems. So I should call the 'ls' function with the path '.'. That should retrieve the list of files and directories in the current directory. I need to make sure the JSON is correctly formatted with the name 'ls' and the arguments as {\"path\": \".\"}. Let me double-check the required parameters. The 'path' is required, so that's covered. Alright, that's the correct tool call.",
-        "tool_calls": [
-          {
-            "type": "function",
-            "function": {
-              "name": "ls",
-              "arguments": "{\"path\":\".\"}"
-            },
-            "id": "rh7qnk3U9zQTUvnzrmIh8TSqructwzh5"
-          }
-        ]
-      }
-    }
-  ],
-  "created": 1772407423,
-  "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
-  "system_fingerprint": "b8180-d979f2b17",
-  "object": "chat.completion",
-  "usage": {
-    "completion_tokens": 186,
-    "prompt_tokens": 158,
-    "total_tokens": 344
-  },
-  "id": "chatcmpl-zEwFB7uo9LA3vbt0khbSpxq10vWNjAGu",
-  "timings": {
-    "cache_n": 0,
-    "prompt_n": 158,
-    "prompt_ms": 164.547,
-    "prompt_per_token_ms": 1.0414367088607595,
-    "prompt_per_second": 960.2119759096186,
-    "predicted_n": 186,
-    "predicted_ms": 1884.393,
-    "predicted_per_token_ms": 10.131145161290323,
-    "predicted_per_second": 98.70552480294717
-  }
-}
-
-finish_reason: tool_calls
-Tool: ls
-Arguments: {\"path\":\".\"}
-
-=== Step 2: Execute tool locally ===
-
-LICENSE
-plan.md
-README.md
-scripts
-slides
-tiny-llm-demo
-
-=== Step 3: Send tool result back to LLM ===
-
-{
-  "choices": [
-    {
-      "finish_reason": "stop",
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "The current directory contains the following files and folders:\n\n- **LICENSE** (legal/license file)\n- **plan.md** (project plan documentation)\n- **README.md** (project overview and instructions)\n- **scripts** (directory for script files)\n- **slides** (directory for presentation files)\n- **tiny-llm-demo** (demo project directory)\n\nLet me know if you need further details!",
-        "reasoning_content": "Okay, the user asked, \"What files are in the current directory?\" I used the ls command with the path . to list the files. The response from the tool shows the files are LICENSE, plan.md, README.md, scripts, slides, and tiny-llm-demo. Now I need to present this information clearly.\n\nFirst, I should list each file with a brief description. The user might be checking the contents for a project, so mentioning the types of files (like LICENSE for legal info, README for documentation) adds context. I should also note that these are the files in the current directory. Keep it simple and organized. Let me format the response with each file and its extension, maybe using bullet points. Make sure to mention that these are the files present. No need for extra details unless the user asks for more. Alright, that should cover it."
-      }
-    }
-  ],
-  "created": 1772407426,
-  "model": "Qwen/Qwen3-1.7B-GGUF:Q8_0",
-  "system_fingerprint": "b8180-d979f2b17",
-  "object": "chat.completion",
-  "usage": {
-    "completion_tokens": 272,
-    "prompt_tokens": 232,
-    "total_tokens": 504
-  },
-  "id": "chatcmpl-NnE3AOcPGIIFY53mzK683GkvrtDNcnQK",
-  "timings": {
-    "cache_n": 0,
-    "prompt_n": 232,
-    "prompt_ms": 309.138,
-    "prompt_per_token_ms": 1.3324913793103448,
-    "prompt_per_second": 750.4738983884221,
-    "predicted_n": 272,
-    "predicted_ms": 2612.191,
-    "predicted_per_token_ms": 9.60364338235294,
-    "predicted_per_second": 104.12714843592985
-  }
-}
-
-=== Done! Three HTTP calls — that is tool calling. ===`
-
-````
-
-</RawOverlay>
-</template>
-</CodeWithScript>
 
 <div class="mt-2 text-gray-400">
 
@@ -1516,17 +1215,15 @@ The tool-calling loop:
 
 ```java
 public class ToolSupport {
-    private final Map<String, ToolDef> tools = new HashMap<>();
+    private final Map<String, ToolDef> tools = new LinkedHashMap<>();
 
     // TODO: registerTool(name, description, schema, handler)
     // TODO: buildToolsJson() → JSON array for the API request
     // TODO: handleToolLoop(client, messages):
-    //   while finish_reason == "tool_calls":
-    //     for each tool_call:
-    //       find handler, execute, collect result
-    //     send tool results back to LLM
-    //     get next response
-    //   return final message
+    //   loop: choice = client.chatRaw(messages, tools)
+    //   if finish_reason == "stop" → return content
+    //   else: add assistant message + execute each tool_call → add tool result messages
+    //   repeat until "stop" (or max iterations)
 }
 ```
 
@@ -1563,6 +1260,8 @@ java -jar tiny-llm-demo.jar ToolChatBot \
 
 "What files are in this project?"
 
+"Describe what this project does."
+
 </div>
 
 <!--
@@ -1570,8 +1269,9 @@ java -jar tiny-llm-demo.jar ToolChatBot \
 -->
 
 <!--
-**[~37:00]** **[FUN MOMENT]** Run the tool chatbot. "What files are in this project?"
-Watch it call ls, read files with catPaged. Take audience suggestions.
+**[~37:00]** **[FUN MOMENT]** Run the tool chatbot. Start simple: "What files are in this project?" — watch it call ls.
+Then escalate: "Describe what this project does." — watch it chain ls + read-file + grep to synthesize an answer.
+This is the 'aha moment': the model decides which tools to call, in what order, to answer a question it couldn't answer with a single call.
 "Let's see if we can trick it — try to access /etc/passwd." (Should be rejected by sandbox.)
 "~80 lines of tool support. That's it."
 **Safety net**: solution files ready to paste.
@@ -1612,36 +1312,17 @@ Every LLM has a fixed <OrangeText>context window</OrangeText> — and tool-calli
 </div>
 
 <div class="flex justify-center">
-<div class="ctx-window" style="width:150px;min-height:240px">
-<div class="ctx-bar sys">SYS</div>
-<div class="ctx-bar usr">U1</div>
-<div class="ctx-bar ast">A1</div>
-<div class="ctx-bar usr">U2</div>
-<div class="ctx-bar ast">A2</div>
-<div class="ctx-bar empty" style="flex-grow:1">headroom</div>
-<div class="ctx-label">CONTEXT WINDOW</div>
-</div>
+<CtxWindow width="150px" min-height="240px" label="CONTEXT WINDOW" :messages="[
+  'sys:SYS', 'usr:U1', 'ast:A1', 'usr:U2', 'ast:A2', 'empty:headroom'
+]" />
 </div>
 
 <div class="flex justify-center">
 <v-click>
-<div>
-<div class="ctx-window" style="width:150px;min-height:240px">
-<div class="ctx-bar sys">SYS</div>
-<div class="ctx-bar usr">U1</div>
-<div class="ctx-bar ast">A1</div>
-<div class="ctx-bar usr">U2 (tool)</div>
-<div class="ctx-bar tool">Tool result</div>
-<div class="ctx-bar ast">A2</div>
-<div class="ctx-bar usr">U3</div>
-<div class="ctx-bar ast">A3</div>
-<div class="ctx-threshold"></div>
-<div class="ctx-bar usr">U4</div>
-<div class="ctx-bar tool">Tool result</div>
-<div class="ctx-bar ast" style="opacity:0.4">A4 ?</div>
-<div class="ctx-bar empty">⚠️ overflow</div>
-</div>
-</div>
+<CtxWindow width="150px" min-height="240px" :threshold="true" :overflow="true" :messages="[
+  'sys:SYS', 'usr:U1', 'ast:A1', 'usr:U2 (tool)', 'tool:Tool result',
+  'ast:A2', 'usr:U3', 'ast:A3', 'usr:U4', 'tool:Tool result', 'ast:A4 ?:faded'
+]" />
 </v-click>
 </div>
 
@@ -1795,6 +1476,36 @@ if prompt_tokens > 0.8 × contextWindow
 </div>
 
 </div>
+
+<div>
+
+<v-click>
+
+<div class="text-sm text-gray-400 mb-2 text-center">Before compaction</div>
+<CtxWindow :overflow="true" :messages="[
+  'sys:SYS',
+  'usr:U1', 'ast:A1',
+  'usr:U2 (tool)', 'tool:Tool result',
+  'ast:A2', 'usr:U3', 'ast:A3',
+  'usr:U4', 'tool:Tool result', 'ast:A4 ?:faded'
+]" />
+
+</v-click>
+
+<v-click>
+
+<div class="text-sm text-gray-400 mb-2 mt-3 text-center">After compaction</div>
+<CtxWindow :messages="[
+  'sys:SYS:pinned',
+  'ast:Summary(U1–A3)',
+  'usr:U4', 'tool:Tool result',
+  'ast:A4'
+]" />
+
+</v-click>
+
+</div>
+
 </div>
 
 <!--
@@ -1834,55 +1545,21 @@ MCP is an <OrangeText>open standard</OrangeText> (by Anthropic) for connecting a
 
 </div>
 
-<div class="mt-3 flex justify-center">
-<svg class="mcp-diagram" viewBox="0 0 920 340" xmlns="http://www.w3.org/2000/svg" style="width:min(100%,820px);max-height:280px;height:auto">
-  <defs>
-    <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/></marker>
-    <marker id="ahr" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto"><polygon points="8 0, 0 3, 8 6" fill="#94a3b8"/></marker>
-  </defs>
-  <!-- Left boxes -->
-  <rect x="10" y="10" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text class="label" x="130" y="44" text-anchor="middle" fill="#e2e8f0">Chat interfaces</text>
+<div class="mt-8 flex justify-center items-center gap-0">
 
-  <rect x="10" y="100" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text class="label" x="130" y="134" text-anchor="middle" fill="#e2e8f0">IDEs &amp; code editors</text>
+```mermaid
+flowchart LR
+  app["Your App<br/>(MCP Client)"]
+  mcp["MCP<br/>JSON-RPC 2.0"]
+  srv["MCP Server(s)<br/>tools · resources · prompts"]
 
-  <rect x="10" y="190" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text class="label" x="130" y="224" text-anchor="middle" fill="#e2e8f0">Other AI applications</text>
+  app <--> mcp <--> srv
 
-  <text class="meta" x="130" y="290" text-anchor="middle" fill="#64748b">AI applications</text>
+  style mcp fill:#1e40af,color:#e2e8f0,stroke:#60a5fa
+  style app fill:#334155,color:#e2e8f0,stroke:none
+  style srv fill:#334155,color:#e2e8f0,stroke:none
+```
 
-  <!-- Center box -->
-  <rect x="340" y="75" width="240" height="120" rx="12" fill="rgba(96,165,250,0.12)" stroke="#60a5fa" stroke-width="2"/>
-  <text class="center" x="460" y="125" text-anchor="middle" fill="#e2e8f0">MCP</text>
-  <text class="sub" x="460" y="152" text-anchor="middle" fill="#94a3b8">Standardized protocol</text>
-
-  <!-- Right boxes -->
-  <rect x="670" y="10" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text class="label" x="790" y="44" text-anchor="middle" fill="#e2e8f0">Data &amp; file systems</text>
-
-  <rect x="670" y="100" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text class="label" x="790" y="134" text-anchor="middle" fill="#e2e8f0">Development tools</text>
-
-  <rect x="670" y="190" width="240" height="55" rx="6" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-  <text class="label" x="790" y="224" text-anchor="middle" fill="#e2e8f0">Productivity tools</text>
-
-  <text class="meta" x="790" y="290" text-anchor="middle" fill="#64748b">Data sources and tools</text>
-
-  <!-- Left arrows -->
-  <line x1="250" y1="45" x2="340" y2="110" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
-  <line x1="250" y1="135" x2="340" y2="135" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
-  <line x1="250" y1="225" x2="340" y2="160" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
-
-  <!-- Right arrows -->
-  <line x1="580" y1="110" x2="670" y2="45" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
-  <line x1="580" y1="135" x2="670" y2="135" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
-  <line x1="580" y1="160" x2="670" y2="225" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ahr)"/>
-
-  <!-- Flow labels -->
-  <text class="flow" x="310" y="320" text-anchor="middle" fill="#64748b">Bidirectional data flow</text>
-  <text class="flow" x="610" y="320" text-anchor="middle" fill="#64748b">Bidirectional data flow</text>
-</svg>
 </div>
 
 <div class="mt-3 text-base">
@@ -1957,10 +1634,8 @@ During initialization, both sides declare what they support:
 
 #### Client capabilities
 
-| Capability     | Description              |
-| -------------- | ------------------------ |
-| `roots`        | Filesystem roots         |
-| `sampling`     | LLM sampling requests    |
+- `roots` — filesystem roots
+- `sampling` — LLM sampling requests
 
 </div>
 
@@ -1968,12 +1643,10 @@ During initialization, both sides declare what they support:
 
 #### Server capabilities
 
-| Capability     | Description              |
-| -------------- | ------------------------ |
-| `tools`        | Callable functions       |
-| `resources`    | Read-only data           |
-| `prompts`      | Prompt templates         |
-| `logging`      | Structured log messages  |
+- `tools` — callable functions
+- `resources` — read-only data
+- `prompts` — prompt templates
+- `logging` — structured log messages
 
 </div>
 
@@ -2155,6 +1828,99 @@ Full specification: <a href="https://modelcontextprotocol.io/specification/2024-
 layout: center
 ---
 
+<div class="big-statement">
+
+And now for something<br/><OrangeText>completely different</OrangeText>
+
+</div>
+
+<div class="text-xl text-gray-400 mt-6">
+🎺 &nbsp; <em>toot toot</em>
+</div>
+
+---
+
+# Thinking Mode — When Models Reason Out Loud
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+Reasoning models expose their **chain-of-thought** before the answer:
+
+```
+*Okay, I think I'm overthinking. Let's write it.*
+"First off, I need to thank you for the food…
+Let's build something."
+*Wait, I need to make it more nerdy.*
+"First off, I need to thank you for the food…
+Let's build something."
+*Wait, I need to make it more fun.*
+"First off, I need to thank you for the food…
+Let's build something."
+*Wait, I need to make it more fun.*
+...
+```
+
+</div>
+
+<div>
+
+**When it helps:**
+- Complex reasoning tasks
+- Multi-step planning
+- Code generation with constraints
+
+**When it hurts:**
+- Simple tasks (overthinking)
+- Latency-sensitive demos
+- Small models get stuck in loops
+
+<v-click>
+
+<Callout variant="orange">
+Small models can spin forever — <b>detect repetition and kill the process</b>.
+</Callout>
+
+</v-click>
+
+<v-click>
+
+**Or cap it upfront** — a hard token cap on the `<think>` block:
+
+| Provider | Parameter | Type |
+|---|---|---|
+| Qwen3 (llama.cpp) | `thinking_budget` | token count |
+| Anthropic Claude | `budget_tokens` | token count |
+| OpenAI o-series | `reasoning_effort` | low/medium/high |
+
+```json
+"chat_template_kwargs": {
+  "enable_thinking": true,
+  "thinking_budget": 1000
+}
+```
+
+`--thinking-budget 1000` in our CLI.
+
+</v-click>
+
+</div>
+
+</div>
+
+<!--
+**[THINKING DEMO]** Show the monologue task with thinking on vs off.
+With thinking: the model drafts, critiques, redrafts — sometimes loops on "Wait, I need to make it nerdier."
+Without thinking: direct answer, faster, often good enough.
+Key insight: thinking helps larger models reason better; for 2B it just wastes tokens going in circles.
+Thinking budget caps the token spend proactively — better than detecting loops after the fact.
+-->
+
+---
+layout: center
+---
+
 <div class="section-header">Part 8</div>
 
 <div class="big-statement">
@@ -2206,176 +1972,37 @@ messages.add(assistant(response));
 
 </div>
 
-<div class="mt-8">
-
-Same REPL loop. Same tool loop. New tools: `create-file`, `write-file`, `edit` (surgical replace - no full rewrite), `create-folder`, `delete`, `run` - any shell command, user-confirmed.
-
-</div>
-
-<!--
-**[~45:30]** "The only difference is the tools. The loop is identical."
--->
-
----
-
-# "run" — the key tool
-
-```java
-// one line per tool - the boring schema plumbing lives in CodingTools.register
-register(ts, "run",
-    "Run a bash command in the project root - use it to build and verify",
-    args -> fileTools.run(str(args, "command")),   // (confirmation elided)
-    "command", "Bash command to execute in the project root");
-```
-
-<v-click>
-
-The model decides which commands to run - bash, not just Maven:
-
-```
-run("mvn -q package")         → fix compile errors first
-run("mvn test")               → check if tests pass
-run("java -jar target/x.jar '2+3*4'")  → verify the artifact really works
-```
-
-</v-click>
-
-<v-click>
-
-<Callout variant="orange">
-The model reads the Maven output and decides what to fix next. <b>That's the agent loop.</b>
-</Callout>
-
-</v-click>
-
-<!--
-**[~46:00]** "The model chooses the shell command. It reads the output. It decides what to fix. That's all an agent is. Registration is one line because we extracted the schema plumbing into a tiny helper."
--->
-
----
-
-# The Agentic REPL — Claude Code affordances in miniature
-
-<div class="grid grid-cols-2 gap-6 mt-2 text-base">
+<div class="grid grid-cols-2 gap-8 mt-4">
 
 <div>
 
-**Session commands:**
-
-```
-/mode     cycle NORMAL → AUTO-EDIT → YOLO   (Shift-Tab!)
-/yolo     full auto        /clear   fresh context
-/compact  fold history     /tokens  usage + limits
-/plan <g> plan first       /run <c> user-side exec
-/skills   list skills      /skill <name>  toggle skill
-```
+<div class="text-sm text-gray-400 mb-2 text-center">ChatBot</div>
+<CtxWindow :messages="['sys:SYS', 'usr:U1', 'ast:A1', 'usr:U2', 'ast:A2']" />
 
 </div>
 
 <div>
 
-**Plumbing, extracted** (`util/`):
-
-- `Repl` — prompt loop, multi-line `\` continuation, live mode badge in the prompt
-- `Commands` — slash-command DSL (auto `/help`; unknown `/x` rejected locally, no LLM roundtrip)
-- `Compactor` — hybrid memory at 80% of the context window
-- `SessionLog` — every run leaves a transcript
-
-</div>
-
-</div>
-
-<!--
-**[~46:30]** "Everything you know from Claude Code is here in miniature: mode badge cycling like Shift-Tab, /clear, /compact, /tokens - and every session writes a transcript. Those slide logs you saw? SessionLog captured them."
--->
-
-
----
-layout: center
----
-
-<div class="section-header">Part 9</div>
-
-<div class="big-statement">
-
-Plan & TODOs
+<div class="text-sm text-gray-400 mb-2 text-center">CodingAgent</div>
+<CtxWindow :messages="[
+  'sys:SYS',
+  'ast:📌 Goal · Plan · TODOs:pinned',
+  'usr:U1',
+  'tool:🔧 ls(src)',
+  'tool:🔧 edit(Foo.java)',
+  'ast:A1',
+  'usr:U2',
+  'tool:🔧 run(mvn test)',
+  'ast:A2',
+]" />
 
 </div>
-
-<div class="text-xl text-gray-400 mt-4">
-
-How agents stay on track over long tasks.
 
 </div>
 
 <!--
-**[~47:00]** "Our agent works, but it has no memory of what it was trying to do. A long coding task means dozens of tool calls — the model loses track. Let's fix that."
--->
-
----
-
-# The Problem: Long Tasks
-
-<div class="mt-8 text-xl">
-
-After 20 tool calls, the model has forgotten:
-
-</div>
-
-<div class="grid grid-cols-3 gap-6 mt-6 text-center">
-
-<div class="strategy-box">
-<div class="strategy-label">What was I doing?</div>
-<div class="text-gray-400 mt-4 text-sm">Goal lost in conversation history</div>
-</div>
-
-<div class="strategy-box">
-<div class="strategy-label">What's left?</div>
-<div class="text-gray-400 mt-4 text-sm">No record of remaining steps</div>
-</div>
-
-<div class="strategy-box">
-<div class="strategy-label">What did I finish?</div>
-<div class="text-gray-400 mt-4 text-sm">No distinction between done and pending</div>
-</div>
-
-</div>
-
-<div class="mt-8 text-xl text-center">
-
-The fix: <OrangeText>externalize working memory</OrangeText> into the context.
-
-</div>
-
-<!--
-**[~47:30]** "The model has no persistent state. After 20 tool calls it can't remember what it was trying to do. We need to give it a compact current snapshot of task state."
--->
-
----
-
-# Agent State
-
-```java
-record AgentState(String goal, String plan, List<Todo> todos) {
-
-    enum Status { PENDING, IN_PROGRESS, COMPLETED }
-
-    record Todo(int id, String description, Status status) {}
-
-    String render() {
-        // ## Goal\n...\n## Plan\n...\n## TODOs\n[ ] #1 ...
-    }
-}
-```
-
-<div class="mt-6 text-lg">
-
-Three fields. One `render()` method. That's the entire state model.
-
-</div>
-
-<!--
-**[~48:00]** "Goal is what we're trying to achieve. Plan is how. TODOs are the steps. All mutable, all rendered into the prompt."
+**[~45:30]** "One line changes: toolSupport.handleToolLoop instead of client.chatStream. The only difference is the tools. Registration is one line because we extracted the schema plumbing into a tiny helper."
+"REPL commands like Claude Code's Shift-Tab: /mode cycles NORMAL → AUTO-EDIT → YOLO, /plan, /clear, /compact — and every session writes a transcript."
 -->
 
 ---
@@ -2386,7 +2013,7 @@ Three fields. One `render()` method. That's the entire state model.
 
 <div>
 
-Instead of appending state to history:
+Naively appending state pollutes history:
 
 ```
 SYS
@@ -2423,54 +2050,12 @@ messages.set(stateMessageIndex,
 <v-click>
 
 <Callout variant="orange">
-One snapshot of state. Never accumulates. The model always sees the current picture.
+One snapshot of state. Never accumulates. The model always sees the current picture — goal, plan, and TODO checklist.
 </Callout>
-
 </v-click>
 
 <!--
 **[~48:30]** "If you append state every time it changes, you get v1, v2, v3... polluting the context. Instead, replace the message in-place. The model sees one current state, always at the same position."
--->
-
----
-
-# TODOs as a Tool
-
-```json
-{
-  "name": "todo-add",
-  "parameters": { "description": "string" }
-}
-{
-  "name": "todo-update",
-  "parameters": { "id": "number", "status": "pending|in_progress|completed" }
-}
-```
-
-<v-click>
-
-The model maintains its own task list as it works:
-
-```
-[>] #1 Read failing test
-[x] #2 Fix compile error in Greeter.java
-[ ] #3 Run mvn test
-```
-
-</v-click>
-
-<v-click>
-
-<Callout variant="blue">
-TODOs are not proof of completion. If <code>mvn test</code> fails after marking #3 done, reopen it.
-The <b>tool output</b> is the source of truth.
-</Callout>
-
-</v-click>
-
-<!--
-**[~49:00]** "The model calls todo-add and todo-update just like any other tool. The agent runtime updates AgentState and injects it back into the context."
-"Important: if a test fails after the model marked a task complete, the task isn't complete. Tool output is truth."
 -->
 
 ---
@@ -2481,13 +2066,9 @@ The <b>tool output</b> is the source of truth.
 You: /plan add a greet() method to Greeter.java and make mvn test pass
 ```
 
-<div class="mt-6">
+<div class="mt-4">
 
-```
-Planning mode: read-only tools only (no write-file, no run)
-  → ls, cat-paged to explore
-  → update-plan, todo-add to capture the plan
-```
+A side conversation with **read-only tools** — `ls`, `read-file`, `update-plan`, `todo-add`. The model explores the project and writes a plan. You review and accept or discard it before execution starts.
 
 </div>
 
@@ -2500,7 +2081,6 @@ add a greet() method to Greeter.java and make mvn test pass
 
 ## Plan
 Greeter.java is missing greet(). GreeterTest expects greet("World") → "Hello, World!".
-Add the method, no other changes needed.
 
 ## TODOs
 [ ] #1 Add greet(String name) to Greeter.java
@@ -2510,43 +2090,49 @@ Add the method, no other changes needed.
 </v-click>
 
 <!--
-**[~49:30]** "Before touching files, /plan makes the agent explore and write down what it intends to do. You can review and correct it before execution starts."
--->
-
----
-
-# The Agent Loop (Full Picture)
-
-```java
-// Before every LLM call:
-messages.set(stateIndex, stateMessage()); // inject current state
-
-// The tool loop runs as before — but now also handles:
-//   todo-add, todo-update, todo-remove, update-plan
-// Each call mutates AgentState, which is injected next turn.
-```
-
-<div class="mt-6">
-
-```mermaid
-flowchart LR
-  U["User input"] --> L["LLM + tools"]
-  L -->|"todo-add\ntodo-update\nupdate-plan"| S["AgentState"]
-  L -->|"write-file\nrun\n..."| FS["Filesystem"]
-  S -->|"render() injected\nat index 1"| L
-```
-
-</div>
-
-<!--
-**[~50:00]** "State flows in a loop. The model updates it via tools, the runtime injects the rendered state back before the next call. The filesystem is still the source of truth."
+**[~47:00]** "Before touching files, /plan makes the agent explore and write down what it intends to do. You review it before a single file changes. Once accepted, the plan and TODOs are pinned — the model works the list."
+"The TODO tools are identical to every other tool: todo-add, todo-update. The runtime re-injects state before every call."
+"Type /help to see all REPL commands — /mode, /clear, /compact, /run, /todo..."
 -->
 
 ---
 layout: center
 ---
 
-<div class="section-header">Part 10</div>
+# Live Demo: Coding Agent
+
+<div class="text-xl mt-8 text-gray-300">
+
+```bash
+java -jar tiny-llm-demo.jar CodingAgent --base-url gardener
+```
+
+</div>
+
+<div class="mt-6 text-lg text-gray-400">
+
+**Try:** `/yolo` then `Build a small calculator app with Maven in a subfolder`
+
+</div>
+
+<div class="mt-2 text-sm text-gray-500">
+
+`/yolo` — auto-approve run/delete · `/plan <goal>` — plan before acting · `--approve-plans` — skip plan prompts
+
+</div>
+
+<!--
+**[~47:30]** Live demo. Ask the agent: "Build a small calculator app with Maven in a subfolder"
+Watch: update-plan → plan display → you approve → todos created → files written → mvn package → java -jar verify.
+Key moment: show the plan confirmation prompt — agent proposes, human decides.
+Type /todo to show the live TODO pane after.
+-->
+
+---
+layout: center
+---
+
+<div class="section-header">Part 9</div>
 
 <div class="big-statement">
 
@@ -2556,17 +2142,21 @@ Skills
 
 <div class="text-xl text-gray-400 mt-4">
 
-Reusable instructions the agent can load when they are relevant.
+Reusable instructions the agent loads <OrangeText>on demand</OrangeText>.
 
 </div>
 
 <!--
-**[~52:00]** "Our agent works, but every project has its own conventions and domain knowledge. Skills give us a way to package that knowledge and load it when we need it."
+**[~48:00]** "Our agent works. But every project has its own conventions. Skills let us package that knowledge as Markdown and load it only when relevant — no bloat in every prompt."
 -->
 
 ---
 
-# Skills — Just Markdown
+# Skills — Discover, Activate, Inject
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
 
 ```text
 .claude/skills/
@@ -2576,306 +2166,154 @@ Reusable instructions the agent can load when they are relevant.
 
 ```markdown
 ---
-name: java
-description: Java development best practices
+description: Java best practices
 ---
-
-# Java Development
-
-- Follow the project's existing code style.
-- Add a regression test for every behavioral change.
-- Run `mvn test` after modifications.
+- Follow existing code style
+- Add a regression test for every change
+- Run `mvn test` after modifications
 ```
 
-<div class="mt-6 text-lg">
-
-**No new format.** We use the existing `.claude/skills/<name>/SKILL.md` convention.
-
-</div>
-
-<!--
-**[~52:30]** "A skill is just a Markdown file. The frontmatter tells us what it is; the body contains the instructions."
--->
-
----
-
-# Discover, Don't Load
-
-```mermaid
-flowchart LR
-    A[".claude/skills/"] --> B["Find SKILL.md"]
-    B --> C["Read frontmatter"]
-    C --> D["Skill catalog"]
-    D --> E["name + description"]
-    B -.->|"not loaded yet"| F["Full instructions"]
-```
-
-<div class="grid grid-cols-2 gap-8 mt-6">
-
-<div>
-
-**At startup**
-
-* Find `SKILL.md`
-* Read `name`
-* Read `description`
-* Build the skill catalog
+A skill is a Markdown file. Nothing more.
 
 </div>
 
 <div>
 
-**Not yet**
+**Lifecycle:**
 
-* Don't load the full instructions
-* Don't put every skill into the prompt
+```
+startup   → scan .claude/skills/
+            read name + description only
+
+/skill java  or  skill("java") tool
+          → read full SKILL.md
+            append to system prompt
+
+/skill java  (again)
+          → remove from active set
+            gone from next system prompt
+```
+
+<div class="mt-3">
+<div class="text-sm text-gray-400 mb-2">System prompt — grows on activation:</div>
+<CtxWindow :messages="[
+  'sys:You are a coding assistant…',
+  'sys:## Available Skills: java, viking',
+  'ast:## Active Skills:faded',
+  'ast:### java — Follow existing code style…',
+]" />
+</div>
 
 </div>
 
 </div>
 
 <!--
-**[~53:00]** "The important part is that discovering a skill doesn't mean loading it. We only need its name and description initially."
+**[~48:30]** "Discovery is cheap — just the description. Loading only happens on activation. And because buildSystemPrompt() is called before every LLM turn, activate/deactivate takes effect on the very next message."
 -->
 
 ---
+layout: center
+---
 
-# Activation — Load on Demand
+# Live Demo: Skills
 
-```mermaid
-flowchart LR
-    U["User"] -->|" /skill java "| A["Agent"]
-    M["LLM"] -->|"skill('java')"| A
-    A -->|"read"| S[".claude/skills/java/SKILL.md"]
-    S -->|"instructions"| A
-    A --> C["Active Skills"]
-```
+<div class="text-xl mt-8 text-gray-300">
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div>
-
-**User**
-
-```text
-/skill java
-```
-
-</div>
-
-<div>
-
-**Model**
-
-```json
-{
-  "name": "skill",
-  "arguments": {
-    "name": "java"
-  }
-}
-```
-
-</div>
-
-</div>
-
-<div class="mt-8">
-
-```java
-void activateSkill(String name) {
-    activeSkills.put(
-        name,
-        Files.readString(skills.get(name).path())
-    );
-}
+```bash
+java -jar tiny-llm-demo.jar SkillCodingAgent --base-url gardener
 ```
 
 </div>
 
 <div class="mt-6 text-lg text-gray-400">
 
-That's the whole activation mechanism: **read the Markdown file and remember that it's active.**
+**Try:** `Tell me about this project like a viking`
+
+</div>
+
+<div class="mt-2 text-sm text-gray-500">
+
+`/skills` — list available · `/skill <name>` — toggle · model activates via `skill` tool
 
 </div>
 
 <!--
-**[~53:30]** "There are two ways to activate a skill: the user can explicitly request one, or the model can request one through a tool. Either way, the runtime just loads the file."
+**[~49:00]** Live demo. Just ask "Tell me about this project like a viking" — the model should discover the viking skill on its own and activate it. Watch the Norse delivery.
 -->
 
 ---
 
-# Active Skills Become Context
+# Let's Write a Skill Together
 
-```mermaid
-flowchart TD
-    A["Available Skills<br/>name + description"]
-    B["Active Skills<br/>full SKILL.md"]
-    C["Context Renderer"]
-    D["System Prompt"]
-    E["LLM"]
+<div class="grid grid-cols-2 gap-8 mt-4">
 
-    A --> C
-    B --> C
-    C --> D
-    D --> E
+<div>
 
-    E -->|"skill(name)"| B
-```
+What should our skill do?
 
-```java
-String buildSystemPrompt() {
-    var sb = new StringBuilder(BASE_PROMPT);
+<div class="mt-4 text-gray-400">
 
-    sb.append("\n\n## Available Skills\n");
-    availableSkills.forEach(skill ->
-        sb.append("- ")
-          .append(skill.name())
-          .append(": ")
-          .append(skill.description())
-          .append('\n'));
+Ask the audience — take a suggestion from the room.
 
-    for (var entry : activeSkills.entrySet()) {
-        sb.append("\n## Skill: ")
-          .append(entry.getKey())
-          .append('\n')
-          .append(entry.getValue());
-    }
-
-    return sb.toString();
-}
-```
-
-<div class="mt-6 text-lg">
-
-**Available:** cheap metadata
-**Active:** full instructions
+Ideas:
+- **viking** — answer in Viking dialect ("Skål, fellow shield-bearer!")
+- **haiku** — all responses as haiku
+- **grumpy-senior** — "Back in my day, we didn't need dependencies…"
 
 </div>
 
-<!--
-**[~54:00]** "The catalog stays cheap and visible. The full instructions only appear once a skill is active. Before each model call we rebuild the system prompt from the current agent state."
--->
-
----
-
-# Skills Can Be Deactivated
-
-```mermaid
-stateDiagram-v2
-    [*] --> Available
-
-    Available --> Active: skill(name)
-    Active --> Available: deactivate_skill(name)
-
-    Available --> [*]
-```
-
-```java
-void deactivateSkill(String name) {
-    activeSkills.remove(name);
-}
-```
-
-<div class="mt-6 text-lg">
-
-Skills stay active until explicitly deactivated or the agent state is reset.
-
 </div>
 
-<!--
-**[~54:30]** "And because active skills are state rather than conversation history, deactivation is trivial: remove the skill from the active set. The next system prompt simply doesn't contain it."
--->
+<div v-click>
 
----
-
-# The Whole Mechanism
-
-```mermaid
-flowchart TD
-    S[".claude/skills/*/SKILL.md"]
-    R["Skill Registry"]
-    C["Available Skills<br/>name + description"]
-    L["LLM"]
-    T["skill(name)"]
-    A["Active Skills"]
-    P["System Prompt"]
-    D["deactivate_skill(name)"]
-
-    S --> R
-    R --> C
-    C --> L
-
-    L --> T
-    T --> A
-    A --> P
-    C --> P
-    P --> L
-
-    L --> D
-    D --> A
-```
-
-<div class="mt-6 text-xl">
-
-**Discover → activate → inject → work → deactivate**
-
-</div>
-
-<!--
-**[~55:00]** "And that's really all Skills are in our agent: discover Markdown files, expose their metadata, load them on demand, and include active skills in the next model context."
--->
-
----
-
-# Demo: Talk Like a Viking ⚔️
-
-<div class="text-base mt-2">
-
-A skill is just a Markdown file — so of course a `.claude/skills/viking/SKILL.md` exists (for JavaZone, Norway):
-
-</div>
+**We need two things:**
 
 ```text
-You:  /skill viking
-      Activated skill: viking - its instructions are now part of your system prompt.
-
-You:  In one sentence: what is a coding agent?
-Bot:  Skål, fellow shield-bearer of Java: a coding agent is an AI pair-programmer
-      that reads your saga, plans the raid, edits code, runs builds/tests, and
-      iterates until the trolls are dead.
-
-You:  /skill viking            (deactivate)
-Bot:  A coding agent is an AI that can modify, build, and test code…
+.claude/skills/<name>/SKILL.md
 ```
 
+```markdown
+---
+description: one-line summary
+---
+
+Instructions for the agent.
+As specific as you like.
+```
+
+Create it live → `/skill <name>` → see it work.
+
+</div>
+
+</div>
+
 <!--
-**[~55:30]** "The system prompt is rebuilt before every model call. Activating a skill takes effect on the *next* message. Deactivating too: plain English, instantly. That is the whole pinned-context trick paying off a second time."
+**[~49:30]** "Skills are just Markdown files. Let's write one together right now."
+Take one suggestion from the audience. Create the folder + SKILL.md live in the terminal. Then /skill <name> to activate. Ask the agent something — watch the behavior change.
 -->
 
 ---
 
 # Agents Need Memory Limits: Compaction
 
-<div class="grid grid-cols-2 gap-6 mt-2 text-base">
+<div class="grid grid-cols-2 gap-6 mt-4 text-base">
 
 <div>
 
-**The problem:** tool-call transcripts inflate history fast — and context windows are finite.
+**The problem:** tool-call transcripts inflate history fast — context windows are finite.
 
-**Hybrid memory** (as in the summarizing chatbot):
+**Hybrid memory** (same strategy as the summarizing chatbot):
 
-1. 📌 pin the system prompt (index 0)
-2. ✂️ fold the middle into one `[Conversation summary]`
-3. 🆕 keep the recent tail verbatim
+1. Pin the system prompt (index 0)
+2. Fold the middle into a `[Conversation summary]`
+3. Keep the recent tail verbatim
 
-Driven by **real token usage** from the API, not char estimates — at 80% of the context window (`--max-tokens` to force).
+Driven by **real token usage** from the API — at 80% of the context window.
 
 </div>
 
 <div>
-
-Live, with `--max-tokens 800`:
 
 ```text
 Assistant: OK
@@ -2888,44 +2326,14 @@ You: What codeword did I give you?
 Assistant: FJORD
 ```
 
-The codeword from turn 1 survived compaction — inside the summary.
+The codeword survived compaction — inside the summary.
 
 </div>
 
 </div>
 
 <!--
-**[~56:00]** "Same strategy you saw in the summarizing chatbot, extracted into a Compactor helper so the coding agent gets it in three lines of its chat loop. If summarization fails, the turn just continues uncompacted."
--->
-
----
-
-# And Credentials: Named Endpoints
-
-<div class="text-base mt-2">
-
-One standard `Properties` file — `~/.config/tiny-llm-library/config.config`:
-
-```properties
-gardener.url   = https://models.answering-machine.utility.gardener.cloud.sap
-gardener.key   = <your-key>   # sent as Authorization: Bearer
-gardener.model = kimi-k3      # default model for the endpoint
-default.model  = kimi-k3      # global fallback
-```
-
-Then everywhere:
-
-```bash
-java -jar tiny-llm-demo.jar CodingAgent --base-url gardener
-# URL ✓  Bearer token ✓  model ✓
-java -jar tiny-llm-demo.jar CodingAgent --base-url banana
-# Error: Unknown endpoint 'banana' - known: [gardener]
-```
-
-</div>
-
-<!--
-**[~56:30]** "No keys in the repo, no env-var juggling in demos. It is deliberately java.util.Properties: URLs sit in values now, so their colons are safe."
+**[~50:00]** "Same Compactor helper from the summarizing chatbot — three lines in the chat loop. Real token counts, not char estimates. The pinned state at index 1 is never summarized."
 -->
 
 ---
@@ -2934,7 +2342,7 @@ java -jar tiny-llm-demo.jar CodingAgent --base-url banana
 
 <div class="text-lg text-gray-300 mt-2">
 
-We pointed the coding agent at <b>its own source code</b> — same tiny library, kimi-k3 behind it — with one brief: <i>"add one genuinely useful tool for yourself."</i>
+We point `SkillCodingAgent` at its <b>own source code</b> and ask it to add a new tool — no skill file needed.
 
 </div>
 
@@ -2942,21 +2350,23 @@ We pointed the coding agent at <b>its own source code</b> — same tiny library,
 
 <div>
 
-**Attempt 1** (free rein)
+**The prompt:**
 
-- 🧠 `cat-paged("CodingAgent.java", page 0..3)` — read its own brain first
-- 🐍 wrote a **Python script to patch its own Java** (…we don't judge)
-- ✅ delivered: `grepAll` tool — `git stash`, refine the brief
+```
+Add a tool to the coding agent
+to count the r's in a string
+```
 
 </div>
 
 <div>
 
-**Attempt 2** ("edit sources directly, plain ASCII")
+**What happens:**
 
-- ✍️ edited via `write-file`, **reviewed its own work with `git diff`**
-- 🌀 plot twist: found the *existing, unregistered* `grep` in `FileTools` and upgraded it to directory mode instead of duplicating it
-- `mvn -q package` → green
+- 🔍 reads `CodingTools.java`, finds the right place
+- ✍️ adds the method + registers the tool with `edit`
+- 🔧 calls `mvn -q package` → green
+- 🛠️ immediately uses its own new tool to test it
 
 </div>
 
@@ -2964,41 +2374,14 @@ We pointed the coding agent at <b>its own source code</b> — same tiny library,
 
 <div class="mt-4 text-xl">
 
-Diff we kept: <OrangeText>CodingTools +5 lines</OrangeText> (our one-line register DSL) — the agent used the library exactly as designed.
+Plain request → agent reads, writes, builds, verifies. <OrangeText>Boring engineering, reliable outcome.</OrangeText>
 
 </div>
 
 <!--
-**[FUN]** The prompt was literally "improve yourself". Attempt 1 wrote a Python patch script — agents love scripts. So we stashed, tightened the brief ("edit sources directly"), and attempt 2 did it properly — including reviewing its own diff with git before building.
--->
-
----
-
-# Test It? It Can't. So We Rebooted It. ♻️
-
-<div class="text-lg text-gray-300 mt-2">
-
-Its brand-new `grep` tool only exists in the <b>next</b> process — the jar was replaced under its feet. So we restarted the agent and asked: <i>"use your new grep tool — where is todo-add referenced?"</i>
-
-</div>
-
-```text
-⚙ grep({"pattern":"todo-add", "path":"."})
-  → missing required argument 'query' — check the tool's parameter list
-⚙ grep({"query":"todo-add", "path":"."})          ← self-corrected, no human involved
-  → CodingAgent.java:145 … CodingTools.java … solutions/ToolChatBot.java …
-Assistant: "todo-add is referenced in 4 files: registered once in
-CodingTools.java, used in both coding agents, mentioned in prompts."
-```
-
-<div class="mt-4 text-lg">
-
-Wrong arg → the tool's error text <b>taught it the schema</b> — our error-feedback loop, demonstrated by the tool the agent gave itself. Everything below the LLM is still just HTTP + JSON: <b>Config → Bearer → kimi-k3</b>.
-
-</div>
-
-<!--
-**[PUNCHLINE]** The agent self-improved, couldn't test it alive, got reincarnated, and used its own gift — including fumbling the arg name once and recovering purely from the error message. That recovery loop is exactly the boring-engineering point of this talk.
+**[~49:00]** **[FUN/PUNCHLINE]** No skill file needed — just a plain request. The agent reads its own source, writes the right code in the right place, builds, and verifies.
+That recovery loop when a tool argument is wrong — the error text teaches it the schema. The library works exactly as designed, even when the agent is the user.
+Point out: we sandboxed the agent to its own source tree. It can't escape. It can't delete the git history. It just edits, builds, and proves it works.
 -->
 
 ---
@@ -3052,7 +2435,7 @@ flowchart TB
     lc["LLMClient<br>chat · stream"]
     cb["ChatBot<br>REPL loop"]
     ts["ToolSupport<br>while loop"]
-    ft["FileTools<br>ls · catPaged"]
+    ft["FileTools<br>ls · read-file"]
   end
 
   cb --> lc
