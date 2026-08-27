@@ -63,13 +63,13 @@ public final class CodingTools {
 
     private static void printFileResult(String r, String filename) {
         int nl = r.indexOf('\n');
-        if (nl < 0) { System.out.println("    → " + r); return; }
-        System.out.println("    → " + r.substring(0, nl));
+        if (nl < 0) { System.out.println("    " + Ansi.dim("→ ") + r); return; }
+        System.out.println("    " + Ansi.dim("→ ") + r.substring(0, nl));
         String body = r.substring(nl + 1);
         String highlighted = Highlight.file(body, filename);
         String[] lines = highlighted.split("\n", -1);
         int shown = Math.min(lines.length, 20);
-        for (int i = 0; i < shown; i++) System.out.println("    " + lines[i]);
+        for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
         if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
     }
 
@@ -87,7 +87,7 @@ public final class CodingTools {
     public static void registerReadOnlyFileTools(ToolSupport ts, FileTools fileTools) {
         register(ts, "ls", "List directory contents",
                 args -> fileTools.ls(str(args, "path")),
-                r -> System.out.println("    → " + Ansi.dim(r.replace("\n", "  "))),
+                r -> System.out.println("    " + Ansi.dim("→ ") + Ansi.dim(r.replace("\n", "  "))),
                 "path", "Directory path relative to project root");
 
         register(ts, "read-file", "Read a file's full contents (up to 20KB)",
@@ -96,7 +96,7 @@ public final class CodingTools {
                     String path = str(args, "path");
                     String[] lines = Highlight.file(r, path).split("\n", -1);
                     int shown = Math.min(lines.length, 20);
-                    for (int i = 0; i < shown; i++) System.out.println("    " + lines[i]);
+                    for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
                     if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
                 },
                 null,
@@ -112,7 +112,7 @@ public final class CodingTools {
                 r -> {
                     String[] lines = r.split("\n", -1);
                     int shown = Math.min(lines.length, 10);
-                    for (int i = 0; i < shown; i++) System.out.println("    " + lines[i]);
+                    for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
                     if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
                 });
     }
@@ -165,7 +165,7 @@ public final class CodingTools {
                 r -> {
                     String[] lines = r.split("\n", -1);
                     int shown = Math.min(lines.length, 20);
-                    for (int i = 0; i < shown; i++) System.out.println("    " + lines[i]);
+                    for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + lines[i]);
                     if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
                 },
                 args -> "{\"command\":\"" + truncateStr(str(args, "command"), 80) + "\"}",

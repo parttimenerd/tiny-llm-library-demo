@@ -1,5 +1,6 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.util.Ansi;
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
 
@@ -265,7 +266,7 @@ public class ToolSupport {
             try { argDisplay = def.argSummarizer().apply(Util.asMap(JSONParser.parse(argumentsJson))); }
             catch (Exception ignored) {}
         }
-        System.out.println("\n  ⚙ " + toolName + "(" + argDisplay + ")");
+        System.out.println("\n  " + Ansi.cyan("⚙ " + toolName) + Ansi.dim("(" + argDisplay + ")"));
         if (def != null && def.argsPrinter() != null) {
             try { def.argsPrinter().accept(Util.asMap(JSONParser.parse(argumentsJson)), result); }
             catch (Exception ignored) { printResult(result); }
@@ -303,11 +304,11 @@ public class ToolSupport {
         if (result == null) return;
         String[] lines = result.split("\n", -1);
         if (lines.length <= 1) {
-            System.out.println("    → " + truncate(result, 200));
+            System.out.println("    " + Ansi.dim("→ ") + truncate(result, 200));
         } else {
             int shown = Math.min(lines.length, 30);
-            for (int i = 0; i < shown; i++) System.out.println("    " + truncate(lines[i], 120));
-            if (lines.length > shown) System.out.println("    … (" + (lines.length - shown) + " more lines)");
+            for (int i = 0; i < shown; i++) System.out.println(Ansi.dim("    ") + truncate(lines[i], 120));
+            if (lines.length > shown) System.out.println(Ansi.dim("    … (" + (lines.length - shown) + " more lines)"));
         }
     }
 

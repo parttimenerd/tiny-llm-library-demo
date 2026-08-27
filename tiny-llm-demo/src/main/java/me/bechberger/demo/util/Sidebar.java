@@ -514,21 +514,34 @@ public final class Sidebar {
     private static String summarise(Map<String, Object> msg, int maxLen) {
         var tc = msg.get("tool_calls");
         if (tc instanceof List<?> list && !list.isEmpty()) {
-            var names = list.stream()
+            // "⚙ ls, grep" or "⚙ read-file  src/Foo.java" (first arg of single-tool call)
+            var parts = list.stream()
                 .filter(t -> t instanceof Map)
                 .map(t -> {
                     var fn = ((Map<?, ?>) ((Map<?, ?>) t).get("function"));
-                    return fn != null ? String.valueOf(fn.get("name")) : "?";
+                    if (fn == null) return "?";
+                    String name = String.valueOf(fn.get("name"));
+                    if (list.size() == 1) {
+                        String firstVal = firstArgValue((String) fn.get("arguments"));
+                        if (!firstVal.isEmpty()) return name + "  " + Ansi.dim(firstVal);
+                    }
+                    return name;
                 })
                 .toList();
-            return truncate(Ansi.cyan("⚙ " + String.join(", ", names)), maxLen);
+            return truncate(Ansi.cyan("⚙ ") + String.join(", ", parts), maxLen);
         }
         var content = msg.get("content");
         if (content == null) return Ansi.dim("—");
         String text = String.valueOf(content).strip().replace("\n", " ↵ ");
-        // strip the Compactor summary prefix for cleaner display
         if (text.startsWith("[Conversation summary]")) text = text.substring("[Conversation summary]".length()).strip();
         return truncate(text, maxLen);
+    }
+
+    /** Extract the first string value from a JSON arguments object, or "" if none. */
+    private static String firstArgValue(String argumentsJson) {
+        if (argumentsJson == null || argumentsJson.isBlank()) return "";
+        var m = java.util.regex.Pattern.compile("\"[^\"]+\"\\s*:\\s*\"([^\"]{1,60})\"").matcher(argumentsJson);
+        return m.find() ? m.group(1) : "";
     }
 
     private static String messageContent(Map<String, Object> msg, String filename) {
@@ -538,7 +551,21 @@ public final class Sidebar {
             for (var t : list) {
                 if (t instanceof Map<?, ?> tm) {
                     var fn = (Map<?, ?>) tm.get("function");
-                    if (fn != null) sb.append("⚙ ").append(fn.get("name")).append("(").append(fn.get("arguments")).append(")\n");
+                    if (fn == null) continue;
+                    sb.append("⚙ ").append(fn.get("name")).append("\n");
+                    // pretty-print each arg on its own indented line (no ANSI — wordWrap strips it)
+                    String argsJson = (String) fn.get("arguments");
+                    if (argsJson != null && !argsJson.isBlank()) {
+                        var pat = java.util.regex.Pattern.compile("\"([^\"]+)\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"");
+                        var matcher = pat.matcher(argsJson);
+                        while (matcher.find()) {
+                            String key = matcher.group(1);
+                            String val = matcher.group(2).replace("\\n", "\n").replace("\\\"", "\"").replace("\\\\", "\\");
+                            int nl = val.indexOf('\n');
+                            String display = nl > 0 ? val.substring(0, nl) + " …" : val;
+                            sb.append("  ").append(key).append(" = ").append(truncate(display, 80)).append("\n");
+                        }
+                    }
                 }
             }
             return sb.toString().trim();
@@ -577,12 +604,31 @@ public final class Sidebar {
         return vl >= width ? s : s + " ".repeat(width - vl);
     }
 
-    /** Truncate to at most maxVisible visible characters, appending … if cut. */
+    /**
+     * Truncate to at most {@code maxVisible} visible characters, appending … if cut.
+     * Preserves ANSI escape codes (they don't count toward the visible length).
+     */
     private static String truncate(String s, int maxVisible) {
         if (visibleLen(s) <= maxVisible) return s;
-        // drop ANSI codes and hard-cut the plain text
-        String stripped = s.replaceAll("\033\\[[^m]*m", "");
-        return stripped.substring(0, Math.max(0, maxVisible - 1)) + "…";
+        int cap = Math.max(0, maxVisible - 1); // leave room for '…'
+        var sb = new StringBuilder();
+        int vis = 0;
+        int pos = 0;
+        while (pos < s.length()) {
+            var m = ANSI_PATTERN.matcher(s);
+            if (m.find(pos) && m.start() == pos) {
+                // ANSI escape — copy verbatim, don't count
+                sb.append(m.group());
+                pos = m.end();
+            } else {
+                // visible character
+                if (vis >= cap) { sb.append('…'); return sb.toString(); }
+                sb.append(s.charAt(pos));
+                vis++;
+                pos++;
+            }
+        }
+        return sb.toString();
     }
 
     /** Pad or truncate to exactly maxVisible visible characters. */
@@ -594,23 +640,119 @@ public final class Sidebar {
         return s.replaceAll("\033\\[[^m]*m", "").length();
     }
 
-    /** Word-wrap plain text (no ANSI codes) to the given column width. */
+    private static final java.util.regex.Pattern ANSI_PATTERN =
+            java.util.regex.Pattern.compile("\033\\[[^m]*m");
+
+    /**
+     * Word-wrap text to {@code width} visible characters, preserving ANSI codes.
+     * Each input logical line (split on \n) may produce multiple output lines.
+     */
     private static List<String> wordWrap(String text, int width) {
-        if (width <= 0) return List.of(text);
+        if (width <= 0) return List.of(stripAnsi(text));
         var result = new ArrayList<String>();
         for (String rawLine : text.split("\n", -1)) {
             if (rawLine.isEmpty()) { result.add(""); continue; }
-            // strip ANSI so we measure visible chars
-            String plain = rawLine.replaceAll("\033\\[[^m]*m", "");
-            while (plain.length() > width) {
-                int cut = plain.lastIndexOf(' ', width);
-                if (cut <= 0) cut = width;
-                result.add(plain.substring(0, cut));
-                plain = plain.substring(cut).stripLeading();
-            }
-            result.add(plain);
+            wrapLine(rawLine, width, result);
         }
         return result;
+    }
+
+    private static final String ESC_RESET = "\033" + Ansi.RESET;
+
+    /**
+     * Wrap a single logical line, keeping ANSI escape codes intact but measuring
+     * only visible characters toward the column limit.
+     */
+    private static void wrapLine(String line, int width, List<String> out) {
+        var tokens = tokenise(line);
+        var current = new StringBuilder();
+        int visLen = 0;
+        String activeAnsi = ""; // last non-reset ANSI code seen — carry to continuation lines
+
+        for (var tok : tokens) {
+            if (tok.ansi) {
+                current.append(tok.text);
+                activeAnsi = tok.text.equals(ESC_RESET) ? "" : tok.text;
+                continue;
+            }
+            if (tok.space) {
+                if (visLen > 0 && visLen + tok.text.length() <= width) {
+                    current.append(tok.text);
+                    visLen += tok.text.length();
+                }
+                continue;
+            }
+            // word token — may need to hard-break if longer than width
+            String word = tok.text;
+            while (!word.isEmpty()) {
+                int room = width - visLen;
+                if (room <= 0) {
+                    // line full — flush
+                    if (!activeAnsi.isEmpty()) current.append(ESC_RESET);
+                    out.add(current.toString());
+                    current.setLength(0);
+                    visLen = 0;
+                    if (!activeAnsi.isEmpty()) current.append(activeAnsi);
+                    room = width;
+                }
+                if (word.length() <= room) {
+                    current.append(word);
+                    visLen += word.length();
+                    word = "";
+                } else if (visLen == 0) {
+                    // word longer than full width — hard break at width
+                    current.append(word, 0, room);
+                    visLen += room;
+                    word = word.substring(room);
+                } else {
+                    // wrap before this word
+                    if (!activeAnsi.isEmpty()) current.append(ESC_RESET);
+                    out.add(current.toString());
+                    current.setLength(0);
+                    visLen = 0;
+                    if (!activeAnsi.isEmpty()) current.append(activeAnsi);
+                }
+            }
+        }
+        if (!activeAnsi.isEmpty()) current.append(ESC_RESET);
+        out.add(current.toString());
+    }
+
+    private record Token(String text, boolean ansi, boolean space) {}
+
+    /** Split a line into ANSI-escape, space-run, and word tokens. */
+    private static List<Token> tokenise(String line) {
+        var tokens = new ArrayList<Token>();
+        var m = ANSI_PATTERN.matcher(line);
+        int pos = 0;
+        while (m.find()) {
+            if (m.start() > pos) addTextTokens(line.substring(pos, m.start()), tokens);
+            tokens.add(new Token(m.group(), true, false));
+            pos = m.end();
+        }
+        if (pos < line.length()) addTextTokens(line.substring(pos), tokens);
+        return tokens;
+    }
+
+    private static void addTextTokens(String text, List<Token> tokens) {
+        int i = 0;
+        while (i < text.length()) {
+            if (text.charAt(i) == ' ') {
+                int j = i;
+                while (j < text.length() && text.charAt(j) == ' ') j++;
+                tokens.add(new Token(text.substring(i, j), false, true));
+                i = j;
+            } else {
+                int j = i;
+                while (j < text.length() && text.charAt(j) != ' ') j++;
+                tokens.add(new Token(text.substring(i, j), false, false));
+                i = j;
+            }
+        }
+    }
+
+    private static String stripAnsi(String s) {
+        return s.replaceAll("\033\\[[^m]*m", "");
     }
 
     /** Dim the entire row — used for structural chrome (borders, separators, footers). */
