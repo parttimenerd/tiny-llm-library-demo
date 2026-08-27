@@ -91,6 +91,9 @@ public class CodingAgent implements Callable<Integer> {
     /** Set once the REPL is built in {@link #call()} — used by confirmPlan for prompting. */
     private Repl repl;
 
+    /** True when --verbose was requested and the terminal is wide enough to show the sidebar. */
+    private boolean sidebarActive = false;
+
     /** Index into messages[] where the pinned state message lives, or -1 if not yet inserted. */
     private int stateMessageIndex = -1;
 
@@ -110,6 +113,7 @@ public class CodingAgent implements Callable<Integer> {
         var builder = new Repl.Builder("\n" + Ansi.bold(Ansi.blue("You: ")), scanner, messages)
                 .prompt(() -> "\n" + approval.badge() + Ansi.bold(Ansi.blue("You: ")));
         var client = createClient(builder);
+        sidebarActive = builder.isSidebarActive();
         compactor = createCompactor(client);
         var fileTools = new FileTools(rootPath);
         var toolSupport = createToolSupport(fileTools);
@@ -155,7 +159,7 @@ public class CodingAgent implements Callable<Integer> {
     protected String greeting() {
         return "Coding agent ready. Model: " + resolveModel()
                 + " — root: " + Path.of(root).toAbsolutePath().normalize()
-                + (options.verbose ? " — sidebar active (see key hints in the box)" : "");
+                + (sidebarActive ? " — sidebar active (see key hints in the box)" : "");
     }
 
     protected Compactor createCompactor(LLMClient client) {

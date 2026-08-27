@@ -177,6 +177,10 @@ public class ToolSupport {
                 return extractContent(choice);
             }
 
+            // Print any narration text the model sent alongside tool calls (e.g. viking skill)
+            var content = extractContent(choice);
+            if (content != null && !content.isBlank()) System.out.println(content);
+
             processToolCalls(choice, messages);
         }
 

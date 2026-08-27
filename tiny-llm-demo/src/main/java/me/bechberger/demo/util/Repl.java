@@ -316,6 +316,9 @@ public final class Repl {
             return this;
         }
 
+        /** True when the sidebar was requested and is usable (real TTY, wide enough). */
+        public boolean isSidebarActive() { return sidebar != null; }
+
         /**
          * Trigger a sidebar redraw — use from tool callbacks for mid-turn updates.
          * No-op when the sidebar is inactive.

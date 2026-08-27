@@ -57,7 +57,7 @@ public class ToolChatBot implements Callable<Integer> {
 
         var repl = builder.build();
         repl.greet("Tool Chatbot ready. Model: " + model
-                + (options.verbose ? " — sidebar active (see key hints in the box)" : ""));
+                + (builder.isSidebarActive() ? " — sidebar active (see key hints in the box)" : ""));
         repl.run(input -> {
             messages.add(LLMClient.user(input));
             System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));

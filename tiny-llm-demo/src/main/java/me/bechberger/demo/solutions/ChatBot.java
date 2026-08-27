@@ -45,7 +45,7 @@ public class ChatBot implements Callable<Integer> {
         var client = options.createClient(builder);
         var repl = builder.build();
         repl.greet("ChatBot ready. Model: " + options.resolveModel()
-                + (options.verbose ? " — sidebar active (see key hints in the box)" : ""));
+                + (builder.isSidebarActive() ? " — sidebar active (see key hints in the box)" : ""));
         repl.run(input -> {
             messages.add(LLMClient.user(input));
             System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
