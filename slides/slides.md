@@ -953,10 +953,6 @@ This is how we tell the LLM <OrangeText>what arguments our tools accept</OrangeT
 
 # JSON Schema with femtoschema
 
-<div class="grid grid-cols-2 gap-6 mt-2">
-
-<div>
-
 ```java
 // Hand-writing JSON Schema maps is tedious. Use femtoschema:
 var schema = Schemas.object()
@@ -968,31 +964,6 @@ var schema = Schemas.object()
 <div class="mt-4 text-lg">
 
 <OrangeText>Type-safe</OrangeText> and readable.
-
-</div>
-
-</div>
-
-<div>
-
-**Output:**
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "path": {
-      "type": "string",
-      "description": "Directory path relative to sandbox"
-    }
-  },
-  "required": ["path"]
-}
-```
-
-<div class="text-sm text-gray-500 mt-2">Identical to hand-written JSON Schema.</div>
-
-</div>
 
 </div>
 
