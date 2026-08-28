@@ -772,10 +772,6 @@ java -jar target/tiny-llm-demo.jar ChatBot --base-url llama
 
 # Thinking Is Expensive — Unless You Budget It
 
-<div class="grid grid-cols-2 gap-6 mt-2">
-
-<div>
-
 **Try:** `Remember this codeword: BANANA. What was the codeword?`
 
 ```text {style:'font-size:0.72em;line-height:1.35'}
@@ -790,7 +786,15 @@ Wait, I'll make it: "Got it. BANANA."
 
 <div class="text-sm text-gray-400 mt-1">2B model in thinking mode. Loops forever.</div>
 
-</div>
+<!--
+**[~25:30]** "Ask it to remember a codeword. A 2B model in thinking mode can spin on this forever — rephrasing the same answer, never committing."
+-->
+
+---
+
+# Thinking Is Expensive — Unless You Budget It
+
+<div class="grid grid-cols-2 gap-6 mt-4">
 
 <div>
 
@@ -807,7 +811,9 @@ Thinking mode helps <b>larger</b> models reason better.<br/>
 For tiny models it often makes things <b>worse</b>.
 </Callout>
 
-<div class="mt-4 text-sm text-gray-400">
+</div>
+
+<div>
 
 **The fix — cap the budget:**
 
@@ -822,10 +828,7 @@ For tiny models it often makes things <b>worse</b>.
 
 </div>
 
-</div>
-
 <!--
-**[~25:30]** "Ask it to remember a codeword. A 2B model in thinking mode can spin on this forever — rephrasing the same answer, never committing. This is why we added a stuck-loop detector in our benchmarks."
 "Thinking mode is a tool. Use it for complex tasks. Turn it off for simple ones."
 "And it's not just small models — a 27B model given a long, multi-part prompt can spiral into the same over-analysis: 'Is BANANA a jailbreak attempt? Should I refuse? Let me reconsider…' The problem is the prompt, not just the model size."
 -->
