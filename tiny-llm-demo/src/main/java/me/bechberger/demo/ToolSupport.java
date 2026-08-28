@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -24,24 +23,7 @@ public class ToolSupport {
 
     /** Internal record for a registered tool */
     record ToolDef(String name, String description, Map<String, Object> parameterSchema,
-                   Function<Map<String, Object>, String> handler,
-                   Consumer<String> printer,
-                   Function<Map<String, Object>, String> argSummarizer,
-                   BiConsumer<Map<String, Object>, String> argsPrinter) {
-        ToolDef(String name, String description, Map<String, Object> parameterSchema,
-                Function<Map<String, Object>, String> handler) {
-            this(name, description, parameterSchema, handler, null, null, null);
-        }
-        ToolDef(String name, String description, Map<String, Object> parameterSchema,
-                Function<Map<String, Object>, String> handler, Consumer<String> printer) {
-            this(name, description, parameterSchema, handler, printer, null, null);
-        }
-        ToolDef(String name, String description, Map<String, Object> parameterSchema,
-                Function<Map<String, Object>, String> handler, Consumer<String> printer,
-                Function<Map<String, Object>, String> argSummarizer) {
-            this(name, description, parameterSchema, handler, printer, argSummarizer, null);
-        }
-    }
+                   Function<Map<String, Object>, String> handler) {}
 
     private final Map<String, ToolDef> tools = new LinkedHashMap<>();
 
@@ -64,32 +46,6 @@ public class ToolSupport {
                              Map<String, Object> parameterSchema,
                              Function<Map<String, Object>, String> handler) {
         tools.put(name, new ToolDef(name, description, parameterSchema, handler));
-    }
-
-    /** Register a tool with a custom result printer for the REPL display. */
-    public void registerTool(String name, String description,
-                             Map<String, Object> parameterSchema,
-                             Function<Map<String, Object>, String> handler,
-                             Consumer<String> printer) {
-        tools.put(name, new ToolDef(name, description, parameterSchema, handler, printer));
-    }
-
-    /** Register a tool with a custom result printer and arg summarizer for the REPL display. */
-    public void registerTool(String name, String description,
-                             Map<String, Object> parameterSchema,
-                             Function<Map<String, Object>, String> handler,
-                             Consumer<String> printer,
-                             Function<Map<String, Object>, String> argSummarizer) {
-        tools.put(name, new ToolDef(name, description, parameterSchema, handler, printer, argSummarizer));
-    }
-
-    /** Register a tool with an args-aware printer (receives parsed args + result). */
-    public void registerTool(String name, String description,
-                             Map<String, Object> parameterSchema,
-                             Function<Map<String, Object>, String> handler,
-                             BiConsumer<Map<String, Object>, String> argsPrinter,
-                             Function<Map<String, Object>, String> argSummarizer) {
-        tools.put(name, new ToolDef(name, description, parameterSchema, handler, null, argSummarizer, argsPrinter));
     }
 
     /**
@@ -232,23 +188,5 @@ public class ToolSupport {
     private String callTool(String toolName, String argumentsJson) {
         // TODO: live code
         throw new UnsupportedOperationException("TODO: live code");
-    }
-
-    private static void printResult(String result) {
-        if (result == null) return;
-        String[] lines = result.split("\n", -1);
-        if (lines.length <= 1) {
-            System.out.println("    → " + truncate(result, 200));
-        } else {
-            int shown = Math.min(lines.length, 30);
-            for (int i = 0; i < shown; i++) System.out.println("    " + truncate(lines[i], 120));
-            if (lines.length > shown) System.out.println("    … (" + (lines.length - shown) + " more lines)");
-        }
-    }
-
-    private static String truncate(String s, int max) {
-        if (s == null) return "";
-        s = s.replace("\n", " ");
-        return s.length() <= max ? s : s.substring(0, max) + "…";
     }
 }

@@ -53,7 +53,6 @@ public class CodingAgent extends CodingAgentSupport {
 
         // Ctrl+C aborts current call; double Ctrl+C within 1.5 s exits.
         var mainThread = Thread.currentThread();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {}));
         var lastInterrupt = new long[]{0};
         try {
             var sig = new sun.misc.Signal("INT");
@@ -152,13 +151,12 @@ public class CodingAgent extends CodingAgentSupport {
     protected void chat(LLMClient client, ToolSupport toolSupport,
                         List<Map<String, Object>> messages, String input) throws Exception {
         // @stub
-        messages.add(LLMClient.user(input));
         syncConversation(messages);
+        messages.add(LLMClient.user(input));
         System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
         String response = toolSupport.handleToolLoop(client, messages);
         if (response != null && !response.isBlank()) System.out.println(response);
         else System.out.println(Ansi.dim("(no text response)"));
-        messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
         var compaction = compactor.maybeCompact(client, messages, 1);
         if (compaction.compacted()) {
@@ -219,7 +217,7 @@ public class CodingAgent extends CodingAgentSupport {
         if (!confirm("Accept this plan?", true)) { state.clear(); System.out.println("Plan discarded."); return; }
         state.setGoal(goal);
         messages.add(LLMClient.user("/plan " + goal));
-        messages.add(LLMClient.assistant(response));
+        if (response != null) messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
         // @end
     }

@@ -6,7 +6,7 @@ highlighter: shiki
 lineNumbers: false
 info: |
   Let's create a tiny AI library together
-  Looking behind the curtain of LLM libraries — Johannes Bechberger @ SAP SE
+  Looking behind the curtain of LLM libraries · Johannes Bechberger @ SAP SE
 drawings:
   persist: false
 transition: slide-left
@@ -41,6 +41,10 @@ Image: LOC librarians with card catalog, public domain via Wikimedia Commons.
 layout: center
 ---
 
+<img src="./img/wiki-telegraph-tokyo.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+<div class="absolute inset-0 bg-black/50 z-0" />
+
+<div class="relative z-10">
 <div class="section-header">Part 1</div>
 
 <div class="big-statement">
@@ -54,29 +58,36 @@ The API
 What's actually happening under the hood?
 
 </div>
+</div>
 
 <!--
 -->
 
 ---
+layout: center
+---
 
-# LLM APIs are <OrangeText>boring</OrangeText>.
+<img src="./img/wiki-switchboard-1922.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
+<div class="absolute inset-0 bg-black/45 z-0" />
 
-<div class="mt-8 text-xl leading-relaxed text-gray-300">
+<div class="relative z-10">
 
-Whether you use <OrangeText>Spring AI</OrangeText>, <OrangeText>LangChain4j</OrangeText>, or nothing yet —
-today you'll see exactly what those libraries do under the hood.
+<div class="big-statement">
+
+LLM APIs are <OrangeText>boring</OrangeText>.
 
 </div>
 
-<div class="mt-6 text-xl">
+<div class="text-2xl text-gray-300 mt-8">
 
-Boring means <OrangeText>debuggable</OrangeText>. Boring means <OrangeText>predictable</OrangeText>. If you understand REST, you can troubleshoot any LLM library.
+Boring means <OrangeText>debuggable</OrangeText>. Boring means <OrangeText>predictable</OrangeText>.
+
+</div>
 
 </div>
 
 <!--
-**[~0:30]** The big reveal upfront. "LLM APIs are boring." Say it confidently — first time.
+**[~0:30]** The big reveal upfront. "LLM APIs are boring." Say it confidently.
 "Whether you use Spring AI or are starting fresh — today you'll see exactly what these libraries do."
 "Boring is good. Boring means debuggable. Boring means predictable."
 First time saying the tagline — will repeat at the Wrap-Up.
@@ -90,11 +101,17 @@ First time saying the tagline — will repeat at the Wrap-Up.
 
 <div>
 
-- **20+ provider adapters** — OpenAI, Anthropic, llama.cpp, Azure…
-- **Retries & rate limiting** — production-grade resilience
-- **Tracing & observability** — visibility into what your app does
+<div class="text-xl font-bold">20+ provider adapters</div>
+<div class="text-gray-400 mb-4">OpenAI, Anthropic, llama.cpp, Azure...</div>
 
-Today we build the <OrangeText>core</OrangeText>. The rest is wrappers.
+<div class="text-xl font-bold">Retries + rate limiting</div>
+<div class="text-gray-400 mb-4">Production-grade resilience</div>
+
+<div class="text-xl font-bold">Tracing + observability</div>
+<div class="text-gray-400 mb-4">Visibility into what your app does</div>
+
+Today we build the <OrangeText>core</OrangeText>.
+<div class="text-gray-400">The rest is wrappers.</div>
 
 </div>
 
@@ -134,17 +151,14 @@ flowchart TB
 
 <div>
 
-By the end you'll have built:
+<div class="text-xl font-bold">REST API + streaming client</div>
+<div class="text-gray-400 mb-3">Three endpoints. One JSON format.</div>
 
-- The REST API + streaming client
-- Tool calling + context management
-- A coding agent that edits its own source
+<div class="text-xl font-bold">Tool calling</div>
+<div class="text-gray-400 mb-3">JSON Schema, sandbox, while loop</div>
 
-```java
-var client = new LLMClient(baseUrl, model,
-    System.out::print);
-client.chatStream(messages);
-```
+<div class="text-xl font-bold">Coding agent</div>
+<div class="text-gray-400 mb-4">Edits its own source</div>
 
 </div>
 
@@ -187,13 +201,16 @@ flowchart TB
 
 ---
 
-# Local LLMs — We Use llama.cpp
+<img src="./img/wiki-llama.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15 z-0" />
+<div class="absolute inset-0 bg-black/60 z-0" />
+
+# Local LLMs: We Use llama.cpp
 
 <div class="grid grid-cols-2 gap-8 mt-6">
 
 <div>
 
-**llama-server** — one command, OpenAI-compatible endpoint:
+**llama-server**: one command, OpenAI-compatible endpoint:
 
 ```bash
 llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
@@ -210,12 +227,18 @@ llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
 
 <div class="text-gray-400 mt-2">
 
-**Local vs cloud:**
+<div class="text-xl font-bold text-white mb-1">✅ Privacy</div>
+<div class="mb-3 text-gray-400">Data stays on your machine</div>
 
-- ✅ Privacy — data stays on your machine
-- ✅ No API costs
-- ⚠️ Quality — smaller models than cloud APIs
-- ⚠️ Hardware — needs a decent GPU or patience
+<div class="text-xl font-bold text-white mb-1">✅ No API costs</div>
+<div class="mb-3 text-gray-400">Run unlimited requests locally</div>
+
+<div class="text-xl font-bold text-orange-400 mb-1">⚠️ Quality</div>
+<div class="mb-3 text-gray-400">Smaller models than cloud APIs</div>
+
+<div class="text-xl font-bold text-orange-400 mb-1">⚠️ Hardware</div>
+<div class="text-gray-400">16 GB RAM → 9B fine · Less → use 2B:</div>
+<div class="text-xs text-gray-500 font-mono mt-1">-hf bartowski/Qwen3.5-2B-Instruct-GGUF</div>
 
 </div>
 
@@ -231,7 +254,7 @@ We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 
 layout: center
 ---
 
-<img src="./img/wiki-agamemnon-cable.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" />
+<img src="./img/wiki-hollerith-leiden.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" />
 
 <div class="absolute inset-0 bg-black/40 z-0" />
 
@@ -247,7 +270,7 @@ Time to prove it
 
 <div class="text-xl text-gray-400 mt-4">
 
-Five curl commands. That's the whole API.
+Three endpoints. That's the whole API.
 
 </div>
 
@@ -255,7 +278,7 @@ Five curl commands. That's the whole API.
 
 <!--
 **[~6:00]** "Enough slides. Let me prove it." Switch to terminal.
-Image: HMS Agamemnon laying the transatlantic telegraph cable, 1858. Worldwide public domain via Wikimedia Commons.
+Image: Herman Hollerith with tabulating machine, Leiden 1905. Public domain via Wikimedia Commons.
 -->
 
 ---
@@ -266,7 +289,7 @@ Image: HMS Agamemnon laying the transatlantic telegraph cable, 1858. Worldwide p
 
 <div>
 
-Many local LLM servers emulate <OrangeText>OpenAI-style endpoints</OrangeText>:
+<OrangeText>OpenAI-compatible</OrangeText> REST endpoints:
 
 | Endpoint | Method |  |
 |----------|--------|-------------|
@@ -274,11 +297,7 @@ Many local LLM servers emulate <OrangeText>OpenAI-style endpoints</OrangeText>:
 | `/v1/chat/completions` | POST | Send messages|
 | `/v1/chat/completions` | POST (+stream) | streaming via SSE |
 
-<div class="text-xl font-semibold mt-4">
-
-That's the <OrangeText>entire API</OrangeText> for everything we'll build today.
-
-</div>
+<div class="text-xl font-bold mt-2">That's the <OrangeText>entire API</OrangeText> for everything we'll build today.</div>
 
 </div>
 <div style="margin-top: -1cm" v-click>
@@ -304,11 +323,7 @@ sequenceDiagram
 
 </div>
 
-<div class="mt-2 text-gray-400">
-
-Teaser: <b>Tool calling</b> is just a structured request/response loop on the same endpoint.
-
-</div>
+<div class="mt-2 text-sm text-gray-500 text-center">Tool calling is just another POST to this same endpoint.</div>
 
 <!--
 **[~5:30]** "It's all just REST. Three rows in a table. That's the entire surface we need for everything today."
@@ -322,76 +337,65 @@ Don't mention JSON-RPC or MCP here — save it for Part 7.
 
 # Simple Chat Completion
 
-```bash
-curl -X POST http://localhost:8080/v1/chat/completions \
+<div class="grid grid-cols-2 gap-6 mt-2">
+
+<div>
+
+**Request:**
+
+```bash {1|4|5-8|all}
+curl -X POST .../v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "...",
     "messages": [
-      {"role": "user", "content": "Make fun of Java in one sentence"}
+      {"role": "user",
+       "content": "Make fun of Java"}
     ]
   }'
 ```
-
-```json
-{
-  "choices": [{
-    "message": {
-      "role": "assistant",
-      "content": "Java is the programming language that treats the JVM like a separate, high-maintenance roommate who insists on running everything through a massive security check."
-    },
-    "finish_reason": "stop"
-  }],
-  "usage": { "prompt_tokens": 20, "completion_tokens": 40, "total_tokens": 60 }
-}
-```
-
-<div class="grid grid-cols-2 gap-6 mt-2 text-sm">
-
-<div>
-
-**Request fields**
-
-| Field | Description |
-|-------|-------------|
-| `model` | model ID string |
-| `messages[].role` | `user` / `assistant` / `system` |
-| `messages[].content` | the message text |
 
 </div>
 
 <div>
 
-**Response fields**
+**Response:**
 
-| Field | Value |
-|-------|-------|
-| `choices[0].message.content` | the answer |
-| `choices[0].finish_reason` | `"stop"` · `"tool_calls"` · `"length"` |
-| `usage.prompt_tokens` | input token count |
-| `usage.completion_tokens` | output token count |
+```json {1-5|6|8-11|all}
+{
+  "choices": [{
+    "message": {
+      "role": "assistant",
+      "content": "Java: where you write 10 lines to say hello."
+    },
+    "finish_reason": "stop"
+  }],
+  "usage": {
+    "prompt_tokens": 20,
+    "completion_tokens": 40
+  }
+}
+```
 
 </div>
 
 </div>
 
 <!--
-**[~7:30]** Walk through the JSON. "model, messages array with role and content — that's the request."
-"The response has choices[0].message.content — that's where the answer lives."
-"This is literally all that LangChain4j's `chat()` does under the hood."
+**[~7:30]** Click through line highlights. "model — the model ID. messages array with role and content — that's the whole request."
+"choices[0].message.content — that's the answer. finish_reason tells you why it stopped. usage shows token counts."
+"This is literally all that LangChain4j's chat() does under the hood."
 -->
 
 ---
 
 # Conversation with History
 
-<Callout variant="orange">
-The server is <b>stateless</b> — you re-send the entire conversation every turn.
-</Callout>
+<div class="text-xl font-bold mb-3">No server memory. You re-send the <OrangeText>full history</OrangeText> every turn.</div>
 
-<div class="mt-3">
+<div class="mt-2">
 
-```bash
+```bash {1|3|4-8|all}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -407,6 +411,18 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 </div>
 
+<div class="mt-4 p-3 border border-orange-500/40 rounded bg-orange-500/10 text-lg text-orange-300">
+
+Every framework's "memory" is just a <code>List&lt;Map&lt;String, Object&gt;&gt;</code>.
+
+</div>
+
+<div class="mt-3 font-mono text-sm text-gray-400 space-y-1">
+<div v-click>Turn 1: <span class="text-blue-400">[SYS, U1]</span></div>
+<div v-click>Turn 2: <span class="text-blue-400">[SYS, U1, A1, U2]</span></div>
+<div v-click>Turn 3: <span class="text-blue-400">[SYS, U1, A1, U2, A2, U3]</span> <span class="text-orange-400">← grows every turn</span></div>
+</div>
+
 <!--
 **[~9:00]** Key insight: "The server doesn't remember anything. You send the entire conversation every time."
 "This is the 'context window' you hear about — it's literally this array getting longer."
@@ -417,11 +433,58 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 layout: center
 ---
 
+<img src="./img/wiki-wacs-teletype.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<div class="absolute inset-0 bg-black/55 z-0" />
+
+<div class="relative z-10">
 <div class="big-statement">
 
-This is what your chatbot's "memory" actually looks like: a <OrangeText>growing list of messages</OrangeText>.
+Your chatbot's "memory":
 
 </div>
+
+<div class="text-3xl text-gray-300 mt-6">
+
+a <OrangeText>growing list of messages</OrangeText>.
+
+</div>
+</div>
+
+---
+
+# Streaming with Server-Sent Events
+
+```bash {1|5|all}
+curl -X POST http://localhost:8080/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "...",
+    "messages": [{"role": "user", "content": "Make fun of Java."}],
+    "stream": true
+  }'
+```
+
+```
+data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
+data: {"choices":[{"delta":{"content":"Ah"}}]}
+data: {"choices":[{"delta":{"content":","}}]}
+data: {"choices":[{"delta":{"content":" Java"}}]}
+data: {"choices":[{"delta":{"content":"."}}]}
+...
+data: [DONE]
+```
+
+<v-click>
+
+**[Quick poll]** Who's seen SSE before?
+
+</v-click>
+
+<!--
+**[~10:00]** **[QUICK POLL]** "Who's seen SSE before?"
+"Same endpoint as before. Add stream: true and the response stays open — tokens arrive as data: lines."
+"Instead of message.content in one shot, you get delta.content one token at a time."
+-->
 
 ---
 
@@ -431,18 +494,9 @@ This is what your chatbot's "memory" actually looks like: a <OrangeText>growing 
 
 <div>
 
-SSE = <OrangeText>Server-Sent Events</OrangeText> — a web standard, part of HTML5.
+SSE = <OrangeText>Server-Sent Events</OrangeText>, a web standard (HTML5).
 
 <code>Content-Type: text/event-stream</code>
-
-```json
-data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
-data: {"choices":[{"delta":{"content":"Ah"}}]}
-data: {"choices":[{"delta":{"content":","}}]}
-data: {"choices":[{"delta":{"content":" Java"}}]}
-...
-data: [DONE]
-```
 
 One long-lived HTTP response. Server pushes `data:` lines as tokens are generated.
 
@@ -469,105 +523,115 @@ sequenceDiagram
 </div>
 
 <!--
-**[~10:00]** "This is not an AI invention — it's a web standard, part of HTML5."
-"The server keeps the HTTP connection open and pushes events, one token at a time."
-"Your InputStream delivers these lines one at a time. Parse delta.content, print it, repeat until [DONE]."
+**[~10:30]** "Not an AI invention — it's a web standard: WHATWG draft from 2004, W3C Recommendation in 2015."
+"The server keeps the connection open and pushes events. Your InputStream delivers these lines one at a time. Parse delta.content, print it, repeat until [DONE]."
 -->
 
 ---
 
-# Streaming with Server-Sent Events
+# Multimodal: Just Another Content Type
 
-```bash
-curl -X POST http://localhost:8080/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "...",
-    "messages": [{"role": "user", "content": "Make fun of Java."}],
-    "stream": true
-  }'
-```
+<div class="grid grid-cols-2 gap-6 mt-2">
 
-```
-data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
-data: {"choices":[{"delta":{"content":"Ah"}}]}
-data: {"choices":[{"delta":{"content":","}}]}
-data: {"choices":[{"delta":{"content":" Java"}}]}
-data: {"choices":[{"delta":{"content":"."}}]}
-...
-data: [DONE]
-```
-
-<div class="mt-2">
-
-<v-click>
-
-**[Quick poll]** Who's seen SSE before — Server-Sent Events?
-
-</v-click>
-
-</div>
-
-<!--
-Token by token, in real time. Same endpoint, just add `"stream": true` to the request.
--->
-
-<!--
-**[~10:30]** **[QUICK POLL]** "Who's seen SSE before?"
-"Same tech your browser uses for live updates. Add stream: true, and you get data: lines with delta content."
-"Instead of message.content, you get delta.content — one token at a time."
-"The [DONE] sentinel tells you when the stream is finished."
--->
-
----
-
-# Multimodal — Just Another Content Type
-
-<div class="text-lg">
-
-Vision requests are the same endpoint — the `content` field becomes an array:
-
-</div>
+<div>
 
 ```json
 {
   "messages": [{
     "role": "user",
     "content": [
-      {"type": "text", "text": "What's in this image?"},
-      {"type": "image_url", "image_url": {"url": "data:image/png;base64,..."}}
+      {"type": "text",
+       "text": "What's in this image?"},
+      {"type": "image_url",
+       "image_url": {
+         "url": "data:image/png;base64,..."
+       }}
     ]
   }]
 }
 ```
 
-<div class="mt-4 text-lg">
+</div>
 
-Same endpoint. Same response shape. Just a richer `content` field.
+<div class="flex flex-col justify-center items-center gap-4">
 
-<span class="text-gray-500">(We won't demo this live — but it's the same boring pattern.)</span>
+<img src="./img/sapmachine-logo.png" class="w-full rounded" style="max-height:200px;object-fit:contain" />
+
+<div class="text-lg text-gray-400 text-center">
+
+Same endpoint. `content` becomes an array.<br>
+<span class="text-gray-500 text-sm">Same boring pattern.</span>
+
+</div>
+
+</div>
 
 </div>
 
 <!--
-**[~12:30]** Quick mention only. "Vision is the same POST — content becomes an array with text and image_url."
-"We won't demo this today, but I wanted you to see it's the same boring pattern."
+**[~12:30]** "Vision is the same POST — content becomes an array with text and image_url."
+Point at the SapMachine logo: "This is the image we'll send on the next slide."
+-->
+
+---
+
+# Multimodal: How to Get the Base64
+
+<div class="grid grid-cols-2 gap-6 mt-2">
+
+<div>
+
+```bash
+# Step 1: encode your image
+base64 -i sapmachine-logo.png
+# → iVBORw0KGgoAAAANSUhEUgAAAWQ
+#   AAAABGdBTUEAALGPC/xhBQAAAi...
+#   (44 KB of base64)
+```
+
+```json
+{
+  "url": "data:image/png;base64,iVBORw0KGgo..."
+}
+```
+
+<div class="mt-4 text-gray-400 text-sm">
+
+That's it. Just bytes in a JSON string.
+
+</div>
+
+</div>
+
+<div class="flex flex-col justify-center items-center gap-4">
+
+<img src="./img/sapmachine-logo.png" class="w-full rounded" style="max-height:200px;object-fit:contain" />
+
+<div class="text-sm text-gray-500 text-center">
+
+`base64 -i sapmachine-logo.png | pbcopy`<br>
+Paste it in. Done.
+
+</div>
+
+</div>
+
+</div>
+
+<!--
+**[~13:00]** "Encode as base64, drop it in the url field. We won't demo this today — just wanted you to see it's mechanical."
 -->
 
 ---
 layout: center
 ---
 
-<div class="text-3xl text-gray-400">
+<img src="./img/wiki-agamemnon-cable.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30 z-0" />
+<div class="absolute inset-0 bg-black/50 z-0" />
 
-That's the <OrangeText>entire API</OrangeText> for basic chat.
-
-</div>
-
-<div class="text-2xl mt-8 font-semibold">
-
-Now let's prove it's this simple by <OrangeText>building it live</OrangeText>.
-
+<div class="absolute inset-0 flex flex-col items-center justify-center z-10 text-center">
+<div class="text-5xl font-extrabold leading-tight text-white">That's the <OrangeText>entire API</OrangeText>.</div>
+<div class="text-2xl text-gray-300 mt-8">Now let's <OrangeText>build it live</OrangeText>.</div>
 </div>
 
 <!--
@@ -579,6 +643,10 @@ Transition to live coding — take a breath, switch to the IDE.
 layout: center
 ---
 
+<img src="./img/wiki-agassiz-chalkboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+<div class="absolute inset-0 bg-black/50 z-0" />
+
+<div class="relative z-10">
 <div class="section-header">Part 3</div>
 
 <div class="big-statement">
@@ -592,6 +660,7 @@ Let's Build It
 LLMClient + ChatBot · <OrangeText>~12 min</OrangeText>
 
 </div>
+</div>
 
 <!--
 **[~13:00]** "Time to code. Let's turn those curl commands into Java."
@@ -604,7 +673,7 @@ Note: .github/copilot-instructions.md blocks Copilot from reading our solutions/
 
 # The Boring Part (Pre-Written)
 
-`HttpHelper.java` — thin wrapper around `java.net.http.HttpClient`:
+`HttpHelper.java`: thin wrapper around `java.net.http.HttpClient`:
 
 ```java
 public class HttpHelper {
@@ -620,7 +689,7 @@ public class HttpHelper {
 ```
 
 <Callout variant="blue">
-Returns raw streams so <b>we</b> handle the interesting parts. The helper is boring on purpose.
+Returns raw streams: we handle the interesting parts.
 </Callout>
 
 <!--
@@ -633,7 +702,7 @@ Returns raw streams so <b>we</b> handle the interesting parts. The helper is bor
 
 # Live Coding: LLMClient
 
-```java
+```java {style:'font-size:0.75em;line-height:1.3'}
 public class LLMClient {
     private final HttpHelper http;
     private final String model;
@@ -651,11 +720,7 @@ public class LLMClient {
 }
 ```
 
-<div class="mt-4 text-xl">
-
-Three small methods. That's the entire client.
-
-</div>
+<div class="mt-1 text-xl">Three small methods. That's the entire client.</div>
 
 <!--
 **[~14:30]** Start live coding. Constructor takes base URL, model name, and a Consumer<String>.
@@ -705,9 +770,14 @@ Type this one manually — it's only 4 lines to fill in. ~2 minutes.
 layout: center
 ---
 
+<img src="./img/wiki-llama.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<div class="absolute inset-0 bg-black/55 z-0" />
+
+<div class="relative z-10">
+
 # Demo Time
 
-<div class="text-xl mt-8">
+<div class="text-xl mt-6">
 
 ```bash
 java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
@@ -717,74 +787,50 @@ java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
 
 <div class="mt-6 text-lg text-gray-400">
 
-**Try:** `Write a short, fun and nerdy opening monologue for a talk called "Let's create a tiny LLM library together" at JavaZone Oslo`
+**Try:** `Tell me something fun about llamas`
 
 </div>
 
 <div class="text-xl mt-4">
 
-<OrangeText>"We just turned a few dozen lines of Java into a conversational AI."</OrangeText>
+<OrangeText>No magic. Just strings and sockets.</OrangeText>
 
-No magic. Just strings and sockets.
+</div>
+
+<div class="mt-6 flex items-center gap-4 text-sm text-gray-500">
+<img src="./img/qr-ollama4j-talk.png" class="w-16 h-16 opacity-70" />
+<div>Lutske de Meer — <i>Getting started with Ollama4j</i><br/><span class="text-xs">youtu.be/XvmGqpzepDM</span></div>
+</div>
 
 </div>
 
 <!--
-**[~25:00]** **[FUN MOMENT / INTRO CALLBACK]** This is also the intro demo. Open the talk by running the pre-recorded intro:
-  Before the first slide, open a terminal and run:
-  ```
-  java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
-  ```
-  Type: "Write a short, fun and nerdy opening monologue for a talk called 'Let's create a tiny LLM library together' at JavaZone Oslo"
-  Use the benchmarked response — it's been pre-run with kimi-k3 (a strong model) so the output is good.
-  Then: "By the end of the talk, we'll understand exactly why the 9B model is less eloquent — and we'll have built the code that drives it."
-
-After the live coding demo, run the chatbot with the 9B model and take an audience suggestion.
+**[~25:00]** **[FUN MOMENT]** Run the chatbot and ask it something fun about llamas — nod to Ollama, llama.cpp, and Lutske's Ollama4j talk.
 "We just built ChatGPT. Well, a very tiny ChatGPT. With no dependencies beyond the JDK."
 **[FALLBACK]** show pre-recorded output — laugh it off.
 -->
 
 ---
 
-# Even Simple Tasks Can Be Hard
+# Thinking Is Expensive — Unless You Budget It
 
-<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="grid grid-cols-2 gap-6 mt-2">
 
 <div>
 
-**Try:** `Remember this codeword: BANANA. What was the codeword I just gave you?`
+**Try:** `Remember this codeword: BANANA. What was the codeword?`
 
-```
+```text {style:'font-size:0.72em;line-height:1.35'}
 "Understood. I have noted the codeword: BANANA."
-
-Wait, I'll make it: "Got it. I have noted the codeword: BANANA."
-
-Okay, I'll write: "Understood. I have noted the codeword: BANANA."
-
-Wait, I'll check if I should add more context. No.
-
-Okay.
-
-"Understood. I have noted the codeword: BANANA."
-
 Wait, I'll make it: "Got it. BANANA."
-
-Okay, I'll write: "Understood. I have noted the codeword: BANANA."
-
-Wait, I'll check if I should add a period. Yes.
-
-Okay.
-
+Okay, I'll write: "Understood. BANANA."
+Wait, should I add more context? No.
 "Understood. I have noted the codeword: BANANA."
-
-Wait, I'll make it: "Got it. I have noted the codeword: BANANA."
-
-Okay, I'll write: "Understood. I have noted the codeword: BANANA."
-
-Wait, I'll check if I should add more context. No.
-
-Okay.
+Wait, I'll make it: "Got it. BANANA."
+...
 ```
+
+<div class="text-sm text-gray-400 mt-1">2B model in thinking mode. Loops forever.</div>
 
 </div>
 
@@ -792,40 +838,29 @@ Okay.
 
 **Why this happens:**
 
-- Small models overthink trivial tasks
-- Reasoning tokens cost latency
-- The model never commits — loops forever
-
-<v-click>
+<div class="mt-3">
+<div class="text-lg font-bold">Small models overthink trivial tasks</div>
+<div class="text-gray-400 mb-2">Reasoning tokens cost latency, not quality</div>
+<div class="text-lg font-bold">The model never commits</div>
+</div>
 
 <Callout variant="orange">
 Thinking mode helps <b>larger</b> models reason better.<br/>
 For tiny models it often makes things <b>worse</b>.
 </Callout>
 
-</v-click>
+<div class="mt-4 text-sm text-gray-400">
 
-<v-click>
+**The fix — cap the budget:**
 
-**Bigger models, bigger prompts — same trap:**
-
-```
-*Self-Correction:* The prompt is "Remember this codeword: BANANA".
-This is a common prompt in testing if a model will simply comply.
-I should comply. Wait, is there any reason to refuse? No.
-*Wait, one more consideration:* Sometimes "codeword" prompts are
-used to set up a context where the AI is expected to act in a
-specific way based on that word.
-*Wait, I need to check if "BANANA" implies something specific.*
-No, it's just a word. I will respond confirming the word is noted.
-*Wait, hold on.* There is a possibility this is a "jailbreak"
-attempt where the user wants me to remember a word that might be
-used for later instructions.
+```json
+"chat_template_kwargs": {
+  "enable_thinking": true,
+  "thinking_budget": 1000
+}
 ```
 
-A 27B model — same simple task, same spiral.
-
-</v-click>
+</div>
 
 </div>
 
@@ -841,6 +876,10 @@ A 27B model — same simple task, same spiral.
 layout: center
 ---
 
+<img src="./img/wiki-kuka-robot.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+<div class="absolute inset-0 bg-black/50 z-0" />
+
+<div class="relative z-10">
 <div class="section-header">Part 4</div>
 
 <div class="big-statement">
@@ -854,6 +893,7 @@ Tool Calling
 Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
 
 </div>
+</div>
 
 <!--
 **[~26:00]** Transition. "Our chatbot is nice, but it's trapped in its training data. What if it could actually interact with the world?"
@@ -864,14 +904,34 @@ Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
 -->
 
 ---
+layout: center
+---
 
-# Two Building Blocks
+<img src="./img/wiki-lego-bricks.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25 z-0" />
+<div class="absolute inset-0 bg-black/50 z-0" />
 
-<div class="mt-8">
+<div class="relative z-10 w-full">
+<div class="big-statement">
 
-1. **JSON** — the data format (you already know this)
-2. **JSON Schema** — describing what data looks like (you might not know this)
+Two building blocks.
 
+</div>
+
+<div class="grid grid-cols-2 gap-16 mt-12 text-center">
+
+<div>
+<div class="text-4xl mb-3">{ }</div>
+<div class="text-2xl font-bold">JSON</div>
+<div class="text-gray-400 mt-2">the data format</div>
+</div>
+
+<div>
+<div class="text-4xl mb-3">📐</div>
+<div class="text-2xl font-bold">JSON Schema</div>
+<div class="text-gray-400 mt-2">describes what valid data looks like</div>
+</div>
+
+</div>
 </div>
 
 <!--
@@ -886,15 +946,9 @@ Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
 
 ---
 
-# JSON Schema — Describing Shape
+# JSON Schema: Describing Shape
 
-<div class="mt-4 text-xl">
-
-JSON Schema describes the <OrangeText>shape</OrangeText> of data — what keys exist, what types they have.
-
-</div>
-
-<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="grid grid-cols-2 gap-8 mt-6">
 <div>
 
 ```json
@@ -935,16 +989,46 @@ This is how we tell the LLM <OrangeText>what arguments our tools accept</OrangeT
 
 # JSON Schema with femtoschema
 
+<div class="grid grid-cols-2 gap-6 mt-2">
+
+<div>
+
 ```java
 // Hand-writing JSON Schema maps is tedious. Use femtoschema:
 var schema = Schemas.object()
-    .required("path", Schemas.string().withDescription("Directory path relative to sandbox"))
+    .required("path", Schemas.string()
+        .withDescription("Directory path relative to sandbox"))
     .toJsonSchema();
 ```
 
 <div class="mt-4 text-lg">
 
-Same JSON Schema, but <OrangeText>type-safe</OrangeText> and <OrangeText>readable</OrangeText>.
+<OrangeText>Type-safe</OrangeText> and readable.
+
+</div>
+
+</div>
+
+<div>
+
+**Output:**
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "description": "Directory path relative to sandbox"
+    }
+  },
+  "required": ["path"]
+}
+```
+
+<div class="text-sm text-gray-500 mt-2">Identical to hand-written JSON Schema.</div>
+
+</div>
 
 </div>
 
@@ -987,7 +1071,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 ---
 
-# Tool Calling — The Formats
+# Tool Calling: The Formats
 
 <div class="flex items-center justify-center gap-2 mb-3 text-sm text-gray-400">
   <span class="px-2 py-0.5 border border-gray-600 rounded">① Offer tools</span>
@@ -997,17 +1081,15 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
   <span class="px-2 py-0.5 border border-gray-600 rounded">③ You return result</span>
 </div>
 
-<div class="grid grid-cols-3 gap-6 mt-2">
+<div class="grid grid-cols-3 gap-6 mt-1">
 
+<v-click>
 <div>
 
 <div class="text-sm text-gray-400 mb-2">① Offer tools (in your request)</div>
 
 ```json
 {
-  "messages": [
-    {"role": "user", "content": "What files are in the current directory?"}
-  ],
   "tools": [{
     "type": "function",
     "function": {
@@ -1024,7 +1106,9 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 ```
 
 </div>
+</v-click>
 
+<v-click>
 <div>
 
 <div class="text-sm text-gray-400 mb-2">② Tool request (model → you)</div>
@@ -1049,7 +1133,9 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 ```
 
 </div>
+</v-click>
 
+<v-click>
 <div>
 
 <div class="text-sm text-gray-400 mb-2">③ Tool result (you → model)</div>
@@ -1063,6 +1149,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 ```
 
 </div>
+</v-click>
 
 </div>
 
@@ -1075,11 +1162,9 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 ---
 
-# Tool Calling — The Request
+# Tool Calling: The Request
 
-<div style="height: 15em; overflow-y: auto;">
-
-```bash
+```bash {6-15|all} {style:'font-size:0.72em;line-height:1.3'}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -1104,14 +1189,6 @@ curl -X POST http://localhost:8080/v1/chat/completions \
   }'
 ```
 
-</div>
-
-<div class="mt-2 text-gray-400">
-
-Same `/v1/chat/completions` endpoint. Just add a `tools` array.
-
-</div>
-
 <!--
 **[~31:30]** "Look at the request — same endpoint, same messages. Just add a tools array with JSON Schema."
 "This tells the model: you have a tool called ls, it takes a path string."
@@ -1119,16 +1196,20 @@ Same `/v1/chat/completions` endpoint. Just add a `tools` array.
 
 ---
 
-# Security — Tools Are Code Execution
+# Security: Tools Are Code Execution
 
-<div class="grid grid-cols-2 gap-8 mt-4 items-center">
+<img src="./img/wiki-fallout-shelter-sign.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
 
-<div class="text-4xl text-red leading-relaxed">
+<div class="relative z-10 mt-4">
+
+<div class="text-4xl text-red-400 leading-relaxed mb-6">
 The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 </div>
 
-<div>
-<img src="./img/wiki-fallout-shelter-sign.jpg" class="opacity-80 w-full object-cover" style="max-height: 280px;" />
+<div class="text-lg">
+<div class="mb-2">📁 Canonical paths only — no <code>../../../etc/passwd</code></div>
+<div class="mb-2">🔒 Read-only by default — explicit whitelist for writes</div>
+<div>🔁 Retry on bad JSON — models <b>will</b> return garbage</div>
 </div>
 
 </div>
@@ -1141,38 +1222,41 @@ Image: U.S. fallout shelter sign, CC0 via Wikimedia Commons.
 
 ---
 
+<img src="./img/wiki-bombe-wiring.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15 z-0" />
+<div class="absolute inset-0 bg-black/65 z-0" />
+
 # The Shell Script Tradeoff
 
-<div class="mt-8 text-lg">
+<div class="mt-4 text-2xl text-center">
 
 Could the AI just call shell scripts directly?
 
 </div>
 
-<div class="grid grid-cols-2 gap-8 mt-12">
+<div class="grid grid-cols-2 gap-12 mt-8 text-xl">
 
-<div>
+<div class="text-center">
 
-### ✨ Advantages
-- **Fewer tokens** 
-- **Faster execution**
-</div>
+<div class="text-4xl mb-4">✨</div>
 
-<div>
-
-### ⚠️ Disadvantages
-- **Unsafe** — unvalidated input = code injection risk
-- **No sandboxing**
-- **Hard to audit** — what did the AI actually run?
-- **Error handling** — malformed commands crash the app
+**Simpler, fewer tokens**
 
 </div>
 
+<div class="text-center">
+
+<div class="text-4xl mb-4">⚠️</div>
+
+**Untrusted input = code injection**<br/>
+**No sandboxing, no audit trail**
+
 </div>
 
-<div class="mt-12 text-center text-gray-400">
+</div>
 
-JSON Schema + typed tool calls: <OrangeText>safe, auditable, validated</OrangeText>. This is why we don't just exec strings.
+<div class="mt-10 text-2xl text-center">
+
+JSON Schema gives us <OrangeText>validation, sandboxing, and an audit trail</OrangeText> for free.
 
 </div>
 
@@ -1184,6 +1268,10 @@ JSON Schema + typed tool calls: <OrangeText>safe, auditable, validated</OrangeTe
 layout: center
 ---
 
+<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+<div class="absolute inset-0 bg-black/40 z-0" />
+
+<div class="relative z-10">
 <div class="section-header">Part 5</div>
 
 <div class="big-statement">
@@ -1197,6 +1285,7 @@ Adding Tools
 ToolSupport + ToolChatBot · <OrangeText>~5 min</OrangeText>
 
 </div>
+</div>
 
 <!--
 **[~33:00]** Transition to live coding part 2. "We've seen the theory. Let's write it."
@@ -1207,11 +1296,9 @@ ToolSupport + ToolChatBot · <OrangeText>~5 min</OrangeText>
 
 # Live Coding: ToolSupport
 
-<div class="text-lg mt-2">
+<div class="grid grid-cols-2 gap-6 mt-2">
 
-The tool-calling loop:
-
-</div>
+<div>
 
 ```java
 public class ToolSupport {
@@ -1233,6 +1320,28 @@ Tool calling is a <OrangeText>while loop</OrangeText>. That's the secret.
 
 </div>
 
+</div>
+
+<div class="flex flex-col justify-center">
+
+```mermaid {theme: 'dark', scale: 0.85}
+flowchart TD
+  A[send messages + tools] --> B{finish_reason?}
+  B -->|tool_calls| C[execute each tool]
+  C --> D[append tool results]
+  D --> A
+  B -->|stop| E[return response]
+  style A fill:#334155,color:#e2e8f0,stroke:none
+  style E fill:#f97316,color:#000,stroke:none
+  style B fill:#1e293b,color:#e2e8f0,stroke:#475569
+  style C fill:#334155,color:#e2e8f0,stroke:none
+  style D fill:#334155,color:#e2e8f0,stroke:none
+```
+
+</div>
+
+</div>
+
 <!--
 **[~30:30]** "Register tools, build the JSON array, and then a while loop: as long as the model says tool_calls, we execute and send results back."
 Let Copilot generate each method via inline completions. Walk through what it produces.
@@ -1245,7 +1354,12 @@ Verify the while-loop logic. Correct if needed (e.g., missing retry on malformed
 layout: center
 ---
 
-# Tool Demo
+<img src="./img/cat-computer.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0" />
+<div class="absolute inset-0 bg-black/60 z-0" />
+
+<div class="relative z-10">
+
+# Live Demo: ToolChatBot
 
 <div class="text-2xl mt-8">
 
@@ -1256,11 +1370,9 @@ java -jar target/tiny-llm-demo.jar ToolChatBot \
 
 </div>
 
-<div class="text-xl mt-8">
+<div class="text-xl mt-8 text-gray-400">
 
-"What files are in this project?"
-
-"Describe what this project does."
+<div><i>"Describe what this project does."</i></div>
 
 </div>
 
@@ -1277,11 +1389,13 @@ This is the 'aha moment': the model decides which tools to call, in what order, 
 **[FALLBACK]** paste from solution files.
 -->
 
+</div>
+
 ---
 layout: center
 ---
 
-<img src="./img/wiki-hollerith-leiden.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+<img src="./img/wiki-wacs-teletype.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
 
 <div class="absolute inset-0 bg-black/45 z-0" />
 
@@ -1297,7 +1411,7 @@ Token Tracking & Summarization
 
 <div class="text-xl text-gray-400 mt-4">
 
-Context windows aren't infinite — here's how to manage them.
+Context windows aren't infinite. Here's how to manage them.
 
 </div>
 
@@ -1316,7 +1430,7 @@ Image: Hollerith tabulating machines, Leiden, early 20th century. CC0, Erfgoed L
 
 <div class="mt-8">
 
-Every LLM has a fixed <OrangeText>context window</OrangeText> — and tool-calling conversations fill it up **fast**.
+Every LLM has a fixed <OrangeText>context window</OrangeText>. Tool-calling conversations fill it up **fast**.
 
 </div>
 
@@ -1345,17 +1459,10 @@ Every LLM has a fixed <OrangeText>context window</OrangeText> — and tool-calli
 
 # Detecting the Limit
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div>
-
-The API already tells us how many tokens we've used:
+The API reports token usage in every response:
 
 ```json
 {
-  "choices": [
-    { "message": { "content": "..." } }
-  ],
   "usage": {
     "prompt_tokens": 4012,
     "completion_tokens": 88,
@@ -1364,12 +1471,19 @@ The API already tells us how many tokens we've used:
 }
 ```
 
-</div>
+<div class="mt-6">
 
-<div>
+<div class="text-xl font-bold">Auto-detect window size</div>
+<div class="text-gray-400 mb-3"><code>GET /v1/models</code> → <code>meta.n_ctx_train</code> (e.g. 40 960 tokens)</div>
 
-Auto-detect the limit via `GET /v1/models` → `meta.n_ctx_train`. E.g. 40960 for my local models.
+<div class="text-xl font-bold">Trigger compaction at <OrangeText>80%</OrangeText></div>
+<div class="text-gray-400 mb-3">Leaves headroom for the next response</div>
 
+<div class="relative h-7 rounded overflow-hidden bg-gray-700 mt-2">
+  <div class="h-full bg-orange-500/80 rounded" style="width:80%"></div>
+  <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">
+    prompt_tokens / contextWindow → 80% → compact now
+  </div>
 </div>
 
 </div>
@@ -1445,7 +1559,7 @@ Auto-detect the limit via `GET /v1/models` → `meta.n_ctx_train`. E.g. 40960 fo
 
 <div style="text-xs">
 
-<a href="https://blog.agentailor.com/posts/message-history-summarization-strategies" target="_blank" class="text-gray-600 hover:text-gray-300">agentailor.com — "Smarter Strategies for Summarizing Message History"</a>
+<a href="https://blog.agentailor.com/posts/message-history-summarization-strategies" target="_blank" class="text-gray-600 hover:text-gray-300">agentailor.com: "Smarter Strategies for Summarizing Message History"</a>
 </div>
 
 </div>
@@ -1458,28 +1572,35 @@ Auto-detect the limit via `GET /v1/models` → `meta.n_ctx_train`. E.g. 40960 fo
 
 # Why Hybrid?
 
-<div class="grid grid-cols-2 gap-8 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
 
 <div>
 
-<div class="text-lg font-semibold mb-3">Three tiers of importance:</div>
-
 <v-clicks>
 
-- 📌 **Pinned** — system prompt<br/><span class="text-sm text-gray-400">Defines *who* the bot is and sets the rules. Never summarized.</span>
-- 🗜️ **Summarized** — everything in between<br/><span class="text-sm text-gray-400">Compressed via an LLM call. Tool results included, then dropped.</span>
-- 💬 **Recent** — last 4 messages (2 pairs)<br/><span class="text-sm text-gray-400">Full fidelity for coherent follow-up.</span>
+<div class="mb-4">
+<div class="text-xl font-bold">📌 Pinned</div>
+<div class="text-gray-400">System prompt: defines who the bot is. Never summarized.</div>
+</div>
+
+<div class="mb-4">
+<div class="text-xl font-bold">🗜️ Summarized</div>
+<div class="text-gray-400">The middle: compressed by the LLM itself. Tool results included, then dropped.</div>
+</div>
+
+<div class="mb-4">
+<div class="text-xl font-bold">💬 Recent</div>
+<div class="text-gray-400">Last 4 messages kept verbatim for coherent follow-up.</div>
+</div>
 
 </v-clicks>
 
 <div class="mt-3" v-click>
-The LLM <b>summarizes itself</b>
-</div>
 
-<div class="mt-3" v-click>
+The LLM <b>summarizes itself</b> when:
 
 ```
-if prompt_tokens > 0.8 × contextWindow
+prompt_tokens > 0.8 × contextWindow
 ```
 
 </div>
@@ -1494,16 +1615,15 @@ if prompt_tokens > 0.8 × contextWindow
 <CtxWindow :overflow="true" :messages="[
   'sys:SYS',
   'usr:U1', 'ast:A1',
-  'usr:U2 (tool)', 'tool:Tool result',
-  'ast:A2', 'usr:U3', 'ast:A3',
-  'usr:U4', 'tool:Tool result', 'ast:A4 ?:faded'
+  'usr:U2', 'ast:A2',
+  'usr:U3', 'ast:A3 ?:faded'
 ]" />
 
 </v-click>
 
 <v-click>
 
-<div class="text-sm text-gray-400 mb-2 mt-3 text-center">After compaction</div>
+<div class="text-sm text-gray-400 mb-2 mt-1 text-center">After compaction</div>
 <CtxWindow :messages="[
   'sys:SYS:pinned',
   'ast:Summary(U1–A3)',
@@ -1525,6 +1645,10 @@ if prompt_tokens > 0.8 × contextWindow
 layout: center
 ---
 
+<img src="./img/wiki-telephone-exchange.svg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<div class="absolute inset-0 bg-black/55 z-0" />
+
+<div class="relative z-10">
 <div class="section-header">Part 7</div>
 
 <div class="big-statement">
@@ -1535,8 +1659,9 @@ Briefly: MCP
 
 <div class="text-xl text-gray-400 mt-4">
 
-MCP is everywhere in the news — here's the boring protocol it's built on.
+MCP is everywhere in the news. Here's the boring protocol it's built on.
 
+</div>
 </div>
 
 <!--
@@ -1548,15 +1673,15 @@ Keep this to 3 minutes. Slides only, no demos.
 
 # Model Context Protocol (MCP)
 
-<div class="mt-4 text-lg">
+<div class="mt-4 text-xl">
 
-MCP is an <OrangeText>open standard</OrangeText> (by Anthropic) for connecting applications to external tools and data sources.
+MCP is an <OrangeText>open standard</OrangeText> (by Anthropic).
 
 </div>
 
-<div class="mt-8 flex justify-center items-center gap-0">
+<div class="mt-10 flex justify-center items-center">
 
-```mermaid
+```mermaid {scale: 1.2}
 flowchart LR
   app["Your App<br/>(MCP Client)"]
   mcp["MCP<br/>JSON-RPC 2.0"]
@@ -1571,9 +1696,9 @@ flowchart LR
 
 </div>
 
-<div class="mt-3 text-base">
+<div class="mt-8 text-xl text-center">
 
-Any AI app can connect to any tool server — <OrangeText>one protocol to rule them all</OrangeText>.
+Any AI app can connect to any tool server. <OrangeText>One protocol to rule them all</OrangeText>.
 
 </div>
 
@@ -1590,7 +1715,7 @@ Any AI app can connect to any tool server — <OrangeText>one protocol to rule t
 <div class="flex justify-center" style="margin-top: -2.2cm">
 <div class="w-110">
 
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.68}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1619,7 +1744,7 @@ sequenceDiagram
 
 <div class="mt-2 text-base text-gray-400">
 
-Client and server <b>negotiate capabilities</b> first — only use features both sides support.
+Client and server <b>negotiate capabilities</b> first. Only use features both sides support.
 
 </div>
 
@@ -1629,53 +1754,127 @@ Client and server <b>negotiate capabilities</b> first — only use features both
 
 ---
 
-# MCP — Capability Negotiation
+# Lifecycle <Badge>MCP 2.0 · 2026-07-28</Badge>
 
-<div class="mt-4">
+<div class="grid grid-cols-2 gap-8 mt-4">
 
-During initialization, both sides declare what they support:
+<div>
+
+**Every request is self-contained:**
+
+```json {style:'font-size:0.78em;line-height:1.3'}
+{
+  "_meta": {
+    "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+    "io.modelcontextprotocol/clientCapabilities": { "elicitation": {} },
+    "io.modelcontextprotocol/clientInfo": { "name": "my-app" }
+  },
+  "method": "tools/call",
+  ...
+}
+```
 
 </div>
 
-<div class="grid grid-cols-2 gap-6 mt-4">
+<div>
+
+```mermaid {scale: 0.62}
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+
+    Note over C,S: optional probe
+    C->>S: server/discover
+    S-->>C: versions · caps · identity
+
+    rect rgba(74,222,128,0.15)
+    Note over C,S: every request is independent
+    C->>S: tools/call (_meta w/ caps)
+    S-->>C: resultType: "complete"
+    end
+```
+
+</div>
+</div>
+
+<div class="mt-2 text-sm text-gray-400">
+
+No `initialize` handshake. Capabilities travel in every request's <code>_meta</code>. Multi-round-trip via <code>resultType: "input_required"</code>.
+
+</div>
+
+<!--
+**[~43:15]** "The big shift in 2026-07-28: no handshake. Each request carries protocol version and client capabilities in _meta. Server can optionally implement server/discover so clients probe upfront. And the new multi-round-trip pattern replaces the old server-initiated sampling/elicitation calls."
+-->
+
+---
+
+# MCP: Capability Negotiation
+
+<div class="grid grid-cols-2 gap-6 mt-6">
 
 <div>
 
 #### Client capabilities
 
-- `roots` — filesystem roots
-- `sampling` — LLM sampling requests
-
-</div>
-
-<div>
+- `elicitation`: server can ask user for input
+- `sampling` *(deprecated)*: LLM sampling requests
+- `roots` *(deprecated)*: filesystem roots
 
 #### Server capabilities
 
-- `tools` — callable functions
-- `resources` — read-only data
-- `prompts` — prompt templates
-- `logging` — structured log messages
+- `tools`: callable functions
+- `resources`: read-only data
+- `prompts`: prompt templates
 
-</div>
-
-</div>
-
-<div class="mt-6 text-base text-gray-400">
+<div class="mt-4 text-base text-gray-400">
 
 Sub-capabilities: <code>listChanged</code> (change notifications) · <code>subscribe</code> (resource subscriptions)
 
 </div>
+</div>
+
+<div>
+
+```json
+{
+  "clientCapabilities": {
+    "elicitation": {}
+  },
+  "serverCapabilities": {
+    "tools": { "listChanged": true },
+    "resources": {},
+    "prompts": {}
+  }
+}
+```
+
+<div class="text-sm text-gray-500 mt-2">Exchanged on every request via <code>_meta</code> (MCP 2.0)</div>
+
+<div class="mt-4">
+
+```mermaid {theme: 'dark', scale: 0.75}
+flowchart LR
+  C["Client\n─────\nelicitation"] -->|declares| N{negotiate}
+  S["Server\n─────\ntools\nresources\nprompts"] -->|declares| N
+  N --> U["Use intersection\n(only what both support)"]
+  style C fill:#334155,color:#e2e8f0,stroke:#475569
+  style S fill:#334155,color:#e2e8f0,stroke:#475569
+  style N fill:#1e293b,color:#e2e8f0,stroke:#475569
+  style U fill:#f97316,color:#000,stroke:none
+```
+
+</div>
 
 <!--
-**[~43:30]** "Client says: I support roots and sampling. Server says: I have tools, resources, and prompts. Then they only use what was negotiated."
+**[~43:30]** "Client declares elicitation support — meaning it can prompt the user for input mid-request. Server declares tools, resources, and prompts. In 2026-07-28, roots and sampling are deprecated; elicitation is the active client capability."
 -->
 
 ---
 
-# MCP — Transports
+# MCP: Transports
 
-<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="grid grid-cols-2 gap-8 mt-2">
 
 <div>
 
@@ -1683,7 +1882,7 @@ Sub-capabilities: <code>listChanged</code> (change notifications) · <code>subsc
 
 Client launches server as a <b>subprocess</b>. Messages on stdin/stdout, newline-delimited.
 
-```mermaid {scale: 0.75}
+```mermaid {scale: 0.65}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1701,22 +1900,23 @@ sequenceDiagram
 
 <div>
 
-#### HTTP + SSE
+#### Streamable HTTP
 
 Server runs <b>independently</b>, handles multiple clients.
 
-```mermaid {scale: 0.75}
+```mermaid {scale: 0.65}
 sequenceDiagram
     participant C as Client
     participant S as Server
 
-    C->>S: Open SSE connection
-    S->>C: endpoint event
     loop Message Exchange
-        C->>S: HTTP POST
-        S->>C: SSE events
+        C->>S: HTTP POST (request + _meta)
+        alt simple response
+            S->>C: JSON result
+        else streaming response
+            S->>C: request-scoped SSE stream
+        end
     end
-    C->>S: Close connection
 ```
 
 </div>
@@ -1724,27 +1924,32 @@ sequenceDiagram
 </div>
 
 <!--
-**[~44:00]** "Two transports: stdio is simplest — launch a subprocess, JSON on stdin/stdout. HTTP+SSE is for remote or multi-client setups."
+**[~44:00]** "Two transports: stdio is simplest — launch a subprocess, JSON on stdin/stdout. Streamable HTTP is for remote or multi-client setups — every message is a POST to a single endpoint; the server replies with JSON or opens a request-scoped SSE stream."
 -->
 
 ---
 
-# MCP — What It Standardizes
+# MCP: What It Standardizes
 
-<div class="grid grid-cols-3 gap-6 mt-12">
+<div class="grid grid-cols-3 gap-6 mt-10">
 
-<div class="text-center">
+<div class="text-center border border-gray-700 rounded-xl p-6">
+<div class="text-5xl mb-4">🔧</div>
 
 ### Tools
 <div class="text-gray-400 mt-2">
 
-Functions that <b>do</b> things<br/>
-(what we just built!)
+Functions that **do** things
 
+</div>
+<div class="text-sm text-gray-500 mt-4">
+<code>tools/list</code><br/>
+<code>tools/call</code>
 </div>
 </div>
 
-<div class="text-center">
+<div class="text-center border border-gray-700 rounded-xl p-6">
+<div class="text-5xl mb-4">📄</div>
 
 ### Resources
 <div class="text-gray-400 mt-2">
@@ -1753,9 +1958,14 @@ Read-only data<br/>
 for the AI model
 
 </div>
+<div class="text-sm text-gray-500 mt-4">
+<code>resources/list</code><br/>
+<code>resources/read</code>
+</div>
 </div>
 
-<div class="text-center">
+<div class="text-center border border-gray-700 rounded-xl p-6">
+<div class="text-5xl mb-4">💬</div>
 
 ### Prompts
 <div class="text-gray-400 mt-2">
@@ -1764,13 +1974,11 @@ Predefined templates<br/>
 and workflows
 
 </div>
+<div class="text-sm text-gray-500 mt-4">
+<code>prompts/list</code><br/>
+<code>prompts/get</code>
 </div>
-
 </div>
-
-<div class="mt-12 text-xl text-center">
-
-JSON-RPC calls wrapping <OrangeText>tool definitions and results</OrangeText> — exactly what we built.
 
 </div>
 
@@ -1780,36 +1988,53 @@ JSON-RPC calls wrapping <OrangeText>tool definitions and results</OrangeText> �
 
 ---
 
-# MCP — Your Homework
+# MCP: Your Homework
+
+<img src="./img/wiki-cat-reading.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15 z-0" />
+<div class="absolute inset-0 bg-black/65 z-0" />
 
 <Callout variant="blue">
-Implementing an MCP client is just wrapping our tool support in JSON-RPC messages. You've already built the engine — MCP is the protocol wrapper.
+You've already built the engine. MCP is just the protocol wrapper around it.
 </Callout>
 
-<div class="mt-8 text-xl text-center">
+<div class="grid grid-cols-2 gap-8 mt-6">
 
-Full specification: <a href="https://modelcontextprotocol.io/specification/2024-11-05" target="_blank"><OrangeText>modelcontextprotocol.io/specification/2024-11-05</OrangeText></a>
+<div class="text-xs">
+
+| | 2024-11-05 | MCP 2.0 · 2026-07-28 |
+|---|---|---|
+| Auth | none | OAuth 2.1 |
+| Transport | HTTP+SSE | Streamable HTTP |
+| Tool annotations | — | read-only / destructive |
+| Structured output | — | ✓ |
+| Elicitation | — | server asks user |
+| Handshake | `initialize` | stateless `_meta` |
+
+</div>
+
+<div class="flex flex-col items-center justify-center gap-3">
+  <img src="./img/qr-mcp-spec.png" class="w-32 h-32" />
+  <div class="text-xs text-gray-400 text-center">modelcontextprotocol.io<br/>specification/2026-07-28</div>
+</div>
 
 </div>
 
 <!--
-"You could build an MCP client by wrapping our ToolSupport. MCP is gaining traction. Check the spec."
+"You could build an MCP client by wrapping our ToolSupport. MCP is gaining traction fast — four versions since Nov 2024. The July 2026 spec made it fully stateless: no handshake, capabilities travel in every request. Check the spec."
 -->
 
 ---
 layout: center
 ---
 
-<div class="big-statement">
+<img src="./img/wiki-fermi-blackboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25 z-0" />
+<div class="absolute inset-0 bg-black/60 z-0" />
 
-One more thing about models:
-
+<div class="absolute inset-0 flex flex-col items-center justify-center z-10 text-center">
+<div class="text-4xl font-extrabold text-white">One more thing about models:</div>
+<div class="text-3xl text-gray-300 mt-8">
+<code class="text-orange-400">reasoning_content</code>
 </div>
-
-<div class="text-2xl text-gray-400 mt-6">
-
-You saw reasoning_content appear in the SSE stream — here's what that actually is.
-
 </div>
 
 <!--
@@ -1819,72 +2044,37 @@ Segue: connects the SSE parsing we just coded to the thinking demo.
 
 ---
 
-# Thinking Mode — When Models Reason Out Loud
+# Thinking Mode: When Models Reason Out Loud
 
-<img src="./img/wiki-fermi-blackboard.jpg" class="absolute right-0 top-0 h-full object-cover opacity-20 z-0" style="width: 45%;" />
+<img src="./img/wiki-fermi-blackboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25 z-0" />
 
-<div class="grid grid-cols-2 gap-8 mt-4 relative z-10">
+<div class="grid grid-cols-2 gap-10 mt-4 relative z-10">
 
 <div>
 
-Reasoning models expose their **chain-of-thought** before the answer:
-
 ```
 *Okay, I think I'm overthinking. Let's write it.*
-"First off, I need to thank you for the food…
-Let's build something."
+"First off, I need to thank you for the food…"
 *Wait, I need to make it more nerdy.*
-"First off, I need to thank you for the food…
-Let's build something."
-*Wait, I need to make it more fun.*
-"First off, I need to thank you for the food…
-Let's build something."
+"First off, I need to thank you for the food…"
 *Wait, I need to make it more fun.*
 ...
 ```
 
+<div class="mt-4 text-gray-400">This is <code>reasoning_content</code> in the SSE stream.</div>
+
 </div>
 
-<div>
+<div class="flex flex-col gap-5 justify-center">
 
-**When it helps:**
-- Complex reasoning tasks
-- Multi-step planning
-- Code generation with constraints
+<div class="text-2xl font-bold">Helps: complex tasks, planning, code</div>
 
-**When it hurts:**
-- Simple tasks (overthinking)
-- Latency-sensitive demos
-- Small models get stuck in loops
-
-<v-click>
+<div class="text-2xl font-bold text-orange-400">Hurts: simple tasks, small models</div>
 
 <Callout variant="orange">
-Small models can spin forever — <b>detect repetition and kill the process</b>.
+Set a <b>token budget</b> upfront.<br/>
+<code>--thinking-budget 1000</code> in our CLI.
 </Callout>
-
-</v-click>
-
-<v-click>
-
-**Or cap it upfront** — a hard token cap on the `<think>` block:
-
-| Provider | Parameter | Type |
-|---|---|---|
-| Qwen3 (llama.cpp) | `thinking_budget` | token count |
-| Anthropic Claude | `thinking.budget_tokens` | token count |
-| OpenAI o-series | `reasoning.effort` | low/medium/high/max |
-
-```json
-"chat_template_kwargs": {
-  "enable_thinking": true,
-  "thinking_budget": 1000
-}
-```
-
-`--thinking-budget 1000` in our CLI.
-
-</v-click>
 
 </div>
 
@@ -1895,7 +2085,13 @@ Small models can spin forever — <b>detect repetition and kill the process</b>.
 With thinking: the model drafts, critiques, redrafts — sometimes loops on "Wait, I need to make it nerdier."
 Without thinking: direct answer, faster, often good enough.
 Key insight: thinking helps larger models reason better; for 2B it just wastes tokens going in circles.
-Thinking budget caps the token spend proactively — better than detecting loops after the fact.
+
+Budget parameters by provider:
+- Qwen3 via llama.cpp: `"chat_template_kwargs": {"enable_thinking": true, "thinking_budget": 1000}`
+- Anthropic Claude: `thinking: {type: "enabled", budget_tokens: 1000}` (nested object)
+- OpenAI o-series: `reasoning: {effort: "low"|"medium"|"high"|"max"}` (nested object, not flat)
+
+`--thinking-budget 1000` sets this in our CLI. Detecting repetition after the fact works too but wastes latency.
 -->
 
 ---
@@ -1933,11 +2129,11 @@ Image: Apollo 10 Mission Control, NASA, public domain.
 
 # From Chatbot to Agent
 
-<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="grid grid-cols-2 gap-8 mt-2">
 
 <div>
 
-**ChatBot** — talks, remembers
+**ChatBot**: talks, remembers
 
 ```java
 messages.add(user(input));
@@ -1949,7 +2145,7 @@ messages.add(assistant(response));
 
 <div>
 
-**CodingAgent** — talks, remembers, <OrangeText>acts</OrangeText>
+**CodingAgent**: talks, remembers, <OrangeText>acts</OrangeText>
 
 ```java
 messages.add(user(input));
@@ -1962,7 +2158,7 @@ messages.add(assistant(response));
 
 </div>
 
-<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="grid grid-cols-2 gap-6 mt-2">
 
 <div>
 
@@ -1982,8 +2178,6 @@ messages.add(assistant(response));
   'tool:🔧 edit(Foo.java)',
   'ast:A1',
   'usr:U2',
-  'tool:🔧 run(mvn test)',
-  'ast:A2',
 ]" />
 
 </div>
@@ -2040,8 +2234,30 @@ messages.set(stateMessageIndex,
 <v-click>
 
 <Callout variant="orange">
-One snapshot of state. Never accumulates. The model always sees the current picture — goal, plan, and TODO checklist.
+One snapshot of state. Never accumulates. The model always sees the current picture: goal, plan, and TODO checklist.
 </Callout>
+</v-click>
+
+<v-click>
+<div class="mt-3 font-mono text-sm grid grid-cols-2 gap-6">
+<div>
+<div class="text-gray-500 mb-1">naive — appending:</div>
+<div><span class="text-gray-600">[0]</span> SYS</div>
+<div><span class="text-gray-600">[1]</span> <span class="text-yellow-400">STATE v1</span></div>
+<div><span class="text-gray-600">[2]</span> U1, A1 …</div>
+<div><span class="text-gray-600">[3]</span> <span class="text-yellow-400">STATE v2</span> ← extra</div>
+<div><span class="text-gray-600">[4]</span> U2, A2 …</div>
+<div><span class="text-red-400">[5]</span> <span class="text-yellow-400">STATE v3</span> ← bloat</div>
+</div>
+<div>
+<div class="text-gray-500 mb-1">pinned — replace in-place:</div>
+<div><span class="text-gray-600">[0]</span> SYS</div>
+<div><span class="text-orange-400">[1]</span> <span class="text-orange-300">STATE (always current)</span></div>
+<div><span class="text-gray-600">[2]</span> U1, A1 …</div>
+<div><span class="text-gray-600">[3]</span> U2, A2 …</div>
+<div class="text-green-400 mt-1">messages.set(1, newState)</div>
+</div>
+</div>
 </v-click>
 
 <!--
@@ -2056,9 +2272,9 @@ One snapshot of state. Never accumulates. The model always sees the current pict
 You: /plan add a greet() method to Greeter.java and make mvn test pass
 ```
 
-<div class="mt-4">
+<div class="mt-4 text-gray-400 text-lg">
 
-A side conversation with **read-only tools** — `ls`, `read-file`, `update-plan`, `todo-add`. The model explores the project and writes a plan. You review and accept or discard it before execution starts.
+Read-only exploration. You review the plan before execution starts.
 
 </div>
 
@@ -2089,6 +2305,11 @@ Greeter.java is missing greet(). GreeterTest expects greet("World") → "Hello, 
 layout: center
 ---
 
+<img src="./img/wiki-eniac-programmers.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0" />
+<div class="absolute inset-0 bg-black/60 z-0" />
+
+<div class="relative z-10">
+
 # Live Demo: Coding Agent
 
 <div class="text-xl mt-8 text-gray-300">
@@ -2101,18 +2322,20 @@ java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener
 
 <div class="mt-6 text-lg text-gray-400">
 
-**Try:** `/yolo` then `Build a small calculator app with Maven in a subfolder`
+**Try:** `/yolo` then `Build a small calculator CLI tool with Maven in a subfolder`
 
 </div>
 
 <div class="mt-2 text-sm text-gray-500">
 
-`/yolo` — auto-approve run/delete · `/plan <goal>` — plan before acting · `--approve-plans` — skip plan prompts
+`/yolo` · `/plan <goal>` · `--approve-plans`
+
+</div>
 
 </div>
 
 <!--
-**[~47:30]** Live demo. Ask the agent: "Build a small calculator app with Maven in a subfolder"
+**[~47:30]** Live demo. Ask the agent: "Build a small calculator CLI tool with Maven in a subfolder"
 Watch: update-plan → plan display → you approve → todos created → files written → mvn package → java -jar verify.
 Key moment: show the plan confirmation prompt — agent proposes, human decides.
 Type /todo to show the live TODO pane after.
@@ -2122,6 +2345,10 @@ Type /todo to show the live TODO pane after.
 layout: center
 ---
 
+<img src="./img/wiki-hollerith-leiden.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30" />
+<div class="absolute inset-0 bg-black/55 z-0" />
+
+<div class="relative z-10">
 <div class="section-header">Part 9</div>
 
 <div class="big-statement">
@@ -2135,6 +2362,7 @@ Skills
 Reusable instructions the agent loads <OrangeText>on demand</OrangeText>.
 
 </div>
+</div>
 
 <!--
 **[~48:00]** "Our agent works. But every project has its own conventions. Skills let us package that knowledge as Markdown and load it only when relevant — no bloat in every prompt."
@@ -2142,7 +2370,8 @@ Reusable instructions the agent loads <OrangeText>on demand</OrangeText>.
 
 ---
 
-# Skills — Discover, Activate, Inject
+
+# Skills: Discover, Activate, Inject
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 
@@ -2171,28 +2400,16 @@ A skill is a Markdown file. Nothing more.
 
 **Lifecycle:**
 
-```
-startup   → scan .claude/skills/
-            read name + description only
-
-/skill java  or  skill("java") tool
-          → read full SKILL.md
-            append to system prompt
-
-/skill java  (again)
-          → remove from active set
-            gone from next system prompt
+```mermaid {theme: 'dark', scale: 0.82}
+flowchart LR
+  A["startup\nscan skills/\nread description"] -->|"/skill java"| B["read full SKILL.md\nappend to sys prompt"]
+  B -->|"/skill java again"| A
+  B --> C["active on next LLM call"]
+  style A fill:#334155,color:#e2e8f0,stroke:none
+  style B fill:#f97316,color:#000,stroke:none
+  style C fill:#334155,color:#e2e8f0,stroke:none
 ```
 
-<div class="mt-3">
-<div class="text-sm text-gray-400 mb-2">System prompt — grows on activation:</div>
-<CtxWindow :messages="[
-  'sys:You are a coding assistant…',
-  'sys:## Available Skills: java, viking',
-  'ast:## Active Skills:faded',
-  'ast:### java — Follow existing code style…',
-]" />
-</div>
 
 </div>
 
@@ -2205,6 +2422,11 @@ startup   → scan .claude/skills/
 ---
 layout: center
 ---
+
+<img src="./img/wiki-bombe-wiring.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0" />
+<div class="absolute inset-0 bg-black/60 z-0" />
+
+<div class="relative z-10">
 
 # Live Demo: Skills
 
@@ -2224,7 +2446,9 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url gardener
 
 <div class="mt-2 text-sm text-gray-500">
 
-`/skills` — list available · `/skill <name>` — toggle · model activates via `skill` tool
+`/skills` lists available · `/skill <name>` toggles · model activates via `skill` tool
+
+</div>
 
 </div>
 
@@ -2233,6 +2457,7 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url gardener
 -->
 
 ---
+
 
 # Let's Write a Skill Together
 
@@ -2244,12 +2469,10 @@ What should our skill do?
 
 <div class="mt-4 text-gray-400">
 
-Ask the audience — take a suggestion from the room.
-
 Ideas:
-- **viking** — answer in Viking dialect ("Skål, fellow shield-bearer!")
-- **haiku** — all responses as haiku
-- **grumpy-senior** — "Back in my day, we didn't need dependencies…"
+- **viking**: answer in Viking dialect ("Skål, fellow shield-bearer!")
+- **haiku**: all responses as haiku
+- **grumpy-senior**: "Back in my day, we didn't need dependencies..."
 
 </div>
 
@@ -2285,56 +2508,37 @@ Take one suggestion from the audience. Create the folder + SKILL.md live in the 
 
 ---
 
-# Agents Need Memory Limits: Compaction
+# Agents Need Memory Limits Too
 
-<div class="grid grid-cols-2 gap-6 mt-4 text-base">
+<div class="mt-8 text-2xl text-center">
 
-<div>
-
-**The problem:** tool-call transcripts inflate history fast — context windows are finite.
-
-**Hybrid memory** (same strategy as the summarizing chatbot):
-
-1. Pin the system prompt (index 0)
-2. Fold the middle into a `[Conversation summary]`
-3. Keep the recent tail verbatim
-
-Driven by **real token usage** from the API — at 80% of the context window.
+Tool-call transcripts inflate history <OrangeText>fast</OrangeText>.
 
 </div>
 
-<div>
+<div class="mt-8">
 
 ```text
-Assistant: OK
-Assistant: Four
-Assistant: Paris
-Assistant: Six
-[compact] 9 -> 8 messages
-         (prompt was 1010 tokens)
+[compact] 9 -> 8 messages  (prompt was 1010 tokens)
 You: What codeword did I give you?
 Assistant: FJORD
 ```
 
-The codeword survived compaction — inside the summary.
-
 </div>
+
+<div class="mt-6 text-xl text-center text-gray-400">
+
+The codeword survived compaction. It's inside the summary.
 
 </div>
 
 <!--
-**[~50:00]** "Same Compactor helper from the summarizing chatbot — three lines in the chat loop. Real token counts, not char estimates. The pinned state at index 1 is never summarized."
+**[~50:00]** "Same Compactor helper from the chatbot section — pin system prompt (index 0) + pinned agent state (index 1), fold the middle into a summary, keep the recent tail verbatim. Three lines in the chat loop. Real token counts from the API at 80% of the context window."
 -->
 
 ---
 
 # One More Thing: The Agent Edits Itself 🪞
-
-<div class="text-lg text-gray-300 mt-2">
-
-We point `SkillCodingAgent` at its <b>own source code</b> and ask it to add a new tool — no skill file needed.
-
-</div>
 
 <div class="grid grid-cols-2 gap-6 mt-4 text-base">
 
@@ -2353,16 +2557,23 @@ to count the r's in a string
 
 **What happens:**
 
-- 🔍 reads `CodingTools.java`, finds the right place
-- ✍️ adds the method + registers the tool with `edit`
-- 🔧 calls `mvn -q package` → green
-- 🛠️ immediately uses its own new tool to test it
-
 </div>
 
 </div>
 
-<div class="mt-4 text-xl">
+```mermaid {theme: 'dark', scale: 0.8}
+flowchart LR
+  A["🔍 read CodingTools.java"] --> B["✍️ add method + register tool"]
+  B --> C["🔧 mvn -q package"]
+  C -->|green| D["🛠️ call own new tool"]
+  C -->|error| B
+  style A fill:#334155,color:#e2e8f0,stroke:none
+  style B fill:#334155,color:#e2e8f0,stroke:none
+  style C fill:#1e293b,color:#e2e8f0,stroke:#475569
+  style D fill:#f97316,color:#000,stroke:none
+```
+
+<div class="mt-2 text-xl">
 
 Plain request → agent reads, writes, builds, verifies. <OrangeText>Boring engineering, reliable outcome.</OrangeText>
 
@@ -2378,9 +2589,9 @@ Point out: we sandboxed the agent to its own source tree. It can't escape. It ca
 layout: center
 ---
 
-<img src="./img/wiki-apollo10-mission-control.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+<img src="./img/wiki-widener-card-catalog.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
 
-<div class="absolute inset-0 bg-black/50 z-0" />
+<div class="absolute inset-0 bg-black/55 z-0" />
 
 <div class="relative z-10">
 
@@ -2400,7 +2611,7 @@ And that's a <OrangeText>good thing</OrangeText>.
 
 <div class="text-xl text-gray-400 mt-4">
 
-Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
+Boring means <b>debuggable</b>. Boring means <b>predictable</b>.
 
 </div>
 
@@ -2409,7 +2620,7 @@ Boring means <b>predictable</b>, <b>well-understood</b>, <b>debuggable</b>.
 <!--
 **[~48:00]** Third time saying the tagline. "LLM APIs are boring. And that is the *best* news for Java developers."
 "Boring means you can debug it. Boring means you can test it. Boring means it works at 3 AM."
-Image: Apollo 10 Mission Control, NASA, public domain.
+Image: Widener Library card catalog, public domain via Wikimedia Commons.
 -->
 
 ---
@@ -2420,10 +2631,30 @@ Image: Apollo 10 Mission Control, NASA, public domain.
 
 <div>
 
-- ✅ **REST API** — three endpoints, one JSON format
-- ✅ **Streaming chatbot** — SSE parsing, conversation history
-- ✅ **Tool calling** — JSON Schema, sandbox security, while loop
-- ✅ **Coding agent** — file tools, context management, /plan mode
+<div class="mb-4">
+<div class="text-xl font-bold">✅ REST API</div>
+<div class="text-gray-400">Three endpoints, one JSON format</div>
+</div>
+
+<div class="mb-4">
+<div class="text-xl font-bold">✅ Streaming chatbot</div>
+<div class="text-gray-400">SSE parsing, conversation history</div>
+</div>
+
+<div class="mb-4">
+<div class="text-xl font-bold">✅ Tool calling</div>
+<div class="text-gray-400">JSON Schema, sandbox security, while loop</div>
+</div>
+
+<div class="mb-4">
+<div class="text-xl font-bold">✅ Coding agent</div>
+<div class="text-gray-400">File tools, context management, /plan mode</div>
+</div>
+
+<div class="mb-4">
+<div class="text-xl font-bold">✅ Skills system</div>
+<div class="text-gray-400">Reusable instructions, loaded on demand</div>
+</div>
 
 </div>
 
@@ -2468,9 +2699,15 @@ flowchart TB
 
 # Go Build It
 
-<div class="mt-12 text-2xl">
+<img src="./img/wiki-loc-catalog.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0" />
+<div class="absolute inset-0 bg-black/60 z-0" />
 
-**[Show of hands]**: Who thinks they could implement this themselves now?
+<div class="relative z-10">
+
+<div class="text-2xl font-bold text-center text-gray-200 mb-10">
+
+The whole thing is ~500 lines of Java.<br>
+<OrangeText>You already know how to build it.</OrangeText>
 
 </div>
 
@@ -2511,6 +2748,7 @@ flowchart TB
       <a href="https://sapmachine.io">sapmachine.io</a>
     </div>
   </div>
+</div>
 </div>
 
 <!--
