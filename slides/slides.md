@@ -1193,10 +1193,6 @@ Could the AI just call shell scripts directly?
 
 </div>
 
-<div class="mt-10 text-2xl text-center">
-
-JSON Schema gives us <OrangeText>validation, sandboxing, and an audit trail</OrangeText> for free.
-
 </div>
 
 <!--
