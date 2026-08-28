@@ -1163,8 +1163,6 @@ Image: Black kitten in snow, Library of Congress, public domain.
 
 ---
 
-<img src="./img/wiki-bombe-wiring.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15 z-0" />
-<div class="absolute inset-0 bg-black/65 z-0" />
 
 # The Shell Script Tradeoff
 
