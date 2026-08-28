@@ -1136,18 +1136,18 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 # Security: Tools Are Code Execution
 
-<img src="./img/wiki-fallout-shelter-sign.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
+<div class="grid grid-cols-2 gap-8 mt-6">
 
-<div class="relative z-10 mt-4">
+<div class="flex flex-col justify-center">
 
 <div class="text-4xl text-red-400 leading-relaxed mb-6">
 The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 </div>
 
-<div class="text-lg">
-<div class="mb-2">📁 Canonical paths only — no <code>../../../etc/passwd</code></div>
-<div class="mb-2">🔒 Read-only by default — explicit whitelist for writes</div>
-<div>🔁 Retry on bad JSON — models <b>will</b> return garbage</div>
+</div>
+
+<div class="flex items-center justify-center">
+<img src="./img/loc-cat-snow.jpg" class="h-full max-h-72 object-contain rounded" />
 </div>
 
 </div>
@@ -1155,7 +1155,10 @@ The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 <!--
 **[~33:00]** "Read-only, sandboxed, canonical paths, no dotfiles, size limits."
 "And retry on bad JSON — because the model WILL sometimes return garbage."
-Image: U.S. fallout shelter sign, CC0 via Wikimedia Commons.
+- Canonical paths only — no ../../../etc/passwd
+- Read-only by default — explicit whitelist for writes
+- Retry on bad JSON — models will return garbage
+Image: Black kitten in snow, Library of Congress, public domain.
 -->
 
 ---

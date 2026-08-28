@@ -23,6 +23,7 @@ All `wiki-*` images are from [Wikimedia Commons](https://commons.wikimedia.org/)
 | `wiki-telegraph-tokyo.jpg` | Telegraph office, Tokyo | [Wikimedia Commons](https://commons.wikimedia.org/) · Public domain |
 | `wiki-telephone-exchange.svg` | Telephone exchange diagram | [Wikimedia Commons](https://commons.wikimedia.org/) · Free license |
 | `wiki-wacs-teletype.jpg` | WACs operating a teletype machine | [Wikimedia Commons](https://commons.wikimedia.org/) · Public domain (U.S. Army) |
+| `loc-cat-snow.jpg` | Black kitten walking in snow | Library of Congress, Prints & Photographs Division · Public domain |
 | `cat-computer.jpg` | Cat at a computer | Source unknown — replace if needed |
 | `sapmachine-logo.png` | SAP Machine JDK logo | [SAP/SapMachine](https://sap.github.io/SapMachine/) · Apache 2.0 |
 | `qr-*.png` | QR codes | Generated for this presentation |
