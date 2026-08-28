@@ -141,21 +141,31 @@ flowchart TB
 
 # What frameworks add on top
 
-<div class="mt-6">
+<div class="grid grid-cols-2 gap-x-12 gap-y-6 mt-8">
 
-<div class="text-xl font-bold">20+ provider adapters</div>
-<div class="text-gray-400 mb-4">OpenAI, Anthropic, llama.cpp, Azure...</div>
+<div>
+<div class="text-2xl font-bold">Provider adapters</div>
+<div class="text-gray-400">OpenAI · Anthropic · llama.cpp · Azure · 20+ more</div>
+</div>
 
-<div class="text-xl font-bold">Retries + rate limiting</div>
-<div class="text-gray-400 mb-4">Production-grade resilience</div>
+<div>
+<div class="text-2xl font-bold">Retries + rate limiting</div>
+<div class="text-gray-400">Production-grade resilience out of the box</div>
+</div>
 
-<div class="text-xl font-bold">Tracing + observability</div>
-<div class="text-gray-400 mb-4">Visibility into what your app does</div>
+<div>
+<div class="text-2xl font-bold">RAG support</div>
+<div class="text-gray-400">Embeddings, vector stores, retrieval pipelines</div>
+</div>
 
-Today we build the <OrangeText>core</OrangeText>.
-<div class="text-gray-400">The rest is wrappers.</div>
+<div>
+<div class="text-2xl font-bold">Observability</div>
+<div class="text-gray-400">Tracing, token counts, cost tracking</div>
+</div>
 
 </div>
+
+<div class="mt-8 text-xl">Today we build the <OrangeText>core</OrangeText>. The rest is wrappers.</div>
 
 <!--
 **[~1:30]** "Provider adapters, retries, tracing — that's real engineering work. We're not replacing that. We're learning what's underneath so you can understand, debug, and extend it."
