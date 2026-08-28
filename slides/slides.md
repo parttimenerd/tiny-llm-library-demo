@@ -1873,28 +1873,39 @@ messages.add(assistant(response));
 You: /plan add a greet() method to Greeter.java and make mvn test pass
 ```
 
-<div class="mt-4 text-gray-400 text-lg">
+<div class="grid grid-cols-2 gap-6 mt-4">
 
-Read-only exploration. You review the plan before execution starts.
+<div>
+
+**Separate conversation, read-only tools, different system prompt:**
+
+```
+You are in planning mode.
+Explore with ls and read-file.
+Call update-plan ONCE with your approach.
+Add each step via todo-add.
+Do NOT write files or run builds.
+```
 
 </div>
 
-<v-click>
+<div v-click>
 
 ```
 --- Plan ready ---
-## Goal
-add a greet() method to Greeter.java and make mvn test pass
-
 ## Plan
-Greeter.java is missing greet(). GreeterTest expects greet("World") → "Hello, World!".
+Greeter.java is missing greet().
+GreeterTest expects greet("World")
+  → "Hello, World!".
 
 ## TODOs
 [ ] #1 Add greet(String name) to Greeter.java
 [ ] #2 Run mvn test to verify
 ```
 
-</v-click>
+</div>
+
+</div>
 
 <!--
 **[~47:00]** "Before touching files, /plan makes the agent explore and write down what it intends to do. You review it before a single file changes. Once accepted, the plan and TODOs are pinned — the model works the list."
