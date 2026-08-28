@@ -1797,19 +1797,6 @@ and workflows
 layout: center
 ---
 
-<div class="big-statement">Not in our chatbot.</div>
-
-<div class="text-xl text-gray-400 mt-4">Shell tools are enough.</div>
-
-<!--
-"You could wrap our ToolSupport into an MCP server in an afternoon. But for today's demo — shell tools are enough."
-MCP spec QR: modelcontextprotocol.io/specification/2026-07-28
--->
-
----
-layout: center
----
-
 <img src="./img/cat-socks-oval-office.jpg" class="absolute inset-0 w-full h-full object-cover" />
 
 ---
