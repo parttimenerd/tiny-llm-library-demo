@@ -1614,15 +1614,15 @@ Client and server negotiate capabilities first — only use features both sides 
 
 ```json
 {
-  "_meta": {
-    "io.modelcontextprotocol/protocolVersion":
-      "2026-07-28",
-    "io.modelcontextprotocol/clientCapabilities":
-      { "elicitation": {} },
-    "io.modelcontextprotocol/clientInfo":
-      { "name": "my-app" }
-  },
-  "method": "tools/call"
+  "method": "tools/call",
+  "params": {
+    "name": "read_file",
+    "arguments": { "path": "src/Main.java" },
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientInfo": { "name": "my-app" }
+    }
+  }
 }
 ```
 
