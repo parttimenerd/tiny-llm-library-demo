@@ -1866,6 +1866,9 @@ flowchart LR
 
 </div>
 
+</div>
+</div>
+
 <!--
 **[~43:30]** "Client declares elicitation support — meaning it can prompt the user for input mid-request. Server declares tools, resources, and prompts. In 2026-07-28, roots and sampling are deprecated; elicitation is the active client capability."
 -->
