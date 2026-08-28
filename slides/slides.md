@@ -91,54 +91,24 @@ First time saying the tagline — will repeat at the Wrap-Up.
 
 # It's Just HTTP
 
-<div class="grid grid-cols-3 gap-6 mt-6 text-center">
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div class="grid grid-cols-1 gap-4 mt-2">
 
 <div class="border border-slate-600 rounded-lg p-4">
 <div class="text-lg font-bold text-orange-400">POST /v1/chat/completions</div>
-<div class="text-gray-400 mt-2">Send a conversation.<br/>Get a reply.</div>
+<div class="text-gray-400 mt-1">Send a conversation. Get a reply.</div>
 </div>
 
 <div class="border border-slate-600 rounded-lg p-4">
 <div class="text-lg font-bold text-orange-400">stream: true</div>
-<div class="text-gray-400 mt-2">Same endpoint.<br/>Tokens arrive as they're generated.</div>
+<div class="text-gray-400 mt-1">Tokens arrive as they're generated.</div>
 </div>
 
 <div class="border border-slate-600 rounded-lg p-4">
 <div class="text-lg font-bold text-orange-400">GET /v1/models</div>
-<div class="text-gray-400 mt-2">What's loaded.<br/>Optional.</div>
+<div class="text-gray-400 mt-1">What's loaded. Optional.</div>
 </div>
-
-</div>
-
-<div class="mt-8 text-xl text-center">
-
-That's the whole API. Everything else is JSON in, JSON out.
-
-</div>
-
-<!--
-"Three endpoints. POST to chat, GET to list models, same endpoint with stream:true for token-by-token output. That's it. Every LLM provider — OpenAI, Anthropic, llama.cpp — speaks a dialect of this."
--->
-
----
-
-# What frameworks add on top
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div>
-
-<div class="text-xl font-bold">20+ provider adapters</div>
-<div class="text-gray-400 mb-4">OpenAI, Anthropic, llama.cpp, Azure...</div>
-
-<div class="text-xl font-bold">Retries + rate limiting</div>
-<div class="text-gray-400 mb-4">Production-grade resilience</div>
-
-<div class="text-xl font-bold">Tracing + observability</div>
-<div class="text-gray-400 mb-4">Visibility into what your app does</div>
-
-Today we build the <OrangeText>core</OrangeText>.
-<div class="text-gray-400">The rest is wrappers.</div>
 
 </div>
 
@@ -159,9 +129,31 @@ flowchart TB
   style http fill:#334155,color:#e2e8f0,stroke:none
 ```
 
-<div class="text-sm text-gray-500 text-center">We build the orange layer today.</div>
+</div>
 
 </div>
+
+<!--
+"Three endpoints. POST to chat, GET to list models, same endpoint with stream:true for token-by-token output. That's it. Every LLM provider — OpenAI, Anthropic, llama.cpp — speaks a dialect of this."
+-->
+
+---
+
+# What frameworks add on top
+
+<div class="mt-6">
+
+<div class="text-xl font-bold">20+ provider adapters</div>
+<div class="text-gray-400 mb-4">OpenAI, Anthropic, llama.cpp, Azure...</div>
+
+<div class="text-xl font-bold">Retries + rate limiting</div>
+<div class="text-gray-400 mb-4">Production-grade resilience</div>
+
+<div class="text-xl font-bold">Tracing + observability</div>
+<div class="text-gray-400 mb-4">Visibility into what your app does</div>
+
+Today we build the <OrangeText>core</OrangeText>.
+<div class="text-gray-400">The rest is wrappers.</div>
 
 </div>
 
