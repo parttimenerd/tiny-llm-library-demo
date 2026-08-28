@@ -26,4 +26,4 @@ All `wiki-*` images are from [Wikimedia Commons](https://commons.wikimedia.org/)
 | `loc-cat-snow.jpg` | Black kitten walking in snow | Library of Congress, Prints & Photographs Division · Public domain |
 | `cat-computer.jpg` | Cat at a computer | Source unknown — replace if needed |
 | `sapmachine-logo.png` | SAP Machine JDK logo | [SAP/SapMachine](https://sap.github.io/SapMachine/) · Apache 2.0 |
-| `qr-*.png` | QR codes | Generated for this presentation |
+| `qr-tiny-llm-demo.png` | QR code → github.com/parttimenerd/tiny-llm-library-demo | Generated for this presentation |

@@ -1411,7 +1411,7 @@ Every LLM has a fixed <OrangeText>context window</OrangeText>. Tool-calling conv
 
 # Four Strategies for Managing History
 
-<img src="./img/qr-project.png" class="absolute top-4 right-4 w-16 z-10" />
+<img src="./img/qr-tiny-llm-demo.png" class="absolute top-4 right-4 w-16 z-10" />
 
 <div class="flex flex-col justify-between h-full">
 
@@ -1483,79 +1483,10 @@ Every LLM has a fixed <OrangeText>context window</OrangeText>. Tool-calling conv
 
 <!--
 **[~39:30]** "There are four common approaches. Dynamic Cutoff is simplest but loses context. Rolling Summaries compress periodically but details fade. Externalized Memory is most powerful but complex. We'll use Hybrid Memory — pin the important messages, summarize the middle, keep recent ones."
--->
-
----
-
-# Why Hybrid?
-
-<div class="grid grid-cols-2 gap-4 mt-2">
-
-<div>
-
-<v-clicks>
-
-<div class="mb-4">
-<div class="text-xl font-bold">📌 Pinned</div>
-<div class="text-gray-400">System prompt: defines who the bot is. Never summarized.</div>
-</div>
-
-<div class="mb-4">
-<div class="text-xl font-bold">🗜️ Summarized</div>
-<div class="text-gray-400">The middle: compressed by the LLM itself. Tool results included, then dropped.</div>
-</div>
-
-<div class="mb-4">
-<div class="text-xl font-bold">💬 Recent</div>
-<div class="text-gray-400">Last 4 messages kept verbatim for coherent follow-up.</div>
-</div>
-
-</v-clicks>
-
-<div class="mt-3" v-click>
-
-The LLM <b>summarizes itself</b> when:
-
-```
-prompt_tokens > 0.8 × contextWindow
-```
-
-</div>
-
-</div>
-
-<div>
-
-<v-click>
-
-<div class="text-sm text-gray-400 mb-2 text-center">Before compaction</div>
-<CtxWindow :overflow="true" :messages="[
-  'sys:SYS',
-  'usr:U1', 'ast:A1',
-  'usr:U2', 'ast:A2',
-  'usr:U3', 'ast:A3 ?:faded'
-]" />
-
-</v-click>
-
-<v-click>
-
-<div class="text-sm text-gray-400 mb-2 mt-1 text-center">After compaction</div>
-<CtxWindow :messages="[
-  'sys:SYS:pinned',
-  'ast:Summary(U1–A3)',
-  'usr:U4', 'tool:Tool result',
-  'ast:A4'
-]" />
-
-</v-click>
-
-</div>
-
-</div>
-
-<!--
-**[~40:30]** "Hybrid Memory has three tiers. The system prompt is pinned — it defines the bot's identity and rules. Everything in the middle gets summarized by the LLM itself. The last 4 messages stay verbatim for coherent follow-up. No external DB needed."
+Hybrid Memory has three tiers: system prompt is pinned (never summarized), the middle gets compressed by the LLM itself, and the last 4 messages stay verbatim for coherent follow-up. Trigger at 80% context usage. No external DB needed.
+- Pinned: system prompt defines who the bot is
+- Summarized: middle compressed by the LLM itself; tool results included then dropped
+- Recent: last 4 messages kept verbatim
 -->
 
 ---
@@ -2647,7 +2578,7 @@ The whole thing is ~500 lines of Java.<br>
   <div>
     <div class="text-lg font-bold mb-3">Project</div>
     <img
-      src="./img/qr-project.png"
+      src="./img/qr-tiny-llm-demo.png"
       alt="QR code for tiny-llm-library-demo GitHub repo"
       class="mx-auto"
       style="width: 50%"
