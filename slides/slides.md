@@ -96,18 +96,24 @@ First time saying the tagline — will repeat at the Wrap-Up.
 <div class="grid grid-cols-1 gap-4 mt-2">
 
 <div class="border border-slate-600 rounded-lg p-4">
+
 <div class="text-lg font-bold text-orange-400">POST /v1/chat/completions</div>
 <div class="text-gray-400 mt-1">Send a conversation. Get a reply.</div>
+
 </div>
 
 <div class="border border-slate-600 rounded-lg p-4">
+
 <div class="text-lg font-bold text-orange-400">stream: true</div>
 <div class="text-gray-400 mt-1">Tokens arrive as they're generated.</div>
+
 </div>
 
 <div class="border border-slate-600 rounded-lg p-4">
+
 <div class="text-lg font-bold text-orange-400">GET /v1/models</div>
 <div class="text-gray-400 mt-1">What's loaded. Optional.</div>
+
 </div>
 
 </div>
@@ -144,23 +150,31 @@ flowchart TB
 <div class="grid grid-cols-2 gap-x-12 gap-y-6 mt-8">
 
 <div>
+
 <div class="text-2xl font-bold">Provider adapters</div>
 <div class="text-gray-400">OpenAI · Anthropic · llama.cpp · Azure · 20+ more</div>
+
 </div>
 
 <div>
+
 <div class="text-2xl font-bold">Retries + rate limiting</div>
 <div class="text-gray-400">Production-grade resilience out of the box</div>
+
 </div>
 
 <div>
+
 <div class="text-2xl font-bold">RAG support</div>
 <div class="text-gray-400">Embeddings, vector stores, retrieval pipelines</div>
+
 </div>
 
 <div>
+
 <div class="text-2xl font-bold">Observability</div>
 <div class="text-gray-400">Tracing, token counts, cost tracking</div>
+
 </div>
 
 </div>
@@ -299,8 +313,6 @@ Time to prove it
 <div class="text-xl text-gray-400 mt-4">
 
 Three endpoints. That's it.
-
-</div>
 
 </div>
 
@@ -653,7 +665,8 @@ Let's Build It
 
 LLMClient + ChatBot
 
-</div></div>
+</div>
+
 </div>
 
 <!--
@@ -901,7 +914,6 @@ Talk is cheap. Let's act.
 
 </div>
 
-</div>
 </div>
 
 <!--
@@ -1269,7 +1281,6 @@ ToolSupport + ToolChatBot
 </div>
 
 </div>
-</div>
 
 <!--
 **[~33:00]** Transition to live coding part 2. "We've seen the theory. Let's write it."
@@ -1386,8 +1397,6 @@ Token Tracking & Summarization
 <div class="text-xl text-gray-400 mt-4">
 
 Infinite conversations, finite window.
-
-</div>
 
 </div>
 
