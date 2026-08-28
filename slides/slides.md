@@ -1533,11 +1533,6 @@ Every LLM has a fixed <OrangeText>context window</OrangeText>. Tool-calling conv
 
 </div>
 
-<div style="text-xs">
-
-<a href="https://blog.agentailor.com/posts/message-history-summarization-strategies" target="_blank" class="text-gray-600 hover:text-gray-300">agentailor.com: "Smarter Strategies for Summarizing Message History"</a>
-</div>
-
 </div>
 
 <!--
