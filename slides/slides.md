@@ -1382,8 +1382,6 @@ Every LLM has a fixed <OrangeText>context window</OrangeText>. Tool-calling conv
 
 # Detecting the Limit
 
-The API reports token usage in every response:
-
 ```json
 {
   "usage": {
@@ -1396,12 +1394,6 @@ The API reports token usage in every response:
 
 <div class="mt-6">
 
-<div class="text-xl font-bold">Auto-detect window size</div>
-<div class="text-gray-400 mb-3"><code>GET /v1/models</code> → <code>meta.n_ctx_train</code> (e.g. 40 960 tokens)</div>
-
-<div class="text-xl font-bold">Trigger compaction at <OrangeText>80%</OrangeText></div>
-<div class="text-gray-400 mb-3">Leaves headroom for the next response</div>
-
 <div class="relative h-7 rounded overflow-hidden bg-gray-700 mt-2">
   <div class="h-full bg-orange-500/80 rounded" style="width:80%"></div>
   <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">
@@ -1412,7 +1404,7 @@ The API reports token usage in every response:
 </div>
 
 <!--
-**[~39:15]** "The good news: the API already tells us how many tokens we've used via the usage object. We can auto-detect the window size from the models endpoint. We trigger summarization at 80% — leaving headroom for the next response."
+**[~39:15]** "The API reports token usage in every response. Auto-detect window size from GET /v1/models → meta.n_ctx_train (e.g. 40 960 tokens). We trigger summarization at 80% — leaving headroom for the next response."
 -->
 
 ---
