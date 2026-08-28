@@ -2063,56 +2063,6 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url llama
 
 ---
 
-
-# Let's Write a Skill Together
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div>
-
-What should our skill do?
-
-<div class="mt-4 text-gray-400">
-
-Ideas:
-- **viking**: answer in Viking dialect ("Skål, fellow shield-bearer!")
-- **haiku**: all responses as haiku
-- **grumpy-senior**: "Back in my day, we didn't need dependencies..."
-
-</div>
-
-</div>
-
-<div v-click>
-
-**We need two things:**
-
-```text
-.claude/skills/<name>/SKILL.md
-```
-
-```markdown
----
-description: one-line summary
----
-
-Instructions for the agent.
-As specific as you like.
-```
-
-Create it live → `/skill <name>` → see it work.
-
-</div>
-
-</div>
-
-<!--
-**[~49:30]** "Skills are just Markdown files. Let's write one together right now."
-Take one suggestion from the audience. Create the folder + SKILL.md live in the terminal. Then /skill <name> to activate. Ask the agent something — watch the behavior change.
--->
-
----
-
 # Agents Need Memory Limits Too
 
 <div class="mt-8 text-2xl text-center">
