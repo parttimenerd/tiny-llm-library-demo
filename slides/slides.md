@@ -1280,9 +1280,6 @@ Verify the while-loop logic. Correct if needed (e.g., missing retry on malformed
 layout: center
 ---
 
-<img src="./img/cat-computer.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0" />
-<div class="absolute inset-0 bg-black/60 z-0" />
-
 <div class="relative z-10">
 
 # Live Demo: ToolChatBot
