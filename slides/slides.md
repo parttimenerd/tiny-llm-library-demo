@@ -1247,12 +1247,6 @@ flowchart TD
 
 </div>
 
-<div class="text-xl text-center mt-4">
-
-Tool calling is a <OrangeText>while loop</OrangeText>. That's the secret.
-
-</div>
-
 <!--
 **[~30:30]** "The tool calling loop: as long as the model says tool_calls, we execute and send results back."
 -->
