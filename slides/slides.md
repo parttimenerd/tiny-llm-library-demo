@@ -1411,6 +1411,8 @@ Every LLM has a fixed <OrangeText>context window</OrangeText>. Tool-calling conv
 
 # Four Strategies for Managing History
 
+<img src="./img/qr-project.png" class="absolute top-4 right-4 w-16 z-10" />
+
 <div class="flex flex-col justify-between h-full">
 
 <div class="grid grid-cols-4 gap-3 mt-4 flex-grow items-center">
