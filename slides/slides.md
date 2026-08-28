@@ -218,7 +218,6 @@ flowchart TB
   style ca fill:#f97316,color:#000,stroke:none
 ```
 
-<div class="text-sm text-gray-500 text-center">Orange = what we build live</div>
 
 </div>
 
@@ -2262,7 +2261,6 @@ flowchart TB
   style ca fill:#f97316,color:#000,stroke:none
 ```
 
-<div class="text-sm text-gray-500 text-center">Orange = what we built</div>
 
 </div>
 
