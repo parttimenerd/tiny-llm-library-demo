@@ -738,7 +738,7 @@ layout: center
 <div class="text-xl mt-6">
 
 ```bash
-java -jar target/tiny-llm-demo.jar ChatBot --base-url gardener
+java -jar target/tiny-llm-demo.jar ChatBot --base-url llama
 ```
 
 </div>
@@ -1323,7 +1323,7 @@ layout: center
 
 ```bash
 java -jar target/tiny-llm-demo.jar ToolChatBot \
-  --base-url gardener
+  --base-url llama
 ```
 
 </div>
@@ -2276,7 +2276,7 @@ layout: center
 <div class="text-xl mt-8 text-gray-300">
 
 ```bash
-java -jar target/tiny-llm-demo.jar CodingAgent --base-url gardener
+java -jar target/tiny-llm-demo.jar CodingAgent --base-url llama
 ```
 
 </div>
@@ -2394,7 +2394,7 @@ layout: center
 <div class="text-xl mt-8 text-gray-300">
 
 ```bash
-java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url gardener
+java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url llama
 ```
 
 </div>
