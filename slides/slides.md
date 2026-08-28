@@ -522,6 +522,18 @@ sequenceDiagram
 -->
 
 ---
+layout: center
+---
+
+<div class="flex flex-col items-center gap-6">
+
+<img src="./img/sapmachine-logo.png" class="w-48" />
+
+<div class="big-statement">Multimodal: Just Another Content Type</div>
+
+</div>
+
+---
 
 # Multimodal: Just Another Content Type
 
@@ -529,7 +541,7 @@ sequenceDiagram
 
 <div>
 
-```json
+```json {7-9}
 {
   "messages": [{
     "role": "user",
@@ -538,7 +550,7 @@ sequenceDiagram
        "text": "What's in this image?"},
       {"type": "image_url",
        "image_url": {
-         "url": "data:image/png;base64,..."
+         "url": "data:image/png;base64,iVBORw0KGgo..."
        }}
     ]
   }]
@@ -547,64 +559,16 @@ sequenceDiagram
 
 </div>
 
-<div class="flex flex-col justify-center items-center gap-4">
-
-<img src="./img/sapmachine-logo.png" class="w-full rounded" style="max-height:200px;object-fit:contain" />
-
-<div class="text-lg text-gray-400 text-center">
-
-Same endpoint. `content` becomes an array.<br>
-<span class="text-gray-500 text-sm">Same boring pattern.</span>
-
-</div>
-
-</div>
-
-</div>
-
-<!--
-**[~12:30]** "Vision is the same POST — content becomes an array with text and image_url."
-Point at the SapMachine logo: "This is the image we'll send on the next slide."
--->
-
----
-
-# Multimodal: How to Get the Base64
-
-<div class="grid grid-cols-2 gap-6 mt-2">
-
-<div>
+<div class="flex flex-col justify-center gap-4">
 
 ```bash
-# Step 1: encode your image
-base64 -i sapmachine-logo.png
-# → iVBORw0KGgoAAAANSUhEUgAAAWQ
-#   AAAABGdBTUEAALGPC/xhBQAAAi...
-#   (44 KB of base64)
+base64 -i sapmachine-logo.png | pbcopy
 ```
 
-```json
-{
-  "url": "data:image/png;base64,iVBORw0KGgo..."
-}
-```
+<div class="text-lg text-gray-400">
 
-<div class="mt-4 text-gray-400 text-sm">
-
-That's it. Just bytes in a JSON string.
-
-</div>
-
-</div>
-
-<div class="flex flex-col justify-center items-center gap-4">
-
-<img src="./img/sapmachine-logo.png" class="w-full rounded" style="max-height:200px;object-fit:contain" />
-
-<div class="text-sm text-gray-500 text-center">
-
-`base64 -i sapmachine-logo.png | pbcopy`<br>
-Paste it in. Done.
+Same endpoint. `content` becomes an array.<br>
+Image = base64 string in `url`. That's it.
 
 </div>
 
@@ -613,7 +577,7 @@ Paste it in. Done.
 </div>
 
 <!--
-**[~13:00]** "Encode as base64, drop it in the url field. We won't demo this today — just wanted you to see it's mechanical."
+**[~12:30]** "Vision is the same POST — content becomes an array with text and image_url. The image is just base64 in the url field. Same boring pattern."
 -->
 
 ---
