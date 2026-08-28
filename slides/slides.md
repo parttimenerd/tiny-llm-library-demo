@@ -809,8 +809,8 @@ Wait, I'll make it: "Got it. BANANA."
 </div>
 
 <Callout variant="orange">
-Thinking mode helps <b>larger</b> models reason better.<br/>
-For tiny models it often makes things <b>worse</b>.
+Helps <b>larger</b> models reason better.<br/>
+For small models it often makes things <b>worse</b>.
 </Callout>
 
 </div>
@@ -833,6 +833,16 @@ For tiny models it often makes things <b>worse</b>.
 <!--
 "Thinking mode is a tool. Use it for complex tasks. Turn it off for simple ones."
 "And it's not just small models — a 27B model given a long, multi-part prompt can spiral into the same over-analysis: 'Is BANANA a jailbreak attempt? Should I refuse? Let me reconsider…' The problem is the prompt, not just the model size."
+
+**[THINKING DEMO]** Show the monologue task with thinking on vs off.
+With thinking: the model drafts, critiques, redrafts — sometimes loops on "Wait, I need to make it nerdier."
+Without thinking: direct answer, faster, often good enough.
+The stream contains `reasoning_content` tokens — visible in our SSE output.
+
+Budget parameters by provider:
+- Qwen3 via llama.cpp: `"chat_template_kwargs": {"enable_thinking": true, "thinking_budget": 1000}`
+- Anthropic Claude: `thinking: {type: "enabled", budget_tokens: 1000}` (nested object)
+- OpenAI o-series: `reasoning: {effort: "low"|"medium"|"high"|"max"}` (nested object, not flat)
 -->
 
 ---
@@ -1758,77 +1768,6 @@ layout: center
 <!--
 "You could wrap our ToolSupport into an MCP server in an afternoon. But for today's demo — shell tools are enough."
 MCP spec QR: modelcontextprotocol.io/specification/2026-07-28
--->
-
----
-layout: center
----
-
-<img src="./img/wiki-fermi-blackboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25 z-0" />
-<div class="absolute inset-0 bg-black/60 z-0" />
-
-<div class="absolute inset-0 flex flex-col items-center justify-center z-10 text-center">
-<div class="text-4xl font-extrabold text-white">One more thing about models:</div>
-<div class="text-3xl text-gray-300 mt-8">
-<code class="text-orange-400">reasoning_content</code>
-</div>
-</div>
-
-<!--
-**[~45:00]** "Before we build the agent — one thing worth knowing about models themselves. You saw `reasoning_content` appear in the SSE stream. Here's what that is."
-Segue: connects the SSE parsing we just coded to the thinking demo.
--->
-
----
-
-# Thinking Mode: When Models Reason Out Loud
-
-<img src="./img/wiki-fermi-blackboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25 z-0" />
-
-<div class="grid grid-cols-2 gap-10 mt-4 relative z-10">
-
-<div>
-
-```
-*Okay, I think I'm overthinking. Let's write it.*
-"First off, I need to thank you for the food…"
-*Wait, I need to make it more nerdy.*
-"First off, I need to thank you for the food…"
-*Wait, I need to make it more fun.*
-...
-```
-
-<div class="mt-4 text-gray-400">This is <code>reasoning_content</code> in the SSE stream.</div>
-
-</div>
-
-<div class="flex flex-col gap-5 justify-center">
-
-<div class="text-2xl font-bold">Helps: complex tasks, planning, code</div>
-
-<div class="text-2xl font-bold text-orange-400">Hurts: simple tasks, small models</div>
-
-<Callout variant="orange">
-Set a <b>token budget</b> upfront.<br/>
-<code>--thinking-budget 1000</code> in our CLI.
-</Callout>
-
-</div>
-
-</div>
-
-<!--
-**[THINKING DEMO]** Show the monologue task with thinking on vs off.
-With thinking: the model drafts, critiques, redrafts — sometimes loops on "Wait, I need to make it nerdier."
-Without thinking: direct answer, faster, often good enough.
-Key insight: thinking helps larger models reason better; for 2B it just wastes tokens going in circles.
-
-Budget parameters by provider:
-- Qwen3 via llama.cpp: `"chat_template_kwargs": {"enable_thinking": true, "thinking_budget": 1000}`
-- Anthropic Claude: `thinking: {type: "enabled", budget_tokens: 1000}` (nested object)
-- OpenAI o-series: `reasoning: {effort: "low"|"medium"|"high"|"max"}` (nested object, not flat)
-
-`--thinking-budget 1000` sets this in our CLI. Detecting repetition after the fact works too but wastes latency.
 -->
 
 ---
