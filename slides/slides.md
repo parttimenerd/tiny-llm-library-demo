@@ -1748,40 +1748,16 @@ and workflows
 -->
 
 ---
+layout: center
+---
 
-# MCP: Your Homework
+<div class="big-statement">Not in our chatbot.</div>
 
-<img src="./img/wiki-cat-reading.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15 z-0" />
-<div class="absolute inset-0 bg-black/65 z-0" />
-
-<Callout variant="blue">
-You've already built the engine. MCP is just the protocol wrapper around it.
-</Callout>
-
-<div class="grid grid-cols-2 gap-8 mt-6">
-
-<div class="text-xs">
-
-| | 2024-11-05 | MCP 2.0 · 2026-07-28 |
-|---|---|---|
-| Auth | none | OAuth 2.1 |
-| Transport | HTTP+SSE | Streamable HTTP |
-| Tool annotations | — | read-only / destructive |
-| Structured output | — | ✓ |
-| Elicitation | — | server asks user |
-| Handshake | `initialize` | stateless `_meta` |
-
-</div>
-
-<div class="flex flex-col items-center justify-center gap-3">
-  <img src="./img/qr-mcp-spec.png" class="w-32 h-32" />
-  <div class="text-xs text-gray-400 text-center">modelcontextprotocol.io<br/>specification/2026-07-28</div>
-</div>
-
-</div>
+<div class="text-xl text-gray-400 mt-4">Shell tools are enough.</div>
 
 <!--
-"You could build an MCP client by wrapping our ToolSupport. MCP is gaining traction fast — four versions since Nov 2024. The July 2026 spec made it fully stateless: no handshake, capabilities travel in every request. Check the spec."
+"You could wrap our ToolSupport into an MCP server in an afternoon. But for today's demo — shell tools are enough."
+MCP spec QR: modelcontextprotocol.io/specification/2026-07-28
 -->
 
 ---
