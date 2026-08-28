@@ -1606,31 +1606,9 @@ Client and server negotiate capabilities first — only use features both sides 
 
 # Lifecycle <Badge>MCP 2.0 · 2026-07-28</Badge>
 
-<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="flex justify-center mt-6">
 
-<div>
-
-**Every request is self-contained:**
-
-```json
-{
-  "method": "tools/call",
-  "params": {
-    "name": "read_file",
-    "arguments": { "path": "src/Main.java" },
-    "_meta": {
-      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-      "io.modelcontextprotocol/clientInfo": { "name": "my-app" }
-    }
-  }
-}
-```
-
-</div>
-
-<div>
-
-```mermaid {scale: 0.62}
+```mermaid {scale: 0.75}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1646,7 +1624,6 @@ sequenceDiagram
     end
 ```
 
-</div>
 </div>
 
 <!--
