@@ -2016,7 +2016,7 @@ Skills
 
 <div class="text-xl text-gray-400 mt-4">
 
-Project conventions, loaded <OrangeText>only when needed</OrangeText>.
+Reusable instructions the agent loads <OrangeText>on demand</OrangeText>.
 
 </div>
 </div>
