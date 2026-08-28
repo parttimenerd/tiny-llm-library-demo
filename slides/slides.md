@@ -1818,6 +1818,12 @@ MCP spec QR: modelcontextprotocol.io/specification/2026-07-28
 layout: center
 ---
 
+<img src="./img/cat-socks-oval-office.jpg" class="absolute inset-0 w-full h-full object-cover" />
+
+---
+layout: center
+---
+
 <img src="./img/wiki-apollo10-mission-control.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
 
 <div class="absolute inset-0 bg-black/45 z-0" />
