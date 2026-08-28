@@ -1201,7 +1201,7 @@ Could the AI just call shell scripts directly?
 layout: center
 ---
 
-<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full object-cover opacity-40" />
+<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full opacity-40" style="object-fit: fill;" />
 <div class="absolute inset-0 bg-black/40 z-0" />
 
 <div class="relative z-10">
@@ -1229,35 +1229,9 @@ ToolSupport + ToolChatBot
 
 # Live Coding: ToolSupport
 
-<div class="grid grid-cols-2 gap-6 mt-2">
+<div class="flex justify-center mt-4">
 
-<div>
-
-```java
-public class ToolSupport {
-    private final Map<String, ToolDef> tools = new LinkedHashMap<>();
-
-    // TODO: registerTool(name, description, schema, handler)
-    // TODO: buildToolsJson() → JSON array for the API request
-    // TODO: handleToolLoop(client, messages):
-    //   loop: choice = client.chatRaw(messages, tools)
-    //   if finish_reason == "stop" → return content
-    //   else: add assistant message + execute each tool_call → add tool result messages
-    //   repeat until "stop" (or max iterations)
-}
-```
-
-<div class="mt-4 text-lg">
-
-Tool calling is a <OrangeText>while loop</OrangeText>. That's the secret.
-
-</div>
-
-</div>
-
-<div class="flex flex-col justify-center">
-
-```mermaid {theme: 'dark', scale: 0.85}
+```mermaid {theme: 'dark', scale: 1.1}
 flowchart TD
   A[send messages + tools] --> B{finish_reason?}
   B -->|tool_calls| C[execute each tool]
@@ -1273,10 +1247,35 @@ flowchart TD
 
 </div>
 
+<div class="text-xl text-center mt-4">
+
+Tool calling is a <OrangeText>while loop</OrangeText>. That's the secret.
+
 </div>
 
 <!--
-**[~30:30]** "Register tools, build the JSON array, and then a while loop: as long as the model says tool_calls, we execute and send results back."
+**[~30:30]** "The tool calling loop: as long as the model says tool_calls, we execute and send results back."
+-->
+
+---
+
+# Live Coding: ToolSupport
+
+```java
+public class ToolSupport {
+    private final Map<String, ToolDef> tools = new LinkedHashMap<>();
+
+    // TODO: registerTool(name, description, schema, handler)
+    // TODO: buildToolsJson() → JSON array for the API request
+    // TODO: handleToolLoop(client, messages):
+    //   loop: choice = client.chatRaw(messages, tools)
+    //   if finish_reason == "stop" → return content
+    //   else: add assistant message + execute each tool_call → add tool result messages
+    //   repeat until "stop" (or max iterations)
+}
+```
+
+<!--
 Let Copilot generate each method via inline completions. Walk through what it produces.
 "Notice Copilot understands the tool-calling loop pattern — it knows the OpenAI API conventions."
 Verify the while-loop logic. Correct if needed (e.g., missing retry on malformed JSON).
