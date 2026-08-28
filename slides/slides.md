@@ -331,13 +331,13 @@ Don't mention JSON-RPC or MCP here — save it for Part 7.
 
 # Simple Chat Completion
 
-<div class="grid grid-cols-2 gap-6 mt-2">
+<div class="grid grid-cols-2 gap-6 mt-2 text-sm">
 
 <div>
 
 **Request:**
 
-```bash {1|4|5-8|all}
+```bash
 curl -X POST .../v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -355,7 +355,7 @@ curl -X POST .../v1/chat/completions \
 
 **Response:**
 
-```json {1-5|6|8-11|all}
+```json
 {
   "choices": [{
     "message": {
