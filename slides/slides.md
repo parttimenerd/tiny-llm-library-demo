@@ -916,7 +916,10 @@ Two building blocks.
 {
   "type": "object",
   "properties": {
-    "path": { "type": "string", "description": "Directory path" }
+    "path": {
+      "type": "string",
+      "description": "Directory path"
+    }
   },
   "required": ["path"]
 }
@@ -1141,7 +1144,10 @@ curl -X POST http://localhost:8080/v1/chat/completions \
         "parameters": {
           "type": "object",
           "properties": {
-              "path": {"type": "string", "description": "Directory path"}
+              "path": {
+                "type": "string",
+                "description": "Directory path"
+              }
           },
           "required": ["path"]
         }
