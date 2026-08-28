@@ -2093,34 +2093,21 @@ The codeword survived compaction. It's inside the summary.
 
 ---
 
-# One More Thing: The Agent Edits Itself 🪞
+# One More Thing: The Agent Edits Itself
 
-<div class="grid grid-cols-2 gap-6 mt-4 text-base">
-
-<div>
-
-**The prompt:**
+<div class="mt-4 text-lg text-gray-300">
 
 ```
-Add a tool to the coding agent
-to count the r's in a string
+You: Add a tool to the coding agent to count the r's in a string
 ```
 
 </div>
 
-<div>
-
-**What happens:**
-
-</div>
-
-</div>
-
-```mermaid {theme: 'dark', scale: 0.8}
+```mermaid {theme: 'dark', scale: 0.88}
 flowchart LR
   A["🔍 read CodingTools.java"] --> B["✍️ add method + register tool"]
   B --> C["🔧 mvn -q package"]
-  C -->|green| D["🛠️ call own new tool"]
+  C -->|green| D["🛠️ call its own new tool"]
   C -->|error| B
   style A fill:#334155,color:#e2e8f0,stroke:none
   style B fill:#334155,color:#e2e8f0,stroke:none
@@ -2128,9 +2115,9 @@ flowchart LR
   style D fill:#f97316,color:#000,stroke:none
 ```
 
-<div class="mt-2 text-xl">
+<div class="mt-2 text-xl text-center">
 
-Plain request → agent reads, writes, builds, verifies. <OrangeText>Boring engineering, reliable outcome.</OrangeText>
+Plain request. No skill file. <OrangeText>Boring engineering, reliable outcome.</OrangeText>
 
 </div>
 
