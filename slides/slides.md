@@ -52,7 +52,7 @@ The API
 
 <div class="text-xl text-gray-400 mt-4">
 
-What's actually happening under the hood?
+What's under the hood?
 
 </div>
 </div>
@@ -264,7 +264,9 @@ Time to prove it
 
 <div class="text-xl text-gray-400 mt-4">
 
-Three endpoints. That's the whole API.
+Three endpoints. That's it.
+
+</div>
 
 </div>
 
@@ -617,7 +619,7 @@ Let's Build It
 
 LLMClient + ChatBot
 
-</div>
+</div></div>
 </div>
 
 <!--
@@ -851,7 +853,9 @@ Tool Calling
 
 <div class="text-xl text-gray-400 mt-4">
 
-Our chatbot can talk, but it can't <i>do</i> anything. Let's fix that.
+Talk is cheap. Let's act.
+
+</div>
 
 </div>
 </div>
@@ -1218,6 +1222,8 @@ Adding Tools
 ToolSupport + ToolChatBot
 
 </div>
+
+</div>
 </div>
 
 <!--
@@ -1334,7 +1340,9 @@ Token Tracking & Summarization
 
 <div class="text-xl text-gray-400 mt-4">
 
-Context windows aren't infinite. Here's how to manage them.
+Infinite conversations, finite window.
+
+</div>
 
 </div>
 
@@ -1493,9 +1501,6 @@ Hybrid Memory has three tiers: system prompt is pinned (never summarized), the m
 layout: center
 ---
 
-<img src="./img/wiki-telephone-exchange.svg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
-<div class="absolute inset-0 bg-black/55 z-0" />
-
 <div class="relative z-10">
 <div class="section-header">Part 7</div>
 
@@ -1507,7 +1512,7 @@ Briefly: MCP
 
 <div class="text-xl text-gray-400 mt-4">
 
-MCP is everywhere in the news. Here's the boring protocol it's built on.
+The boring protocol behind the buzz.
 
 </div>
 </div>
@@ -1520,6 +1525,8 @@ Keep this to 3 minutes. Slides only, no demos.
 ---
 
 # Model Context Protocol (MCP)
+
+<img src="./img/qr-mcp-spec.png" class="absolute top-4 right-4 w-16 z-10" />
 
 <div class="mt-4 text-xl">
 
@@ -1546,7 +1553,7 @@ flowchart LR
 
 <div class="mt-8 text-xl text-center">
 
-Any AI app can connect to any tool server. <OrangeText>One protocol to rule them all</OrangeText>.
+<OrangeText>One protocol to rule them all</OrangeText>.
 
 </div>
 
@@ -1965,7 +1972,7 @@ Coding Agent
 
 <div class="text-xl text-gray-400 mt-4">
 
-A chatbot that can actually <OrangeText>change your code</OrangeText>.
+A chatbot that <OrangeText>changes your code</OrangeText>.
 
 </div>
 
