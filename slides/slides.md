@@ -1243,6 +1243,7 @@ Could the AI just call shell scripts directly?
 
 <!--
 **[~33:30]** "Shell scripts seem simpler — but every string the model emits is untrusted input. No validation, no sandbox, no audit trail. Our JSON Schema approach gives us all three for free."
+"So let's build that — ToolSupport and a chatbot that can actually use it."
 -->
 
 ---
@@ -1985,6 +1986,7 @@ java -jar target/tiny-llm-demo.jar CodingAgent --base-url llama
 Watch: update-plan → plan display → you approve → todos created → files written → mvn package → java -jar verify.
 Key moment: show the plan confirmation prompt — agent proposes, human decides.
 Type /todo to show the live TODO pane after.
+"The agent works. But what if we want it to always follow the project's test conventions? Or always answer in a specific style? We'd have to bake that into the system prompt — for every project. Skills solve that."
 -->
 
 ---
@@ -2005,7 +2007,7 @@ Skills
 
 <div class="text-xl text-gray-400 mt-4">
 
-Reusable instructions the agent loads <OrangeText>on demand</OrangeText>.
+Project conventions, loaded <OrangeText>only when needed</OrangeText>.
 
 </div>
 </div>
