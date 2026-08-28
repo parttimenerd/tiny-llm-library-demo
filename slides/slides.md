@@ -1597,14 +1597,9 @@ sequenceDiagram
 </div>
 </div>
 
-<div class="mt-2 text-base text-gray-400">
-
-Client and server <b>negotiate capabilities</b> first. Only use features both sides support.
-
-</div>
-
 <!--
 **[~43:00]** "MCP has a strict lifecycle. First the client and server negotiate what they can do, then they communicate, then they shut down cleanly."
+Client and server negotiate capabilities first — only use features both sides support.
 -->
 
 ---
@@ -1617,15 +1612,17 @@ Client and server <b>negotiate capabilities</b> first. Only use features both si
 
 **Every request is self-contained:**
 
-```json {style:'font-size:0.78em;line-height:1.3'}
+```json
 {
   "_meta": {
-    "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-    "io.modelcontextprotocol/clientCapabilities": { "elicitation": {} },
-    "io.modelcontextprotocol/clientInfo": { "name": "my-app" }
+    "io.modelcontextprotocol/protocolVersion":
+      "2026-07-28",
+    "io.modelcontextprotocol/clientCapabilities":
+      { "elicitation": {} },
+    "io.modelcontextprotocol/clientInfo":
+      { "name": "my-app" }
   },
-  "method": "tools/call",
-  ...
+  "method": "tools/call"
 }
 ```
 
@@ -1652,14 +1649,9 @@ sequenceDiagram
 </div>
 </div>
 
-<div class="mt-2 text-sm text-gray-400">
-
-No `initialize` handshake. Capabilities travel in every request's <code>_meta</code>. Multi-round-trip via <code>resultType: "input_required"</code>.
-
-</div>
-
 <!--
 **[~43:15]** "The big shift in 2026-07-28: no handshake. Each request carries protocol version and client capabilities in _meta. Server can optionally implement server/discover so clients probe upfront. And the new multi-round-trip pattern replaces the old server-initiated sampling/elicitation calls."
+No `initialize` handshake. Capabilities travel in every request's `_meta`. Multi-round-trip via `resultType: "input_required"`.
 -->
 
 ---
