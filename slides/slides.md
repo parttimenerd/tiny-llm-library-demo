@@ -615,7 +615,7 @@ Let's Build It
 
 <div class="text-xl text-gray-400 mt-4">
 
-LLMClient + ChatBot · <OrangeText>~12 min</OrangeText>
+LLMClient + ChatBot
 
 </div>
 </div>
@@ -1240,7 +1240,7 @@ Adding Tools
 
 <div class="text-xl text-gray-400 mt-4">
 
-ToolSupport + ToolChatBot · <OrangeText>~5 min</OrangeText>
+ToolSupport + ToolChatBot
 
 </div>
 </div>
