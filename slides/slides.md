@@ -1193,8 +1193,6 @@ Could the AI just call shell scripts directly?
 
 </div>
 
-</div>
-
 <!--
 **[~33:30]** "Shell scripts seem simpler — but every string the model emits is untrusted input. No validation, no sandbox, no audit trail. Our JSON Schema approach gives us all three for free."
 -->
