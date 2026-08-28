@@ -41,9 +41,6 @@ Image: LOC librarians with card catalog, public domain via Wikimedia Commons.
 layout: center
 ---
 
-<img src="./img/wiki-telegraph-tokyo.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
-<div class="absolute inset-0 bg-black/50 z-0" />
-
 <div class="relative z-10">
 <div class="section-header">Part 1</div>
 
@@ -66,9 +63,6 @@ What's actually happening under the hood?
 ---
 layout: center
 ---
-
-<img src="./img/wiki-switchboard-1922.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
-<div class="absolute inset-0 bg-black/45 z-0" />
 
 <div class="relative z-10">
 
