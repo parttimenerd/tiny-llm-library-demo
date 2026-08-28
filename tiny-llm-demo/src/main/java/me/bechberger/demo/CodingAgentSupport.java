@@ -2,7 +2,7 @@ package me.bechberger.demo;
 
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Compactor;
-import me.bechberger.demo.util.ModelSize;
+
 import me.bechberger.demo.util.Repl;
 import me.bechberger.demo.util.SessionLog;
 import me.bechberger.femtocli.annotations.Mixin;
@@ -81,7 +81,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
     protected LLMClient createClient(Repl.Builder builder) { return options.createClient(builder); }
 
     protected Compactor createCompactor(LLMClient client) {
-        int contextWindow = client.getContextWindowSize(ModelSize.defaultContextWindowFor(resolveModel()));
+        int contextWindow = client.getContextWindowSize(32768);
         int threshold = maxTokens > 0 ? maxTokens : (int) (contextWindow * 0.8);
         return new Compactor(threshold, 6);
     }

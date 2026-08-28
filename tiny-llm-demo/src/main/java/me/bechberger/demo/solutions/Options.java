@@ -1,7 +1,6 @@
 package me.bechberger.demo.solutions;
 
 import me.bechberger.demo.http.Config;
-import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.annotations.Option;
 
@@ -29,10 +28,9 @@ public class Options {
     @Option(names = {"--thinking-budget"}, description = "Cap thinking tokens (e.g. 1000)", defaultValue = "-1")
     int thinkingBudget;
 
-    /** Resolve --model (name or raw ID) against the config file, falling back to fast. */
+    /** Resolve --model against the config file; returns null if nothing is configured (endpoint default). */
     public String resolveModel() {
-        return ModelSize.resolveModelId(
-                model != null ? model : Config.load().modelFor(baseUrl, ModelSize.FAST.getModelId()));
+        return model != null ? model : Config.load().modelFor(baseUrl, null);
     }
 
     /**

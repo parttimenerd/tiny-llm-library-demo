@@ -1,7 +1,6 @@
 package me.bechberger.demo.summaries;
 
 import me.bechberger.demo.FileTools;
-import me.bechberger.demo.util.ModelSize;
 import me.bechberger.demo.summaries.LLMClient.ChatResult;
 import me.bechberger.demo.summaries.LLMClient.TokenUsage;
 import me.bechberger.femtocli.FemtoCli;
@@ -37,9 +36,9 @@ import java.util.concurrent.Callable;
 public class SummarizingChatBot implements Callable<Integer> {
 
     @Option(names = {"-m", "--model"},
-            description = "Model size: fast (1.7B), medium (9B), slow (27B) (default: ${DEFAULT-VALUE})",
-            defaultValue = "fast")
-    ModelSize modelSize;
+            description = "Model ID or null for endpoint default (default: ${DEFAULT-VALUE})",
+            defaultValue = "")
+    String model;
 
     @Option(names = {"-u", "--base-url"},
             description = "LLM API base URL (default: ${DEFAULT-VALUE})",
@@ -64,11 +63,11 @@ public class SummarizingChatBot implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        String model = modelSize.getModelId();
-        var client = new LLMClient(baseUrl, model, System.out::print);
+        String resolvedModel = model.isEmpty() ? null : model;
+        var client = new LLMClient(baseUrl, resolvedModel, System.out::print);
 
         // Detect context window
-        int contextWindow = client.getContextWindowSize(modelSize.getDefaultContextWindow());
+        int contextWindow = client.getContextWindowSize(32768);
         int threshold = maxTokensOverride > 0
                 ? maxTokensOverride
                 : (int) (contextWindow * THRESHOLD_PERCENT);
@@ -76,7 +75,7 @@ public class SummarizingChatBot implements Callable<Integer> {
         System.out.println("Connecting to " + baseUrl + "...");
         client.listModels();
         System.out.println("\nSummarizing Chatbot ready!");
-        System.out.println("  Model:          " + modelSize.name() + " (" + modelSize.getDescription() + ")");
+        System.out.println("  Model:          " + (resolvedModel != null ? resolvedModel : "(endpoint default)"));
         System.out.println("  Context window:  " + contextWindow + " tokens");
         System.out.println("  Summarize at:    " + threshold + " prompt tokens (" + (int)(THRESHOLD_PERCENT * 100) + "%)");
         System.out.println("  Sandbox root:    " + Path.of(root).toAbsolutePath().normalize());

@@ -243,9 +243,6 @@ flowchart TB
 
 ---
 
-<img src="./img/wiki-llama.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15 z-0" />
-<div class="absolute inset-0 bg-black/60 z-0" />
-
 # Local LLMs: We Use llama.cpp
 
 <div class="grid grid-cols-2 gap-8 mt-6">
@@ -255,7 +252,7 @@ flowchart TB
 **llama-server**: one command, OpenAI-compatible endpoint:
 
 ```bash
-llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
+llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
 # → http://localhost:8080/v1/chat/completions
 ```
 
@@ -280,7 +277,7 @@ llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
 
 <div class="text-xl font-bold text-orange-400 mb-1">⚠️ Hardware</div>
 <div class="text-gray-400">16 GB RAM → 9B fine · Less → use 2B:</div>
-<div class="text-xs text-gray-500 font-mono mt-1">-hf bartowski/Qwen3.5-2B-Instruct-GGUF</div>
+<div class="text-xs text-gray-500 font-mono mt-1">-hf unsloth/Qwen3.5-2B-GGUF:Q8_0</div>
 
 </div>
 
@@ -288,7 +285,7 @@ llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
 
 <!--
 **[~4:30]** **[SHOW OF HANDS]** "Who has run a local LLM?"
-We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 9B model; use `llama-server -hf bartowski/Qwen3.5-2B-Instruct-GGUF` for underpowered hardware.
+We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 9B model; use `llama-server -hf unsloth/Qwen3.5-2B-GGUF:Q8_0` for underpowered hardware.
 (Ollama and LM Studio are fine too — they all expose the same endpoint.)
 -->
 
@@ -1196,7 +1193,11 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 # Security: Tools Are Code Execution
 
-<div class="grid grid-cols-2 gap-8 mt-6">
+<div class="grid grid-cols-2 gap-8 mt-6 h-80">
+
+<div class="flex items-stretch">
+<img src="./img/loc-cat-snow.jpg" class="w-full h-full object-cover rounded" />
+</div>
 
 <div class="flex flex-col justify-center">
 
@@ -1204,10 +1205,6 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 </div>
 
-</div>
-
-<div class="flex items-center justify-center">
-<img src="./img/loc-cat-snow.jpg" class="h-full max-h-72 object-contain rounded" />
 </div>
 
 </div>
@@ -1262,7 +1259,7 @@ Could the AI just call shell scripts directly?
 layout: center
 ---
 
-<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full opacity-40" style="object-fit: fill;" />
+<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full opacity-40 object-cover" />
 <div class="absolute inset-0 bg-black/40 z-0" />
 
 <div class="relative z-10">
@@ -1294,7 +1291,7 @@ ToolSupport + ToolChatBot
 <div class="flex justify-center mt-4">
 
 ```mermaid {theme: 'dark', scale: 1.1}
-flowchart TD
+flowchart LR
   A[send messages + tools] --> B{finish_reason?}
   B -->|tool_calls| C[execute each tool]
   C --> D[append tool results]
