@@ -1983,11 +1983,7 @@ Reusable instructions the agent loads <OrangeText>on demand</OrangeText>.
 ---
 
 
-# Skills: Discover, Activate, Inject
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div>
+# Skills: A Markdown File
 
 ```text
 .claude/skills/
@@ -2004,15 +2000,17 @@ description: Java best practices
 - Run `mvn test` after modifications
 ```
 
-A skill is a Markdown file. Nothing more.
+<div class="mt-4 text-gray-400">A skill is a Markdown file. Nothing more.</div>
 
-</div>
+<!--
+**[~48:30]** "A skill is just a Markdown file with a one-line description in the frontmatter. Discovery reads only the description — cheap. Loading the full content only happens when activated."
+-->
 
-<div>
+---
 
-**Lifecycle:**
+# Skills: Activate on Demand
 
-```mermaid {theme: 'dark', scale: 0.82}
+```mermaid {theme: 'dark', scale: 0.9}
 flowchart LR
   A["startup\nscan skills/\nread description"] -->|"/skill java"| B["read full SKILL.md\nappend to sys prompt"]
   B -->|"/skill java again"| A
@@ -2022,13 +2020,8 @@ flowchart LR
   style C fill:#334155,color:#e2e8f0,stroke:none
 ```
 
-
-</div>
-
-</div>
-
 <!--
-**[~48:30]** "Discovery is cheap — just the description. Loading only happens on activation. And because buildSystemPrompt() is called before every LLM turn, activate/deactivate takes effect on the very next message."
+"Because buildSystemPrompt() is called before every LLM turn, activate/deactivate takes effect on the very next message."
 -->
 
 ---
