@@ -2012,7 +2012,7 @@ description: Java best practices
 
 ```mermaid {theme: 'dark', scale: 0.9}
 flowchart LR
-  A["startup\nscan skills/\nread description"] -->|"/skill java"| B["read full SKILL.md\nappend to sys prompt"]
+  A["startup<br/>scan skills/<br/>read description"] -->|"/skill java"| B["read full SKILL.md<br/>append to sys prompt"]
   B -->|"/skill java again"| A
   B --> C["active on next LLM call"]
   style A fill:#334155,color:#e2e8f0,stroke:none
