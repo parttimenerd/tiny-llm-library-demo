@@ -120,7 +120,7 @@ First time saying the tagline — will repeat at the Wrap-Up.
 
 <div>
 
-```mermaid
+```mermaid {theme: 'dark'}
 flowchart TB
   app["Your Code"]
   fw["Framework<br>(LangChain4j / Spring AI)"]
@@ -131,8 +131,10 @@ flowchart TB
   fw --> http
   http --> llm
 
+  style app fill:#1e293b,color:#e2e8f0,stroke:#475569
   style fw fill:#f97316,color:#000,stroke:none
   style http fill:#334155,color:#e2e8f0,stroke:none
+  style llm fill:#1e293b,color:#e2e8f0,stroke:#475569
 ```
 
 </div>
@@ -187,7 +189,7 @@ flowchart TB
 
 <div>
 
-```mermaid
+```mermaid {theme: 'dark'}
 flowchart TB
   jdk["dependencies<br>(pre-written)"]
   lc["LLMClient"]
@@ -312,7 +314,7 @@ Image: Herman Hollerith with tabulating machine, Leiden 1905. Public domain via 
 </div>
 <div style="margin-top: -1cm" v-click>
 
-```mermaid
+```mermaid {theme: 'dark'}
 sequenceDiagram
   participant App
   participant LLM as LLM Server
@@ -502,7 +504,7 @@ One long-lived HTTP response. Server pushes `data:` lines as tokens are generate
 
 <div>
 
-```mermaid
+```mermaid {theme: 'dark'}
 sequenceDiagram
   participant App
   participant LLM as LLM Server
@@ -968,7 +970,7 @@ var schema = Schemas.object()
 # The Tool Calling Flow
 
 <div style="text-align: center">
-```mermaid
+```mermaid {theme: 'dark'}
 sequenceDiagram
   participant You as App
   participant LLM
@@ -1509,7 +1511,7 @@ MCP is an <OrangeText>open standard</OrangeText> (by Anthropic).
 
 <div class="mt-10 flex justify-center items-center">
 
-```mermaid {scale: 1.2}
+```mermaid {theme: 'dark', scale: 1.2}
 flowchart LR
   app["Your App<br/>(MCP Client)"]
   mcp["MCP<br/>JSON-RPC 2.0"]
@@ -1543,7 +1545,7 @@ flowchart LR
 <div class="flex justify-center" style="margin-top: -2.2cm">
 <div class="w-110">
 
-```mermaid {scale: 0.68}
+```mermaid {theme: 'dark', scale: 0.68}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1581,7 +1583,7 @@ Client and server negotiate capabilities first — only use features both sides 
 
 <div class="flex justify-center mt-6">
 
-```mermaid {scale: 0.75}
+```mermaid {theme: 'dark', scale: 0.75}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1616,7 +1618,7 @@ No `initialize` handshake. Capabilities travel in every request's `_meta`. Multi
 
 Client launches server as a <b>subprocess</b>. Messages on stdin/stdout, newline-delimited.
 
-```mermaid {scale: 0.65}
+```mermaid {theme: 'dark', scale: 0.65}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -1638,7 +1640,7 @@ sequenceDiagram
 
 Server runs <b>independently</b>, handles multiple clients.
 
-```mermaid {scale: 0.65}
+```mermaid {theme: 'dark', scale: 0.65}
 sequenceDiagram
     participant C as Client
     participant S as Server
@@ -2172,7 +2174,7 @@ Image: Widener Library card catalog, public domain via Wikimedia Commons.
 
 <div>
 
-```mermaid
+```mermaid {theme: 'dark'}
 flowchart TB
   jdk["dependencies<br>(pre-written)"]
   lc["LLMClient"]
