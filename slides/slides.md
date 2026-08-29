@@ -931,8 +931,6 @@ Two building blocks.
 { "path": 42 }
 ```
 
-`path` must be a string. The model generates matching JSON.
-
 </div>
 </div>
 
@@ -943,6 +941,8 @@ Two building blocks.
 ---
 
 # JSON Schema with femtoschema
+
+<img src="./img/qr-femtoschema.png" class="absolute top-4 right-4 w-16 z-10" />
 
 ```java
 // Hand-writing JSON Schema maps is tedious. Use femtoschema:
@@ -1090,7 +1090,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 # Tool Calling: The Request
 
-```bash {6-15|all} {style:'font-size:0.72em;line-height:1.3'}
+```bash {6-8|9-25} {style:'font-size:0.72em;line-height:1.3'}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{

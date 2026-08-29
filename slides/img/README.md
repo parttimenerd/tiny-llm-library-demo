@@ -27,3 +27,4 @@ All `wiki-*` images are from [Wikimedia Commons](https://commons.wikimedia.org/)
 | `cat-computer.jpg` | Cat at a computer | Source unknown — replace if needed |
 | `sapmachine-logo.png` | SAP Machine JDK logo | [SAP/SapMachine](https://sap.github.io/SapMachine/) · Apache 2.0 |
 | `qr-tiny-llm-demo.png` | QR code → github.com/parttimenerd/tiny-llm-library-demo | Generated for this presentation |
+| `qr-femtoschema.png` | QR code → github.com/parttimenerd/femtoschema | Generated for this presentation |
