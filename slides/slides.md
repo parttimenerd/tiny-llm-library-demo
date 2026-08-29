@@ -254,9 +254,10 @@ llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
 </div>
 
 <!--
-**[~4:30]** **[SHOW OF HANDS]** "Who has run a local LLM?"
+**[~4:30]** **[SHOW OF HANDS]** "Who has run a local LLM before?"
 We use llama.cpp (llama-server) — minimal, fast, OpenAI-compatible. Default = 9B model; use `llama-server -hf unsloth/Qwen3.5-2B-GGUF:Q8_0` for underpowered hardware.
 (Ollama and LM Studio are fine too — they all expose the same endpoint.)
+Privacy: data stays on your machine. No API costs: run unlimited requests locally. Quality: smaller models than cloud APIs. Hardware: 16 GB RAM → 9B fine, less → use 2B.
 -->
 
 ---
