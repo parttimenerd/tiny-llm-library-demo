@@ -541,10 +541,6 @@ layout: center
 
 # Multimodal: Just Another Content Type
 
-<div class="grid grid-cols-2 gap-6 mt-2">
-
-<div>
-
 ```json {7-9}
 {
   "messages": [{
@@ -554,31 +550,12 @@ layout: center
        "text": "What's in this image?"},
       {"type": "image_url",
        "image_url": {
-         "url": "data:image/png;base64,iVBORw0KGgo..."
+         "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAAA10dzkAAABhGlDQ1BJQ0MgcHJvZmlsZQ..."
        }}
     ]
   }]
 }
 ```
-
-</div>
-
-<div class="flex flex-col justify-center gap-4">
-
-```bash
-base64 -i sapmachine-logo.png | pbcopy
-```
-
-<div class="text-lg text-gray-400">
-
-Same endpoint. `content` becomes an array.<br>
-Image = base64 string in `url`. That's it.
-
-</div>
-
-</div>
-
-</div>
 
 <!--
 **[~12:30]** "Vision is the same POST — content becomes an array with text and image_url. The image is just base64 in the url field. Same boring pattern."
