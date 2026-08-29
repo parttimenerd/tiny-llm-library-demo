@@ -1127,18 +1127,12 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 # Security: Tools Are Code Execution
 
-<div class="grid grid-cols-2 gap-8 mt-6 h-80">
+<img src="./img/loc-cat-snow-cutout.png" class="absolute right-0 bottom-0 h-4/5 z-0 opacity-90" />
 
-<div class="flex items-stretch">
-<img src="./img/loc-cat-snow.jpg" class="w-full h-full object-cover rounded" />
-</div>
-
-<div class="flex flex-col justify-center">
+<div class="relative z-10 mt-10 w-1/2">
 
 <div class="text-4xl text-red-400 leading-relaxed mb-6">
 The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
-</div>
-
 </div>
 
 </div>
@@ -1149,7 +1143,7 @@ The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
 - Canonical paths only — no ../../../etc/passwd
 - Read-only by default — explicit whitelist for writes
 - Retry on bad JSON — models will return garbage
-Image: Black kitten in snow, Library of Congress, public domain.
+Image: Black kitten cutout, Library of Congress, public domain.
 -->
 
 ---
