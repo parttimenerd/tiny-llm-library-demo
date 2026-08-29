@@ -478,12 +478,6 @@ data: {"choices":[{"delta":{"content":"."}}]}
 data: [DONE]
 ```
 
-<v-click>
-
-**[Quick poll]** Who's seen SSE before?
-
-</v-click>
-
 <!--
 **[~10:00]** **[QUICK POLL]** "Who's seen SSE before?"
 "Same endpoint as before. Add stream: true and the response stays open — tokens arrive as data: lines."
