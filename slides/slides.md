@@ -1217,7 +1217,7 @@ ToolSupport + ToolChatBot
 
 <div class="flex justify-center mt-4">
 
-```mermaid {theme: 'dark', scale: 1.1}
+```mermaid {theme: 'dark', scale: 0.8}
 flowchart LR
   A[send messages + tools] --> B{finish_reason?}
   B -->|tool_calls| C[execute each tool]
