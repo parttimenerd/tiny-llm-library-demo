@@ -918,8 +918,6 @@ Two building blocks.
 }
 ```
 
-This is how we tell the LLM <OrangeText>what arguments our tools accept</OrangeText>.
-
 </div>
 <div class="mt-4">
 
