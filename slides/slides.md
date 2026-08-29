@@ -1865,7 +1865,7 @@ Explore and produce a plan with TODOs.
 ## Plan
 Greeter.java is missing greet().
 GreeterTest expects greet("World")
-  → "Hello, World!".
+  -> "Hello, World!".
 
 ## TODOs
 [ ] #1 Add greet(String name) to Greeter.java
