@@ -147,39 +147,19 @@ flowchart TB
 
 # What frameworks add on top
 
-<div class="grid grid-cols-2 gap-x-12 gap-y-6 mt-8">
+<div class="grid grid-cols-2 gap-x-12 gap-y-8 mt-10 text-3xl font-bold leading-snug">
 
-<div>
+<div><OrangeText>Provider adapters</OrangeText> for every cloud</div>
 
-<div class="text-2xl font-bold">Provider adapters</div>
-<div class="text-gray-400">OpenAI · Anthropic · llama.cpp · Azure · 20+ more</div>
+<div><OrangeText>Retries</OrangeText> + rate limiting</div>
 
-</div>
+<div><OrangeText>RAG</OrangeText> pipelines + vector stores</div>
 
-<div>
-
-<div class="text-2xl font-bold">Retries + rate limiting</div>
-<div class="text-gray-400">Production-grade resilience out of the box</div>
+<div><OrangeText>Observability</OrangeText> + cost tracking</div>
 
 </div>
 
-<div>
-
-<div class="text-2xl font-bold">RAG support</div>
-<div class="text-gray-400">Embeddings, vector stores, retrieval pipelines</div>
-
-</div>
-
-<div>
-
-<div class="text-2xl font-bold">Observability</div>
-<div class="text-gray-400">Tracing, token counts, cost tracking</div>
-
-</div>
-
-</div>
-
-<div class="mt-8 text-xl">Today we build the <OrangeText>core</OrangeText>. The rest is wrappers.</div>
+<div class="mt-10 text-xl">Today we build the <OrangeText>core</OrangeText>. The rest is wrappers.</div>
 
 <!--
 **[~1:30]** "Provider adapters, retries, tracing — that's real engineering work. We're not replacing that. We're learning what's underneath so you can understand, debug, and extend it."
