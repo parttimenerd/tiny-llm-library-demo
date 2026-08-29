@@ -1187,8 +1187,7 @@ Could the AI just call shell scripts directly?
 layout: center
 ---
 
-<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full opacity-40 object-cover" />
-<div class="absolute inset-0 bg-black/40 z-0" />
+<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full object-cover" />
 
 <div class="relative z-10">
 <div class="section-header">Part 5</div>
