@@ -1129,7 +1129,7 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 # Security: Tools Are Code Execution
 
-<img src="./img/loc-cat-snow-cutout.png" class="absolute right-0 bottom-0 h-4/5 z-0 opacity-90" />
+<img src="./img/loc-cat-snow-cutout.png" class="absolute right-0 bottom-0 h-full z-0 opacity-90" />
 
 <div class="relative z-10 mt-10 w-1/2">
 
