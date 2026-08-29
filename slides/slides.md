@@ -236,12 +236,6 @@ llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
 # → http://localhost:8080/v1/chat/completions
 ```
 
-<div class="mt-4 text-lg">
-
-**[Show of hands]** Who has run a local LLM before?
-
-</div>
-
 </div>
 
 <div class="text-gray-400 mt-2">
