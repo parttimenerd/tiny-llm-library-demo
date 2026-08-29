@@ -1837,26 +1837,26 @@ You: /plan add a greet() method to Greeter.java and make mvn test pass
 
 **System:**
 
-```text {style:'font-size:0.58em;line-height:1.3'}
-You are in planning mode: explore and plan,
-do not execute. Explore with ls and read-file,
-then call update-plan ONCE with a concise
-approach naming the concrete files to create
-and the exact run command that will verify it.
-Add each implementation step exactly once via
-todo-add - never duplicate a step.
-Do NOT write files or run builds. Stop after
+<div class="text-xs font-mono leading-relaxed bg-slate-800 rounded p-3 mt-1 mb-3">
+You are in planning mode: explore and plan,<br>
+do not execute. Explore with ls and read-file,<br>
+then call update-plan ONCE with a concise<br>
+approach naming the concrete files to create<br>
+and the exact run command that will verify it.<br>
+Add each implementation step exactly once via<br>
+todo-add - never duplicate a step.<br>
+Do NOT write files or run builds. Stop after<br>
 plan and TODOs are recorded.
-```
+</div>
 
 **User:**
 
-```text {style:'font-size:0.58em;line-height:1.3'}
-Goal: add a greet() method to Greeter.java
-and make mvn test pass
-
+<div class="text-xs font-mono leading-relaxed bg-slate-800 rounded p-3 mt-1">
+Goal: add a greet() method to Greeter.java<br>
+and make mvn test pass<br>
+<br>
 Explore and produce a plan with TODOs.
-```
+</div>
 
 </div>
 
