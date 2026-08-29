@@ -1132,7 +1132,7 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 <div class="relative z-10 mt-10 w-1/2">
 
 <div class="text-4xl text-red-400 leading-relaxed mb-6">
-The model is <OrangeText>untrusted</OrangeText>.<br>You are the executor.
+The model is <OrangeText>untrusted</OrangeText>.<br><OrangeText>You</OrangeText> are the executor.
 </div>
 
 </div>
