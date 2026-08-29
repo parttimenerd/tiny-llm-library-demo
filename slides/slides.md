@@ -246,17 +246,13 @@ llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
 
 <div class="text-gray-400 mt-2">
 
-<div class="text-xl font-bold text-white mb-1">✅ Privacy</div>
-<div class="mb-3 text-gray-400">Data stays on your machine</div>
+<div class="text-xl font-bold text-white mb-4">✅ Privacy</div>
 
-<div class="text-xl font-bold text-white mb-1">✅ No API costs</div>
-<div class="mb-3 text-gray-400">Run unlimited requests locally</div>
+<div class="text-xl font-bold text-white mb-4">✅ No API costs</div>
 
-<div class="text-xl font-bold text-orange-400 mb-1">⚠️ Quality</div>
-<div class="mb-3 text-gray-400">Smaller models than cloud APIs</div>
+<div class="text-xl font-bold text-orange-400 mb-4">⚠️ Quality</div>
 
 <div class="text-xl font-bold text-orange-400 mb-1">⚠️ Hardware</div>
-<div class="text-gray-400">16 GB RAM → 9B fine · Less → use 2B:</div>
 <div class="text-xs text-gray-500 font-mono mt-1">-hf unsloth/Qwen3.5-2B-GGUF:Q8_0</div>
 
 </div>
