@@ -2073,8 +2073,8 @@ You: Add a tool to the coding agent to count the r's in a string
 
 </div>
 
-```mermaid {theme: 'dark', scale: 0.65}
-flowchart LR
+```mermaid {theme: 'dark', scale: 0.88}
+flowchart TD
   A["🔍 read CodingTools.java"] --> B["✍️ add method + register tool"]
   B --> C["🔧 mvn -q package"]
   C -->|green| D["🛠️ call its own new tool"]
