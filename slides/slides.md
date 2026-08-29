@@ -235,7 +235,7 @@ flowchart TB
 
 ```bash
 llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
-# → http://localhost:8080/v1/chat/completions
+# -> http://localhost:8080/v1/chat/completions
 ```
 
 </div>
@@ -656,9 +656,9 @@ public class LLMClient {
     public static Map<String, Object> assistant(String content) { ... }
     public static Map<String, Object> system(String content) { ... }
 
-    // TODO: chat(messages) → POST /v1/chat/completions → return choices[0].message.content
-    // TODO: processSSELine(line) → strip "data: " → parse JSON → return delta.content (null = [DONE])
-    // TODO: chatStream(messages) → POST stream:true → loop SSE lines via processSSELine → return full text
+    // TODO: chat(messages) -> POST /v1/chat/completions → return choices[0].message.content
+    // TODO: processSSELine(line) -> strip "data: " → parse JSON → return delta.content (null = [DONE])
+    // TODO: chatStream(messages) -> POST stream:true → loop SSE lines via processSSELine → return full text
 }
 ```
 
@@ -1248,11 +1248,11 @@ public class ToolSupport {
     private final Map<String, ToolDef> tools = new LinkedHashMap<>();
 
     // TODO: registerTool(name, description, schema, handler)
-    // TODO: buildToolsJson() → JSON array for the API request
+    // TODO: buildToolsJson() -> JSON array for the API request
     // TODO: handleToolLoop(client, messages):
     //   loop: choice = client.chatRaw(messages, tools)
-    //   if finish_reason == "stop" → return content
-    //   else: add assistant message + execute each tool_call → add tool result messages
+    //   if finish_reason == "stop" -> return content
+    //   else: add assistant message + execute each tool_call -> add tool result messages
     //   repeat until "stop" (or max iterations)
 }
 ```
@@ -1515,7 +1515,7 @@ MCP is an <OrangeText>open standard</OrangeText> (by Anthropic).
 flowchart LR
   app["Your App<br/>(MCP Client)"]
   mcp["MCP<br/>JSON-RPC 2.0"]
-  srv["MCP Server(s)<br/>tools · resources · prompts"]
+  srv["MCP Server(s)<br/>tools / resources / prompts"]
 
   app <--> mcp <--> srv
 
@@ -1590,7 +1590,7 @@ sequenceDiagram
 
     Note over C,S: optional probe
     C->>S: server/discover
-    S-->>C: versions · caps · identity
+    S-->>C: versions / caps / identity
 
     rect rgba(74,222,128,0.15)
     Note over C,S: every request is independent
@@ -1844,7 +1844,7 @@ then call update-plan ONCE with a concise
 approach naming the concrete files to create
 and the exact run command that will verify it.
 Add each implementation step exactly once via
-todo-add — never duplicate a step.
+todo-add - never duplicate a step.
 Do NOT write files or run builds. Stop after
 plan and TODOs are recorded.
 ```
