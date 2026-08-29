@@ -405,7 +405,7 @@ curl -X POST .../v1/chat/completions \
 
 <div class="mt-2">
 
-```bash {1|3|4-8|all}
+```bash {1|2|4-9}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -418,12 +418,6 @@ curl -X POST http://localhost:8080/v1/chat/completions \
     ]
   }'
 ```
-
-</div>
-
-<div class="mt-4 p-3 border border-orange-500/40 rounded bg-orange-500/10 text-lg text-orange-300">
-
-Every framework's "memory" is just a <code>List&lt;Map&lt;String, Object&gt;&gt;</code>.
 
 </div>
 
