@@ -317,18 +317,34 @@ public class CodingAgent extends CodingAgentSupport {
             Schemas.object()
                 .required("question", Schemas.string().withDescription("The question to ask"))
                 .optional("choices",  Schemas.array(Schemas.string()).withDescription("Up to 4 suggested answers"))
+                .optional("default",  Schemas.number().withDescription("1-based index of the default choice (shown highlighted; accepted on Enter)"))
+                .optional("default_reason", Schemas.string().withDescription("One short sentence explaining why this default makes sense"))
                 .toJsonSchema(),
             args -> {
                 String question = CodingTools.str(args, "question");
                 @SuppressWarnings("unchecked")
                 List<String> choices = args.get("choices") instanceof List<?> l
                     ? l.stream().map(Object::toString).toList() : List.of();
+                int defaultIdx = args.get("default") instanceof Number n ? n.intValue() - 1 : -1;
+                String defaultReason = args.get("default_reason") instanceof String s ? s : "";
                 System.out.println("\n" + Ansi.bold(Ansi.cyan("? ")) + Ansi.bold(question));
-                for (int i = 0; i < choices.size(); i++)
-                    System.out.println(Ansi.dim("  " + (i + 1) + ". ") + choices.get(i));
-                if (!choices.isEmpty())
-                    System.out.println(Ansi.dim("  (enter a number or type your own answer)"));
+                for (int i = 0; i < choices.size(); i++) {
+                    if (i == defaultIdx) {
+                        System.out.println(Ansi.bold(Ansi.green("  " + (i + 1) + ". ")) + Ansi.bold(choices.get(i)) + Ansi.green(" ◀ default"));
+                    } else {
+                        System.out.println(Ansi.dim("  " + (i + 1) + ". ") + choices.get(i));
+                    }
+                }
+                if (defaultIdx >= 0 && !defaultReason.isBlank())
+                    System.out.println(Ansi.dim("    (default because: " + defaultReason + ")"));
+                String hint = choices.isEmpty() ? "" : defaultIdx >= 0
+                    ? "  (enter a number, type your own answer, or press Enter for default)"
+                    : "  (enter a number or type your own answer)";
+                if (!hint.isBlank()) System.out.println(Ansi.dim(hint));
                 String answer = repl != null ? repl.prompt("  > ", "") : "";
+                // Empty → use default
+                if (answer.isBlank() && defaultIdx >= 0 && defaultIdx < choices.size())
+                    return choices.get(defaultIdx);
                 if (!choices.isEmpty()) {
                     try { int idx = Integer.parseInt(answer.trim()) - 1;
                           if (idx >= 0 && idx < choices.size()) answer = choices.get(idx);
@@ -404,6 +420,7 @@ public class CodingAgent extends CodingAgentSupport {
 
                 PHASE 2 — QUESTIONS (optional, max 3)
                 If anything is unclear about scope, approach, or constraints, call ask-user with optional numbered choices.
+                Always set a default choice (the most sensible one given the codebase) and a default_reason explaining why.
                 Do NOT ask about things the code already answers.
 
                 PHASE 3 — PLAN

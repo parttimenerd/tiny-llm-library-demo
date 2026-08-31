@@ -268,6 +268,7 @@ public class CodingAgent extends CodingAgentSupport {
 
                 PHASE 2 — QUESTIONS (optional, max 3)
                 If anything is unclear about scope, approach, or constraints, call ask-user with optional numbered choices.
+                Always set a default choice (the most sensible one given the codebase) and a default_reason explaining why.
                 Do NOT ask about things the code already answers.
 
                 PHASE 3 — PLAN
