@@ -1,9 +1,9 @@
 package me.bechberger.demo.solutions;
 
-import me.bechberger.demo.CodingTools;
+import me.bechberger.demo.solutions.CodingTools;
 import me.bechberger.demo.FileTools;
 import me.bechberger.demo.LLMClient;
-import me.bechberger.demo.ToolSupport;
+import me.bechberger.demo.solutions.ToolSupport;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.demo.util.Skills;

@@ -19,7 +19,6 @@ import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 
 import me.bechberger.demo.LLMClient;
-import me.bechberger.demo.ToolSupport;
 
 
 /**
@@ -382,15 +381,55 @@ public final class Repl {
                                 cursor = buf.length();
                                 redrawLine(buf, cursor);
                             }
-                        } else if (b3 == 'C') {    // →
+                        } else if (b3 == 'C') {    // → (right arrow)
                             if (cursor < buf.length()) { cursor++; redrawLine(buf, cursor); }
-                        } else if (b3 == 'D') {    // ←
+                        } else if (b3 == 'D') {    // ← (left arrow)
                             if (cursor > 0) { cursor--; redrawLine(buf, cursor); }
+                        } else if (b3 == 'H') {    // Home (ESC [ H)
+                            cursor = 0; redrawLine(buf, cursor);
+                        } else if (b3 == 'F') {    // End (ESC [ F)
+                            cursor = buf.length(); redrawLine(buf, cursor);
                         } else if (b3 == '3') {    // Delete key (ESC [ 3 ~)
                             while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
                             if (tty.available() > 0) tty.read(); // consume '~'
                             if (cursor < buf.length()) { buf.deleteCharAt(cursor); redrawLine(buf, cursor); }
+                        } else if (b3 == '1') {    // ESC [ 1 ... — Home or Ctrl+Arrow
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                            if (tty.available() > 0) {
+                                int b4 = tty.read();
+                                if (b4 == '~') {   // ESC [ 1 ~ — Home (alternate)
+                                    cursor = 0; redrawLine(buf, cursor);
+                                } else if (b4 == ';') { // ESC [ 1 ; ... — modifier sequences
+                                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                                    if (tty.available() > 0) tty.read(); // consume modifier digit (5=Ctrl)
+                                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                                    if (tty.available() > 0) {
+                                        int b6 = tty.read();
+                                        if (b6 == 'C') {       // Ctrl+→: skip word forward
+                                            while (cursor < buf.length() && buf.charAt(cursor) == ' ') cursor++;
+                                            while (cursor < buf.length() && buf.charAt(cursor) != ' ') cursor++;
+                                            redrawLine(buf, cursor);
+                                        } else if (b6 == 'D') { // Ctrl+←: skip word backward
+                                            while (cursor > 0 && buf.charAt(cursor - 1) == ' ') cursor--;
+                                            while (cursor > 0 && buf.charAt(cursor - 1) != ' ') cursor--;
+                                            redrawLine(buf, cursor);
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (b3 == '4') {    // ESC [ 4 ~ — End (alternate)
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                            if (tty.available() > 0) tty.read(); // consume '~'
+                            cursor = buf.length(); redrawLine(buf, cursor);
                         }
+                    } else if (b2 == 'b') {        // Alt+← (word backward, xterm)
+                        while (cursor > 0 && buf.charAt(cursor - 1) == ' ') cursor--;
+                        while (cursor > 0 && buf.charAt(cursor - 1) != ' ') cursor--;
+                        redrawLine(buf, cursor);
+                    } else if (b2 == 'f') {        // Alt+→ (word forward, xterm)
+                        while (cursor < buf.length() && buf.charAt(cursor) == ' ') cursor++;
+                        while (cursor < buf.length() && buf.charAt(cursor) != ' ') cursor++;
+                        redrawLine(buf, cursor);
                     }
                 } else if (b >= 32) {              // printable character
                     buf.insert(cursor++, (char) b);
@@ -466,7 +505,7 @@ public final class Repl {
         /**
          * Wire a ToolSupport so the pane rerenders for todo/plan tools.
          */
-        public Builder withTools(ToolSupport toolSupport) {
+        public Builder withTools(ToolCallListener toolSupport) {
             if (pane != null) {
                 toolSupport.setOnToolCall((name, result) -> {
                     if (name.startsWith("todo-") || name.equals("update-plan")) pane.run();

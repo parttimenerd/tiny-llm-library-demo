@@ -2,6 +2,8 @@ package me.bechberger.demo.solutions;
 
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
+import me.bechberger.demo.LLMClient;
+import me.bechberger.demo.util.Ansi;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -13,7 +15,7 @@ import java.util.function.Function;
  * Tools are registered directly via {@link #registerTool(String, String, Map, Function)}
  * with name, description, JSON Schema for parameters, and a handler function.
  */
-public class ToolSupport {
+public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
 
     record ToolDef(String name, String description, Map<String, Object> parameterSchema,
                    Function<Map<String, Object>, String> handler) {}
@@ -75,8 +77,9 @@ public class ToolSupport {
 
         String result = callTool(toolName, argumentsJson);
 
-        System.out.println("\n  ⚙ " + toolName + "(" + truncate(argumentsJson, 120) + ")");
-        System.out.println("    → " + truncate(result, 200));
+        System.out.println(Ansi.dim("\n  ⚙ ") + Ansi.bold(toolName)
+                + Ansi.dim("(" + truncateArgs(argumentsJson, 80) + ")"));
+        printResult(result);
 
         if (onToolCall != null) onToolCall.accept(toolName, result);
 
@@ -95,9 +98,26 @@ public class ToolSupport {
         }
     }
 
-    private static String truncate(String s, int max) {
-        if (s == null) return "";
-        s = s.replace("\n", " ");
+    private static String truncateArgs(String json, int max) {
+        if (json == null) return "";
+        // strip outer braces and newlines for inline display
+        String s = json.strip();
+        if (s.startsWith("{") && s.endsWith("}")) s = s.substring(1, s.length() - 1).strip();
+        s = s.replace("\n", " ").replaceAll("\\s+", " ");
         return s.length() <= max ? s : s.substring(0, max) + "…";
+    }
+
+    /** Print the tool result: up to 5 lines, then a "… N more lines" hint. */
+    private static void printResult(String result) {
+        if (result == null || result.isBlank()) return;
+        String[] lines = result.split("\n", -1);
+        int show = Math.min(lines.length, 5);
+        for (int i = 0; i < show; i++) {
+            String line = lines[i].length() > 120 ? lines[i].substring(0, 120) + "…" : lines[i];
+            System.out.println(Ansi.gray("    → ") + Ansi.dim(line));
+        }
+        if (lines.length > show) {
+            System.out.println(Ansi.gray("    … (" + (lines.length - show) + " more lines)"));
+        }
     }
 }

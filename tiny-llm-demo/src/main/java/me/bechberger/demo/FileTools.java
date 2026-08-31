@@ -203,10 +203,10 @@ public class FileTools {
             return p.normalize();
         }
 
-        // Relative: reject hidden segments
+        // Relative: reject path traversal attempts only
         for (String segment : path.split("[/\\\\]")) {
-            if (segment.startsWith(".") && !segment.equals(".")) {
-                throw new SecurityException("Access denied: hidden path segment '" + segment + "'");
+            if (segment.equals("..")) {
+                throw new SecurityException("Access denied: path traversal not allowed");
             }
         }
 
