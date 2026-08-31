@@ -3,7 +3,7 @@ package me.bechberger.demo.solutions;
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
 import me.bechberger.demo.util.Ansi;
-import me.bechberger.demo.util.Compactor;
+import me.bechberger.demo.util.Compactor; // @demo: import me.bechberger.demo.util.Compactor;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -26,18 +26,20 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
     private BiConsumer<String, String> onToolCall = null;
 
     /** If set, checked before each API call to proactively compact when approaching the limit. */
-    private Compactor compactor = null;
-    private LLMClient compactorClient = null;
-    private Runnable onCompact = null;
+    private Compactor compactor = null; // @demo: private Compactor compactor = null;
+    private LLMClient compactorClient = null; // @demo: private LLMClient compactorClient = null;
+    private Runnable onCompact = null; // @demo: private Runnable onCompact = null;
 
     public void setOnToolCall(BiConsumer<String, String> onToolCall) {
         this.onToolCall = onToolCall;
     }
 
+    // @demo: public void setCompactor(Compactor compactor, LLMClient client) { this.setCompactor(compactor, client, null); }
     public void setCompactor(Compactor compactor, LLMClient client) {
         this.setCompactor(compactor, client, null);
     }
 
+    // @demo: public void setCompactor(Compactor compactor, LLMClient client, Runnable onCompact) { this.compactor = compactor; this.compactorClient = client; this.onCompact = onCompact; }
     public void setCompactor(Compactor compactor, LLMClient client, Runnable onCompact) {
         this.compactor = compactor;
         this.compactorClient = client;
@@ -93,7 +95,8 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
         var assistantMessage = Util.asMap(choice.get("message"));
         messages.add(assistantMessage);
         var narration = (String) assistantMessage.get("content");
-        if (narration != null && !narration.isBlank()) System.out.print("  " + Ansi.renderMarkdown(narration.strip()));
+        if (narration != null && !narration.isBlank())
+            System.out.println(Ansi.cyan("  ↳ ") + Ansi.dim(narration.strip()));
         for (var toolCall : Util.asList(assistantMessage.get("tool_calls"))) {
             maybeCompact(messages);
             messages.add(executeToolCall(Util.asMap(toolCall)));

@@ -2,6 +2,7 @@ package me.bechberger.demo;
 
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
+import me.bechberger.demo.util.Compactor;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -33,6 +34,11 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
     public void setOnToolCall(BiConsumer<String, String> cb) {
         this.onToolCall = cb;
     }
+
+    public void setCompactor(Compactor compactor, LLMClient client) { this.setCompactor(compactor, client, null); }
+    public void setCompactor(Compactor compactor, LLMClient client, Runnable onCompact) {}
+
+    public String getLastToolName() { return null; }
 
     /**
      * Register a tool that the LLM can call.

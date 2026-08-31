@@ -203,7 +203,7 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
             lastUsage = parseTokenUsage(response);
             return Util.asMap(Util.asList(response.get("choices")).getFirst());
         } catch (Exception e) {
-            throw new RuntimeException("Chat with tools failed", e);
+            throw new RuntimeException("chatRaw failed [" + http.getBaseUrl() + "/v1/chat/completions]: " + e.getMessage(), e);
         }
     }
 

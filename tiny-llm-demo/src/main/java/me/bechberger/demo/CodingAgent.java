@@ -45,6 +45,7 @@ public class CodingAgent extends CodingAgentSupport {
         compactor = createCompactor(client);
         var fileTools = new FileTools(rootPath);
         var toolSupport = createToolSupport(fileTools, client);
+        toolSupport.setCompactor(compactor, client, () -> stateMessageIndex = -1);
 
         registerCommands(builder, client, fileTools, toolSupport, messages);
         builder.setLivePane(() -> state.renderPane());
@@ -165,6 +166,7 @@ public class CodingAgent extends CodingAgentSupport {
                 - Exact param names: ls→path, read-file→path, grep→query/path, edit→path/old/new, run→command
                 - All paths are relative to the project root — never use absolute paths
                 - Never search from '/' — use 'find . -name foo' or find-file instead
+                - Never summarize or repeat file/command output — the user sees the tool result directly
 
                 CLARIFYING QUESTIONS:
                 - If the request is ambiguous or could go multiple ways, ask ONE short question before acting.

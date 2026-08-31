@@ -58,6 +58,8 @@ public class HttpHelper {
         this.client = HttpClient.newHttpClient();
     }
 
+    public String getBaseUrl() { return baseUrl; }
+
     private HttpRequest.Builder baseRequest(String path) {
         var builder = HttpRequest.newBuilder().uri(URI.create(baseUrl + path));
         if (apiKey != null && !apiKey.isBlank()) {

@@ -169,6 +169,7 @@ public class CodingAgent extends CodingAgentSupport {
                 - Exact param names: ls→path, read-file→path, grep→query/path, edit→path/old/new, run→command
                 - All paths are relative to the project root — never use absolute paths
                 - Never search from '/' — use 'find . -name foo' or find-file instead
+                - Never summarize or repeat file/command output — the user sees the tool result directly
 
                 CLARIFYING QUESTIONS:
                 - If the request is ambiguous or could go multiple ways, ask ONE short question before acting.
@@ -249,10 +250,14 @@ public class CodingAgent extends CodingAgentSupport {
                     if (outcome.compacted()) {
                         response = toolSupport.handleToolLoop(client, messages);
                     } else {
-                        throw e;
+                        System.err.println(Ansi.yellow("\n[error] ") + e.getMessage());
+                        e.printStackTrace(System.err);
+                        return;
                     }
                 } else {
-                    throw e;
+                    System.err.println(Ansi.yellow("\n[error] ") + e.getMessage());
+                    e.printStackTrace(System.err);
+                    return;
                 }
             } else {
                 Thread.interrupted(); // clear flag
