@@ -1933,40 +1933,32 @@ Then <span class="text-cyan-400">todo-add</span> once per step.<br>
 
 # /plan Loop
 
-```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {'primaryColor': '#1e293b', 'primaryTextColor': '#e2e8f0', 'primaryBorderColor': '#475569', 'lineColor': '#64748b', 'secondaryColor': '#0f172a', 'tertiaryColor': '#1e293b'}}}%%
-flowchart TD
-    A(["/plan &lt;goal&gt;"]) --> B
+```kotlin
+fun handlePlanCommand(goal: String) {
+    val planTools = buildPlanTools() // ls, read-file, ask-user, write-plan
+    val messages = conversation(planningPrompt(), "Goal: $goal …")
 
-    B["🔍 Phase 1: Research\nls · read-file · grep · find-file"]
-    B --> C
+    while (true) {
+        val response = planTools.handleToolLoop(client, messages)
 
-    C{"Questions\nneeded?"}
-    C -- "yes (≤3)" --> D["❓ ask-user\nstructured prompt\n+ numbered choices"]
-    D --> C
-    C -- "no" --> E
+        showPlanDraft()   // print Markdown from write-plan
+        printTodos()      // show TODO list from todo-add calls
 
-    E["📄 write-plan\nMarkdown document\n+ todo-add × N"]
-    E --> F["Show plan draft\n+ TODO list"]
-    F --> G{"User?"}
+        when (prompt("Proceed? [Y/n/feedback]")) {
+            "y", "" -> break
+            "n"     -> { state.clear(); return }
+            else    -> messages += userMessage("Revise: $answer …")
+        }
+    }
 
-    G -- "y / enter" --> H["✅ Accept\nstate.setGoal + setPlan\npinned at context[1]"]
-    G -- "feedback" --> I["Revise\nadd feedback to planMessages"]
-    G -- "n" --> J(["❌ Discard"])
-    I --> B
-
-    H --> K(["▶ Implement the plan step by step"])
-
-    style A fill:#1e40af,color:#e2e8f0,stroke:none
-    style H fill:#166534,color:#e2e8f0,stroke:none
-    style J fill:#991b1b,color:#e2e8f0,stroke:none
-    style K fill:#92400e,color:#e2e8f0,stroke:none
-    style D fill:#164e63,color:#e2e8f0,stroke:none
-    style E fill:#1e3a5f,color:#e2e8f0,stroke:none
+    state.setGoal(goal)
+    state.setPlan(planText)
+    chat("Implement the plan step by step.")
+}
 ```
 
 <!--
-**[~47:10]** "Three phases baked into the prompt — research, optional questions, plan. The iteration loop is explicit: feedback goes back as a user message, the agent revises. Once the user types y, the full Markdown plan is pinned into the state block."
+**[~47:10]** "The loop is simple: run the tool loop (research → questions → write-plan), show the draft, ask the user. Feedback goes back as a message and loops. Once accepted, goal and plan are pinned into the state block — and implementation starts."
 -->
 
 ---
