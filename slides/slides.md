@@ -2153,25 +2153,7 @@ Be thorough on files and errors. Err on the side of including detail.
 
 <img src="./img/qr-claude-cookbook-compaction.png" class="absolute top-4 right-4 w-16 z-10 opacity-70" />
 
-<div class="grid grid-cols-2 gap-4 mt-4">
-
-<div>
-
-```text
-[compact] summarizing 35 messages (87420 tokens)…
-[compact] done — 38 → 6 messages, was 87420 tokens
-```
-
-```text
-You: What codeword did I give you?
-Assistant: FJORD
-```
-
-<div class="text-sm text-gray-400 mt-3">The codeword survived. It's inside the summary.</div>
-
-</div>
-
-<div class="text-xs text-gray-300 bg-gray-800/60 rounded p-3 font-mono leading-relaxed">
+<div class="text-xs text-gray-300 bg-gray-800/60 rounded p-3 font-mono leading-relaxed mt-4">
 
 <div class="text-orange-400 font-bold mb-1">## Task</div>
 Add retry-on-429 to chatRaw. Cap wait at 10s.
@@ -2194,10 +2176,8 @@ generates demo/. Always sync + mvn -q package.
 
 </div>
 
-</div>
-
 <!--
-**[~50:15]** "Here's what the summary actually looks like — five sections, structured, actionable. The compaction log shows 38 messages collapsed to 6. The codeword test proves the key fact survived. The right column is a real example from this project's session."
+**[~50:15]** "Here's what the summary actually looks like — five sections, structured, actionable. A real example from this project's session."
 -->
 
 ---
