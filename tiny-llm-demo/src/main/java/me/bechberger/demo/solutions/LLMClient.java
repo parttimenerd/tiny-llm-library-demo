@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
     private final HttpHelper http;
-    private final String model;
+    private String model;
     private final Consumer<String> onToken;
 
     private me.bechberger.demo.util.LLMClientInterface.TokenUsage lastUsage;
@@ -90,11 +90,17 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
         try {
             var json = Util.asMap(JSONParser.parse(http.get("/v1/models")));
             var models = Util.asList(json.get("data"));
-            models.forEach(m -> System.out.println("  - " + Util.asMap(m).get("id")));
+            models.forEach(m -> {
+                String id = (String) Util.asMap(m).get("id");
+                System.out.println("  " + (id.equals(model) ? Ansi.bold(Ansi.green("* " + id)) : Ansi.dim("  " + id)));
+            });
         } catch (Exception e) {
             System.err.println("Error listing models: " + e.getMessage());
         }
     }
+
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
 
     /**
      * Send a message and get a complete response (blocking).

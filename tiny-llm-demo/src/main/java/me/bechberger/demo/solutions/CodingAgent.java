@@ -210,7 +210,19 @@ public class CodingAgent extends CodingAgentSupport {
                         args -> editRules())
                 .on("clear",   "clear conversation, keep system prompt and state", args -> clearConversation(messages))
                 .on("compact", "fold old history into a summary now",        args -> compactNow(client, messages))
-                .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages));
+                .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages))
+                .on("model",   "show or switch model: /model [name]",
+                        args -> {
+                            if (args.isBlank()) {
+                                System.out.println(Ansi.dim("Current: ") + Ansi.bold(client.getModel()));
+                                client.listModels();
+                            } else {
+                                client.setModel(args.trim());
+                                compactor = createCompactor(client);
+                                toolSupport.setCompactor(compactor, client, () -> stateMessageIndex = -1);
+                                System.out.println(Ansi.green("Model switched to: " + client.getModel()));
+                            }
+                        });
     }
 
     // ── chat round ───────────────────────────────────────────────────────────
