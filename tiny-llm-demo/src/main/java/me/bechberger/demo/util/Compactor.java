@@ -102,7 +102,7 @@ public final class Compactor {
         String summary;
         try {
             System.out.println(Ansi.dim("[compact] summarizing " + (recentStart - pinned) + " messages…"));
-            summary = client.chat(List.of(
+            summary = client.chatSimple(List.of(
                     LLMClientInterface.system(SUMMARY_PROMPT), LLMClientInterface.user(text.toString())));
         } catch (Exception e) {
             // compaction must never kill a session - leave history as is, retry next turn
