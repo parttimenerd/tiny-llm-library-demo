@@ -61,7 +61,7 @@ public final class Repl {
      */
     public Repl(String prompt, Scanner scanner) {
         this.scanner = scanner;
-        this.interactive = isStdinScanner(scanner) && new java.io.File("/dev/tty").exists();
+        this.interactive = hasTty();
         this.history = new History(interactive);
         this.prompt = () -> prompt;
         commands.on("exit", "leave the chat", args -> stop(), "quit");
@@ -601,14 +601,9 @@ public final class Repl {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private static boolean isStdinScanner(Scanner scanner) {
-        try {
-            var f = Scanner.class.getDeclaredField("source");
-            f.setAccessible(true);
-            return f.get(scanner) == System.in;
-        } catch (Exception ignored) {
-            return false;
-        }
+    private static boolean hasTty() {
+        try (var f = new java.io.FileInputStream("/dev/tty")) { return true; }
+        catch (Exception e) { return false; }
     }
 
     private static void runStty(String[] cmd) {
