@@ -204,6 +204,7 @@ public class CodingAgent extends CodingAgentSupport {
         syncConversation(messages);
         messages.add(LLMClient.user(input));
         System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
+        System.out.flush();
         String response;
         try {
             response = toolSupport.handleToolLoop(client, messages);
@@ -353,6 +354,7 @@ public class CodingAgent extends CodingAgentSupport {
             if (answer == null) { System.out.println(Ansi.yellow("(no input — plan not accepted)")); return; }
             if (answer.isEmpty() || answer.equalsIgnoreCase("y")) {
                 System.out.println(Ansi.bold(Ansi.green("\nImplementing...")));
+                if (repl != null) repl.resetLivePaneCount();
                 break;
             }
             if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }

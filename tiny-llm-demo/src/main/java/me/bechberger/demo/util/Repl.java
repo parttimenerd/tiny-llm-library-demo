@@ -106,7 +106,7 @@ public final class Repl {
     }
 
     /** Reset pane line counter so next printLivePane() repaints fresh below current output. */
-    void resetLivePaneCount() { lastPaneLines = 0; }
+    public void resetLivePaneCount() { lastPaneLines = 0; }
 
     /** The command table - add your own slash-commands here. */
     public Commands commands() {
