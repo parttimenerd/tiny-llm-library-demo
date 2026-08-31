@@ -289,7 +289,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
         System.out.println(Ansi.divider(58));
     }
 
-    /** Open the full API JSON in nvim/vim, read it back and replace messages in-place. */
+    /** Open the full API JSON in vim, read it back and replace messages in-place. */
     void editState(List<Map<String, Object>> messages, ToolSupport toolSupport) {
         try {
             var obj = new java.util.LinkedHashMap<String, Object>();
@@ -301,7 +301,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
             Files.writeString(tmp, json, StandardCharsets.UTF_8);
 
             String editor = "vi";
-            for (String e : new String[]{"nvim", "vim", "vi"}) {
+            for (String e : new String[]{"vim", "vi"}) {
                 var p = new ProcessBuilder("which", e).start(); p.waitFor();
                 if (p.exitValue() == 0) { editor = e; break; }
             }

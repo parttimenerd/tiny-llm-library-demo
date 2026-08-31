@@ -291,7 +291,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
             Files.writeString(tmp, json, StandardCharsets.UTF_8);
 
             String editor = "vi";
-            for (String e : new String[]{"nvim", "vim", "vi"}) {
+            for (String e : new String[]{"vim", "vi"}) {
                 var p = new ProcessBuilder("which", e).start(); p.waitFor();
                 if (p.exitValue() == 0) { editor = e; break; }
             }
