@@ -136,42 +136,112 @@ public final class Ansi {
     private static String renderTable(String[] lines) {
         // parse rows, skip separator lines (|---|---|)
         var rows = new java.util.ArrayList<String[]>();
-        boolean[] isSeparator = new boolean[lines.length];
-        for (int i = 0; i < lines.length; i++) {
-            String l = lines[i].strip();
-            if (l.replaceAll("[|:\\-\\s]", "").isEmpty()) { isSeparator[i] = true; continue; }
-            String[] cells = splitTableRow(l);
-            rows.add(cells);
+        for (String line : lines) {
+            String l = line.strip();
+            if (l.replaceAll("[|:\\-\\s]", "").isEmpty()) continue;
+            rows.add(splitTableRow(l));
         }
         if (rows.isEmpty()) return String.join("\n", lines) + "\n";
 
-        // compute column widths (plain text, no ANSI)
         int cols = rows.stream().mapToInt(r -> r.length).max().orElse(1);
-        int[] widths = new int[cols];
+
+        // ideal widths — natural content width
+        int[] ideal = new int[cols];
         for (String[] row : rows)
             for (int c = 0; c < row.length; c++)
-                widths[c] = Math.max(widths[c], row[c].strip().length());
+                ideal[c] = Math.max(ideal[c], row[c].strip().length());
+
+        // cap columns so the whole table fits within the terminal
+        int termW = terminalWidth();
+        // borders + padding consume: 1 (left │) + cols * (1 space + 1 space + 1 │) = 1 + cols*3
+        int overhead = 1 + cols * 3;
+        int available = Math.max(termW - overhead, cols * 4); // at least 4 chars per col
+        int[] widths = capColumnWidths(ideal, available);
 
         var sb = new StringBuilder();
         String bar = gray("│");
-        // top border
         sb.append(tableHRule("┌", "┬", "┐", widths)).append("\n");
         for (int ri = 0; ri < rows.size(); ri++) {
             String[] row = rows.get(ri);
-            sb.append(bar);
+            // wrap each cell to its column width
+            String[][] wrapped = new String[cols][];
+            int rowLines = 1;
             for (int c = 0; c < cols; c++) {
                 String cell = c < row.length ? row[c].strip() : "";
-                String rendered = ri == 0 ? bold(inlineMarkdown(cell)) : inlineMarkdown(cell);
-                int pad = widths[c] - cell.length();
-                sb.append(" ").append(rendered).append(" ".repeat(Math.max(0, pad) + 1)).append(bar);
+                wrapped[c] = wordWrap(cell, widths[c]);
+                rowLines = Math.max(rowLines, wrapped[c].length);
             }
-            sb.append("\n");
-            // separator after header row
+            for (int li = 0; li < rowLines; li++) {
+                sb.append(bar);
+                for (int c = 0; c < cols; c++) {
+                    String segment = li < wrapped[c].length ? wrapped[c][li] : "";
+                    String rendered = (ri == 0) ? bold(inlineMarkdown(segment)) : inlineMarkdown(segment);
+                    int pad = widths[c] - segment.length();
+                    sb.append(" ").append(rendered).append(" ".repeat(Math.max(0, pad) + 1)).append(bar);
+                }
+                sb.append("\n");
+            }
             if (ri == 0 && rows.size() > 1)
                 sb.append(tableHRule("├", "┼", "┤", widths)).append("\n");
         }
         sb.append(tableHRule("└", "┴", "┘", widths)).append("\n");
         return sb.toString();
+    }
+
+    /** Word-wrap {@code text} to at most {@code maxWidth} characters per line. */
+    private static String[] wordWrap(String text, int maxWidth) {
+        if (text.length() <= maxWidth) return new String[]{text};
+        var result = new java.util.ArrayList<String>();
+        String[] words = text.split(" ", -1);
+        var line = new StringBuilder();
+        for (String word : words) {
+            // single word longer than maxWidth — hard-break it
+            while (word.length() > maxWidth) {
+                int space = maxWidth - line.length() - (line.length() > 0 ? 1 : 0);
+                if (line.length() > 0 && space <= 0) { result.add(line.toString()); line.setLength(0); space = maxWidth; }
+                if (line.length() > 0) { line.append(' '); space--; }
+                line.append(word, 0, space);
+                word = word.substring(space);
+                if (line.length() >= maxWidth) { result.add(line.toString()); line.setLength(0); }
+            }
+            if (word.isEmpty()) continue;
+            int need = line.length() == 0 ? word.length() : line.length() + 1 + word.length();
+            if (need > maxWidth) { result.add(line.toString()); line.setLength(0); }
+            if (line.length() > 0) line.append(' ');
+            line.append(word);
+        }
+        if (line.length() > 0) result.add(line.toString());
+        return result.toArray(String[]::new);
+    }
+
+    /** Distribute {@code available} chars across columns, shrinking the widest first. */
+    private static int[] capColumnWidths(int[] ideal, int available) {
+        int[] w = ideal.clone();
+        int total = java.util.Arrays.stream(w).sum();
+        while (total > available) {
+            int maxW = 0, maxIdx = 0;
+            for (int c = 0; c < w.length; c++) if (w[c] > maxW) { maxW = w[c]; maxIdx = c; }
+            if (maxW <= 1) break;
+            w[maxIdx]--;
+            total--;
+        }
+        return w;
+    }
+
+    /** Terminal width: try $COLUMNS env, then stty, fall back to 120. */
+    static int terminalWidth() {
+        String cols = System.getenv("COLUMNS");
+        if (cols != null) { try { return Integer.parseInt(cols.trim()); } catch (NumberFormatException ignored) {} }
+        try {
+            var pb = new ProcessBuilder("stty", "size");
+            pb.redirectInput(new java.io.File("/dev/tty"));
+            var proc = pb.start();
+            String out = new String(proc.getInputStream().readAllBytes()).trim();
+            proc.waitFor();
+            String[] parts = out.split("\\s+");
+            if (parts.length >= 2) return Integer.parseInt(parts[1]);
+        } catch (Exception ignored) {}
+        return 120;
     }
 
     private static String tableHRule(String left, String mid, String right, int[] widths) {
