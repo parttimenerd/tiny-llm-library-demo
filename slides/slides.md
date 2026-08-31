@@ -2181,30 +2181,36 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url llama
 
 # Agents Need Memory Limits Too
 
-<div class="mt-6 text-2xl text-center">
+<div class="mt-4 text-lg text-center text-gray-400">
 
 Tool-call transcripts inflate history <OrangeText>fast</OrangeText>.
 
 </div>
 
-<div class="mt-6 text-lg text-center text-gray-400">
-
-What does the summary prompt look like?
-
-</div>
-
-<div class="mt-4">
+<div class="mt-2">
 
 ```text
 Summarize this coding session so work can resume in a new context window.
 Do NOT call any tools. Wrap your summary in <summary></summary> tags.
 Write in a way that enables immediate resumption of the task.
 
-## Task       — what the user asked for and any constraints
-## Done       — completed steps, files modified, key decisions
-## Errors     — problems hit and fixes (quote error messages verbatim)
-## Next       — remaining steps in priority order, blockers
-## Context    — user preferences, promises made, non-obvious constraints
+## Task
+What the user asked for and any constraints.
+
+## Done
+Completed steps, files created/modified (with paths), key decisions and their rationale.
+
+## Errors
+Problems hit and how they were resolved. Quote error messages verbatim.
+
+## Next
+Remaining steps in priority order. Open questions or blockers.
+
+## Context
+User preferences, non-obvious constraints, promises made to the user,
+anything that would prevent duplicate work.
+
+Be thorough on files and errors. Err on the side of including detail.
 ```
 
 </div>
