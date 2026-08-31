@@ -107,17 +107,17 @@ public class AgentState {
         if (isEmpty()) return null;
         var sb = new StringBuilder();
         sb.append(Ansi.divider(58)).append("\n");
-        if (!goal.isBlank()) {
+        if (!goal.isBlank())
             sb.append(Ansi.bold(Ansi.cyan("Goal: "))).append(goal).append("\n");
+        if (!plan.isBlank()) {
+            String planHint = plan.lines().filter(l -> !l.isBlank()).findFirst().orElse("");
+            if (planHint.startsWith("#")) planHint = planHint.replaceFirst("^#+\\s*", "");
+            if (!planHint.isBlank())
+                sb.append(Ansi.dim("Plan: " + planHint)).append("\n");
         }
-        if (!todos.isEmpty()) {
-            for (var t : todos) {
-                sb.append(t.status().colorSymbol()).append(" ")
-                  .append(Ansi.dim("#" + t.id())).append(" ").append(t.description()).append("\n");
-            }
-        } else if (!plan.isBlank()) {
-            sb.append(Ansi.dim(plan)).append("\n");
-        }
+        for (var t : todos)
+            sb.append(t.status().colorSymbol()).append(" ")
+              .append(Ansi.dim("#" + t.id())).append(" ").append(t.description()).append("\n");
         sb.append(Ansi.divider(58));
         return sb.toString();
     }

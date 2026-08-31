@@ -11,7 +11,11 @@ import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.util.femtoschema.Schemas;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -219,24 +223,74 @@ public class CodingAgent extends CodingAgentSupport {
                                      List<Map<String, Object>> messages, Repl.Chat chat) throws Exception {
         // @stub
         if (goal.isBlank()) { System.out.println("Usage: /plan <goal>"); return; }
+
+        Path planTmpFile = Files.createTempFile("tiny-llm-plan-", ".md");
+        planTmpFile.toFile().deleteOnExit();
+
         var planTools = new ToolSupport();
         CodingTools.registerReadOnlyFileTools(planTools, new FileTools(Path.of(root)));
         CodingTools.registerStateTools(planTools, state, action -> true);
-        var planMessages = LLMClient.conversation(planningPrompt(), "Goal: " + goal + "\n\nExplore and produce a plan with TODOs.");
+
+        planTools.registerTool("ask-user",
+            "Ask the user a clarifying question before drafting the plan. Call after research, before write-plan.",
+            Schemas.object()
+                .required("question", Schemas.string().withDescription("The question to ask"))
+                .optional("choices",  Schemas.array(Schemas.string()).withDescription("Up to 4 suggested answers"))
+                .toJsonSchema(),
+            args -> {
+                String question = CodingTools.str(args, "question");
+                @SuppressWarnings("unchecked")
+                List<String> choices = args.get("choices") instanceof List<?> l
+                    ? l.stream().map(Object::toString).toList() : List.of();
+                System.out.println("\n" + Ansi.bold(Ansi.cyan("? ")) + Ansi.bold(question));
+                for (int i = 0; i < choices.size(); i++)
+                    System.out.println(Ansi.dim("  " + (i + 1) + ". ") + choices.get(i));
+                if (!choices.isEmpty())
+                    System.out.println(Ansi.dim("  (enter a number or type your own answer)"));
+                String answer = repl != null ? repl.prompt("  > ", "") : "";
+                if (!choices.isEmpty()) {
+                    try { int idx = Integer.parseInt(answer.trim()) - 1;
+                          if (idx >= 0 && idx < choices.size()) answer = choices.get(idx);
+                    } catch (NumberFormatException ignored) {}
+                }
+                return answer.isBlank() ? "(no answer)" : answer;
+            });
+
+        planTools.registerTool("write-plan",
+            "Write the complete Markdown plan document. Call exactly once after research and questions.",
+            Schemas.object()
+                .required("plan", Schemas.string().withDescription("Full plan in Markdown"))
+                .toJsonSchema(),
+            args -> {
+                try {
+                    Files.writeString(planTmpFile, CodingTools.str(args, "plan"), StandardCharsets.UTF_8);
+                    return "Plan written.";
+                } catch (IOException e) { return "Error writing plan: " + e.getMessage(); }
+            });
+
+        var planMessages = LLMClient.conversation(planningPrompt(),
+            "Goal: " + goal + "\n\nResearch the codebase, ask any clarifying questions, then write the plan.");
         String response = null;
         while (true) {
             System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
             response = Repl.io(() -> planTools.handleToolLoop(client, planMessages));
-            System.out.println(Ansi.bold("\n─── Plan ready ──────────────────────────────────────────"));
+            if (Files.exists(planTmpFile) && Files.size(planTmpFile) > 0) {
+                System.out.println(Ansi.bold("\n─── Plan draft ──────────────────────────────────────────"));
+                System.out.println(Files.readString(planTmpFile, StandardCharsets.UTF_8));
+                System.out.println(Ansi.bold("─────────────────────────────────────────────────────────"));
+            }
             printTodos();
             String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", "") : "";
             if (answer.isEmpty() || answer.equalsIgnoreCase("y")) break;
             if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
-            // feedback: ask LLM to revise
             state.clear();
-            planMessages.add(LLMClient.user("Please revise the plan based on this feedback: " + answer + "\n\nExplore again if needed, then call update-plan and todo-add to set the revised plan."));
+            planMessages.add(LLMClient.user(
+                "Please revise the plan based on this feedback: " + answer +
+                "\n\nExplore more if needed, ask follow-up questions, then call write-plan with the revised plan and todo-add for each step."));
         }
+        String planText = Files.exists(planTmpFile) ? Files.readString(planTmpFile, StandardCharsets.UTF_8) : "";
         state.setGoal(goal);
+        state.setPlan(planText);
         messages.add(LLMClient.user("/plan " + goal));
         if (response != null) messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
@@ -245,11 +299,26 @@ public class CodingAgent extends CodingAgentSupport {
     }
 
     private String planningPrompt() {
-        return "You are in planning mode: explore and plan, do not execute. " +
-               "Explore with ls and read-file, then call update-plan ONCE with a concise approach " +
-               "naming the concrete files to create and the exact run command that will verify it. " +
-               "Add each implementation step exactly once via todo-add — never duplicate a step. " +
-               "Do NOT write files or run builds. Stop after plan and TODOs are recorded.";
+        return """
+                You are in planning mode. Work in exactly three phases:
+
+                PHASE 1 — RESEARCH
+                Explore with ls, read-file, grep, find-file. Understand the codebase relevant to the goal.
+
+                PHASE 2 — QUESTIONS (optional, max 3)
+                If anything is unclear about scope, approach, or constraints, call ask-user with optional numbered choices.
+                Do NOT ask about things the code already answers.
+
+                PHASE 3 — PLAN
+                Call write-plan with a complete Markdown plan. Include:
+                - A short # title
+                - Approach: what will be done and why
+                - Numbered steps (each step maps to one TODO)
+                - Files to create/modify
+                - Verification: how to test
+
+                After write-plan, call todo-add once per step (in order).
+                Do NOT write files, run commands, or implement anything.""";
     }
 
     protected void printTodos() {
