@@ -225,7 +225,7 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
 
     private static int parseRetryAfter(String errorMsg) {
         var m = java.util.regex.Pattern.compile("(\\d+)\\s*second").matcher(errorMsg);
-        return m.find() ? Integer.parseInt(m.group(1)) + 2 : 32;
+        return Math.min(m.find() ? Integer.parseInt(m.group(1)) + 2 : 32, 10);
     }
 
     /** Parse the usage object of a response, tolerating missing usage entirely. */
