@@ -3,6 +3,7 @@ package me.bechberger.demo.solutions;
 import me.bechberger.demo.AgentState;
 import me.bechberger.demo.FileTools;
 import me.bechberger.util.femtoschema.Schemas;
+import me.bechberger.util.json.CompactPrinter;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -106,8 +107,32 @@ public final class CodingTools {
     }
 
     public static void registerStateTools(ToolSupport ts, AgentState state, Predicate<String> approve) {
-        register(ts, "state-read", "Read the current agent state: goal, plan, and all TODOs with their ids and statuses",
-                args -> state.isEmpty() ? "(no state)" : state.render());
+        ts.registerTool("state-get",
+                "Read one state field as JSON. field: 'goal' (string), 'plan' (string), 'todos' (array of {id,description,status}).",
+                Schemas.object()
+                        .required("field", Schemas.string().withDescription("goal, plan, or todos"))
+                        .toJsonSchema(),
+                args -> switch (str(args, "field")) {
+                    case "goal"  -> CompactPrinter.compactPrint(state.getGoal());
+                    case "plan"  -> CompactPrinter.compactPrint(state.getPlan());
+                    case "todos" -> CompactPrinter.compactPrint(
+                            state.getTodos().stream()
+                                 .map(t -> Map.of("id", t.id(), "description", t.description(), "status", t.status().name().toLowerCase()))
+                                 .toList());
+                    default      -> "Unknown field. Use: goal, plan, todos";
+                });
+
+        ts.registerTool("state-set",
+                "Overwrite one state field. field: 'goal' or 'plan' (value is a plain string).",
+                Schemas.object()
+                        .required("field", Schemas.string().withDescription("goal or plan"))
+                        .required("value", Schemas.string().withDescription("New value"))
+                        .toJsonSchema(),
+                args -> switch (str(args, "field")) {
+                    case "goal" -> { state.setGoal(str(args, "value")); yield "goal updated"; }
+                    case "plan" -> { state.setPlan(str(args, "value")); yield "plan updated"; }
+                    default     -> "Unknown field. Use: goal or plan";
+                });
 
         register(ts, "todo-add", "Add a new TODO item",
                 args -> "Added TODO #" + state.addTodo(str(args, "description")),
@@ -153,10 +178,6 @@ public final class CodingTools {
                     return state.removeTodo(id) ? "Removed TODO #" + id : "Unknown TODO #" + id;
                 },
                 "id", "TODO id to remove");
-
-        register(ts, "set-goal", "Set or clear the current goal",
-                args -> { state.setGoal(str(args, "goal")); return "Goal updated."; },
-                "goal", "New goal text, or empty string to clear");
 
         register(ts, "update-plan", "Record or update the current plan — user must approve before execution begins",
                 args -> {

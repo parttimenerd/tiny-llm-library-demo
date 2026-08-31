@@ -153,8 +153,8 @@ public class CodingAgent extends CodingAgentSupport {
                 - update-plan once with the approach, then todo-add each step
                 - todo-update in_progress when starting a step, completed when done
                 - todo-edit <id> to rename a step or correct a description
-                - state-read to inspect current goal, plan, and all TODOs (use when asked about state)
-                - set-goal to update or clear the current goal
+                - state-get field=goal/plan/todos — read a state field as JSON
+                - state-set field=goal/plan value=... — overwrite goal or plan text
                 - For simple well-known tasks (calculator, hello-world): skip planning, go straight to implementation
 
                 END each turn: one line — what was done and how it was verified.""";
