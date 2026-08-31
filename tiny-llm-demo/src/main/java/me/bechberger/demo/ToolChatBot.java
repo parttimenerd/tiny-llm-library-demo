@@ -1,8 +1,6 @@
 package me.bechberger.demo;
 
 import me.bechberger.demo.FileTools;
-import me.bechberger.demo.LLMClient;
-import me.bechberger.demo.ToolSupport;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
@@ -50,8 +48,8 @@ public class ToolChatBot implements Callable<Integer> {
         var fileTools = new FileTools(Path.of(root));
 
         // Each tool: registerTool(name, description, jsonSchema, handler)
-        // Pre-written to save time — see FileTools.registerTools for ls/read-file/grep/find-file.
-        fileTools.registerTools(toolSupport);
+        // Pre-written to save time — see CodingTools.registerReadOnlyFileTools for ls/read-file/grep/find-file.
+        CodingTools.registerReadOnlyFileTools(toolSupport, fileTools);
         builder.withTools(toolSupport);
 
         var repl = builder.build();

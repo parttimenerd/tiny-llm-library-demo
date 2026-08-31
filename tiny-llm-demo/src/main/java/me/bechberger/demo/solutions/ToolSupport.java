@@ -2,7 +2,6 @@ package me.bechberger.demo.solutions;
 
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
-import me.bechberger.demo.LLMClient;
 import me.bechberger.demo.util.Ansi;
 
 import java.util.*;

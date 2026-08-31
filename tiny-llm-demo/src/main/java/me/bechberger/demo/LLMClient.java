@@ -109,6 +109,12 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
      * @param messages List of message maps with "role" and "content" keys
      * @return The assistant's response text
      */
+    @Override public String chatSimple(List<Map<String, Object>> messages) {
+        boolean prev = thinking;
+        thinking = false;
+        try { return chat(messages); } finally { thinking = prev; }
+    }
+
     public String chat(List<Map<String, Object>> messages) {
         try {
             // TODO: POST /v1/chat/completions → parse JSON → return choices[0].message.content

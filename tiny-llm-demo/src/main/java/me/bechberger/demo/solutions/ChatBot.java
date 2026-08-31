@@ -1,6 +1,5 @@
 package me.bechberger.demo.solutions;
 
-import me.bechberger.demo.LLMClient;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;

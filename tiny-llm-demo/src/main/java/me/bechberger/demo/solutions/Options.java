@@ -34,11 +34,10 @@ public class Options {
     }
 
     /**
-     * Create a fully configured {@link me.bechberger.demo.LLMClient} wired to
-     * {@code builder.tokenCallback}.
+     * Create a fully configured {@link LLMClient} wired to {@code builder.tokenCallback}.
      */
-    public me.bechberger.demo.LLMClient createClient(Repl.Builder builder) {
-        return new me.bechberger.demo.LLMClient(baseUrl, resolveModel(), builder.tokenCallback)
+    public LLMClient createClient(Repl.Builder builder) {
+        return new LLMClient(baseUrl, resolveModel(), builder.tokenCallback)
                 .withThinking(!noThinking)
                 .withThinkingBudget(thinkingBudget);
     }
