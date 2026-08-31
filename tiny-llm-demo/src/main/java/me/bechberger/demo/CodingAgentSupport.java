@@ -183,7 +183,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
                 System.out.println(Ansi.green("  Rule added: allow " + action));
                 return true;
             }
-            if (answer.equals("y!") || answer.equals("yolo")) {
+            if (answer.equals("y!") || answer.equals("yolo") || answer.equals("Y")) {
                 approval = ApprovalMode.YOLO;
                 printMode();
                 return true;

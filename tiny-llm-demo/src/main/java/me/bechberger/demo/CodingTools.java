@@ -106,7 +106,7 @@ public final class CodingTools {
         register(ts, "delete", "Delete a file or folder (folders are deleted recursively). Requires user confirmation.",
                 args -> approve.test("delete: " + args.get("path"))
                         ? fileTools.delete(str(args, "path"))
-                        : "User declined this deletion - ask for reasons, or suggest they enable /yolo mode.",
+                        : "User declined this deletion.",
                 "path", "Path relative to project root");
 
         register(ts, "run", "Run a bash command in the project root and return its output - use it to build and to " +
@@ -114,8 +114,7 @@ public final class CodingTools {
                         "(60s timeout, output truncated at 16KB). Requires user confirmation.",
                 args -> approve.test("run: " + args.get("command"))
                         ? fileTools.run(str(args, "command"))
-                        : "User declined to run this command - ask for reasons, or suggest they enable /yolo mode. " +
-                          "The user can also execute it themselves with /run.",
+                        : "User declined to run this command.",
                 "command", "Bash command to execute in the project root");
     }
 
