@@ -11,9 +11,6 @@ import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
-import me.bechberger.util.femtoschema.Schemas;
-import me.bechberger.util.json.Util;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,34 +82,7 @@ public class CodingAgent extends CodingAgentSupport {
         var toolSupport = new ToolSupport();
         CodingTools.registerFileTools(toolSupport, fileTools, action -> confirm(action, false));
         CodingTools.registerStateTools(toolSupport, state, action -> confirmPlan(action));
-        registerJokeTool(toolSupport, client);
         return toolSupport;
-    }
-
-    /**
-     * The joke tool: a one-off side conversation asking the same LLM for a fresh
-     * programming joke, optionally on a topic. Joke traffic stays out of the main
-     * conversation; token usage is still tracked by the shared client.
-     * Uses {@code chatRaw} so it also works while {@code chat()} is not yet live-coded;
-     * API errors degrade gracefully into tool-error strings via {@code ToolSupport.callTool}.
-     */
-    protected void registerJokeTool(ToolSupport toolSupport, LLMClient client) {
-        toolSupport.registerTool("joke",
-                "Tell a short, clean, nerdy programming joke — freshly generated each time, optionally on a topic. Use when the user asks for a joke or comic relief.",
-                Schemas.object()
-                        .optional("topic", Schemas.string().withDescription("Optional joke topic, e.g. 'Maven'"))
-                        .toJsonSchema(),
-                args -> tellJoke(client, args.containsKey("topic") ? CodingTools.str(args, "topic") : ""));
-    }
-
-    private String tellJoke(LLMClient client, String topic) {
-        var request = "Tell me one short, clean, nerdy programming joke"
-                + (topic.isBlank() ? "" : " about " + topic)
-                + ". Reply with only the joke itself.";
-        var choice = client.chatRaw(LLMClient.conversation(
-                "You are a joke-telling assistant. Short, clean, nerdy programming jokes; reply with only the joke.",
-                request), List.of());
-        return (String) Util.asMap(choice.get("message")).get("content");
     }
 
     protected String buildSystemPrompt() {
