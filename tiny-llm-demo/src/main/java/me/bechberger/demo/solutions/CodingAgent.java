@@ -209,12 +209,20 @@ public class CodingAgent extends CodingAgentSupport {
         var planTools = new ToolSupport();
         CodingTools.registerReadOnlyFileTools(planTools, new FileTools(Path.of(root)));
         CodingTools.registerStateTools(planTools, state, action -> true);
-        System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
-        String response = Repl.io(() -> planTools.handleToolLoop(client,
-                LLMClient.conversation(planningPrompt(), "Goal: " + goal + "\n\nExplore and produce a plan with TODOs.")));
-        System.out.println(Ansi.bold("\n─── Plan ready ──────────────────────────────────────────"));
-        printTodos();
-        if (!confirm("Accept this plan?", true)) { state.clear(); System.out.println("Plan discarded."); return; }
+        var planMessages = LLMClient.conversation(planningPrompt(), "Goal: " + goal + "\n\nExplore and produce a plan with TODOs.");
+        String response = null;
+        while (true) {
+            System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
+            response = Repl.io(() -> planTools.handleToolLoop(client, planMessages));
+            System.out.println(Ansi.bold("\n─── Plan ready ──────────────────────────────────────────"));
+            printTodos();
+            String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", "") : "";
+            if (answer.isEmpty() || answer.equalsIgnoreCase("y")) break;
+            if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
+            // feedback: ask LLM to revise
+            state.clear();
+            planMessages.add(LLMClient.user("Please revise the plan based on this feedback: " + answer + "\n\nExplore again if needed, then call update-plan and todo-add to set the revised plan."));
+        }
         state.setGoal(goal);
         messages.add(LLMClient.user("/plan " + goal));
         if (response != null) messages.add(LLMClient.assistant(response));
