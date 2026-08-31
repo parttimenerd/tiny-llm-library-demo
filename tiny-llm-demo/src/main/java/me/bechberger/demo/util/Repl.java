@@ -357,6 +357,15 @@ public final class Repl {
 
             redrawLine(buf, cursor); // print initial prompt
             while (true) {
+                // Poll so injected input (schedule tool) can interrupt the blocking read
+                while (tty.available() == 0) {
+                    if (injectedInput != null) {
+                        out.write(new byte[]{'\r', '\n'});
+                        out.flush();
+                        return ""; // empty → outer loop picks up injectedInput
+                    }
+                    Thread.sleep(50);
+                }
                 int b = tty.read();
                 if (b == -1) return null;  // EOF
 
