@@ -132,7 +132,7 @@ public class CodingAgent extends CodingAgentSupport {
                     .on("undone", "<id> — mark pending",   (int id) -> state.updateTodo(id, AgentState.Status.PENDING))
                     .on("del",    "<id> — remove",         (int id) -> state.removeTodo(id))
                 .end(() -> { if (state.isEmpty()) System.out.println(Ansi.dim("(no plan or TODOs yet)")); })
-                .on("plan",    "enter planning mode: /plan <goal>",          args -> handlePlanCommand(args, client, messages))
+                .on("plan",    "enter planning mode: /plan <goal>",          args -> { try { handlePlanCommand(args, client, messages, input -> chat(client, toolSupport, messages, input)); } catch (Exception e) { throw new RuntimeException(e); } })
                 .on("run",     "run a shell command, output shared with the agent: /run <cmd>", args -> runForUser(args, fileTools, messages))
                 .on("yolo",    "toggle YOLO mode",                           args -> { approval = approval == ApprovalMode.YOLO ? ApprovalMode.NORMAL : ApprovalMode.YOLO; printMode(); })
                 .on("mode",    "cycle approval mode: NORMAL → AUTO-EDIT → YOLO", args -> { approval = approval.next(); printMode(); })
@@ -203,7 +203,7 @@ public class CodingAgent extends CodingAgentSupport {
      * TODO: live code
      */
     protected void handlePlanCommand(String goal, LLMClient client,
-                                     List<Map<String, Object>> messages) {
+                                     List<Map<String, Object>> messages, Repl.Chat chat) throws Exception {
         // @stub
         if (goal.isBlank()) { System.out.println("Usage: /plan <goal>"); return; }
         var planTools = new ToolSupport();
@@ -227,6 +227,7 @@ public class CodingAgent extends CodingAgentSupport {
         messages.add(LLMClient.user("/plan " + goal));
         if (response != null) messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
+        chat.chat("Implement the plan step by step.");
         // @end
     }
 
