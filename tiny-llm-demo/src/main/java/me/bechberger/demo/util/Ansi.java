@@ -74,6 +74,65 @@ public final class Ansi {
         return isTerminal() ? DIM + line + RESET : line;
     }
 
+    // ── markdown renderer ─────────────────────────────────────────────────────
+
+    /**
+     * Render a Markdown string to ANSI-styled terminal output.
+     * Handles: # headings, **bold**, `code`, fenced code blocks, - / * / 1. lists, --- rules.
+     * Falls back to plain text when not a terminal.
+     */
+    public static String renderMarkdown(String md) {
+        if (md == null) return "";
+        var sb = new StringBuilder();
+        boolean inFence = false;
+        for (String raw : md.split("\n", -1)) {
+            String line = raw.stripTrailing();
+            if (line.startsWith("```")) {
+                inFence = !inFence;
+                continue; // skip fence delimiters
+            }
+            if (inFence) { sb.append(style(CYAN, line)).append("\n"); continue; }
+
+            // headings
+            if (line.startsWith("### ")) { sb.append(bold(yellow(line.substring(4)))).append("\n"); continue; }
+            if (line.startsWith("## "))  { sb.append(bold(cyan(line.substring(3)))).append("\n"); continue; }
+            if (line.startsWith("# "))   { sb.append(bold(header(line.substring(2)))).append("\n"); continue; }
+
+            // horizontal rule
+            if (line.matches("^[-*_]{3,}\\s*$")) { sb.append(divider(58)).append("\n"); continue; }
+
+            // bullet lists
+            if (line.matches("^(\\s*)[-*+] (.*)")) {
+                String indent = line.replaceFirst("^(\\s*)[-*+] .*", "$1");
+                String item   = line.replaceFirst("^\\s*[-*+] ", "");
+                sb.append(indent).append(gray("• ")).append(inlineMarkdown(item)).append("\n");
+                continue;
+            }
+            // numbered lists
+            if (line.matches("^(\\s*)\\d+[.)] (.*)")) {
+                String indent = line.replaceFirst("^(\\s*)\\d+[.)] .*", "$1");
+                String num    = line.replaceFirst("^\\s*(\\d+[.)]) .*", "$1");
+                String item   = line.replaceFirst("^\\s*\\d+[.)] ", "");
+                sb.append(indent).append(bold(num)).append(" ").append(inlineMarkdown(item)).append("\n");
+                continue;
+            }
+
+            sb.append(inlineMarkdown(line)).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private static String inlineMarkdown(String text) {
+        if (!isTerminal()) return text;
+        // inline code: `...`
+        text = text.replaceAll("`([^`]+)`", CYAN + "$1" + RESET);
+        // bold: **...**
+        text = text.replaceAll("\\*\\*([^*]+)\\*\\*", BOLD + "$1" + RESET);
+        // italic: *...*  (after bold)
+        text = text.replaceAll("\\*([^*]+)\\*", DIM + "$1" + RESET);
+        return text;
+    }
+
     /** True when System.out is connected to a real terminal (not redirected). */
     public static boolean isTerminal() {
         return forceTerminal || System.console() != null;

@@ -282,7 +282,7 @@ public class CodingAgent extends CodingAgentSupport {
             response = Repl.io(() -> planTools.handleToolLoop(client, planMessages));
             if (Files.exists(planTmpFile) && Files.size(planTmpFile) > 0) {
                 System.out.println(Ansi.bold("\n─── Plan draft ──────────────────────────────────────────"));
-                System.out.println(Files.readString(planTmpFile, StandardCharsets.UTF_8));
+                System.out.print(Ansi.renderMarkdown(Files.readString(planTmpFile, StandardCharsets.UTF_8)));
                 System.out.println(Ansi.bold("─────────────────────────────────────────────────────────"));
             }
             printTodos();
