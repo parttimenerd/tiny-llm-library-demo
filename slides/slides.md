@@ -2112,9 +2112,8 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url llama
 
 ---
 
-# The Summarization Prompt
-
-<div class="mt-8">
+<img src="./img/qr-claude-cookbook-compaction.png" class="absolute bottom-6 right-6 w-16 z-10 opacity-70" />
+<div class="absolute bottom-7 right-24 text-xs text-gray-500">Inspired by Claude Cookbook</div>
 
 ```text
 Summarize this coding session so work can resume
@@ -2122,30 +2121,7 @@ in a new context window.
 Do NOT call any tools.
 Write in a way that enables immediate resumption.
 Wrap your summary in <summary></summary> tags.
-```
 
-</div>
-
-<div class="mt-8 text-xl text-center text-gray-400">
-
-Five structured sections follow →
-
-</div>
-
-<img src="./img/qr-claude-cookbook-compaction.png" class="absolute bottom-6 right-6 w-16 z-10 opacity-70" />
-<div class="absolute bottom-7 right-24 text-xs text-gray-500">Inspired by Claude Cookbook</div>
-
-<!--
-**[~50:00]** "The summarization prompt matters. Three key constraints up front: don't call tools, enable immediate resumption, wrap in tags so we can extract it cleanly."
--->
-
----
-
-# The Summarization Prompt
-
-<div class="mt-6">
-
-```text
 ## Task
 What the user asked for and any constraints.
 
@@ -2167,12 +2143,8 @@ anything that would prevent duplicate work.
 Be thorough on files and errors. Err on the side of including detail.
 ```
 
-</div>
-
-<img src="./img/qr-claude-cookbook-compaction.png" class="absolute bottom-6 right-6 w-16 z-10 opacity-70" />
-
 <!--
-**[~50:05]** "Five sections. Task, Done, Errors, Next, Context. The model fills these in — and the result lands as a system message at position [1] in the new context window."
+**[~50:00]** "The summarization prompt matters. Five structured sections, plus three constraints up front: don't call tools, enable immediate resumption, wrap in tags so we can extract it cleanly."
 -->
 
 ---
