@@ -299,8 +299,11 @@ public final class Repl {
 
         private boolean tryStty(String[] cmd) {
             try {
-                int exit = new ProcessBuilder(cmd).inheritIO()
-                        .redirectInput(ProcessBuilder.Redirect.from(new java.io.File("/dev/tty")))
+                var devTty = new java.io.File("/dev/tty");
+                int exit = new ProcessBuilder(cmd)
+                        .redirectInput(ProcessBuilder.Redirect.from(devTty))
+                        .redirectOutput(ProcessBuilder.Redirect.to(devTty))
+                        .redirectError(ProcessBuilder.Redirect.to(devTty))
                         .start().waitFor();
                 return exit == 0;
             } catch (Exception e) { return false; }
