@@ -145,6 +145,10 @@ public class CodingAgent extends CodingAgentSupport {
                 - All paths are relative to the project root — never use absolute paths
                 - Never search from '/' — use 'find . -name foo' or find-file instead
 
+                CLARIFYING QUESTIONS:
+                - If the request is ambiguous or could go multiple ways, ask ONE short question before acting.
+                - Do not ask about things you can determine by exploring the code.
+
                 PLANNING (for non-trivial tasks):
                 - update-plan once with the approach, then todo-add each step
                 - todo-update in_progress when starting a step, completed when done
