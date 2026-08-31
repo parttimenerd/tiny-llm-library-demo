@@ -89,6 +89,20 @@ First time saying the tagline — will repeat at the Wrap-Up.
 
 ---
 
+---
+layout: center
+---
+
+<img src="./img/qr-boring-blog.png" class="absolute top-4 right-4 w-20 z-10" />
+
+<img src="./img/boring-duke.png" class="mx-auto" style="height: 75vh; object-fit: contain;" />
+
+<!--
+**[~0:35]** No notes needed — the image says it all.
+-->
+
+---
+
 # It's Just HTTP
 
 <div class="grid grid-cols-2 gap-8 mt-4">
