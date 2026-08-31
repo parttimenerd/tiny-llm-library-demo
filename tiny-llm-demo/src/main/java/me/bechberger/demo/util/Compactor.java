@@ -107,7 +107,8 @@ public final class Compactor {
         } catch (Exception e) {
             // compaction must never kill a session - leave history as is, retry next turn
             if (e instanceof InterruptedException) Thread.currentThread().interrupt();
-            System.err.println("[compact] summarization failed: " + e.getMessage());
+            System.err.println("[compact] summarization failed: " + rootMessage(e)
+                    + " (summarizing " + text.length() + " chars)");
             return new Outcome(false, before, messages.size(), promptTokens);
         }
 
@@ -118,5 +119,16 @@ public final class Compactor {
         int after = messages.size();
         System.out.println(Ansi.dim("[compact] done — " + before + " → " + after + " messages"));
         return new Outcome(true, before, after, promptTokens);
+    }
+
+    private static String rootMessage(Throwable e) {
+        var sb = new StringBuilder();
+        Throwable t = e;
+        while (t != null) {
+            if (sb.length() > 0) sb.append(" → ");
+            sb.append(t.getMessage() != null ? t.getMessage() : t.getClass().getSimpleName());
+            t = t.getCause();
+        }
+        return sb.toString();
     }
 }

@@ -148,6 +148,27 @@ abstract class CodingAgentSupport implements Callable<Integer> {
         }
     }
 
+    /** Add dummy messages until token usage is near the alert threshold (for testing compaction). */
+    void fillContext(LLMClient client, List<Map<String, Object>> messages) {
+        int contextWindow = client.getContextWindowSize(32768);
+        int target = (int) (contextWindow * 0.82); // just above alert threshold
+        var u = client.lastUsage();
+        int current = u != null ? u.promptTokens() : 0;
+        if (current >= target) {
+            System.out.println(Ansi.dim("[fill] already at " + current + "/" + contextWindow + " tokens, nothing to add."));
+            return;
+        }
+        // Each token ≈ 4 chars; pad with ~500-token messages
+        String chunk = "A".repeat(2000);
+        int added = 0;
+        while (current + added * 500 < target) {
+            messages.add(LLMClient.user("[fill-context padding] " + chunk));
+            messages.add(LLMClient.assistant("Understood."));
+            added++;
+        }
+        System.out.println(Ansi.dim("[fill] added " + (added * 2) + " dummy messages — send any message to see token count."));
+    }
+
     void clearConversation(List<Map<String, Object>> messages) {
         int dropped = Math.max(0, messages.size() - 1);
         if (dropped > 0) messages.subList(1, messages.size()).clear();
