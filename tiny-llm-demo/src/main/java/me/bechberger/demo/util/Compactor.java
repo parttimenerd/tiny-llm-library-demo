@@ -23,9 +23,34 @@ public final class Compactor {
     public record Outcome(boolean compacted, int messagesBefore, int messagesAfter, int promptTokens) {}
 
     private static final String SUMMARY_PROMPT =
-            "Summarize the following conversation concisely, preserving key facts, decisions, " +
-            "files created or changed, tool results, and errors that were fixed. " +
-            "Write in third person as a summary of what was discussed.";
+            "You have been working on a coding task but have not yet completed it. " +
+            "Write a continuation summary that will allow you (or another instance of yourself) " +
+            "to resume work efficiently in a future context window where the conversation history " +
+            "will be replaced with this summary. Do NOT call any tools.\n\n" +
+            "Your summary should be structured, concise, and actionable. Include:\n\n" +
+            "1. **Task Overview**\n" +
+            "   - The user's core request and success criteria\n" +
+            "   - Any clarifications or constraints they specified\n\n" +
+            "2. **Current State**\n" +
+            "   - What has been completed so far\n" +
+            "   - Files created, modified, or analyzed (with paths)\n" +
+            "   - Key outputs or artifacts produced\n\n" +
+            "3. **Important Discoveries**\n" +
+            "   - Technical constraints or requirements uncovered\n" +
+            "   - Decisions made and their rationale\n" +
+            "   - Errors encountered and how they were resolved (quote error messages verbatim)\n" +
+            "   - What approaches were tried that didn't work (and why)\n\n" +
+            "4. **Next Steps**\n" +
+            "   - Specific actions needed to complete the task\n" +
+            "   - Any blockers or open questions to resolve\n" +
+            "   - Priority order if multiple steps remain\n\n" +
+            "5. **Context to Preserve**\n" +
+            "   - User preferences or style requirements\n" +
+            "   - Domain-specific details that aren't obvious\n" +
+            "   - Any promises made to the user\n\n" +
+            "Be concise but complete — err on the side of including information that would " +
+            "prevent duplicate work or repeated mistakes. Write in a way that enables immediate " +
+            "resumption of the task. Wrap your summary in <summary></summary> tags.";
 
     private final int compactThreshold; // prompt tokens that trigger compaction
     private final int alertThreshold;   // prompt tokens that trigger the "approaching limit" warning
@@ -88,10 +113,26 @@ public final class Compactor {
         for (var msg : messages.subList(pinned, recentStart)) {
             var role = (String) msg.get("role");
             var content = msg.get("content");
-            if (content != null) {
+            if ("assistant".equals(role) && msg.containsKey("tool_calls")) {
+                @SuppressWarnings("unchecked")
+                var toolCalls = (List<Map<String, Object>>) msg.get("tool_calls");
+                if (content != null && !content.toString().isBlank())
+                    text.append("assistant: ").append(content).append("\n");
+                for (var tc : toolCalls) {
+                    @SuppressWarnings("unchecked")
+                    var fn = (Map<String, Object>) tc.get("function");
+                    String name = fn != null ? String.valueOf(fn.get("name")) : "?";
+                    String args = fn != null ? String.valueOf(fn.get("arguments")) : "";
+                    if (args.length() > 200) args = args.substring(0, 200) + "…";
+                    text.append("tool-call: ").append(name).append("(").append(args).append(")\n");
+                }
+                text.append("\n");
+            } else if ("tool".equals(role)) {
+                String result = content != null ? content.toString() : "";
+                if (result.length() > 500) result = result.substring(0, 500) + "…";
+                text.append("tool-result: ").append(result).append("\n\n");
+            } else if (content != null) {
                 text.append(role).append(": ").append(content).append("\n\n");
-            } else if ("assistant".equals(role) && msg.containsKey("tool_calls")) {
-                text.append("assistant: [called tools]\n\n");
             }
         }
 
@@ -114,11 +155,18 @@ public final class Compactor {
 
         messages.clear();
         messages.addAll(head);
-        messages.add(LLMClientInterface.system("[Conversation summary] " + summary));
+        messages.add(LLMClientInterface.system("[Conversation summary]\n" + extractSummary(summary)));
         messages.addAll(tail);
         int after = messages.size();
         System.out.println(Ansi.dim("[compact] done — " + before + " → " + after + " messages, was " + promptTokens + " tokens"));
         return new Outcome(true, before, after, promptTokens);
+    }
+
+    private static String extractSummary(String response) {
+        int start = response.indexOf("<summary>");
+        int end   = response.indexOf("</summary>");
+        if (start >= 0 && end > start) return response.substring(start + 9, end).strip();
+        return response.strip();
     }
 
     private static String rootMessage(Throwable e) {
