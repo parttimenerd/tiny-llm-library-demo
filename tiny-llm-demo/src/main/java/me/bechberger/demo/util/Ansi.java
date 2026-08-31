@@ -229,9 +229,15 @@ public final class Ansi {
     }
 
     /** Terminal width: try $COLUMNS env, then stty, fall back to 120. */
+    /** Package-private: override terminal width in tests. 0 = auto-detect. */
+    static int forcedTerminalWidth = 0;
+
     static int terminalWidth() {
+        if (forcedTerminalWidth > 0) return forcedTerminalWidth;
         String cols = System.getenv("COLUMNS");
-        if (cols != null) { try { return Integer.parseInt(cols.trim()); } catch (NumberFormatException ignored) {} }
+        if (cols != null) {
+            try { int w = Integer.parseInt(cols.trim()); if (w > 0) return w; } catch (NumberFormatException ignored) {}
+        }
         try {
             var pb = new ProcessBuilder("stty", "size");
             pb.redirectInput(new java.io.File("/dev/tty"));
@@ -239,7 +245,7 @@ public final class Ansi {
             String out = new String(proc.getInputStream().readAllBytes()).trim();
             proc.waitFor();
             String[] parts = out.split("\\s+");
-            if (parts.length >= 2) return Integer.parseInt(parts[1]);
+            if (parts.length >= 2) { int w = Integer.parseInt(parts[1]); if (w > 0) return w; }
         } catch (Exception ignored) {}
         return 120;
     }

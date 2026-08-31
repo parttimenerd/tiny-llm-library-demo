@@ -166,20 +166,22 @@ class HighlightTest {
 
         private String table(String md) { return plain(Ansi.renderMarkdown(md)); }
 
+        @BeforeEach void fixWidth()    { Ansi.forcedTerminalWidth = 80; }
+        @AfterEach  void clearWidth()  { Ansi.forcedTerminalWidth = 0; }
+
         @Test void shortTableFitsInOneLine() {
             String out = table("| A | B |\n|---|---|\n| x | y |\n");
             assertTrue(out.contains("x"), "cell content preserved");
             assertTrue(out.contains("y"), "cell content preserved");
-            // single data row → no line with 'x' should appear more than once
             long xLines = out.lines().filter(l -> l.contains("x")).count();
             assertEquals(1, xLines, "short cell must not wrap");
         }
 
         @Test void longCellWrapsToMultipleLines() {
-            String longVal = "word ".repeat(30).trim(); // 150 chars
+            // 150-char value in an 80-col terminal must wrap
+            String longVal = "word ".repeat(30).trim();
             String md = "| Key | Value |\n|-----|-------|\n| k | " + longVal + " |\n";
             String out = table(md);
-            // the value row should become several output lines (each starting with │)
             long dataLines = out.lines().filter(l -> l.startsWith("│") && !l.contains("Key")).count();
             assertTrue(dataLines > 1, "long cell must produce multiple output lines, got: " + dataLines);
         }
@@ -188,19 +190,16 @@ class HighlightTest {
             String content = "alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi";
             String md = "| Col |\n|-----|\n| " + content + " |\n";
             String out = table(md);
-            // all words from content should appear somewhere in the output
-            for (String word : content.split(" ")) {
+            for (String word : content.split(" "))
                 assertTrue(out.contains(word), "word '" + word + "' must appear in wrapped output");
-            }
         }
 
         @Test void tableWidthRespectsBound() {
             String longCell = "this is a very long description ".repeat(5).trim();
             String md = "| Name | Description | Extra |\n|------|-------------|-------|\n| foo | " + longCell + " | bar |\n";
             String out = table(md);
-            // no output line should exceed terminalWidth+1 (ANSI codes aside, we check plain)
             int maxLine = out.lines().mapToInt(String::length).max().orElse(0);
-            assertTrue(maxLine <= Ansi.terminalWidth() + 2, "table line too wide: " + maxLine);
+            assertTrue(maxLine <= Ansi.forcedTerminalWidth + 2, "table line too wide: " + maxLine);
         }
     }
 
