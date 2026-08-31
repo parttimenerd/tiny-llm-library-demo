@@ -227,11 +227,14 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
         try {
             for (var m : Util.asList(Util.asMap(JSONParser.parse(http.get("/v1/models"))).get("data"))) {
                 var modelMap = Util.asMap(m);
-                if (model.equals(modelMap.get("id")) && modelMap.containsKey("meta")) {
-                    var nCtx = Util.asMap(modelMap.get("meta")).get("n_ctx_train");
-                    if (nCtx instanceof Number n) {
-                        return n.intValue();
+                if (model.equals(modelMap.get("id"))) {
+                    // llama-server: meta.n_ctx_train
+                    if (modelMap.containsKey("meta")) {
+                        var nCtx = Util.asMap(modelMap.get("meta")).get("n_ctx_train");
+                        if (nCtx instanceof Number n) return n.intValue();
                     }
+                    // OpenAI-compatible servers: max_input_tokens
+                    if (modelMap.get("max_input_tokens") instanceof Number n) return n.intValue();
                 }
             }
         } catch (Exception e) {
