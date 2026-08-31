@@ -101,7 +101,7 @@ public final class Compactor {
 
         String summary;
         try {
-            System.out.println(Ansi.dim("[compact] summarizing " + (recentStart - pinned) + " messages…"));
+            System.out.println(Ansi.dim("[compact] summarizing " + (recentStart - pinned) + " messages (" + promptTokens + " tokens)…"));
             summary = client.chatSimple(List.of(
                     LLMClientInterface.system(SUMMARY_PROMPT), LLMClientInterface.user(text.toString())));
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public final class Compactor {
         messages.add(LLMClientInterface.system("[Conversation summary] " + summary));
         messages.addAll(tail);
         int after = messages.size();
-        System.out.println(Ansi.dim("[compact] done — " + before + " → " + after + " messages"));
+        System.out.println(Ansi.dim("[compact] done — " + before + " → " + after + " messages, was " + promptTokens + " tokens"));
         return new Outcome(true, before, after, promptTokens);
     }
 
