@@ -78,35 +78,45 @@ public final class Ansi {
 
     /**
      * Render a Markdown string to ANSI-styled terminal output.
-     * Handles: # headings, **bold**, `code`, fenced code blocks, - / * / 1. lists, --- rules.
+     * Handles: # headings, **bold**, `code`, fenced code blocks, - / * / 1. lists, --- rules, tables.
      * Falls back to plain text when not a terminal.
      */
     public static String renderMarkdown(String md) {
         if (md == null) return "";
         var sb = new StringBuilder();
         boolean inFence = false;
-        for (String raw : md.split("\n", -1)) {
-            String line = raw.stripTrailing();
-            if (line.startsWith("```")) {
-                inFence = !inFence;
-                continue; // skip fence delimiters
+        String[] lines = md.split("\n", -1);
+        int i = 0;
+        while (i < lines.length) {
+            String line = lines[i].stripTrailing();
+
+            if (line.startsWith("```")) { inFence = !inFence; i++; continue; }
+            if (inFence) { sb.append(style(CYAN, line)).append("\n"); i++; continue; }
+
+            // table: collect consecutive pipe-lines
+            if (line.contains("|")) {
+                int j = i;
+                while (j < lines.length && lines[j].stripTrailing().contains("|")) j++;
+                String[] tableLines = java.util.Arrays.copyOfRange(lines, i, j);
+                sb.append(renderTable(tableLines));
+                i = j;
+                continue;
             }
-            if (inFence) { sb.append(style(CYAN, line)).append("\n"); continue; }
 
             // headings
-            if (line.startsWith("### ")) { sb.append(bold(yellow(line.substring(4)))).append("\n"); continue; }
-            if (line.startsWith("## "))  { sb.append(bold(cyan(line.substring(3)))).append("\n"); continue; }
-            if (line.startsWith("# "))   { sb.append(bold(header(line.substring(2)))).append("\n"); continue; }
+            if (line.startsWith("### ")) { sb.append(bold(yellow(line.substring(4)))).append("\n"); i++; continue; }
+            if (line.startsWith("## "))  { sb.append(bold(cyan(line.substring(3)))).append("\n"); i++; continue; }
+            if (line.startsWith("# "))   { sb.append(bold(header(line.substring(2)))).append("\n"); i++; continue; }
 
             // horizontal rule
-            if (line.matches("^[-*_]{3,}\\s*$")) { sb.append(divider(58)).append("\n"); continue; }
+            if (line.matches("^[-*_]{3,}\\s*$")) { sb.append(divider(58)).append("\n"); i++; continue; }
 
             // bullet lists
             if (line.matches("^(\\s*)[-*+] (.*)")) {
                 String indent = line.replaceFirst("^(\\s*)[-*+] .*", "$1");
                 String item   = line.replaceFirst("^\\s*[-*+] ", "");
                 sb.append(indent).append(gray("• ")).append(inlineMarkdown(item)).append("\n");
-                continue;
+                i++; continue;
             }
             // numbered lists
             if (line.matches("^(\\s*)\\d+[.)] (.*)")) {
@@ -114,12 +124,70 @@ public final class Ansi {
                 String num    = line.replaceFirst("^\\s*(\\d+[.)]) .*", "$1");
                 String item   = line.replaceFirst("^\\s*\\d+[.)] ", "");
                 sb.append(indent).append(bold(num)).append(" ").append(inlineMarkdown(item)).append("\n");
-                continue;
+                i++; continue;
             }
 
             sb.append(inlineMarkdown(line)).append("\n");
+            i++;
         }
         return sb.toString();
+    }
+
+    private static String renderTable(String[] lines) {
+        // parse rows, skip separator lines (|---|---|)
+        var rows = new java.util.ArrayList<String[]>();
+        boolean[] isSeparator = new boolean[lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            String l = lines[i].strip();
+            if (l.replaceAll("[|:\\-\\s]", "").isEmpty()) { isSeparator[i] = true; continue; }
+            String[] cells = splitTableRow(l);
+            rows.add(cells);
+        }
+        if (rows.isEmpty()) return String.join("\n", lines) + "\n";
+
+        // compute column widths (plain text, no ANSI)
+        int cols = rows.stream().mapToInt(r -> r.length).max().orElse(1);
+        int[] widths = new int[cols];
+        for (String[] row : rows)
+            for (int c = 0; c < row.length; c++)
+                widths[c] = Math.max(widths[c], row[c].strip().length());
+
+        var sb = new StringBuilder();
+        String bar = gray("│");
+        // top border
+        sb.append(tableHRule("┌", "┬", "┐", widths)).append("\n");
+        for (int ri = 0; ri < rows.size(); ri++) {
+            String[] row = rows.get(ri);
+            sb.append(bar);
+            for (int c = 0; c < cols; c++) {
+                String cell = c < row.length ? row[c].strip() : "";
+                String rendered = ri == 0 ? bold(inlineMarkdown(cell)) : inlineMarkdown(cell);
+                int pad = widths[c] - cell.length();
+                sb.append(" ").append(rendered).append(" ".repeat(Math.max(0, pad) + 1)).append(bar);
+            }
+            sb.append("\n");
+            // separator after header row
+            if (ri == 0 && rows.size() > 1)
+                sb.append(tableHRule("├", "┼", "┤", widths)).append("\n");
+        }
+        sb.append(tableHRule("└", "┴", "┘", widths)).append("\n");
+        return sb.toString();
+    }
+
+    private static String tableHRule(String left, String mid, String right, int[] widths) {
+        var sb = new StringBuilder();
+        sb.append(gray(left));
+        for (int c = 0; c < widths.length; c++) {
+            sb.append(gray("─".repeat(widths[c] + 2)));
+            sb.append(gray(c < widths.length - 1 ? mid : right));
+        }
+        return sb.toString();
+    }
+
+    private static String[] splitTableRow(String line) {
+        if (line.startsWith("|")) line = line.substring(1);
+        if (line.endsWith("|"))   line = line.substring(0, line.length() - 1);
+        return line.split("\\|", -1);
     }
 
     private static String inlineMarkdown(String text) {
