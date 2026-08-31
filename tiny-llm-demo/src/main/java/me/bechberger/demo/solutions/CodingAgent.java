@@ -228,9 +228,14 @@ public class CodingAgent extends CodingAgentSupport {
         Path planTmpFile = Files.createTempFile("tiny-llm-plan-", ".md");
         planTmpFile.toFile().deleteOnExit();
 
+        var pendingTodos = new ArrayList<String>();
+
         var planTools = new ToolSupport();
         CodingTools.registerReadOnlyFileTools(planTools, new FileTools(Path.of(root)));
-        CodingTools.registerStateTools(planTools, state, action -> true);
+        planTools.registerTool("todo-add",
+            "Queue a TODO step for the plan (applied only after user accepts).",
+            Schemas.object().required("description", Schemas.string()).toJsonSchema(),
+            args -> { pendingTodos.add(CodingTools.str(args, "description")); return "Queued."; });
 
         planTools.registerTool("ask-user",
             "Ask the user a clarifying question before drafting the plan. Call after research, before write-plan.",
@@ -288,7 +293,7 @@ public class CodingAgent extends CodingAgentSupport {
                 break;
             }
             if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
-            state.clear();
+            pendingTodos.clear();
             planMessages.add(LLMClient.user(
                 "Please revise the plan based on this feedback: " + answer +
                 "\n\nExplore more if needed, ask follow-up questions, then call write-plan with the revised plan and todo-add for each step."));
@@ -296,6 +301,7 @@ public class CodingAgent extends CodingAgentSupport {
         String planText = Files.exists(planTmpFile) ? Files.readString(planTmpFile, StandardCharsets.UTF_8) : "";
         state.setGoal(goal);
         state.setPlan(planText);
+        pendingTodos.forEach(state::addTodo);
         messages.add(LLMClient.user("/plan " + goal));
         if (response != null) messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
