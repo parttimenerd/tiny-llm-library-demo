@@ -357,9 +357,10 @@ public final class Repl {
 
             redrawLine(buf, cursor); // print initial prompt
             while (true) {
-                // Poll so injected input (schedule tool) can interrupt the blocking read
+                // Poll so injected input (schedule tool) can interrupt the blocking read,
+                // but only when the user hasn't started typing yet (buf is empty).
                 while (tty.available() == 0) {
-                    if (injectedInput != null) {
+                    if (buf.length() == 0 && injectedInput != null) {
                         out.write(new byte[]{'\r', '\n'});
                         out.flush();
                         return ""; // empty → outer loop picks up injectedInput
