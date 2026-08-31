@@ -19,7 +19,7 @@ import java.util.function.Function;
  * Tools are registered directly via {@link #registerTool(String, String, Map, Function)}
  * with name, description, JSON Schema for parameters, and a handler function.
  */
-public class ToolSupport {
+public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
 
     /** Internal record for a registered tool */
     record ToolDef(String name, String description, Map<String, Object> parameterSchema,

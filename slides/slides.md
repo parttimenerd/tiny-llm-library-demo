@@ -1835,54 +1835,147 @@ You: /plan add a greet() method to Greeter.java and make mvn test pass
 
 <div>
 
-**System:**
-
-<div class="text-xs font-mono leading-relaxed bg-slate-800 rounded p-3 mt-1 mb-3">
-You are in planning mode: explore and plan,<br>
-do not execute. Explore with ls and read-file,<br>
-then call update-plan ONCE with a concise<br>
-approach naming the concrete files to create<br>
-and the exact run command that will verify it.<br>
-Add each implementation step exactly once via<br>
-todo-add - never duplicate a step.<br>
-Do NOT write files or run builds. Stop after<br>
-plan and TODOs are recorded.
-</div>
-
-**User:**
+**Planning prompt (3 phases):**
 
 <div class="text-xs font-mono leading-relaxed bg-slate-800 rounded p-3 mt-1">
-Goal: add a greet() method to Greeter.java<br>
-and make mvn test pass<br>
+<span class="text-orange-400 font-bold">PHASE 1 — RESEARCH</span><br>
+Explore with ls, read-file, grep, find-file.<br>
+Understand the codebase relevant to the goal.<br>
 <br>
-Explore and produce a plan with TODOs.
+<span class="text-yellow-400 font-bold">PHASE 2 — QUESTIONS</span> <span class="text-gray-500">(optional, max 3)</span><br>
+If anything is unclear, call <span class="text-cyan-400">ask-user</span><br>
+with optional numbered choices.<br>
+<br>
+<span class="text-green-400 font-bold">PHASE 3 — PLAN</span><br>
+Call <span class="text-cyan-400">write-plan</span> with a Markdown plan.<br>
+Then <span class="text-cyan-400">todo-add</span> once per step.<br>
+<span class="text-gray-500">Do NOT write files or run builds.</span>
 </div>
 
 </div>
 
-<div v-click>
+<div>
 
-```
---- Plan ready ---
-## Plan
-Greeter.java is missing greet().
-GreeterTest expects greet("World")
-  -> "Hello, World!".
+**Plan stored in agent state:**
 
-## TODOs
-[ ] #1 Add greet(String name) to Greeter.java
-[ ] #2 Run mvn test to verify
-```
+<CtxWindow :messages="[
+  'sys:SYS',
+  'ast:📌 Goal · Plan · TODOs:pinned',
+  'usr:U1',
+  'tool:🔧 ls / grep / ask-user',
+  'tool:📄 write-plan + todo-add',
+  'ast:A1 (plan ready)',
+  'usr:▶ y (accept)',
+]" />
+
+<div class="text-xs text-gray-400 mt-2">Full plan Markdown lives in state[1] — model reads it on every call.</div>
 
 </div>
 
 </div>
 
 <!--
-**[~47:00]** "Before touching files, /plan makes the agent explore and write down what it intends to do. You review it before a single file changes. Once accepted, the plan and TODOs are pinned — the model works the list."
-"The TODO tools are identical to every other tool: todo-add, todo-update. The runtime re-injects state before every call."
-"Type /help to see all REPL commands — /mode, /clear, /compact, /run, /todo..."
+**[~47:00]** "The planning prompt has three explicit phases. Phase 1: explore. Phase 2: ask the user anything unclear — structured prompt with numbered choices. Phase 3: write the full Markdown plan, then add todos. The user sees the plan text before approving. Feedback loops until accepted. Once accepted, the full plan goes into the pinned state block at index 1 — the model reads it before every tool call."
 -->
+
+---
+
+# /plan Loop
+
+```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': {'primaryColor': '#1e293b', 'primaryTextColor': '#e2e8f0', 'primaryBorderColor': '#475569', 'lineColor': '#64748b', 'secondaryColor': '#0f172a', 'tertiaryColor': '#1e293b'}}}%%
+flowchart TD
+    A(["/plan &lt;goal&gt;"]) --> B
+
+    B["🔍 Phase 1: Research\nls · read-file · grep · find-file"]
+    B --> C
+
+    C{"Questions\nneeded?"}
+    C -- "yes (≤3)" --> D["❓ ask-user\nstructured prompt\n+ numbered choices"]
+    D --> C
+    C -- "no" --> E
+
+    E["📄 write-plan\nMarkdown document\n+ todo-add × N"]
+    E --> F["Show plan draft\n+ TODO list"]
+    F --> G{"User?"}
+
+    G -- "y / enter" --> H["✅ Accept\nstate.setGoal + setPlan\npinned at context[1]"]
+    G -- "feedback" --> I["Revise\nadd feedback to planMessages"]
+    G -- "n" --> J(["❌ Discard"])
+    I --> B
+
+    H --> K(["▶ Implement the plan step by step"])
+
+    style A fill:#1e40af,color:#e2e8f0,stroke:none
+    style H fill:#166534,color:#e2e8f0,stroke:none
+    style J fill:#991b1b,color:#e2e8f0,stroke:none
+    style K fill:#92400e,color:#e2e8f0,stroke:none
+    style D fill:#164e63,color:#e2e8f0,stroke:none
+    style E fill:#1e3a5f,color:#e2e8f0,stroke:none
+```
+
+<!--
+**[~47:10]** "Three phases baked into the prompt — research, optional questions, plan. The iteration loop is explicit: feedback goes back as a user message, the agent revises. Once the user types y, the full Markdown plan is pinned into the state block."
+-->
+
+---
+
+# Approval Rules Engine
+
+Keep control without going full YOLO.
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+**Three modes** (cycle with `/mode`):
+
+| Mode | Auto-approves |
+|------|--------------|
+| `NORMAL` | nothing |
+| `AUTO-EDIT` | `run:` commands |
+| `YOLO ⚡` | everything |
+
+**Add fine-grained rules** on top:
+
+```bash
+/allow "run: mvn *"     # always ok
+/deny  "delete: *"      # never
+/rules                  # list active rules
+```
+
+</div>
+
+<div>
+
+**Decision order:**
+
+```mermaid
+%%{init: {'theme': 'dark'}}%%
+flowchart TD
+    A["action: run: mvn package"] --> B{"ApprovalRules\nmatch?"}
+    B -- "ALLOW" --> C["✅ auto-allow\n(rule-allow)"]
+    B -- "DENY"  --> D["❌ auto-deny\n(rule-deny)"]
+    B -- "null"  --> E{"Mode?"}
+    E -- "YOLO / AUTO-EDIT\n+ run:" --> F["✅ auto-approve"]
+    E -- "NORMAL" --> G["⚠ prompt user\n[Y/n]"]
+
+    style C fill:#166534,color:#e2e8f0,stroke:none
+    style D fill:#991b1b,color:#e2e8f0,stroke:none
+    style F fill:#166534,color:#e2e8f0,stroke:none
+```
+
+**Patterns:** `*` matches anything.
+`"run: mvn *"` · `"delete: target/*"` · `"plan: *"`
+
+</div>
+
+</div>
+
+<!--
+**[~47:20]** "Three modes aren't enough. /allow and /deny let you set exact rules — first match wins. Auto-approve Maven builds, always block deletions, prompt for everything else. Simple glob matching, in-memory, no config file."
+-->
+
 
 ---
 layout: center
