@@ -12,9 +12,9 @@ import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.util.femtoschema.Schemas;
 
-import java.io.IOException; // @demo:
-import java.nio.charset.StandardCharsets; // @demo:
-import java.nio.file.Files; // @demo:
+import java.io.IOException; // @demo: import java.io.IOException;
+import java.nio.charset.StandardCharsets; // @demo: import java.nio.charset.StandardCharsets;
+import java.nio.file.Files; // @demo: import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,12 +229,9 @@ public class CodingAgent extends CodingAgentSupport {
 
     /**
      * One chat round: sync context, call the tool loop, record reply, compact if needed.
-     * <p>
-     * TODO: live code
      */
     protected void chat(LLMClient client, ToolSupport toolSupport,
                         List<Map<String, Object>> messages, String input) throws Exception {
-        // @stub
         syncConversation(messages);
         messages.add(LLMClient.user(input));
         System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
@@ -299,7 +296,6 @@ public class CodingAgent extends CodingAgentSupport {
             System.out.println(Ansi.dim("[continue] " + cont));
             chat(client, toolSupport, messages, cont);
         }
-        // @end
     }
 
     // ── pinned context ───────────────────────────────────────────────────────
@@ -334,18 +330,57 @@ public class CodingAgent extends CodingAgentSupport {
     // ── /plan mode ───────────────────────────────────────────────────────────
 
     /**
-     * /plan &lt;goal&gt; — side conversation with read-only tools → plan + TODOs → confirm → pin into main chat.
+     * /plan &lt;goal&gt; — research + clarify + draft plan → confirm → implement.
      * <p>
      * TODO: live code
      */
     protected void handlePlanCommand(String goal, LLMClient client,
                                      List<Map<String, Object>> messages, Repl.Chat chat) throws Exception {
-        // @stub
         if (goal.isBlank()) { System.out.println("Usage: /plan <goal>"); return; }
-
         Path planTmpFile = Files.createTempFile("tiny-llm-plan-", ".md");
         planTmpFile.toFile().deleteOnExit();
+        var planTools = buildPlanTools(planTmpFile);
+        var planMessages = LLMClient.conversation(planningPrompt(),
+            "Goal: " + goal + "\n\nResearch the codebase, ask any clarifying questions, then write the plan.");
+        String response = null;
+        // @stub: while(true): response = callPlanToolLoop → if null return (interrupted)
+        // @stub: show plan draft → printTodos() → prompt Y/n/feedback
+        // @stub: break on Y, return on n, append feedback and loop
+        // @stub: then: state.setGoal/setPlan → inject messages → syncStateMessage → chat.chat(...)
+        while (true) {
+            System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
+            response = callPlanToolLoop(planTools, client, planMessages);
+            if (response == null) return; // interrupted
+            if (Files.exists(planTmpFile) && Files.size(planTmpFile) > 0) {
+                System.out.println(Ansi.bold("\n─── Plan draft ──────────────────────────────────────────"));
+                System.out.print(Ansi.renderMarkdown(Files.readString(planTmpFile, StandardCharsets.UTF_8)));
+                System.out.println(Ansi.bold("─────────────────────────────────────────────────────────"));
+            }
+            printTodos();
+            String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", null) : null;
+            if (answer == null) { System.out.println(Ansi.yellow("(no input — plan not accepted)")); return; }
+            if (answer.isEmpty() || answer.equalsIgnoreCase("y")) {
+                System.out.println(Ansi.bold(Ansi.green("\nImplementing...")));
+                if (repl != null) repl.resetLivePaneCount();
+                break;
+            }
+            if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
+            planMessages.add(LLMClient.user(
+                "Please revise the plan based on this feedback: " + answer +
+                "\n\nExplore more if needed, ask follow-up questions, then call write-plan with the revised plan."));
+        }
+        String planText = Files.exists(planTmpFile) ? Files.readString(planTmpFile, StandardCharsets.UTF_8) : "";
+        state.setGoal(goal);
+        state.setPlan(planText);
+        messages.add(LLMClient.user("/plan " + goal));
+        if (response != null) messages.add(LLMClient.assistant(response));
+        syncStateMessage(messages);
+        chat.chat("Implement the plan step by step.");
+        // @end
+    }
 
+    /** Register read-only file tools + ask-user + write-plan for planning mode. */
+    private ToolSupport buildPlanTools(Path planTmpFile) {
         var planTools = new ToolSupport();
         CodingTools.registerReadOnlyFileTools(planTools, new FileTools(Path.of(root)));
 
@@ -379,7 +414,6 @@ public class CodingAgent extends CodingAgentSupport {
                     : "  (enter a number or type your own answer)";
                 if (!hint.isBlank()) System.out.println(Ansi.dim(hint));
                 String answer = repl != null ? repl.prompt("  > ", "") : "";
-                // Empty → use default
                 if (answer.isBlank() && defaultIdx >= 0 && defaultIdx < choices.size())
                     return choices.get(defaultIdx);
                 if (!choices.isEmpty()) {
@@ -402,49 +436,24 @@ public class CodingAgent extends CodingAgentSupport {
                 } catch (IOException e) { return "Error writing plan: " + e.getMessage(); }
             });
 
-        var planMessages = LLMClient.conversation(planningPrompt(),
-            "Goal: " + goal + "\n\nResearch the codebase, ask any clarifying questions, then write the plan.");
-        String response = null;
-        while (true) {
-            System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
-            try {
-                response = Repl.io(() -> planTools.handleToolLoop(client, planMessages));
-            } catch (Exception e) {
-                boolean interrupted = e instanceof InterruptedException
-                        || e instanceof java.io.InterruptedIOException
-                        || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
-                        || Thread.interrupted();
-                if (!interrupted) throw e;
-                Thread.interrupted();
-                System.out.println("\n" + Ansi.yellow("[planning interrupted]"));
-                return;
-            }
-            if (Files.exists(planTmpFile) && Files.size(planTmpFile) > 0) {
-                System.out.println(Ansi.bold("\n─── Plan draft ──────────────────────────────────────────"));
-                System.out.print(Ansi.renderMarkdown(Files.readString(planTmpFile, StandardCharsets.UTF_8)));
-                System.out.println(Ansi.bold("─────────────────────────────────────────────────────────"));
-            }
-            printTodos();
-            String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", null) : null;
-            if (answer == null) { System.out.println(Ansi.yellow("(no input — plan not accepted)")); return; }
-            if (answer.isEmpty() || answer.equalsIgnoreCase("y")) {
-                System.out.println(Ansi.bold(Ansi.green("\nImplementing...")));
-                if (repl != null) repl.resetLivePaneCount();
-                break;
-            }
-            if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
-            planMessages.add(LLMClient.user(
-                "Please revise the plan based on this feedback: " + answer +
-                "\n\nExplore more if needed, ask follow-up questions, then call write-plan with the revised plan."));
+        return planTools;
+    }
+
+    /** Run one tool-loop iteration; returns null if interrupted (caller should return). */
+    private String callPlanToolLoop(ToolSupport planTools, LLMClient client,
+                                    List<Map<String, Object>> planMessages) throws Exception {
+        try {
+            return Repl.io(() -> planTools.handleToolLoop(client, planMessages));
+        } catch (Exception e) {
+            boolean interrupted = e instanceof InterruptedException
+                    || e instanceof java.io.InterruptedIOException
+                    || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
+                    || Thread.interrupted();
+            if (!interrupted) throw e;
+            Thread.interrupted();
+            System.out.println("\n" + Ansi.yellow("[planning interrupted]"));
+            return null;
         }
-        String planText = Files.exists(planTmpFile) ? Files.readString(planTmpFile, StandardCharsets.UTF_8) : "";
-        state.setGoal(goal);
-        state.setPlan(planText);
-        messages.add(LLMClient.user("/plan " + goal));
-        if (response != null) messages.add(LLMClient.assistant(response));
-        syncStateMessage(messages);
-        chat.chat("Implement the plan step by step.");
-        // @end
     }
 
     private String planningPrompt() {

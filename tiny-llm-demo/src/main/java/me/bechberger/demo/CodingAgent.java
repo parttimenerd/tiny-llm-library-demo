@@ -12,6 +12,9 @@ import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.util.femtoschema.Schemas;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -226,13 +229,73 @@ public class CodingAgent extends CodingAgentSupport {
 
     /**
      * One chat round: sync context, call the tool loop, record reply, compact if needed.
-     * <p>
-     * TODO: live code
      */
     protected void chat(LLMClient client, ToolSupport toolSupport,
                         List<Map<String, Object>> messages, String input) throws Exception {
-        // TODO: live code
-        throw new UnsupportedOperationException("TODO: live code");
+        syncConversation(messages);
+        messages.add(LLMClient.user(input));
+        System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
+        System.out.flush();
+        String response;
+        try {
+            response = toolSupport.handleToolLoop(client, messages);
+        } catch (Exception e) {
+            boolean interrupted = e instanceof InterruptedException
+                    || e instanceof java.io.InterruptedIOException
+                    || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
+                    || Thread.interrupted();
+            if (!interrupted) {
+                // Context-length exceeded → compact now and retry once
+                String msg = e.getMessage() != null ? e.getMessage() : "";
+                String cause = e.getCause() != null && e.getCause().getMessage() != null ? e.getCause().getMessage() : "";
+                boolean contextExceeded = msg.contains("context") || cause.contains("context")
+                        || msg.contains("too long") || cause.contains("too long")
+                        || msg.contains("maximum") || cause.contains("maximum")
+                        || msg.contains("400") || cause.contains("400");
+                if (contextExceeded) {
+                    System.out.println(Ansi.yellow("\n[context limit hit — compacting and retrying]"));
+                    var outcome = compactor.compactNow(client, messages);
+                    stateMessageIndex = -1;
+                    if (outcome.compacted()) {
+                        response = toolSupport.handleToolLoop(client, messages);
+                    } else {
+                        System.err.println(Ansi.yellow("\n[error] ") + e.getMessage());
+                        e.printStackTrace(System.err);
+                        return;
+                    }
+                } else {
+                    System.err.println(Ansi.yellow("\n[error] ") + e.getMessage());
+                    e.printStackTrace(System.err);
+                    return;
+                }
+            } else {
+                Thread.interrupted(); // clear flag
+                String last = toolSupport.getLastToolName();
+                System.out.println("\n" + Ansi.yellow("[interrupted" + (last != null ? " during " + last : "") + "]"));
+                System.out.println(Ansi.dim("What would you like to do instead?"));
+                return;
+            }
+        }
+        if (Thread.interrupted()) {
+            String last = toolSupport.getLastToolName();
+            System.out.println("\n" + Ansi.yellow("[interrupted" + (last != null ? " during " + last : "") + "]"));
+            System.out.println(Ansi.dim("What would you like to do instead?"));
+            return;
+        }
+        if (response != null && !response.isBlank()) System.out.print(Ansi.renderMarkdown(response));
+        else System.out.println(Ansi.dim("(no text response)"));
+        syncStateMessage(messages);
+        var compaction = compactor.maybeCompact(client, messages, 1);
+        if (compaction.compacted()) {
+            stateMessageIndex = -1;
+        }
+        // drain any continuation queued by continue/schedule tools
+        String cont = pendingContinuation;
+        if (cont != null) {
+            pendingContinuation = null;
+            System.out.println(Ansi.dim("[continue] " + cont));
+            chat(client, toolSupport, messages, cont);
+        }
     }
 
     // ── pinned context ───────────────────────────────────────────────────────
@@ -261,14 +324,101 @@ public class CodingAgent extends CodingAgentSupport {
     // ── /plan mode ───────────────────────────────────────────────────────────
 
     /**
-     * /plan &lt;goal&gt; — side conversation with read-only tools → plan + TODOs → confirm → pin into main chat.
+     * /plan &lt;goal&gt; — research + clarify + draft plan → confirm → implement.
      * <p>
      * TODO: live code
      */
     protected void handlePlanCommand(String goal, LLMClient client,
                                      List<Map<String, Object>> messages, Repl.Chat chat) throws Exception {
-        // TODO: live code
+        if (goal.isBlank()) { System.out.println("Usage: /plan <goal>"); return; }
+        Path planTmpFile = Files.createTempFile("tiny-llm-plan-", ".md");
+        planTmpFile.toFile().deleteOnExit();
+        var planTools = buildPlanTools(planTmpFile);
+        var planMessages = LLMClient.conversation(planningPrompt(),
+            "Goal: " + goal + "\n\nResearch the codebase, ask any clarifying questions, then write the plan.");
+        String response = null;
+        // TODO: while(true): response = callPlanToolLoop → if null return (interrupted)
+        // TODO: show plan draft → printTodos() → prompt Y/n/feedback
+        // TODO: break on Y, return on n, append feedback and loop
+        // TODO: then: state.setGoal/setPlan → inject messages → syncStateMessage → chat.chat(...)
         throw new UnsupportedOperationException("TODO: live code");
+    }
+
+    /** Register read-only file tools + ask-user + write-plan for planning mode. */
+    private ToolSupport buildPlanTools(Path planTmpFile) {
+        var planTools = new ToolSupport();
+        CodingTools.registerReadOnlyFileTools(planTools, new FileTools(Path.of(root)));
+
+        planTools.registerTool("ask-user",
+            "Ask the user a clarifying question before drafting the plan. Call after research, before write-plan.",
+            Schemas.object()
+                .required("question", Schemas.string().withDescription("The question to ask"))
+                .optional("choices",  Schemas.array(Schemas.string()).withDescription("Up to 4 suggested answers"))
+                .optional("default",  Schemas.number().withDescription("1-based index of the default choice (shown highlighted; accepted on Enter)"))
+                .optional("default_reason", Schemas.string().withDescription("One short sentence explaining why this default makes sense"))
+                .toJsonSchema(),
+            args -> {
+                String question = CodingTools.str(args, "question");
+                @SuppressWarnings("unchecked")
+                List<String> choices = args.get("choices") instanceof List<?> l
+                    ? l.stream().map(Object::toString).toList() : List.of();
+                int defaultIdx = args.get("default") instanceof Number n ? n.intValue() - 1 : -1;
+                String defaultReason = args.get("default_reason") instanceof String s ? s : "";
+                System.out.println("\n" + Ansi.bold(Ansi.cyan("? ")) + Ansi.bold(question));
+                for (int i = 0; i < choices.size(); i++) {
+                    if (i == defaultIdx) {
+                        System.out.println(Ansi.bold(Ansi.green("  " + (i + 1) + ". ")) + Ansi.bold(choices.get(i)) + Ansi.green(" ◀ default"));
+                    } else {
+                        System.out.println(Ansi.dim("  " + (i + 1) + ". ") + choices.get(i));
+                    }
+                }
+                if (defaultIdx >= 0 && !defaultReason.isBlank())
+                    System.out.println(Ansi.dim("    (default because: " + defaultReason + ")"));
+                String hint = choices.isEmpty() ? "" : defaultIdx >= 0
+                    ? "  (enter a number, type your own answer, or press Enter for default)"
+                    : "  (enter a number or type your own answer)";
+                if (!hint.isBlank()) System.out.println(Ansi.dim(hint));
+                String answer = repl != null ? repl.prompt("  > ", "") : "";
+                if (answer.isBlank() && defaultIdx >= 0 && defaultIdx < choices.size())
+                    return choices.get(defaultIdx);
+                if (!choices.isEmpty()) {
+                    try { int idx = Integer.parseInt(answer.trim()) - 1;
+                          if (idx >= 0 && idx < choices.size()) answer = choices.get(idx);
+                    } catch (NumberFormatException ignored) {}
+                }
+                return answer.isBlank() ? "(no answer)" : answer;
+            });
+
+        planTools.registerTool("write-plan",
+            "Write the complete Markdown plan document. Call exactly once after research and questions.",
+            Schemas.object()
+                .required("plan", Schemas.string().withDescription("Full plan in Markdown"))
+                .toJsonSchema(),
+            args -> {
+                try {
+                    Files.writeString(planTmpFile, CodingTools.str(args, "plan"), StandardCharsets.UTF_8);
+                    return "Plan written.";
+                } catch (IOException e) { return "Error writing plan: " + e.getMessage(); }
+            });
+
+        return planTools;
+    }
+
+    /** Run one tool-loop iteration; returns null if interrupted (caller should return). */
+    private String callPlanToolLoop(ToolSupport planTools, LLMClient client,
+                                    List<Map<String, Object>> planMessages) throws Exception {
+        try {
+            return Repl.io(() -> planTools.handleToolLoop(client, planMessages));
+        } catch (Exception e) {
+            boolean interrupted = e instanceof InterruptedException
+                    || e instanceof java.io.InterruptedIOException
+                    || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
+                    || Thread.interrupted();
+            if (!interrupted) throw e;
+            Thread.interrupted();
+            System.out.println("\n" + Ansi.yellow("[planning interrupted]"));
+            return null;
+        }
     }
 
     private String planningPrompt() {
