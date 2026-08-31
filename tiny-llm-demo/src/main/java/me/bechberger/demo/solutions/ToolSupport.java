@@ -64,6 +64,8 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
         var assistantMessage = Util.asMap(choice.get("message"));
         messages.add(assistantMessage);
+        var narration = (String) assistantMessage.get("content");
+        if (narration != null && !narration.isBlank()) System.out.println("  " + narration.strip());
         for (var toolCall : Util.asList(assistantMessage.get("tool_calls"))) {
             messages.add(executeToolCall(Util.asMap(toolCall)));
         }
