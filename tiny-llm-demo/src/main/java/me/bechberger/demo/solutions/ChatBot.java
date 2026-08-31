@@ -39,10 +39,10 @@ public class ChatBot implements Callable<Integer> {
     public Integer call() {
         var messages = new ArrayList<Map<String, Object>>();
         var builder = new Repl.Builder("\nYou: ", new Scanner(System.in), messages);
-
-        // @stub: createClient; build repl; greet; repl.run: add user msg, print "\nAssistant: ", chatStream, add assistant msg
         var client = options.createClient(builder);
         var repl = builder.build();
+
+        // @stub: greet; repl.run: add user msg, print "\nAssistant: ", chatStream, add assistant msg
         repl.greet("ChatBot ready. Model: " + options.resolveModel());
         repl.run(input -> {
             messages.add(LLMClient.user(input));

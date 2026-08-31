@@ -56,6 +56,10 @@ public final class Compactor {
         return compactThreshold;
     }
 
+    public static String systemPrompt() {
+        return SUMMARY_PROMPT;
+    }
+
     /**
      * Compact {@code messages} in place when the prompt is over the threshold.
      *
@@ -84,29 +88,14 @@ public final class Compactor {
         return doCompact(client, messages, 1);
     }
 
-    private Outcome doCompact(LLMClientInterface client, List<Map<String, Object>> messages, int pinned) {
-        var usage = client.lastUsage();
-        int promptTokens = usage != null ? usage.promptTokens() : 0;
+    /** Build the full text that would be sent to the LLM as the user message during compaction. */
+    public String buildCompactionUserMessage(List<Map<String, Object>> messages) {
+        return buildCompactionUserMessage(messages, 1);
+    }
 
-        int recentStart = Math.max(pinned, messages.size() - keepRecent);
-        // Don't cut inside a tool-call group: if recentStart lands on a tool result,
-        // walk forward past all tool results AND their preceding assistant tool_calls message.
-        while (recentStart < messages.size() && "tool".equals(messages.get(recentStart).get("role"))) {
-            recentStart++;
-        }
-        // Also: if the message just before recentStart is an assistant with tool_calls,
-        // its tool results are already in the tail — move recentStart back to include the
-        // assistant message too, keeping the group intact.
-        if (recentStart > pinned && recentStart < messages.size()) {
-            var prev = messages.get(recentStart - 1);
-            if ("assistant".equals(prev.get("role")) && prev.containsKey("tool_calls")) {
-                recentStart--;
-            }
-        }
-        if (recentStart <= pinned) {
-            return new Outcome(false, messages.size(), messages.size(), promptTokens);
-        }
-
+    private String buildCompactionUserMessage(List<Map<String, Object>> messages, int pinned) {
+        int recentStart = recentStart(messages, pinned);
+        if (recentStart <= pinned) return "(nothing to compact)";
         var text = new StringBuilder();
         for (var msg : messages.subList(pinned, recentStart)) {
             var role = (String) msg.get("role");
@@ -133,7 +122,39 @@ public final class Compactor {
                 text.append(role).append(": ").append(content).append("\n\n");
             }
         }
+        return text.toString();
+    }
 
+    /** Index of the first message kept verbatim (the tail); everything before it gets summarized. */
+    private int recentStart(List<Map<String, Object>> messages, int pinned) {
+        int recentStart = Math.max(pinned, messages.size() - keepRecent);
+        // Don't cut inside a tool-call group: if recentStart lands on a tool result,
+        // walk forward past all tool results AND their preceding assistant tool_calls message.
+        while (recentStart < messages.size() && "tool".equals(messages.get(recentStart).get("role"))) {
+            recentStart++;
+        }
+        // Also: if the message just before recentStart is an assistant with tool_calls,
+        // its tool results are already in the tail — move recentStart back to include the
+        // assistant message too, keeping the group intact.
+        if (recentStart > pinned && recentStart < messages.size()) {
+            var prev = messages.get(recentStart - 1);
+            if ("assistant".equals(prev.get("role")) && prev.containsKey("tool_calls")) {
+                recentStart--;
+            }
+        }
+        return recentStart;
+    }
+
+    private Outcome doCompact(LLMClientInterface client, List<Map<String, Object>> messages, int pinned) {
+        var usage = client.lastUsage();
+        int promptTokens = usage != null ? usage.promptTokens() : 0;
+
+        int recentStart = recentStart(messages, pinned);
+        if (recentStart <= pinned) {
+            return new Outcome(false, messages.size(), messages.size(), promptTokens);
+        }
+
+        String text = buildCompactionUserMessage(messages, pinned);
         var head = new ArrayList<>(messages.subList(0, pinned));
         var tail = new ArrayList<>(messages.subList(recentStart, messages.size()));
         int before = messages.size();
@@ -142,7 +163,7 @@ public final class Compactor {
         try {
             System.out.println(Ansi.dim("[compact] summarizing " + (recentStart - pinned) + " messages (" + promptTokens + " tokens)…"));
             summary = client.chatSimple(List.of(
-                    LLMClientInterface.system(SUMMARY_PROMPT), LLMClientInterface.user(text.toString())));
+                    LLMClientInterface.system(SUMMARY_PROMPT), LLMClientInterface.user(text)));
         } catch (Exception e) {
             // compaction must never kill a session - leave history as is, retry next turn
             if (e instanceof InterruptedException) Thread.currentThread().interrupt();

@@ -53,13 +53,9 @@ return content != null ? content : "";</pre></div>
 
 ### `Integer call()`
 
-<div class="stub"><div class="label">hint</div><pre>// TODO: createClient
-// TODO: build repl
-// TODO: greet
+<div class="stub"><div class="label">hint</div><pre>// TODO: greet
 // TODO: repl.run: add user msg, print "\nAssistant: ", chatStream, add assistant msg</pre></div>
-<div class="solution"><div class="label">solution</div><pre>var client = options.createClient(builder);
-var repl = builder.build();
-repl.greet("ChatBot ready. Model: " + options.resolveModel());
+<div class="solution"><div class="label">solution</div><pre>repl.greet("ChatBot ready. Model: " + options.resolveModel());
 repl.run(input -&gt; {
     messages.add(LLMClient.user(input));
     System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
@@ -134,31 +130,30 @@ return Map.of("role","tool","tool_call_id",id,"content",result);</pre></div>
 
 ## Part 5 — ToolChatBot
 
-### ``
+### `Integer call()`
 
-<div class="stub"><div class="label">hint</div><pre>// TODO: call handleToolLoop, print the response, add it to messages</pre></div>
-<div class="solution"><div class="label">solution</div><pre>String response = toolSupport.handleToolLoop(client, messages);
-System.out.println(response);
-messages.add(LLMClient.assistant(response));</pre></div>
+<div class="stub"><div class="label">hint</div><pre>// TODO: 1. registerTool("ls", description, Schemas.object().required("path",...).toJsonSchema(), handler)
+// TODO: 2. call handleToolLoop(client, messages), print response</pre></div>
+<div class="solution"><div class="label">solution</div><pre>toolSupport.registerTool("ls", "List directory contents (one level). Use tree for a recursive overview.",
+        Schemas.object()
+                .required("path", Schemas.string().withDescription("Directory path relative to project root"))
+                .toJsonSchema(),
+        args -&gt; fileTools.ls(args.get("path").toString()));
+// register read-file, grep, tree, find-file
+CodingTools.registerReadOnlyFileToolsExceptLs(toolSupport, fileTools);
+builder.withTools(toolSupport);
+
+var repl = builder.build();
+repl.greet("Tool Chatbot ready. Model: " + options.resolveModel());
+repl.run(input -&gt; {
+    messages.add(LLMClient.user(input));
+    System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
+    String response = toolSupport.handleToolLoop(client, messages);
+    if (response != null) System.out.println(response);
+});
+return 0;</pre></div>
 
 ## Part 8 — CodingAgent
-
-### `chat(LLMClient client, ToolSupport toolSupport,`
-
-<div class="stub"><div class="label">hint</div><pre>// TODO: live code</pre></div>
-<div class="solution"><div class="label">solution</div><pre>messages.add(LLMClient.user(input));
-syncConversation(messages);
-System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
-String response = toolSupport.handleToolLoop(client, messages);
-if (response != null &amp;&amp; !response.isBlank()) System.out.println(response);
-else System.out.println(Ansi.dim("(no text response)"));
-messages.add(LLMClient.assistant(response));
-syncStateMessage(messages);
-var compaction = compactor.maybeCompact(client, messages, 1);
-if (compaction.compacted()) {
-    stateMessageIndex = -1;
-    System.out.println(Ansi.dim("[compact] " + compaction.messagesBefore() + " → " + compaction.messagesAfter() + " messages"));
-}</pre></div>
 
 ### `syncConversation(List<Map<String, Object>> messages)`
 
@@ -176,19 +171,37 @@ else messages.set(stateMessageIndex, msg);</pre></div>
 
 ### `handlePlanCommand(String goal, LLMClient client,`
 
-<div class="stub"><div class="label">hint</div><pre>// TODO: live code</pre></div>
-<div class="solution"><div class="label">solution</div><pre>if (goal.isBlank()) { System.out.println("Usage: /plan &lt;goal&gt;"); return; }
-var planTools = new ToolSupport();
-CodingTools.registerReadOnlyFileTools(planTools, new FileTools(Path.of(root)));
-CodingTools.registerStateTools(planTools, state, action -&gt; true);
-System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
-String response = Repl.io(() -&gt; planTools.handleToolLoop(client,
-        LLMClient.conversation(planningPrompt(), "Goal: " + goal + "\n\nExplore and produce a plan with TODOs.")));
-System.out.println(Ansi.bold("\n─── Plan ready ──────────────────────────────────────────"));
-printTodos();
-if (!confirm("Accept this plan?", true)) { state.clear(); System.out.println("Plan discarded."); return; }
+<div class="stub"><div class="label">hint</div><pre>// TODO: while(true): response = callPlanToolLoop → if null return (interrupted)
+// TODO: show plan draft → printTodos() → prompt Y/n/feedback
+// TODO: break on Y, return on n, append feedback and loop
+// TODO: then: state.setGoal/setPlan → inject messages → syncStateMessage → chat.chat(...)</pre></div>
+<div class="solution"><div class="label">solution</div><pre>while (true) {
+    System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
+    response = callPlanToolLoop(planTools, client, planMessages);
+    if (response == null) return; // interrupted
+    if (Files.exists(planTmpFile) &amp;&amp; Files.size(planTmpFile) &gt; 0) {
+        System.out.println(Ansi.bold("\n─── Plan draft ──────────────────────────────────────────"));
+        System.out.print(Ansi.renderMarkdown(Files.readString(planTmpFile, StandardCharsets.UTF_8)));
+        System.out.println(Ansi.bold("─────────────────────────────────────────────────────────"));
+    }
+    printTodos();
+    String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", null) : null;
+    if (answer == null) { System.out.println(Ansi.yellow("(no input — plan not accepted)")); return; }
+    if (answer.isEmpty() || answer.equalsIgnoreCase("y")) {
+        System.out.println(Ansi.bold(Ansi.green("\nImplementing...")));
+        if (repl != null) repl.resetLivePaneCount();
+        break;
+    }
+    if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
+    planMessages.add(LLMClient.user(
+        "Please revise the plan based on this feedback: " + answer +
+        "\n\nExplore more if needed, ask follow-up questions, then call write-plan with the revised plan."));
+}
+String planText = Files.exists(planTmpFile) ? Files.readString(planTmpFile, StandardCharsets.UTF_8) : "";
 state.setGoal(goal);
+state.setPlan(planText);
 messages.add(LLMClient.user("/plan " + goal));
-messages.add(LLMClient.assistant(response));
-syncStateMessage(messages);</pre></div>
+if (response != null) messages.add(LLMClient.assistant(response));
+syncStateMessage(messages);
+chat.chat("Implement the plan step by step.");</pre></div>
 

@@ -7,6 +7,7 @@ import me.bechberger.demo.ToolSupport;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.ApprovalRules;
 import me.bechberger.demo.util.Commands;
+import me.bechberger.demo.util.Compactor;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
@@ -209,7 +210,25 @@ public class CodingAgent extends CodingAgentSupport {
                 .on("rules",   "manage allow/deny rules (interactive)",
                         args -> editRules())
                 .on("clear",   "clear conversation, keep system prompt and state", args -> clearConversation(messages))
-                .on("compact", "fold old history into a summary now",        args -> compactNow(client, messages))
+                .on("compact", "fold old history into a summary now; /compact prompt — show what would be sent",
+                        args -> {
+                            if (args.trim().equals("prompt")) {
+                                try {
+                                    Path tmp = Files.createTempFile("llm-compact-prompt-", ".txt");
+                                    tmp.toFile().deleteOnExit();
+                                    String content = "=== SYSTEM PROMPT ===\n\n" + Compactor.systemPrompt()
+                                            + "\n\n=== USER MESSAGE (conversation so far) ===\n\n"
+                                            + compactor.buildCompactionUserMessage(messages);
+                                    Files.writeString(tmp, content, StandardCharsets.UTF_8);
+                                    new ProcessBuilder("less", tmp.toString()).inheritIO().start().waitFor();
+                                    Files.deleteIfExists(tmp);
+                                } catch (Exception e) {
+                                    System.err.println("Could not open less: " + e.getMessage());
+                                }
+                            } else {
+                                compactNow(client, messages);
+                            }
+                        })
                 .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages))
                 .on("model",   "show or switch model: /model [name]",
                         args -> {
