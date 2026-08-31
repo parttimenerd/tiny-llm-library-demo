@@ -26,7 +26,8 @@ public final class Compactor {
     // and https://github.com/cline/cline
     private static final String SUMMARY_PROMPT =
             "Summarize this coding session so work can resume in a new context window.\n" +
-            "Do NOT call any tools. Wrap your summary in <summary></summary> tags.\n\n" +
+            "Do NOT call any tools. Wrap your summary in <summary></summary> tags.\n" +
+            "Write in a way that enables immediate resumption of the task.\n\n" +
             "## Task\n" +
             "What the user asked for and any constraints.\n\n" +
             "## Done\n" +
@@ -36,7 +37,8 @@ public final class Compactor {
             "## Next\n" +
             "Remaining steps in priority order. Open questions or blockers.\n\n" +
             "## Context\n" +
-            "User preferences, non-obvious constraints, anything that would prevent duplicate work.\n\n" +
+            "User preferences, non-obvious constraints, promises made to the user, " +
+            "anything that would prevent duplicate work.\n\n" +
             "Be thorough on files and errors. Err on the side of including detail.";
 
     private final int compactThreshold; // prompt tokens that trigger compaction
@@ -87,10 +89,19 @@ public final class Compactor {
         int promptTokens = usage != null ? usage.promptTokens() : 0;
 
         int recentStart = Math.max(pinned, messages.size() - keepRecent);
-        // don't let the kept tail start with an orphaned tool result whose
-        // assistant tool_calls message would have been summarized away
+        // Don't cut inside a tool-call group: if recentStart lands on a tool result,
+        // walk forward past all tool results AND their preceding assistant tool_calls message.
         while (recentStart < messages.size() && "tool".equals(messages.get(recentStart).get("role"))) {
             recentStart++;
+        }
+        // Also: if the message just before recentStart is an assistant with tool_calls,
+        // its tool results are already in the tail — move recentStart back to include the
+        // assistant message too, keeping the group intact.
+        if (recentStart > pinned && recentStart < messages.size()) {
+            var prev = messages.get(recentStart - 1);
+            if ("assistant".equals(prev.get("role")) && prev.containsKey("tool_calls")) {
+                recentStart--;
+            }
         }
         if (recentStart <= pinned) {
             return new Outcome(false, messages.size(), messages.size(), promptTokens);
