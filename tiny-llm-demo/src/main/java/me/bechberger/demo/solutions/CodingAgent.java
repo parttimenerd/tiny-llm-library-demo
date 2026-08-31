@@ -281,8 +281,12 @@ public class CodingAgent extends CodingAgentSupport {
                 System.out.println(Ansi.bold("─────────────────────────────────────────────────────────"));
             }
             printTodos();
-            String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", "") : "";
-            if (answer.isEmpty() || answer.equalsIgnoreCase("y")) break;
+            String answer = repl != null ? repl.prompt("  Proceed? [Y/n/feedback] ", null) : null;
+            if (answer == null) { System.out.println(Ansi.yellow("(no input — plan not accepted)")); return; }
+            if (answer.isEmpty() || answer.equalsIgnoreCase("y")) {
+                System.out.println(Ansi.bold(Ansi.green("\nImplementing...")));
+                break;
+            }
             if (answer.equalsIgnoreCase("n")) { state.clear(); System.out.println("Plan discarded."); return; }
             state.clear();
             planMessages.add(LLMClient.user(

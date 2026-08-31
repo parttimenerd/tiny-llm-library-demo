@@ -174,9 +174,9 @@ public final class Repl {
     public String prompt(String promptText, String defaultValue) {
         System.out.print(promptText);
         if (!scanner.hasNextLine()) return defaultValue;
-        String answer = scanner.nextLine().trim();
-        if (!interactive) System.out.println(answer); // echo for piped input
-        return answer;
+        String line = scanner.nextLine();
+        if (!interactive) System.out.println(line); // echo for piped input
+        return line.trim();
     }
 
     /** Print a one-line greeting with a slim hint to discover commands. */
