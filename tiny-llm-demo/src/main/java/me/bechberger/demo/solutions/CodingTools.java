@@ -106,6 +106,9 @@ public final class CodingTools {
     }
 
     public static void registerStateTools(ToolSupport ts, AgentState state, Predicate<String> approve) {
+        register(ts, "state-read", "Read the current agent state: goal, plan, and all TODOs with their ids and statuses",
+                args -> state.isEmpty() ? "(no state)" : state.render());
+
         register(ts, "todo-add", "Add a new TODO item",
                 args -> "Added TODO #" + state.addTodo(str(args, "description")),
                 "description", "What needs to be done");
@@ -123,12 +126,37 @@ public final class CodingTools {
                 },
                 "id", "TODO id", "status", "pending, in_progress, or completed");
 
+        ts.registerTool("todo-edit", "Change the description (and optionally the status) of an existing TODO item",
+                Schemas.object()
+                        .required("id",          Schemas.number().withDescription("TODO id"))
+                        .required("description", Schemas.string().withDescription("New description text"))
+                        .optional("status",      Schemas.string().withDescription("pending, in_progress, or completed — omit to keep current"))
+                        .toJsonSchema(),
+                args -> {
+                    int id = number(args, "id");
+                    String desc = str(args, "description");
+                    Object statusArg = args.get("status");
+                    AgentState.Status s = null;
+                    if (statusArg != null) {
+                        s = switch (statusArg.toString().toLowerCase().replace('-', '_')) {
+                            case "in_progress" -> AgentState.Status.IN_PROGRESS;
+                            case "completed"   -> AgentState.Status.COMPLETED;
+                            default            -> AgentState.Status.PENDING;
+                        };
+                    }
+                    return state.editTodo(id, desc, s) ? "Edited TODO #" + id : "Unknown TODO #" + id;
+                });
+
         register(ts, "todo-remove", "Remove a TODO item",
                 args -> {
                     int id = number(args, "id");
                     return state.removeTodo(id) ? "Removed TODO #" + id : "Unknown TODO #" + id;
                 },
                 "id", "TODO id to remove");
+
+        register(ts, "set-goal", "Set or clear the current goal",
+                args -> { state.setGoal(str(args, "goal")); return "Goal updated."; },
+                "goal", "New goal text, or empty string to clear");
 
         register(ts, "update-plan", "Record or update the current plan — user must approve before execution begins",
                 args -> {

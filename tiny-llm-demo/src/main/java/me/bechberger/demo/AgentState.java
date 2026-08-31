@@ -34,6 +34,7 @@ public class AgentState {
 
     public record Todo(int id, String description, Status status) {
         public Todo withStatus(Status s) { return new Todo(id, description, s); }
+        public Todo withDescription(String d) { return new Todo(id, d, status); }
     }
 
     private String goal = "";
@@ -58,6 +59,19 @@ public class AgentState {
         for (int i = 0; i < todos.size(); i++) {
             if (todos.get(i).id() == id) {
                 todos.set(i, todos.get(i).withStatus(status));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Change a todo's description and optionally its status (null = keep existing). */
+    public boolean editTodo(int id, String description, Status status) {
+        for (int i = 0; i < todos.size(); i++) {
+            if (todos.get(i).id() == id) {
+                var t = todos.get(i).withDescription(description);
+                if (status != null) t = t.withStatus(status);
+                todos.set(i, t);
                 return true;
             }
         }
