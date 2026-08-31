@@ -71,46 +71,54 @@ public final class CodingTools {
         registerReadOnlyFileTools(ts, fileTools);
 
         register(ts, "create-file", "Create a new file with content (fails if it already exists - use write-file to overwrite)",
-                args -> approve.test(action("create-file", args, "content"))
-                        ? fileTools.createFile(str(args, "path"), str(args, "content"))
-                        : "User declined — ask why or suggest /yolo.",
+                args -> guarded(approve, action("create-file", args, "content"),
+                        () -> fileTools.createFile(str(args, "path"), str(args, "content"))),
                 "path", "File path relative to project root", "content", "File content");
 
         register(ts, "write-file", "Write (create or overwrite) a file",
-                args -> approve.test(action("write-file", args, "content"))
-                        ? fileTools.writeFile(str(args, "path"), str(args, "content"))
-                        : "User declined — ask why or suggest /yolo.",
+                args -> guarded(approve, action("write-file", args, "content"),
+                        () -> fileTools.writeFile(str(args, "path"), str(args, "content"))),
                 "path", "File path relative to project root", "content", "Full file content to write");
 
         register(ts, "edit", "Replace exact text in an existing file - 'old' must occur exactly once; " +
                         "use for surgical changes instead of rewriting the whole file",
-                args -> approve.test(action("edit", args, "old", "new"))
-                        ? fileTools.editFile(str(args, "path"), str(args, "old"), str(args, "new"))
-                        : "User declined — ask why or suggest /yolo.",
+                args -> guarded(approve, action("edit", args, "old", "new"),
+                        () -> fileTools.editFile(str(args, "path"), str(args, "old"), str(args, "new"))),
                 "path", "File relative to project root",
                 "old", "Exact current text to replace (must occur exactly once - include surrounding lines if ambiguous)",
                 "new", "Replacement text");
 
         register(ts, "create-folder", "Create a folder (and any missing parents)",
-                args -> approve.test(action("create-folder", args))
-                        ? fileTools.createFolder(str(args, "path"))
-                        : "User declined — ask why or suggest /yolo.",
+                args -> guarded(approve, action("create-folder", args),
+                        () -> fileTools.createFolder(str(args, "path"))),
                 "path", "Folder path relative to project root");
 
         register(ts, "delete", "Delete a file or folder (folders are deleted recursively). Requires user confirmation.",
-                args -> approve.test(action("delete", args))
-                        ? fileTools.delete(str(args, "path"))
-                        : "User declined this deletion - ask for reasons, or suggest they enable /yolo mode.",
+                args -> guarded(approve, action("delete", args),
+                        () -> fileTools.delete(str(args, "path")),
+                        "User declined this deletion - ask for reasons, or suggest they enable /yolo mode."),
                 "path", "Path relative to project root");
 
         register(ts, "run", "Run a bash command in the project root and return its output - use it to build and to " +
                         "verify, e.g. \"mvn -q package\", \"java -jar target/app.jar '2+3*4'\" " +
                         "(60s timeout, output truncated at 16KB). Requires user confirmation.",
-                args -> approve.test(action("run", args))
-                        ? fileTools.run(str(args, "command"))
-                        : "User declined to run this command - ask for reasons, or suggest they enable /yolo mode. " +
-                          "The user can also execute it themselves with /run.",
+                args -> guarded(approve, action("run", args),
+                        () -> fileTools.run(str(args, "command")),
+                        "User declined to run this command - ask for reasons, or suggest they enable /yolo mode. " +
+                        "The user can also execute it themselves with /run."),
                 "command", "Bash command to execute in the project root");
+    }
+
+    private static final String DECLINED = "User declined — ask why or suggest /yolo.";
+
+    private static String guarded(Predicate<String> approve, String actionStr,
+                                  java.util.function.Supplier<String> work) {
+        return guarded(approve, actionStr, work, DECLINED);
+    }
+
+    private static String guarded(Predicate<String> approve, String actionStr,
+                                  java.util.function.Supplier<String> work, String declineMsg) {
+        return approve.test(actionStr) ? work.get() : declineMsg;
     }
 
     public static void registerStateTools(ToolSupport ts, AgentState state, Predicate<String> approve) {
