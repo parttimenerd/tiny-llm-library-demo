@@ -1825,6 +1825,57 @@ messages.add(assistant(response));
 
 ---
 
+# The System Prompt
+
+<div class="grid grid-cols-2 gap-6 mt-2 text-sm">
+
+<div>
+
+```
+You are a coding assistant with file
+and shell tools. Be concise.
+
+EXPLORATION
+- Say what you're looking for before
+  each tool call
+- ls · tree · find-file · grep
+- read-file (with start_line/end_line)
+
+EDITING — surgical edits preferred
+- edit old/new (unique match)
+- write-file for new files / rewrites
+```
+
+</div>
+
+<div>
+
+```
+VERIFICATION — always run after changes
+- mvn -q package → check exit code
+- java -jar target/*.jar <args>
+
+CLARIFYING QUESTIONS
+- Ask ONE question if ambiguous
+- Don't ask what the code answers
+
+PLANNING (non-trivial tasks)
+- update-plan · todo-add · todo-update
+- Skip for hello-world / calculator
+
+END: one line — done + how verified
+```
+
+</div>
+
+</div>
+
+<!--
+**[~45:45]** "The system prompt is the agent's standing orders. Exploration discipline, edit discipline, always verify, clarify before acting, plan for non-trivial tasks. Short enough to fit on a slide — long enough to prevent the most common mistakes."
+-->
+
+---
+
 # /plan Mode
 
 ```bash
