@@ -302,7 +302,7 @@ public final class Repl {
             if (interactive) {
                 var reader = new QueueReader();
                 activeReader = reader;
-                Thread.ofVirtual().start(reader);
+                var readerThread = Thread.ofVirtual().start(reader);
                 try {
                     runTurn(chat, input);
                 } catch (Exception e) {
@@ -310,6 +310,7 @@ public final class Repl {
                 } finally {
                     reader.stop();
                     activeReader = null;
+                    try { readerThread.join(500); } catch (InterruptedException ignored) { Thread.currentThread().interrupt(); }
                 }
             } else {
                 try { runTurn(chat, input); } catch (Exception e) { handleTurnException(e); }
@@ -349,10 +350,16 @@ public final class Repl {
      */
     final class QueueReader implements Runnable {
         private volatile boolean running = true;
+        private volatile Thread thread;
 
-        void stop() { running = false; }
+        void stop() {
+            running = false;
+            var t = thread;
+            if (t != null) t.interrupt(); // wake immediately from sleep
+        }
 
         @Override public void run() {
+            thread = Thread.currentThread();
             var devTty = new java.io.File("/dev/tty");
             try (var tty = new java.io.FileInputStream(devTty)) {
                 var out = System.out;
