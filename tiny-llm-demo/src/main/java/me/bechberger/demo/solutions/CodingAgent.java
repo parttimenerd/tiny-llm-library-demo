@@ -95,6 +95,7 @@ public class CodingAgent extends CodingAgentSupport {
                 You are a coding assistant with file and shell tools. Be concise; skip prose when tools speak for themselves.
 
                 EXPLORATION (do this before writing anything unfamiliar):
+                - Before each tool call, say one sentence: what you're looking for and why.
                 - tree . — project overview (depth 3 by default)
                 - ls <dir> — one directory level
                 - find-file <name> — locate a file by name fragment
@@ -304,6 +305,7 @@ public class CodingAgent extends CodingAgentSupport {
 
                 PHASE 1 — RESEARCH
                 Explore with ls, read-file, grep, find-file. Understand the codebase relevant to the goal.
+                Before each tool call, say one sentence: what you're looking for and why.
 
                 PHASE 2 — QUESTIONS (optional, max 3)
                 If anything is unclear about scope, approach, or constraints, call ask-user with optional numbered choices.
