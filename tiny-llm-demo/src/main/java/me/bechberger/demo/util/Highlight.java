@@ -54,7 +54,14 @@ public final class Highlight {
         return applyRules(src, XML_RULES);
     }
 
-    // ── rule engine ───────────────────────────────────────────────────────────
+    /** Highlight a shell command string (no newlines). */
+    public static String shell(String src) {
+        if (!Ansi.isTerminal() || src == null) return src;
+        return applyRules(src, SHELL_RULES);
+    }
+
+    // package-private: used by tests
+    static String applyShell(String src) { return applyRules(src, SHELL_RULES); }
 
     private record Rule(Pattern pattern, String open, String close) {}
 
@@ -125,6 +132,23 @@ public final class Highlight {
         rule("[A-Za-z_:][A-Za-z0-9_:.-]*(?=\\s*=)",        C_ATTR,    RESET),
         // tag names (opening/closing)
         rule("</?[A-Za-z_:][A-Za-z0-9_:.-]*",              C_TAG,     RESET),
+    };
+
+    private static final Rule[] SHELL_RULES = {
+        // single-quoted strings
+        rule("'[^']*'",                                    C_STRING,  RESET),
+        // double-quoted strings
+        rule("\"(?:[^\"\\\\]|\\\\.)*\"",                   C_STRING,  RESET),
+        // shell keywords / builtins
+        rule("\\b(if|then|else|elif|fi|for|while|do|done|case|esac|in" +
+             "|echo|export|unset|source|return|exit|cd|pwd|set|shift" +
+             "|true|false|test|local|function)\\b",        C_KEYWORD, RESET),
+        // flags (-x, --long-flag)
+        rule("(?<![\\w-])--?[A-Za-z][A-Za-z0-9_-]*",      C_ANNOT,   RESET),
+        // numbers
+        rule("\\b[0-9]+\\b",                               C_NUMBER,  RESET),
+        // pipe, redirect, semicolon, ampersand operators
+        rule("[|&;><]+",                                   C_COMMENT, RESET),
     };
 
     // ── scan-and-replace ──────────────────────────────────────────────────────

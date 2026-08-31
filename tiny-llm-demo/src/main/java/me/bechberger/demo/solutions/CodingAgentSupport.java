@@ -8,6 +8,7 @@ import me.bechberger.demo.solutions.ToolSupport;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.ApprovalRules;
 import me.bechberger.demo.util.Compactor;
+import me.bechberger.demo.util.Highlight;
 
 import me.bechberger.demo.util.Repl;
 import me.bechberger.demo.util.SessionLog;
@@ -138,6 +139,17 @@ abstract class CodingAgentSupport implements Callable<Integer> {
         System.out.println("Conversation cleared (" + dropped + " messages dropped; goal/plan/TODOs stay pinned).");
     }
 
+    private static String formatAction(String action) {
+        int colon = action.indexOf(": ");
+        if (colon < 0) return Ansi.yellow(action);
+        String prefix = action.substring(0, colon + 2);
+        String body   = action.substring(colon + 2);
+        String highlighted = action.startsWith("run:") || action.startsWith("delete:")
+                ? Highlight.shell(body)
+                : Ansi.yellow(body);
+        return Ansi.yellow(Ansi.BOLD + prefix + Ansi.RESET) + highlighted;
+    }
+
     /** Ask the user to approve a risky agent action — auto-approved in YOLO/AUTO_EDIT mode. */
     boolean confirm(String action, boolean defaultYes) {
         var effect = approvalRules.match(action);
@@ -150,7 +162,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
             return true;
         }
         while (true) {
-            System.out.print("\n" + Ansi.yellow("⚠  " + action) + "\n    Allow? [y/N/a=always/Y=yolo/r=rules] ");
+            System.out.print("\n" + Ansi.yellow("⚠  ") + formatAction(action) + "\n    Allow? [y/N/a=always/Y=yolo/r=rules] ");
             if (!scanner.hasNextLine()) return defaultYes;
             String answer = scanner.nextLine().trim().toLowerCase();
             if (System.console() == null) System.out.println(answer);
