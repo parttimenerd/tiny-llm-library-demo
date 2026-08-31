@@ -22,35 +22,22 @@ public final class Compactor {
     /** One check: whether it compacted, message counts around it, and the triggering prompt size. */
     public record Outcome(boolean compacted, int messagesBefore, int messagesAfter, int promptTokens) {}
 
+    // Prompt structure inspired by https://platform.claude.com/cookbook/tool-use-automatic-context-compaction
+    // and https://github.com/cline/cline
     private static final String SUMMARY_PROMPT =
-            "You have been working on a coding task but have not yet completed it. " +
-            "Write a continuation summary that will allow you (or another instance of yourself) " +
-            "to resume work efficiently in a future context window where the conversation history " +
-            "will be replaced with this summary. Do NOT call any tools.\n\n" +
-            "Your summary should be structured, concise, and actionable. Include:\n\n" +
-            "1. **Task Overview**\n" +
-            "   - The user's core request and success criteria\n" +
-            "   - Any clarifications or constraints they specified\n\n" +
-            "2. **Current State**\n" +
-            "   - What has been completed so far\n" +
-            "   - Files created, modified, or analyzed (with paths)\n" +
-            "   - Key outputs or artifacts produced\n\n" +
-            "3. **Important Discoveries**\n" +
-            "   - Technical constraints or requirements uncovered\n" +
-            "   - Decisions made and their rationale\n" +
-            "   - Errors encountered and how they were resolved (quote error messages verbatim)\n" +
-            "   - What approaches were tried that didn't work (and why)\n\n" +
-            "4. **Next Steps**\n" +
-            "   - Specific actions needed to complete the task\n" +
-            "   - Any blockers or open questions to resolve\n" +
-            "   - Priority order if multiple steps remain\n\n" +
-            "5. **Context to Preserve**\n" +
-            "   - User preferences or style requirements\n" +
-            "   - Domain-specific details that aren't obvious\n" +
-            "   - Any promises made to the user\n\n" +
-            "Be concise but complete — err on the side of including information that would " +
-            "prevent duplicate work or repeated mistakes. Write in a way that enables immediate " +
-            "resumption of the task. Wrap your summary in <summary></summary> tags.";
+            "Summarize this coding session so work can resume in a new context window.\n" +
+            "Do NOT call any tools. Wrap your summary in <summary></summary> tags.\n\n" +
+            "## Task\n" +
+            "What the user asked for and any constraints.\n\n" +
+            "## Done\n" +
+            "Completed steps, files created/modified (with paths), key decisions and their rationale.\n\n" +
+            "## Errors\n" +
+            "Problems hit and how they were resolved. Quote error messages verbatim.\n\n" +
+            "## Next\n" +
+            "Remaining steps in priority order. Open questions or blockers.\n\n" +
+            "## Context\n" +
+            "User preferences, non-obvious constraints, anything that would prevent duplicate work.\n\n" +
+            "Be thorough on files and errors. Err on the side of including detail.";
 
     private final int compactThreshold; // prompt tokens that trigger compaction
     private final int alertThreshold;   // prompt tokens that trigger the "approaching limit" warning
