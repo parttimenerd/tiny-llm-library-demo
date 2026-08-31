@@ -49,8 +49,8 @@ public class ToolChatBot implements Callable<Integer> {
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));
 
-        // Tool registration: name + description + JSON schema + handler.
-        // This is pre-written boilerplate — see FileTools.registerTools for the details.
+        // Each tool: registerTool(name, description, jsonSchema, handler)
+        // Pre-written to save time — see FileTools.registerTools for ls/read-file/grep/find-file.
         fileTools.registerTools(toolSupport);
         builder.withTools(toolSupport);
 

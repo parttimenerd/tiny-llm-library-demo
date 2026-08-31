@@ -11,11 +11,11 @@ import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
-import me.bechberger.util.femtoschema.Schemas;
+import me.bechberger.util.femtoschema.Schemas; // @demo:
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.io.IOException; // @demo:
+import java.nio.charset.StandardCharsets; // @demo:
+import java.nio.file.Files; // @demo:
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

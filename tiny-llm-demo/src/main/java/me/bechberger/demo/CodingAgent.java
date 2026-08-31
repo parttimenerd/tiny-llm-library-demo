@@ -1,5 +1,10 @@
 package me.bechberger.demo;
 
+import me.bechberger.demo.AgentState;
+import me.bechberger.demo.CodingTools;
+import me.bechberger.demo.FileTools;
+import me.bechberger.demo.LLMClient;
+import me.bechberger.demo.ToolSupport;
 import me.bechberger.demo.util.Ansi;
 import me.bechberger.demo.util.ApprovalRules;
 import me.bechberger.demo.util.Commands;
@@ -49,7 +54,6 @@ public class CodingAgent extends CodingAgentSupport {
 
         // Ctrl+C aborts current call; double Ctrl+C within 1.5 s exits.
         var mainThread = Thread.currentThread();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {}));
         var lastInterrupt = new long[]{0};
         try {
             var sig = new sun.misc.Signal("INT");
@@ -83,13 +87,38 @@ public class CodingAgent extends CodingAgentSupport {
     }
 
     protected String buildSystemPrompt() {
-        return "Coding assistant. Use tools only, keep replies brief.\n" +
-               "- Exact param names: ls→path, todo-add→description, run→command, edit→path/old/new.\n" +
-               "- All paths are relative to the sandbox root. Never search from '/' — use 'find . -name foo' instead.\n" +
-               "- For well-known tasks (calculator, hello-world, etc): skip exploration, go straight to creating files.\n" +
-               "- For non-trivial or unfamiliar tasks: update-plan first, then todo-add each step, todo-update in_progress/completed as you go.\n" +
-               "- Always verify: run mvn package then java -jar target/*.jar with realistic inputs.\n" +
-               "- End with one line: what was done and how verified.";
+        return """
+                You are a coding assistant with file and shell tools. Be concise; skip prose when tools speak for themselves.
+
+                EXPLORATION (do this before writing anything unfamiliar):
+                - Before each tool call, say one sentence: what you're looking for and why.
+                - tree . — project overview (depth 3 by default)
+                - ls <dir> — one directory level
+                - find-file <name> — locate a file by name fragment
+                - grep <text> — search across all files
+                - read-file <path> — read a file; add start_line/end_line to page large files
+
+                EDITING — prefer surgical edits:
+                - edit path/old/new — replace exact text (must be unique; add surrounding lines if ambiguous)
+                - write-file — only for new files or complete rewrites
+                - For files > 200 lines: read the relevant section (start_line/end_line) before editing
+
+                VERIFICATION — always run after changes:
+                - run "mvn -q package" — compiles and packages; check exit code
+                - run "java -jar target/*.jar <args>" — test with realistic inputs
+                - On failure: read the [ERROR] lines; fix, then re-run
+
+                TOOL DISCIPLINE:
+                - Exact param names: ls→path, read-file→path, grep→query/path, edit→path/old/new, run→command
+                - All paths are relative to the project root — never use absolute paths
+                - Never search from '/' — use 'find . -name foo' or find-file instead
+
+                PLANNING (for non-trivial tasks):
+                - update-plan once with the approach, then todo-add each step
+                - todo-update in_progress when starting a step, completed when done
+                - For simple well-known tasks (calculator, hello-world): skip planning, go straight to implementation
+
+                END each turn: one line — what was done and how it was verified.""";
     }
 
     protected void registerCommands(Repl.Builder builder, LLMClient client, FileTools fileTools,
@@ -105,7 +134,7 @@ public class CodingAgent extends CodingAgentSupport {
                     .on("undone", "<id> — mark pending",   (int id) -> state.updateTodo(id, AgentState.Status.PENDING))
                     .on("del",    "<id> — remove",         (int id) -> state.removeTodo(id))
                 .end(() -> { if (state.isEmpty()) System.out.println(Ansi.dim("(no plan or TODOs yet)")); })
-                .on("plan",    "enter planning mode: /plan <goal>",          args -> handlePlanCommand(args, client, messages))
+                .on("plan",    "enter planning mode: /plan <goal>",          args -> { try { handlePlanCommand(args, client, messages, input -> chat(client, toolSupport, messages, input)); } catch (Exception e) { throw new RuntimeException(e); } })
                 .on("run",     "run a shell command, output shared with the agent: /run <cmd>", args -> runForUser(args, fileTools, messages))
                 .on("yolo",    "toggle YOLO mode",                           args -> { approval = approval == ApprovalMode.YOLO ? ApprovalMode.NORMAL : ApprovalMode.YOLO; printMode(); })
                 .on("mode",    "cycle approval mode: NORMAL → AUTO-EDIT → YOLO", args -> { approval = approval.next(); printMode(); })
@@ -170,17 +199,33 @@ public class CodingAgent extends CodingAgentSupport {
      * TODO: live code
      */
     protected void handlePlanCommand(String goal, LLMClient client,
-                                     List<Map<String, Object>> messages) {
+                                     List<Map<String, Object>> messages, Repl.Chat chat) throws Exception {
         // TODO: live code
         throw new UnsupportedOperationException("TODO: live code");
     }
 
     private String planningPrompt() {
-        return "You are in planning mode: explore and plan, do not execute. " +
-               "Explore with ls and read-file, then call update-plan ONCE with a concise approach " +
-               "naming the concrete files to create and the exact run command that will verify it. " +
-               "Add each implementation step exactly once via todo-add — never duplicate a step. " +
-               "Do NOT write files or run builds. Stop after plan and TODOs are recorded.";
+        return """
+                You are in planning mode. Work in exactly three phases:
+
+                PHASE 1 — RESEARCH
+                Explore with ls, read-file, grep, find-file. Understand the codebase relevant to the goal.
+                Before each tool call, say one sentence: what you're looking for and why.
+
+                PHASE 2 — QUESTIONS (optional, max 3)
+                If anything is unclear about scope, approach, or constraints, call ask-user with optional numbered choices.
+                Do NOT ask about things the code already answers.
+
+                PHASE 3 — PLAN
+                Call write-plan with a complete Markdown plan. Include:
+                - A short # title
+                - Approach: what will be done and why
+                - Numbered steps (each step maps to one TODO)
+                - Files to create/modify
+                - Verification: how to test
+
+                After write-plan, call todo-add once per step (in order).
+                Do NOT write files, run commands, or implement anything.""";
     }
 
     protected void printTodos() {
