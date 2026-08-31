@@ -331,7 +331,18 @@ public class CodingAgent extends CodingAgentSupport {
         String response = null;
         while (true) {
             System.out.print(Ansi.bold(Ansi.yellow("\nPlanning: ")));
-            response = Repl.io(() -> planTools.handleToolLoop(client, planMessages));
+            try {
+                response = Repl.io(() -> planTools.handleToolLoop(client, planMessages));
+            } catch (Exception e) {
+                boolean interrupted = e instanceof InterruptedException
+                        || e instanceof java.io.InterruptedIOException
+                        || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
+                        || Thread.interrupted();
+                if (!interrupted) throw e;
+                Thread.interrupted();
+                System.out.println("\n" + Ansi.yellow("[planning interrupted]"));
+                return;
+            }
             if (Files.exists(planTmpFile) && Files.size(planTmpFile) > 0) {
                 System.out.println(Ansi.bold("\n─── Plan draft ──────────────────────────────────────────"));
                 System.out.print(Ansi.renderMarkdown(Files.readString(planTmpFile, StandardCharsets.UTF_8)));

@@ -174,9 +174,14 @@ public final class Repl {
     public String prompt(String promptText, String defaultValue) {
         System.out.print(promptText);
         if (!scanner.hasNextLine()) return defaultValue;
-        String line = scanner.nextLine();
-        if (!interactive) System.out.println(line); // echo for piped input
-        return line.trim();
+        try {
+            String line = scanner.nextLine();
+            if (!interactive) System.out.println(line); // echo for piped input
+            return line.trim();
+        } catch (Exception e) {
+            if (e instanceof java.util.NoSuchElementException || Thread.interrupted()) return defaultValue;
+            throw e;
+        }
     }
 
     /** Print a one-line greeting with a slim hint to discover commands. */
@@ -188,6 +193,7 @@ public final class Repl {
     /** Run prompt - dispatch commands - chat, until exit/quit or EOF. */
     public void run(Chat chat) {
         while (!stopped) {
+            Thread.interrupted(); // clear any pending interrupt from a previous turn's Ctrl-C
             if (interactive) {
                 printLivePane(); // pane above prompt; readLogicalLine/lineEditor prints the prompt itself
             } else {
@@ -215,7 +221,8 @@ public final class Repl {
                 }
                 throw e;
             } catch (Exception e) {
-                if (e instanceof java.io.InterruptedIOException) {
+                if (e instanceof java.io.InterruptedIOException || e instanceof InterruptedException
+                        || (e instanceof RuntimeException && e.getCause() instanceof InterruptedException)) {
                     Thread.interrupted();
                     System.out.println("\n[interrupted]");
                     resetLivePaneCount();
@@ -377,7 +384,8 @@ public final class Repl {
                     out.write(new byte[]{'\r', '\n'});
                     out.flush();
                     return buf.toString();
-                } else if (b == 3) {               // Ctrl-C
+                } else if (b == 3) {               // Ctrl-C: discard current line, clear interrupt flag
+                    Thread.interrupted();
                     out.write(new byte[]{'\r', '\n'});
                     out.flush();
                     return "";
