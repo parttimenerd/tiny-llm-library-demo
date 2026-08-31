@@ -205,8 +205,7 @@ public class CodingAgent extends CodingAgentSupport {
                         args -> editRules())
                 .on("clear",   "clear conversation, keep system prompt and state", args -> clearConversation(messages))
                 .on("compact", "fold old history into a summary now",        args -> compactNow(client, messages))
-                .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages))
-                .on("fill-context", "add dummy messages until near the alert threshold (for testing compaction)", args -> fillContext(client, messages));
+                .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages));
     }
 
     // ── chat round ───────────────────────────────────────────────────────────

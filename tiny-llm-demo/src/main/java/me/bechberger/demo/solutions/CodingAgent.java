@@ -48,6 +48,7 @@ public class CodingAgent extends CodingAgentSupport {
         compactor = createCompactor(client);
         var fileTools = new FileTools(rootPath);
         var toolSupport = createToolSupport(fileTools, client);
+        toolSupport.setCompactor(compactor, client, () -> stateMessageIndex = -1);
 
         registerCommands(builder, client, fileTools, toolSupport, messages);
         builder.setLivePane(() -> state.renderPane());
@@ -208,8 +209,7 @@ public class CodingAgent extends CodingAgentSupport {
                         args -> editRules())
                 .on("clear",   "clear conversation, keep system prompt and state", args -> clearConversation(messages))
                 .on("compact", "fold old history into a summary now",        args -> compactNow(client, messages))
-                .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages))
-                .on("fill-context", "add dummy messages until near the alert threshold (for testing compaction)", args -> fillContext(client, messages));
+                .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages));
     }
 
     // ── chat round ───────────────────────────────────────────────────────────

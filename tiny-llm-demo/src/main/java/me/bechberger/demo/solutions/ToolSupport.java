@@ -3,6 +3,7 @@ package me.bechberger.demo.solutions;
 import me.bechberger.util.json.JSONParser;
 import me.bechberger.util.json.Util;
 import me.bechberger.demo.util.Ansi;
+import me.bechberger.demo.util.Compactor;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -24,8 +25,23 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
     /** Called after each tool execution with (toolName, result) — e.g. to re-render agent state. */
     private BiConsumer<String, String> onToolCall = null;
 
+    /** If set, checked before each API call to proactively compact when approaching the limit. */
+    private Compactor compactor = null;
+    private LLMClient compactorClient = null;
+    private Runnable onCompact = null;
+
     public void setOnToolCall(BiConsumer<String, String> onToolCall) {
         this.onToolCall = onToolCall;
+    }
+
+    public void setCompactor(Compactor compactor, LLMClient client) {
+        this.setCompactor(compactor, client, null);
+    }
+
+    public void setCompactor(Compactor compactor, LLMClient client, Runnable onCompact) {
+        this.compactor = compactor;
+        this.compactorClient = client;
+        this.onCompact = onCompact;
     }
 
     public void registerTool(String name, String description,
@@ -54,6 +70,7 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
         var toolsJson = buildToolsJson();
         for (int i = 0; i < 100; i++) {
+            maybeCompact(messages);
             var choice = client.chatRaw(messages, toolsJson);
             if (!"tool_calls".equals(choice.get("finish_reason"))) {
                 String content = (String) Util.asMap(choice.get("message")).get("content");
@@ -65,12 +82,20 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
         return null;
     }
 
+    private void maybeCompact(List<Map<String, Object>> messages) {
+        if (compactor != null && compactorClient != null) {
+            var outcome = compactor.maybeCompact(compactorClient, messages, 1);
+            if (outcome.compacted() && onCompact != null) onCompact.run();
+        }
+    }
+
     private void processToolCalls(Map<String, Object> choice, List<Map<String, Object>> messages) {
         var assistantMessage = Util.asMap(choice.get("message"));
         messages.add(assistantMessage);
         var narration = (String) assistantMessage.get("content");
         if (narration != null && !narration.isBlank()) System.out.print("  " + Ansi.renderMarkdown(narration.strip()));
         for (var toolCall : Util.asList(assistantMessage.get("tool_calls"))) {
+            maybeCompact(messages);
             messages.add(executeToolCall(Util.asMap(toolCall)));
         }
     }
