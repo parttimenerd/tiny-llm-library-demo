@@ -19,6 +19,7 @@ public final class ApprovalRules {
 
     public void allow(String pattern) { rules.add(new Rule(Effect.ALLOW, pattern)); }
     public void deny(String pattern)  { rules.add(new Rule(Effect.DENY,  pattern)); }
+    public void remove(int index)     { if (index >= 0 && index < rules.size()) rules.remove(index); }
 
     /** Returns ALLOW, DENY, or null (no match — fall through to mode-based logic). */
     public Effect match(String action) {

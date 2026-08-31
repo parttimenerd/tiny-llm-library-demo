@@ -149,10 +149,15 @@ abstract class CodingAgentSupport implements Callable<Integer> {
             System.out.println("  " + approval.badge() + Ansi.dim("auto-approved (" + approval.name().toLowerCase().replace('_', '-') + "): " + action));
             return true;
         }
-        System.out.print("\n" + Ansi.yellow("⚠  " + action) + "\n    Allow? " + (defaultYes ? "[Y/n] " : "[y/N] "));
+        System.out.print("\n" + Ansi.yellow("⚠  " + action) + "\n    Allow? [y/N/a=always] ");
         if (!scanner.hasNextLine()) return defaultYes;
         String answer = scanner.nextLine().trim().toLowerCase();
         if (System.console() == null) System.out.println(answer);
+        if (answer.equals("a")) {
+            approvalRules.allow(action);
+            System.out.println(Ansi.green("  Rule added: allow " + action));
+            return true;
+        }
         return answer.isEmpty() ? defaultYes : answer.startsWith("y");
     }
 
@@ -168,6 +173,47 @@ abstract class CodingAgentSupport implements Callable<Integer> {
         if (answer.equalsIgnoreCase("n")) return false;
         state.setPlan("REJECTED — user feedback: " + answer);
         return false;
+    }
+
+    /** Interactive /rules editor: list rules, delete by number, add allow/deny by pattern. */
+    void editRules() {
+        while (true) {
+            var list = approvalRules.rules();
+            System.out.println(Ansi.bold("\n─── Rules ──────────────────────────────────────────────"));
+            if (list.isEmpty()) {
+                System.out.println(Ansi.dim("  (no rules)"));
+            } else {
+                for (int i = 0; i < list.size(); i++) {
+                    var r = list.get(i);
+                    String label = r.effect() == ApprovalRules.Effect.ALLOW ? Ansi.green("allow") : Ansi.yellow("deny ");
+                    System.out.println("  " + Ansi.dim((i + 1) + ".") + " " + label + "  " + r.pattern());
+                }
+            }
+            System.out.println(Ansi.dim("  Commands: allow <pattern> | deny <pattern> | <number> to delete | empty to exit"));
+            System.out.println(Ansi.bold("────────────────────────────────────────────────────────"));
+            String input = repl != null ? repl.prompt("  > ", null) : null;
+            if (input == null || input.isBlank()) break;
+            if (input.startsWith("allow ")) {
+                String pat = input.substring(6).trim();
+                if (!pat.isBlank()) { approvalRules.allow(pat); System.out.println(Ansi.green("  Added: allow " + pat)); }
+            } else if (input.startsWith("deny ")) {
+                String pat = input.substring(5).trim();
+                if (!pat.isBlank()) { approvalRules.deny(pat); System.out.println(Ansi.yellow("  Added: deny " + pat)); }
+            } else {
+                try {
+                    int idx = Integer.parseInt(input.trim()) - 1;
+                    var rules = approvalRules.rules();
+                    if (idx >= 0 && idx < rules.size()) {
+                        approvalRules.remove(idx);
+                        System.out.println(Ansi.dim("  Removed rule " + (idx + 1)));
+                    } else {
+                        System.out.println(Ansi.dim("  No rule #" + (idx + 1)));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(Ansi.dim("  Unknown command — use: allow <pat> | deny <pat> | <number> to delete"));
+                }
+            }
+        }
     }
 
     /** Run a shell command and inject the output into the conversation. */

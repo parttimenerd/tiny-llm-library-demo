@@ -124,6 +124,7 @@ public class CodingAgent extends CodingAgentSupport {
 
                 EXPLORATION (do this before writing anything unfamiliar):
                 - Before each tool call, say one sentence: what you're looking for and why.
+                - Narrate briefly between steps so the user can follow along.
                 - tree . — project overview (depth 3 by default)
                 - ls <dir> — one directory level
                 - find-file <name> — locate a file by name fragment
@@ -180,12 +181,8 @@ public class CodingAgent extends CodingAgentSupport {
                 .on("deny",    "auto-deny matching actions: /deny <pattern>",
                         args -> { if (args.isBlank()) { System.out.println("Usage: /deny <pattern>"); return; }
                                   approvalRules.deny(args);  System.out.println(Ansi.yellow("Deny: " + args)); })
-                .on("rules",   "list current allow/deny rules",
-                        args -> { var list = approvalRules.rules();
-                                  if (list.isEmpty()) { System.out.println(Ansi.dim("(no rules)")); return; }
-                                  list.forEach(r -> System.out.println(
-                                      (r.effect() == ApprovalRules.Effect.ALLOW ? Ansi.green("allow ") : Ansi.yellow("deny  "))
-                                      + r.pattern())); })
+                .on("rules",   "manage allow/deny rules (interactive)",
+                        args -> editRules())
                 .on("clear",   "clear conversation, keep system prompt and state", args -> clearConversation(messages))
                 .on("compact", "fold old history into a summary now",        args -> compactNow(client, messages))
                 .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages));
