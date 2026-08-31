@@ -602,8 +602,12 @@ public final class Repl {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private static boolean hasTty() {
-        try (var f = new java.io.FileInputStream("/dev/tty")) { return true; }
-        catch (Exception e) { return false; }
+        try (var f = new java.io.FileInputStream("/dev/tty")) {
+            // Also verify stdin is actually a terminal, not a pipe or ByteArrayInputStream.
+            // 'test -t 0' with inheritIO checks the JVM's own stdin fd.
+            int exit = new ProcessBuilder("sh", "-c", "test -t 0").inheritIO().start().waitFor();
+            return exit == 0;
+        } catch (Exception e) { return false; }
     }
 
     private static void runStty(String[] cmd) {
