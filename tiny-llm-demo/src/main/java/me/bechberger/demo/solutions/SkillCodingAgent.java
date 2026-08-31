@@ -70,8 +70,8 @@ public class SkillCodingAgent extends CodingAgent {
     // ── tool + command registration ──────────────────────────────────────────
 
     @Override
-    protected ToolSupport createToolSupport(FileTools fileTools) {
-        var ts = super.createToolSupport(fileTools);
+    protected ToolSupport createToolSupport(FileTools fileTools, LLMClient client) {
+        var ts = super.createToolSupport(fileTools, client);
         if (availableSkills.isEmpty()) return ts;
         CodingTools.register(ts, "skill",
                 "Activate a skill from the Available Skills list to load its instructions",

@@ -149,16 +149,24 @@ abstract class CodingAgentSupport implements Callable<Integer> {
             System.out.println("  " + approval.badge() + Ansi.dim("auto-approved (" + approval.name().toLowerCase().replace('_', '-') + "): " + action));
             return true;
         }
-        System.out.print("\n" + Ansi.yellow("⚠  " + action) + "\n    Allow? [y/N/a=always] ");
-        if (!scanner.hasNextLine()) return defaultYes;
-        String answer = scanner.nextLine().trim().toLowerCase();
-        if (System.console() == null) System.out.println(answer);
-        if (answer.equals("a")) {
-            approvalRules.allow(action);
-            System.out.println(Ansi.green("  Rule added: allow " + action));
-            return true;
+        while (true) {
+            System.out.print("\n" + Ansi.yellow("⚠  " + action) + "\n    Allow? [y/N/a=always/Y=yolo/r=rules] ");
+            if (!scanner.hasNextLine()) return defaultYes;
+            String answer = scanner.nextLine().trim().toLowerCase();
+            if (System.console() == null) System.out.println(answer);
+            if (answer.equals("a")) {
+                approvalRules.allow(action);
+                System.out.println(Ansi.green("  Rule added: allow " + action));
+                return true;
+            }
+            if (answer.equals("y!") || answer.equals("yolo")) {
+                approval = ApprovalMode.YOLO;
+                printMode();
+                return true;
+            }
+            if (answer.equals("r")) { editRules(); continue; }
+            return answer.isEmpty() ? defaultYes : answer.startsWith("y");
         }
-        return answer.isEmpty() ? defaultYes : answer.startsWith("y");
     }
 
     /** Always pauses to show the plan — even in YOLO mode. */
