@@ -183,13 +183,28 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
      * @return The complete first choice object (check finish_reason and message structure)
      */
     public Map<String, Object> chatRaw(List<Map<String, Object>> messages, List<Map<String, Object>> tools) {
-        try {
-            var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, tools))));
-            lastUsage = parseTokenUsage(response);
-            return Util.asMap(Util.asList(response.get("choices")).getFirst());
-        } catch (Exception e) {
-            throw new RuntimeException("chatRaw failed [" + http.getBaseUrl() + "/v1/chat/completions]: " + e.getMessage(), e);
+        for (int attempt = 0; ; attempt++) {
+            try {
+                var response = Util.asMap(JSONParser.parse(http.postJson("/v1/chat/completions", buildRequest(messages, false, tools))));
+                lastUsage = parseTokenUsage(response);
+                return Util.asMap(Util.asList(response.get("choices")).getFirst());
+            } catch (Exception e) {
+                String msg = e.getMessage() != null ? e.getMessage() : "";
+                boolean is429 = msg.contains("429") || msg.contains("Too Many Requests");
+                if (is429 && attempt < 3) {
+                    int waitSecs = parseRetryAfter(msg);
+                    System.out.println(Ansi.yellow("[429] rate-limited — waiting " + waitSecs + "s before retry " + (attempt + 1) + "/3…"));
+                    try { Thread.sleep(waitSecs * 1000L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); throw new RuntimeException("Interrupted during 429 retry wait", ie); }
+                    continue;
+                }
+                throw new RuntimeException("chatRaw failed [" + http.getBaseUrl() + "/v1/chat/completions]: " + msg, e);
+            }
         }
+    }
+
+    private static int parseRetryAfter(String errorMsg) {
+        var m = java.util.regex.Pattern.compile("(\\d+)\\s*second").matcher(errorMsg);
+        return m.find() ? Integer.parseInt(m.group(1)) + 2 : 32;
     }
 
     /** Parse the usage object of a response, tolerating missing usage entirely. */
