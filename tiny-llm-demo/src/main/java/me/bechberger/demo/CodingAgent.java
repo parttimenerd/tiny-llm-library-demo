@@ -237,11 +237,6 @@ public class CodingAgent extends CodingAgentSupport {
         throw new UnsupportedOperationException("TODO: live code");
     }
 
-    private String suggestAfterInterrupt(String toolName) {
-        // TODO: live code
-        throw new UnsupportedOperationException("TODO: live code");
-    }
-
     private String planningPrompt() {
         return """
                 You are in planning mode. Work in exactly three phases:

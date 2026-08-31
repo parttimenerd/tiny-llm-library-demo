@@ -216,14 +216,13 @@ public class CodingAgent extends CodingAgentSupport {
             Thread.interrupted(); // clear flag
             String last = toolSupport.getLastToolName();
             System.out.println("\n" + Ansi.yellow("[interrupted" + (last != null ? " during " + last : "") + "]"));
-            String suggestion = last != null ? suggestAfterInterrupt(last) : "What would you like to do instead?";
-            System.out.println(Ansi.dim(suggestion));
+            System.out.println(Ansi.dim("What would you like to do instead?"));
             return;
         }
         if (Thread.interrupted()) {
             String last = toolSupport.getLastToolName();
             System.out.println("\n" + Ansi.yellow("[interrupted" + (last != null ? " during " + last : "") + "]"));
-            System.out.println(Ansi.dim(last != null ? suggestAfterInterrupt(last) : "What would you like to do instead?"));
+            System.out.println(Ansi.dim("What would you like to do instead?"));
             return;
         }
         if (response != null && !response.isBlank()) System.out.print(Ansi.renderMarkdown(response));
@@ -359,21 +358,6 @@ public class CodingAgent extends CodingAgentSupport {
         if (response != null) messages.add(LLMClient.assistant(response));
         syncStateMessage(messages);
         chat.chat("Implement the plan step by step.");
-        // @end
-    }
-
-    private String suggestAfterInterrupt(String toolName) {
-        // @stub
-        return switch (toolName) {
-            case "run"        -> "Tip: you can /deny \"run: *\" to block all shell commands, or tell me what to do differently.";
-            case "write-file",
-                 "edit"       -> "The file edit was aborted. Tell me what to change instead, or /clear to start fresh.";
-            case "read-file",
-                 "grep",
-                 "find-file",
-                 "ls", "tree" -> "Exploration stopped. Tell me what to focus on, or give me a more specific task.";
-            default           -> "Aborted. Tell me what to do differently.";
-        };
         // @end
     }
 
