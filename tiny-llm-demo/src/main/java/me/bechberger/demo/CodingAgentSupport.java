@@ -55,7 +55,24 @@ abstract class CodingAgentSupport implements Callable<Integer> {
     final Scanner scanner = new Scanner(System.in);
 
     protected ApprovalMode approval = ApprovalMode.NORMAL;
-    final ApprovalRules approvalRules = new ApprovalRules();
+    final ApprovalRules approvalRules = defaultRules();
+
+    private static ApprovalRules defaultRules() {
+        var r = new ApprovalRules();
+        r.allow("run: ls*");
+        r.allow("run: git status*");
+        r.allow("run: git log*");
+        r.allow("run: git diff*");
+        r.allow("run: cat *");
+        r.allow("run: find *");
+        r.allow("run: grep *");
+        r.allow("run: pwd");
+        r.allow("run: echo *");
+        r.allow("run: mvn test*");
+        r.allow("run: mvn package*");
+        r.allow("run: mvn -q*");
+        return r;
+    }
 
     protected enum ApprovalMode {
         NORMAL(""), AUTO_EDIT("⏵ "), YOLO("⚡ ");
