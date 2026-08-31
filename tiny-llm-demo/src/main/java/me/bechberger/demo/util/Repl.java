@@ -53,6 +53,9 @@ public final class Repl {
     /** Active schedule handles; cancel() stops the virtual thread. */
     private final java.util.concurrent.CopyOnWriteArrayList<ScheduleHandle> schedules =
             new java.util.concurrent.CopyOnWriteArrayList<>();
+    /** Lines typed while the assistant was responding, drained at the start of the next iteration. */
+    private final java.util.concurrent.LinkedBlockingDeque<String> messageQueue =
+            new java.util.concurrent.LinkedBlockingDeque<>();
 
     /** Handle returned by {@link #schedule} — call {@link #cancel()} to stop it. */
     public static final class ScheduleHandle {
@@ -242,7 +245,21 @@ public final class Repl {
     public void run(Chat chat) {
         while (!stopped) {
             Thread.interrupted(); // clear any pending interrupt from a previous turn's Ctrl-C
-            // check for input injected by the schedule/continue tool
+
+            // ── drain queued messages (typed while the last response was streaming) ──
+            String queued = messageQueue.poll();
+            if (queued != null) {
+                System.out.println(Ansi.dim("\n[sending queued] ") + queued);
+                if (!commands.handle(queued)) {
+                    history.add(queued);
+                    try { runTurn(chat, queued); } catch (Exception e) { handleTurnException(e); }
+                }
+                if (onResponse != null && !stopped) onResponse.run();
+                resetLivePaneCount();
+                continue;
+            }
+
+            // ── check for input injected by the schedule/continue tool ──
             var injected = injectedInput;
             if (injected != null) {
                 injectedInput = null;
@@ -250,14 +267,15 @@ public final class Repl {
                 if (input != null && !input.isBlank()) {
                     System.out.println(Ansi.dim("[scheduled] " + input));
                     history.add(input);
-                    try { chat.chat(input); } catch (Exception e) { /* handled below */ }
+                    try { runTurn(chat, input); } catch (Exception e) { handleTurnException(e); }
                     if (onResponse != null) onResponse.run();
                     resetLivePaneCount();
                     continue;
                 }
             }
+
             if (interactive) {
-                printLivePane(); // pane above prompt; readLogicalLine/lineEditor prints the prompt itself
+                printLivePane();
             } else {
                 System.out.print(prompt.get());
             }
@@ -272,29 +290,115 @@ public final class Repl {
                 continue;
             }
             history.add(input);
-            try {
-                chat.chat(input);
-            } catch (java.io.UncheckedIOException e) {
-                if (e.getCause() instanceof java.io.InterruptedIOException) {
-                    Thread.interrupted();
-                    System.out.println("\n[interrupted]");
-                    resetLivePaneCount();
-                    continue;
-                }
-                throw e;
-            } catch (Exception e) {
-                if (e instanceof java.io.InterruptedIOException || e instanceof InterruptedException
-                        || (e instanceof RuntimeException && e.getCause() instanceof InterruptedException)) {
-                    Thread.interrupted();
-                    System.out.println("\n[interrupted]");
-                    resetLivePaneCount();
-                    continue;
-                }
-                throw new RuntimeException(e);
+            if (interactive) {
+                var reader = new QueueReader();
+                Thread.ofVirtual().start(reader);
+                try { runTurn(chat, input); } catch (Exception e) { handleTurnException(e); } finally { reader.stop(); }
+            } else {
+                try { runTurn(chat, input); } catch (Exception e) { handleTurnException(e); }
             }
             if (Thread.interrupted()) { System.out.println("\n[interrupted]"); resetLivePaneCount(); continue; }
             if (onResponse != null) onResponse.run();
-            resetLivePaneCount(); // response text scrolled the terminal; next cycle repaints fresh
+            resetLivePaneCount();
+        }
+    }
+
+    private void runTurn(Chat chat, String input) throws Exception {
+        chat.chat(input);
+    }
+
+    private void handleTurnException(Exception e) {
+        if (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException) {
+            Thread.interrupted();
+            System.out.println("\n[interrupted]");
+            resetLivePaneCount();
+            return;
+        }
+        if (e instanceof java.io.InterruptedIOException || e instanceof InterruptedException
+                || (e instanceof RuntimeException && e.getCause() instanceof InterruptedException)) {
+            Thread.interrupted();
+            System.out.println("\n[interrupted]");
+            resetLivePaneCount();
+            return;
+        }
+        throw e instanceof RuntimeException re ? re : new RuntimeException(e);
+    }
+
+    /** Raw-mode line editor: ↑/↓ history, Ctrl-R search, basic editing. */
+    private final LineEditor lineEditor = new LineEditor();
+
+    /**
+     * Runs in a virtual thread while the assistant is responding.
+     * Owns /dev/tty in raw mode, echoes keystrokes, and pushes completed lines onto
+     * {@link #messageQueue}. Partially typed text when stopped is carried over as
+     * {@link #lineEditor} prefill for the next prompt.
+     */
+    final class QueueReader implements Runnable {
+        private volatile boolean running = true;
+
+        void stop() { running = false; }
+
+        @Override public void run() {
+            try (var tty = new java.io.FileInputStream("/dev/tty")) {
+                var out  = System.out;
+                var devTty = new java.io.File("/dev/tty");
+                boolean rawOk;
+                try {
+                    rawOk = new ProcessBuilder("stty", "-icanon", "-echo")
+                            .redirectInput(ProcessBuilder.Redirect.from(devTty))
+                            .redirectOutput(ProcessBuilder.Redirect.to(devTty))
+                            .redirectError(ProcessBuilder.Redirect.to(devTty))
+                            .start().waitFor() == 0;
+                } catch (Exception e2) { rawOk = false; }
+                try {
+                    var buf = new StringBuilder();
+                    // print initial "queue" prompt on a new line so it doesn't collide with streamed output
+                    out.print("\n" + Ansi.dim("  [type to queue] "));
+                    out.flush();
+                    while (running) {
+                        if (tty.available() == 0) { Thread.sleep(20); continue; }
+                        int b = tty.read();
+                        if (b == -1 || !running) break;
+                        if (b == 13 || b == 10) {           // Enter
+                            out.write(new byte[]{'\r', '\n'});
+                            String line = buf.toString().trim();
+                            buf.setLength(0);
+                            if (!line.isBlank()) {
+                                messageQueue.addLast(line);
+                                out.print(Ansi.dim("  [queued] ") + line + "\n");
+                            }
+                            out.print(Ansi.dim("  [type to queue] "));
+                            out.flush();
+                        } else if (b == 127 || b == 8) {    // Backspace
+                            if (buf.length() > 0) {
+                                buf.deleteCharAt(buf.length() - 1);
+                                out.write(new byte[]{'\b', ' ', '\b'});
+                                out.flush();
+                            }
+                        } else if (b == 3) {                // Ctrl-C — discard buffer
+                            buf.setLength(0);
+                            out.write(new byte[]{'\r', '\n'});
+                            out.print(Ansi.dim("  [type to queue] "));
+                            out.flush();
+                        } else if (b >= 32 && b < 127) {    // printable ASCII
+                            buf.append((char) b);
+                            out.write(b);
+                            out.flush();
+                        }
+                    }
+                    // carry over any partially typed text as prefill for the next prompt
+                    if (buf.length() > 0) {
+                        out.write(new byte[]{'\r', '\n'});
+                        out.flush();
+                        lineEditor.setPrefill(buf.toString());
+                    } else {
+                        out.write(new byte[]{'\r', '\n'});
+                        out.flush();
+                    }
+                } finally {
+                    if (rawOk) runStty(new String[]{"stty", "sane"});
+                }
+            } catch (Exception ignored) {}
         }
     }
 
@@ -329,17 +433,19 @@ public final class Repl {
         return sb.toString();
     }
 
-    /** Raw-mode line editor: ↑/↓ history, Ctrl-R search, basic editing. */
-    private final LineEditor lineEditor = new LineEditor();
-
     final class LineEditor {
         private InputStream tty;
         private OutputStream out;
         private String currentPrompt = "";
         /** Visible (non-ANSI) length of currentPrompt, for cursor math. */
         private int promptVisibleLen = 0;
+        /** Text to pre-populate on the next readLine() call (carry-over from QueueReader). */
+        private volatile String prefill = null;
 
         LineEditor() {}
+
+        /** Set text to pre-populate when the next readLine() starts. */
+        void setPrefill(String text) { this.prefill = text; }
 
         /** Read a line using raw terminal mode. Returns null on EOF/Ctrl-D. */
         String readLine(String promptText) {
@@ -392,7 +498,10 @@ public final class Repl {
 
         private String readRaw() throws Exception {
             var buf = new StringBuilder();
-            int cursor = 0;          // insertion point in buf
+            // Apply prefill from QueueReader carry-over
+            String pf = prefill;
+            if (pf != null) { prefill = null; buf.append(pf); }
+            int cursor = buf.length(); // insertion point in buf
             int histIdx = -1;        // -1 = not browsing history
             String savedLine = "";   // line typed before ↑ pressed
             boolean searchMode = false;
