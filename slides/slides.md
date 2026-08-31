@@ -2211,6 +2211,8 @@ The codeword survived compaction. It's inside the summary.
 
 # One More Thing: The Agent Edits Itself
 
+<img src="./img/wiki-strawberry.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15" />
+
 <div class="mt-4 text-lg text-gray-300">
 
 ```
