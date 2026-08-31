@@ -2181,30 +2181,93 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url llama
 
 # Agents Need Memory Limits Too
 
-<div class="mt-8 text-2xl text-center">
+<div class="mt-6 text-2xl text-center">
 
 Tool-call transcripts inflate history <OrangeText>fast</OrangeText>.
 
 </div>
 
-<div class="mt-8">
+<div class="mt-6 text-lg text-center text-gray-400">
+
+What does the summary prompt look like?
+
+</div>
+
+<div class="mt-4">
 
 ```text
-[compact] 9 -> 8 messages  (prompt was 1010 tokens)
-You: What codeword did I give you?
-Assistant: FJORD
+Summarize this coding session so work can resume in a new context window.
+Do NOT call any tools. Wrap your summary in <summary></summary> tags.
+Write in a way that enables immediate resumption of the task.
+
+## Task       — what the user asked for and any constraints
+## Done       — completed steps, files modified, key decisions
+## Errors     — problems hit and fixes (quote error messages verbatim)
+## Next       — remaining steps in priority order, blockers
+## Context    — user preferences, promises made, non-obvious constraints
 ```
 
 </div>
 
-<div class="mt-6 text-xl text-center text-gray-400">
+<img src="./img/qr-claude-cookbook-compaction.png" class="absolute bottom-6 right-6 w-16 z-10 opacity-70" />
 
-The codeword survived compaction. It's inside the summary.
+<div class="absolute bottom-7 right-24 text-xs text-gray-500">Inspired by Claude Cookbook</div>
+
+<!--
+**[~50:00]** "The summarization prompt matters. Ours is structured: five sections, explicit instruction not to call tools, wrap in summary tags. Inspired by the Claude Cookbook's compaction recipe — link on the QR code."
+-->
+
+---
+
+# What the Summary Looks Like
+
+<img src="./img/qr-claude-cookbook-compaction.png" class="absolute top-4 right-4 w-16 z-10 opacity-70" />
+
+<div class="grid grid-cols-2 gap-4 mt-4">
+
+<div>
+
+```text
+[compact] summarizing 35 messages (87420 tokens)…
+[compact] done — 38 → 6 messages, was 87420 tokens
+```
+
+```text
+You: What codeword did I give you?
+Assistant: FJORD
+```
+
+<div class="text-sm text-gray-400 mt-3">The codeword survived. It's inside the summary.</div>
+
+</div>
+
+<div class="text-xs text-gray-300 bg-gray-800/60 rounded p-3 font-mono leading-relaxed">
+
+<div class="text-orange-400 font-bold mb-1">## Task</div>
+Add retry-on-429 to chatRaw. Cap wait at 10s.
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Done</div>
+- solutions/LLMClient.java: chatRaw now retries<br/>
+  up to 3× on 429, wait = min(server_secs+2, 10)<br/>
+- parseRetryAfter() parses "N seconds" from msg<br/>
+- Committed & pushed (main, 5e04868)
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Errors</div>
+None. Build clean on first attempt.
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Next</div>
+User asked to improve compaction summary prompt.
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Context</div>
+solutions/ is source of truth; sync-demo.py<br/>
+generates demo/. Always sync + mvn -q package.
+
+</div>
 
 </div>
 
 <!--
-**[~50:00]** "Same Compactor helper from the chatbot section — pin system prompt (index 0) + pinned agent state (index 1), fold the middle into a summary, keep the recent tail verbatim. Three lines in the chat loop. Real token counts from the API at 80% of the context window."
+**[~50:15]** "Here's what the summary actually looks like — five sections, structured, actionable. The compaction log shows 38 messages collapsed to 6. The codeword test proves the key fact survived. The right column is a real example from this project's session."
 -->
 
 ---
