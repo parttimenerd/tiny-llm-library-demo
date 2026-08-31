@@ -110,8 +110,9 @@ abstract class CodingAgentSupport implements Callable<Integer> {
 
     protected Compactor createCompactor(LLMClient client) {
         int contextWindow = client.getContextWindowSize(32768);
-        int threshold = maxTokens > 0 ? maxTokens : (int) (contextWindow * 0.8);
-        return new Compactor(threshold, 6);
+        int compact = maxTokens > 0 ? maxTokens : (int) (contextWindow * 0.90);
+        int alert   = (int) (contextWindow * 0.80);
+        return new Compactor(compact, alert, 6);
     }
 
     void startSessionLog() {
@@ -139,12 +140,9 @@ abstract class CodingAgentSupport implements Callable<Integer> {
     }
 
     void compactNow(LLMClient client, List<Map<String, Object>> messages) {
-        System.out.println(Ansi.dim("[compact] summarizing " + messages.size() + " messages…"));
         var outcome = compactor.compactNow(client, messages);
         if (outcome.compacted()) {
             stateMessageIndex = -1;
-            System.out.println(Ansi.dim("[compact] done — " + outcome.messagesBefore()
-                    + " → " + outcome.messagesAfter() + " messages"));
         } else {
             System.out.println(Ansi.dim("[compact] nothing to compact (" + messages.size() + " messages)."));
         }
@@ -186,9 +184,10 @@ abstract class CodingAgentSupport implements Callable<Integer> {
             return true;
         }
         while (true) {
-            System.out.print("\n" + Ansi.yellow("⚠  ") + formatAction(action) + "\n    Allow? [y/N/a=always/Y=yolo/r=rules] ");
-            if (!scanner.hasNextLine()) return defaultYes;
-            String answer = scanner.nextLine().trim().toLowerCase();
+            String prompt = "\n" + Ansi.yellow("⚠  ") + formatAction(action) + "\n    Allow? [y/N/a=always/Y=yolo/r=rules] ";
+            String answer = repl != null
+                    ? repl.prompt(prompt, defaultYes ? "y" : "n")
+                    : (scanner.hasNextLine() ? scanner.nextLine().trim().toLowerCase() : (defaultYes ? "y" : ""));
             if (System.console() == null) System.out.println(answer);
             if (answer.equals("a")) {
                 approvalRules.allow(action);

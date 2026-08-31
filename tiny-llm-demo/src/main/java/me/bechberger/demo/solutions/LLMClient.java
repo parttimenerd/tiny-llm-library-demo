@@ -16,18 +16,15 @@ import java.util.function.Consumer;
  * Simple LLM client for live coding.
  * Streaming is the default mode. Each token arrives via the onToken callback.
  */
-public class LLMClient {
+public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
     private final HttpHelper http;
     private final String model;
     private final Consumer<String> onToken;
 
-    /** Token usage statistics from an API response's "usage" object. */
-    public record TokenUsage(int completionTokens, int promptTokens, int totalTokens) {}
-
-    private TokenUsage lastUsage;
+    private me.bechberger.demo.util.LLMClientInterface.TokenUsage lastUsage;
 
     /** Usage of the most recent API call, or null if the server sent none (drives compaction). */
-    public TokenUsage lastUsage() {
+    @Override public me.bechberger.demo.util.LLMClientInterface.TokenUsage lastUsage() {
         return lastUsage;
     }
 
@@ -205,11 +202,11 @@ public class LLMClient {
     }
 
     /** Parse the usage object of a response, tolerating missing usage entirely. */
-    private static TokenUsage parseTokenUsage(Map<String, Object> response) {
+    private static me.bechberger.demo.util.LLMClientInterface.TokenUsage parseTokenUsage(Map<String, Object> response) {
         var usage = response.get("usage");
         if (!(usage instanceof Map)) return null;
         var u = Util.asMap(usage);
-        return new TokenUsage(
+        return new me.bechberger.demo.util.LLMClientInterface.TokenUsage(
                 ((Number) u.get("completion_tokens")).intValue(),
                 ((Number) u.get("prompt_tokens")).intValue(),
                 ((Number) u.get("total_tokens")).intValue());

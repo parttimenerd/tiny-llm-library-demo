@@ -1,7 +1,5 @@
 package me.bechberger.demo.util;
 
-import me.bechberger.demo.LLMClient;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +13,9 @@ import java.util.Map;
  *   <li><b>summarize</b> everything in between via an LLM call into one
  *       "[Conversation summary]" system message.</li>
  * </ol>
- * Triggered when the last API call's prompt tokens exceed a threshold - real usage
- * data, not a character estimate (see {@link LLMClient#lastUsage()}). On the next
- * compaction the old summary is part of the middle and gets folded into the new one.
+ * Triggered when the last API call's prompt tokens exceed {@code compactThreshold} (90% of
+ * context window). A warning is printed when tokens exceed {@code alertThreshold} (80%) so
+ * the user knows compaction is coming and can call /compact early if they prefer.
  */
 public final class Compactor {
 
@@ -29,16 +27,19 @@ public final class Compactor {
             "files created or changed, tool results, and errors that were fixed. " +
             "Write in third person as a summary of what was discussed.";
 
-    private final int threshold;   // prompt tokens that trigger compaction
-    private final int keepRecent;  // messages kept verbatim at the tail
+    private final int compactThreshold; // prompt tokens that trigger compaction
+    private final int alertThreshold;   // prompt tokens that trigger the "approaching limit" warning
+    private final int keepRecent;       // messages kept verbatim at the tail
+    private boolean alerted = false;    // print the alert only once per compaction cycle
 
-    public Compactor(int threshold, int keepRecent) {
-        this.threshold = threshold;
-        this.keepRecent = keepRecent;
+    public Compactor(int compactThreshold, int alertThreshold, int keepRecent) {
+        this.compactThreshold = compactThreshold;
+        this.alertThreshold   = alertThreshold;
+        this.keepRecent       = keepRecent;
     }
 
     public int threshold() {
-        return threshold;
+        return compactThreshold;
     }
 
     /**
@@ -48,21 +49,28 @@ public final class Compactor {
      * @param messages conversation history (mutated on compaction)
      * @param pinned   number of leading messages never summarized (normally 1: the system prompt)
      */
-    public Outcome maybeCompact(LLMClient client, List<Map<String, Object>> messages, int pinned) {
+    public Outcome maybeCompact(LLMClientInterface client, List<Map<String, Object>> messages, int pinned) {
         var usage = client.lastUsage();
-        if (usage == null || usage.promptTokens() <= threshold) {
-            return new Outcome(false, messages.size(), messages.size(),
-                    usage != null ? usage.promptTokens() : 0);
+        int tokens = usage != null ? usage.promptTokens() : 0;
+        if (usage == null) return new Outcome(false, messages.size(), messages.size(), 0);
+        if (tokens >= compactThreshold) {
+            alerted = false; // reset for next cycle
+            return doCompact(client, messages, pinned);
         }
-        return doCompact(client, messages, pinned);
+        if (!alerted && tokens >= alertThreshold) {
+            alerted = true;
+            System.out.println(Ansi.yellow("[context " + tokens + "/" + compactThreshold
+                    + " tokens — auto-compact soon. Use /compact to compact now.]"));
+        }
+        return new Outcome(false, messages.size(), messages.size(), tokens);
     }
 
     /** Force compaction now, regardless of the threshold (the /compact command). */
-    public Outcome compactNow(LLMClient client, List<Map<String, Object>> messages) {
+    public Outcome compactNow(LLMClientInterface client, List<Map<String, Object>> messages) {
         return doCompact(client, messages, 1);
     }
 
-    private Outcome doCompact(LLMClient client, List<Map<String, Object>> messages, int pinned) {
+    private Outcome doCompact(LLMClientInterface client, List<Map<String, Object>> messages, int pinned) {
         var usage = client.lastUsage();
         int promptTokens = usage != null ? usage.promptTokens() : 0;
 
@@ -93,8 +101,9 @@ public final class Compactor {
 
         String summary;
         try {
+            System.out.println(Ansi.dim("[compact] summarizing " + (recentStart - pinned) + " messages…"));
             summary = client.chat(List.of(
-                    LLMClient.system(SUMMARY_PROMPT), LLMClient.user(text.toString())));
+                    LLMClientInterface.system(SUMMARY_PROMPT), LLMClientInterface.user(text.toString())));
         } catch (Exception e) {
             // compaction must never kill a session - leave history as is, retry next turn
             if (e instanceof InterruptedException) Thread.currentThread().interrupt();
@@ -104,8 +113,10 @@ public final class Compactor {
 
         messages.clear();
         messages.addAll(head);
-        messages.add(LLMClient.system("[Conversation summary] " + summary));
+        messages.add(LLMClientInterface.system("[Conversation summary] " + summary));
         messages.addAll(tail);
-        return new Outcome(true, before, messages.size(), promptTokens);
+        int after = messages.size();
+        System.out.println(Ansi.dim("[compact] done — " + before + " → " + after + " messages"));
+        return new Outcome(true, before, after, promptTokens);
     }
 }

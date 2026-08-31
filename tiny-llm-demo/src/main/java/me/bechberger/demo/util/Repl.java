@@ -56,6 +56,8 @@ public final class Repl {
     /** Lines typed while the assistant was responding, drained at the start of the next iteration. */
     private final java.util.concurrent.LinkedBlockingDeque<String> messageQueue =
             new java.util.concurrent.LinkedBlockingDeque<>();
+    /** The QueueReader running during a turn — stopped before any mid-turn prompt so echo is restored. */
+    private volatile QueueReader activeReader;
 
     /** Handle returned by {@link #schedule} — call {@link #cancel()} to stop it. */
     public static final class ScheduleHandle {
@@ -223,6 +225,13 @@ public final class Repl {
      * Returns {@code defaultValue} on EOF (Ctrl-D / end of piped input).
      */
     public String prompt(String promptText, String defaultValue) {
+        // Stop QueueReader if active — it holds stty -echo, we need echo for the prompt.
+        var r = activeReader;
+        if (r != null) {
+            r.stop();
+            activeReader = null;
+            try { Thread.sleep(60); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        }
         System.out.print(promptText);
         if (!scanner.hasNextLine()) return defaultValue;
         try {
@@ -292,8 +301,16 @@ public final class Repl {
             history.add(input);
             if (interactive) {
                 var reader = new QueueReader();
+                activeReader = reader;
                 Thread.ofVirtual().start(reader);
-                try { runTurn(chat, input); } catch (Exception e) { handleTurnException(e); } finally { reader.stop(); }
+                try {
+                    runTurn(chat, input);
+                } catch (Exception e) {
+                    handleTurnException(e);
+                } finally {
+                    reader.stop();
+                    activeReader = null;
+                }
             } else {
                 try { runTurn(chat, input); } catch (Exception e) { handleTurnException(e); }
             }
@@ -308,14 +325,11 @@ public final class Repl {
     }
 
     private void handleTurnException(Exception e) {
-        if (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException) {
-            Thread.interrupted();
-            System.out.println("\n[interrupted]");
-            resetLivePaneCount();
-            return;
-        }
-        if (e instanceof java.io.InterruptedIOException || e instanceof InterruptedException
-                || (e instanceof RuntimeException && e.getCause() instanceof InterruptedException)) {
+        boolean isInterrupt = e instanceof InterruptedException
+                || e instanceof java.io.InterruptedIOException
+                || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
+                || (e instanceof RuntimeException && e.getCause() instanceof InterruptedException);
+        if (isInterrupt) {
             Thread.interrupted();
             System.out.println("\n[interrupted]");
             resetLivePaneCount();
@@ -339,66 +353,72 @@ public final class Repl {
         void stop() { running = false; }
 
         @Override public void run() {
-            try (var tty = new java.io.FileInputStream("/dev/tty")) {
-                var out  = System.out;
-                var devTty = new java.io.File("/dev/tty");
-                boolean rawOk;
+            var devTty = new java.io.File("/dev/tty");
+            try (var tty = new java.io.FileInputStream(devTty)) {
+                var out = System.out;
+                boolean rawOk = runSttyQuiet(new String[]{"stty", "-icanon", "-echo"});
                 try {
-                    rawOk = new ProcessBuilder("stty", "-icanon", "-echo")
-                            .redirectInput(ProcessBuilder.Redirect.from(devTty))
-                            .redirectOutput(ProcessBuilder.Redirect.to(devTty))
-                            .redirectError(ProcessBuilder.Redirect.to(devTty))
-                            .start().waitFor() == 0;
-                } catch (Exception e2) { rawOk = false; }
-                try {
-                    var buf = new StringBuilder();
-                    // print initial "queue" prompt on a new line so it doesn't collide with streamed output
-                    out.print("\n" + Ansi.dim("  [type to queue] "));
-                    out.flush();
-                    while (running) {
-                        if (tty.available() == 0) { Thread.sleep(20); continue; }
-                        int b = tty.read();
-                        if (b == -1 || !running) break;
-                        if (b == 13 || b == 10) {           // Enter
-                            out.write(new byte[]{'\r', '\n'});
-                            String line = buf.toString().trim();
-                            buf.setLength(0);
-                            if (!line.isBlank()) {
-                                messageQueue.addLast(line);
-                                out.print(Ansi.dim("  [queued] ") + line + "\n");
-                            }
-                            out.print(Ansi.dim("  [type to queue] "));
-                            out.flush();
-                        } else if (b == 127 || b == 8) {    // Backspace
-                            if (buf.length() > 0) {
-                                buf.deleteCharAt(buf.length() - 1);
-                                out.write(new byte[]{'\b', ' ', '\b'});
-                                out.flush();
-                            }
-                        } else if (b == 3) {                // Ctrl-C — discard buffer
-                            buf.setLength(0);
-                            out.write(new byte[]{'\r', '\n'});
-                            out.print(Ansi.dim("  [type to queue] "));
-                            out.flush();
-                        } else if (b >= 32 && b < 127) {    // printable ASCII
-                            buf.append((char) b);
-                            out.write(b);
-                            out.flush();
-                        }
-                    }
-                    // carry over any partially typed text as prefill for the next prompt
-                    if (buf.length() > 0) {
-                        out.write(new byte[]{'\r', '\n'});
-                        out.flush();
-                        lineEditor.setPrefill(buf.toString());
-                    } else {
-                        out.write(new byte[]{'\r', '\n'});
-                        out.flush();
-                    }
+                    readLoop(tty, out);
                 } finally {
                     if (rawOk) runStty(new String[]{"stty", "sane"});
                 }
             } catch (Exception ignored) {}
+        }
+
+        private void readLoop(java.io.FileInputStream tty, java.io.PrintStream out) throws Exception {
+            var buf = new StringBuilder();
+            out.print("\n" + Ansi.dim("  [type to queue] "));
+            out.flush();
+            while (running) {
+                if (tty.available() == 0) { Thread.sleep(20); continue; }
+                int b = tty.read();
+                if (b == -1 || !running) break;
+                if (b == '\r' || b == '\n') {
+                    out.write(new byte[]{'\r', '\n'});
+                    String line = buf.toString().trim();
+                    buf.setLength(0);
+                    if (!line.isBlank()) {
+                        messageQueue.addLast(line);
+                        out.print(Ansi.dim("  [queued] ") + line + "\n");
+                    }
+                    out.print(Ansi.dim("  [type to queue] "));
+                    out.flush();
+                } else if (b == 127 || b == '\b') {     // Backspace
+                    if (buf.length() > 0) {
+                        buf.deleteCharAt(buf.length() - 1);
+                        out.write(new byte[]{'\b', ' ', '\b'});
+                        out.flush();
+                    }
+                } else if (b == 3) {                    // Ctrl-C — discard buffer
+                    buf.setLength(0);
+                    out.write(new byte[]{'\r', '\n'});
+                    out.print(Ansi.dim("  [type to queue] "));
+                    out.flush();
+                } else if (b >= 32 && b < 127) {        // printable ASCII
+                    buf.append((char) b);
+                    out.write(b);
+                    out.flush();
+                }
+            }
+            if (buf.length() > 0) {
+                out.write(new byte[]{'\r', '\n'});
+                out.flush();
+                lineEditor.setPrefill(buf.toString());
+            } else {
+                out.write(new byte[]{'\r', '\n'});
+                out.flush();
+            }
+        }
+
+        private boolean runSttyQuiet(String[] cmd) {
+            try {
+                var devTty = new java.io.File("/dev/tty");
+                return new ProcessBuilder(cmd)
+                        .redirectInput(ProcessBuilder.Redirect.from(devTty))
+                        .redirectOutput(ProcessBuilder.Redirect.to(devTty))
+                        .redirectError(ProcessBuilder.Redirect.to(devTty))
+                        .start().waitFor() == 0;
+            } catch (Exception e) { return false; }
         }
     }
 
@@ -489,7 +509,11 @@ public final class Repl {
             var buf = new StringBuilder();
             int b;
             while ((b = tty.read()) != -1) {
-                if (b == '\n' || b == '\r') { out.write(new byte[]{'\r', '\n'}); out.flush(); return buf.toString(); }
+                if (b == '\n' || b == '\r') {
+                    out.write(new byte[]{'\r', '\n'});
+                    out.flush();
+                    return buf.toString();
+                }
                 if (b == 4 && buf.length() == 0) return null; // Ctrl-D
                 if (b >= 32) buf.append((char) b);
             }
@@ -498,19 +522,17 @@ public final class Repl {
 
         private String readRaw() throws Exception {
             var buf = new StringBuilder();
-            // Apply prefill from QueueReader carry-over
             String pf = prefill;
             if (pf != null) { prefill = null; buf.append(pf); }
-            int cursor = buf.length(); // insertion point in buf
-            int histIdx = -1;        // -1 = not browsing history
-            String savedLine = "";   // line typed before ↑ pressed
+            int cursor = buf.length();
+            int histIdx = -1;
+            String savedLine = "";
             boolean searchMode = false;
             var searchBuf = new StringBuilder();
 
-            redrawLine(buf, cursor); // print initial prompt
+            redrawLine(buf, cursor);
             while (true) {
-                // Poll so injected input (schedule tool) can interrupt the blocking read,
-                // but only when the user hasn't started typing yet (buf is empty).
+                // Poll so schedule-injected input can interrupt, but only on empty line.
                 while (tty.available() == 0) {
                     if (buf.length() == 0 && injectedInput != null) {
                         out.write(new byte[]{'\r', '\n'});
@@ -520,160 +542,194 @@ public final class Repl {
                     Thread.sleep(50);
                 }
                 int b = tty.read();
-                if (b == -1) return null;  // EOF
+                if (b == -1) return null; // EOF
 
+                // ── search mode ──────────────────────────────────────────────
                 if (searchMode) {
-                    if (b == 18) { // Ctrl-R again → search backwards further
-                        String found = history.searchBackward(searchBuf.toString(),
-                                histIdx < 0 ? history.size() : histIdx);
+                    if (b == 18) { // Ctrl-R: search further back
+                        int from = histIdx < 0 ? history.size() : histIdx;
+                        String found = history.searchBackward(searchBuf.toString(), from);
                         if (found != null) {
                             histIdx = history.entries().indexOf(found);
                             buf = new StringBuilder(found);
                             cursor = buf.length();
                         }
                         printSearchLine(searchBuf, buf);
-                        continue;
-                    } else if (b == 27 || b == 7) { // Esc or Ctrl-G: cancel search
+                    } else if (b == 27 || b == 7) { // Esc / Ctrl-G: cancel
                         searchMode = false;
-                        buf = new StringBuilder(savedLine); cursor = buf.length(); histIdx = -1;
+                        buf = new StringBuilder(savedLine);
+                        cursor = buf.length();
+                        histIdx = -1;
                         redrawLine(buf, cursor);
-                        continue;
-                    } else if (b == 13 || b == 10) { // Enter: accept
+                    } else if (b == '\r' || b == '\n') { // Enter: accept
                         searchMode = false;
                         out.write(new byte[]{'\r', '\n'});
                         out.flush();
                         return buf.toString();
-                    } else if (b == 127 || b == 8) { // Backspace in search
+                    } else if (b == 127 || b == '\b') { // Backspace: shorten query
                         if (searchBuf.length() > 0) searchBuf.deleteCharAt(searchBuf.length() - 1);
                         String found = history.searchBackward(searchBuf.toString(), history.size());
-                        if (found != null) { histIdx = history.entries().indexOf(found); buf = new StringBuilder(found); cursor = buf.length(); }
+                        if (found != null) {
+                            histIdx = history.entries().indexOf(found);
+                            buf = new StringBuilder(found);
+                            cursor = buf.length();
+                        }
                         printSearchLine(searchBuf, buf);
-                        continue;
-                    } else if (b >= 32 && b < 127) { // printable: extend search query
+                    } else if (b >= 32 && b < 127) { // printable: extend query
                         searchBuf.append((char) b);
                         String found = history.searchBackward(searchBuf.toString(), history.size());
-                        if (found != null) { histIdx = history.entries().indexOf(found); buf = new StringBuilder(found); cursor = buf.length(); }
+                        if (found != null) {
+                            histIdx = history.entries().indexOf(found);
+                            buf = new StringBuilder(found);
+                            cursor = buf.length();
+                        }
                         printSearchLine(searchBuf, buf);
-                        continue;
-                    } else { // any other control key: exit search, fall through
+                    } else { // any other key: exit search, fall through to normal handling
                         searchMode = false;
                         redrawLine(buf, cursor);
-                        // fall through to handle the key normally
                     }
+                    if (searchMode) continue; // stay in search unless we fell through
                 }
 
-                if (b == 13 || b == 10) {         // Enter — \r\n needed in raw mode
+                // ── normal mode ──────────────────────────────────────────────
+                if (b == '\r' || b == '\n') {
                     out.write(new byte[]{'\r', '\n'});
                     out.flush();
                     return buf.toString();
-                } else if (b == 3) {               // Ctrl-C: discard current line, clear interrupt flag
+                } else if (b == 3) {                    // Ctrl-C: discard line
                     Thread.interrupted();
                     out.write(new byte[]{'\r', '\n'});
                     out.flush();
                     return "";
-                } else if (b == 4 && buf.length() == 0) {  // Ctrl-D on empty line = EOF
+                } else if (b == 4 && buf.length() == 0) { // Ctrl-D on empty = EOF
                     return null;
-                } else if (b == 18) {              // Ctrl-R: start reverse search
+                } else if (b == 18) {                   // Ctrl-R: start search
                     searchMode = true;
                     searchBuf = new StringBuilder();
                     savedLine = buf.toString();
                     histIdx = -1;
                     printSearchLine(searchBuf, buf);
-                } else if (b == 1) {               // Ctrl-A: start of line
-                    cursor = 0; redrawLine(buf, cursor);
-                } else if (b == 5) {               // Ctrl-E: end of line
-                    cursor = buf.length(); redrawLine(buf, cursor);
-                } else if (b == 11) {              // Ctrl-K: kill to end
-                    buf.delete(cursor, buf.length()); redrawLine(buf, cursor);
-                } else if (b == 21) {              // Ctrl-U: kill to start
-                    buf.delete(0, cursor); cursor = 0; redrawLine(buf, cursor);
-                } else if (b == 127 || b == 8) {   // Backspace / Ctrl-H
-                    if (cursor > 0) { buf.deleteCharAt(--cursor); redrawLine(buf, cursor); }
-                } else if (b == 27) {              // Escape sequence
-                    long deadline = System.currentTimeMillis() + 50;
-                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
-                    if (tty.available() == 0) continue; // bare Esc — ignore
-                    int b2 = tty.read();
-                    if (b2 == '[') {
-                        deadline = System.currentTimeMillis() + 50;
-                        while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
-                        if (tty.available() == 0) continue;
-                        int b3 = tty.read();
-                        if (b3 == 'A') {           // ↑ — older history
-                            if (histIdx == -1) { savedLine = buf.toString(); histIdx = history.size(); }
-                            if (histIdx > 0) {
-                                histIdx--;
-                                buf = new StringBuilder(history.entries().get(histIdx));
-                                cursor = buf.length();
-                                redrawLine(buf, cursor);
-                            }
-                        } else if (b3 == 'B') {    // ↓ — newer history / restore
-                            if (histIdx >= 0 && histIdx < history.size() - 1) {
-                                histIdx++;
-                                buf = new StringBuilder(history.entries().get(histIdx));
-                                cursor = buf.length();
-                                redrawLine(buf, cursor);
-                            } else if (histIdx == history.size() - 1 || histIdx == history.size()) {
-                                histIdx = -1;
-                                buf = new StringBuilder(savedLine);
-                                cursor = buf.length();
-                                redrawLine(buf, cursor);
-                            }
-                        } else if (b3 == 'C') {    // → (right arrow)
-                            if (cursor < buf.length()) { cursor++; redrawLine(buf, cursor); }
-                        } else if (b3 == 'D') {    // ← (left arrow)
-                            if (cursor > 0) { cursor--; redrawLine(buf, cursor); }
-                        } else if (b3 == 'H') {    // Home (ESC [ H)
-                            cursor = 0; redrawLine(buf, cursor);
-                        } else if (b3 == 'F') {    // End (ESC [ F)
-                            cursor = buf.length(); redrawLine(buf, cursor);
-                        } else if (b3 == '3') {    // Delete key (ESC [ 3 ~)
-                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
-                            if (tty.available() > 0) tty.read(); // consume '~'
-                            if (cursor < buf.length()) { buf.deleteCharAt(cursor); redrawLine(buf, cursor); }
-                        } else if (b3 == '1') {    // ESC [ 1 ... — Home or Ctrl+Arrow
-                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
-                            if (tty.available() > 0) {
-                                int b4 = tty.read();
-                                if (b4 == '~') {   // ESC [ 1 ~ — Home (alternate)
-                                    cursor = 0; redrawLine(buf, cursor);
-                                } else if (b4 == ';') { // ESC [ 1 ; ... — modifier sequences
-                                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
-                                    if (tty.available() > 0) tty.read(); // consume modifier digit (5=Ctrl)
-                                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
-                                    if (tty.available() > 0) {
-                                        int b6 = tty.read();
-                                        if (b6 == 'C') {       // Ctrl+→: skip word forward
-                                            while (cursor < buf.length() && buf.charAt(cursor) == ' ') cursor++;
-                                            while (cursor < buf.length() && buf.charAt(cursor) != ' ') cursor++;
-                                            redrawLine(buf, cursor);
-                                        } else if (b6 == 'D') { // Ctrl+←: skip word backward
-                                            while (cursor > 0 && buf.charAt(cursor - 1) == ' ') cursor--;
-                                            while (cursor > 0 && buf.charAt(cursor - 1) != ' ') cursor--;
-                                            redrawLine(buf, cursor);
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (b3 == '4') {    // ESC [ 4 ~ — End (alternate)
-                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
-                            if (tty.available() > 0) tty.read(); // consume '~'
-                            cursor = buf.length(); redrawLine(buf, cursor);
-                        }
-                    } else if (b2 == 'b') {        // Alt+← (word backward, xterm)
-                        while (cursor > 0 && buf.charAt(cursor - 1) == ' ') cursor--;
-                        while (cursor > 0 && buf.charAt(cursor - 1) != ' ') cursor--;
-                        redrawLine(buf, cursor);
-                    } else if (b2 == 'f') {        // Alt+→ (word forward, xterm)
-                        while (cursor < buf.length() && buf.charAt(cursor) == ' ') cursor++;
-                        while (cursor < buf.length() && buf.charAt(cursor) != ' ') cursor++;
+                } else if (b == 1) {                    // Ctrl-A: start of line
+                    cursor = 0;
+                    redrawLine(buf, cursor);
+                } else if (b == 5) {                    // Ctrl-E: end of line
+                    cursor = buf.length();
+                    redrawLine(buf, cursor);
+                } else if (b == 11) {                   // Ctrl-K: kill to end
+                    buf.delete(cursor, buf.length());
+                    redrawLine(buf, cursor);
+                } else if (b == 21) {                   // Ctrl-U: kill to start
+                    buf.delete(0, cursor);
+                    cursor = 0;
+                    redrawLine(buf, cursor);
+                } else if (b == 127 || b == '\b') {     // Backspace / Ctrl-H
+                    if (cursor > 0) {
+                        buf.deleteCharAt(--cursor);
                         redrawLine(buf, cursor);
                     }
-                } else if (b >= 32) {              // printable character
+                } else if (b == 27) {                   // Escape sequence (arrows, etc.)
+                    int[] result = handleEscape(buf, cursor, histIdx, savedLine);
+                    cursor  = result[0];
+                    histIdx = result[1];
+                    if (result[2] == 1) savedLine = buf.toString(); // histIdx just initialised
+                    redrawLine(buf, cursor);
+                } else if (b >= 32) {                   // printable character
                     buf.insert(cursor++, (char) b);
                     redrawLine(buf, cursor);
                 }
             }
+        }
+
+        /**
+         * Read and apply one escape sequence. Returns [newCursor, newHistIdx, savedLineUpdated].
+         * Mutates buf in-place for history navigation.
+         */
+        private int[] handleEscape(StringBuilder buf, int cursor, int histIdx, String savedLine)
+                throws Exception {
+            long deadline = System.currentTimeMillis() + 50;
+            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
+            if (tty.available() == 0) return new int[]{cursor, histIdx, 0}; // bare Esc
+
+            int b2 = tty.read();
+            if (b2 == '[') {
+                while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
+                if (tty.available() == 0) return new int[]{cursor, histIdx, 0};
+                int b3 = tty.read();
+
+                if (b3 == 'A') {       // ↑ older history
+                    if (histIdx == -1) histIdx = history.size();
+                    if (histIdx > 0) {
+                        histIdx--;
+                        buf.replace(0, buf.length(), history.entries().get(histIdx));
+                        cursor = buf.length();
+                    }
+                    return new int[]{cursor, histIdx, 1};
+                } else if (b3 == 'B') { // ↓ newer history / restore
+                    if (histIdx >= 0 && histIdx < history.size() - 1) {
+                        histIdx++;
+                        buf.replace(0, buf.length(), history.entries().get(histIdx));
+                        cursor = buf.length();
+                    } else if (histIdx >= history.size() - 1) {
+                        histIdx = -1;
+                        buf.replace(0, buf.length(), savedLine);
+                        cursor = buf.length();
+                    }
+                    return new int[]{cursor, histIdx, 0};
+                } else if (b3 == 'C') { // → right
+                    if (cursor < buf.length()) cursor++;
+                } else if (b3 == 'D') { // ← left
+                    if (cursor > 0) cursor--;
+                } else if (b3 == 'H') { // Home (ESC [ H)
+                    cursor = 0;
+                } else if (b3 == 'F') { // End (ESC [ F)
+                    cursor = buf.length();
+                } else if (b3 == '3') { // Delete (ESC [ 3 ~)
+                    consumeUntilTilde(deadline);
+                    if (cursor < buf.length()) buf.deleteCharAt(cursor);
+                } else if (b3 == '4') { // End alternate (ESC [ 4 ~)
+                    consumeUntilTilde(deadline);
+                    cursor = buf.length();
+                } else if (b3 == '1') { // ESC [ 1 ... — Home or Ctrl+Arrow
+                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                    if (tty.available() > 0) {
+                        int b4 = tty.read();
+                        if (b4 == '~') {          // ESC [ 1 ~ — Home (alternate)
+                            cursor = 0;
+                        } else if (b4 == ';') {   // ESC [ 1 ; 5 C/D — Ctrl+Arrow
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                            if (tty.available() > 0) tty.read(); // consume modifier digit (5=Ctrl)
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                            if (tty.available() > 0) {
+                                int b6 = tty.read();
+                                if (b6 == 'C')      cursor = wordForward(buf, cursor);
+                                else if (b6 == 'D') cursor = wordBackward(buf, cursor);
+                            }
+                        }
+                    }
+                }
+            } else if (b2 == 'b') {    // Alt+← word backward
+                cursor = wordBackward(buf, cursor);
+            } else if (b2 == 'f') {    // Alt+→ word forward
+                cursor = wordForward(buf, cursor);
+            }
+            return new int[]{cursor, histIdx, 0};
+        }
+
+        private void consumeUntilTilde(long deadline) throws Exception {
+            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+            if (tty.available() > 0) tty.read(); // consume '~'
+        }
+
+        private int wordForward(StringBuilder buf, int cursor) {
+            while (cursor < buf.length() && buf.charAt(cursor) == ' ') cursor++;
+            while (cursor < buf.length() && buf.charAt(cursor) != ' ') cursor++;
+            return cursor;
+        }
+
+        private int wordBackward(StringBuilder buf, int cursor) {
+            while (cursor > 0 && buf.charAt(cursor - 1) == ' ') cursor--;
+            while (cursor > 0 && buf.charAt(cursor - 1) != ' ') cursor--;
+            return cursor;
         }
 
         /** Redraw prompt + buffer, placing the cursor at `cursor` offset within the buffer. */

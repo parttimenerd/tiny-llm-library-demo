@@ -247,7 +247,6 @@ public class CodingAgent extends CodingAgentSupport {
                     var outcome = compactor.compactNow(client, messages);
                     stateMessageIndex = -1;
                     if (outcome.compacted()) {
-                        System.out.println(Ansi.dim("[compact] " + outcome.messagesBefore() + " → " + outcome.messagesAfter() + " messages"));
                         response = toolSupport.handleToolLoop(client, messages);
                     } else {
                         throw e;
@@ -275,7 +274,6 @@ public class CodingAgent extends CodingAgentSupport {
         var compaction = compactor.maybeCompact(client, messages, 1);
         if (compaction.compacted()) {
             stateMessageIndex = -1;
-            System.out.println(Ansi.dim("[compact] " + compaction.messagesBefore() + " → " + compaction.messagesAfter() + " messages"));
         }
         // drain any continuation queued by continue/schedule tools
         String cont = pendingContinuation;
