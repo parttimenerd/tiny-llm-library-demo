@@ -7,6 +7,7 @@ import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Mixin;
 import me.bechberger.femtocli.annotations.Option;
+import me.bechberger.util.femtoschema.Schemas;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -47,9 +48,15 @@ public class ToolChatBot implements Callable<Integer> {
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));
 
-        // Each tool: registerTool(name, description, jsonSchema, handler)
-        // Pre-written to save time — see CodingTools.registerReadOnlyFileTools for ls/read-file/grep/find-file.
-        CodingTools.registerReadOnlyFileTools(toolSupport, fileTools);
+        // @stub: 1. registerTool("ls", description, Schemas.object().required("path",...).toJsonSchema(), handler)
+        // @stub: 2. call handleToolLoop(client, messages), print response
+        toolSupport.registerTool("ls", "List directory contents (one level). Use tree for a recursive overview.",
+                Schemas.object()
+                        .required("path", Schemas.string().withDescription("Directory path relative to project root"))
+                        .toJsonSchema(),
+                args -> fileTools.ls(args.get("path").toString()));
+        // register read-file, grep, tree, find-file
+        CodingTools.registerReadOnlyFileToolsExceptLs(toolSupport, fileTools);
         builder.withTools(toolSupport);
 
         var repl = builder.build();
@@ -57,12 +64,11 @@ public class ToolChatBot implements Callable<Integer> {
         repl.run(input -> {
             messages.add(LLMClient.user(input));
             System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
-            // @stub: call handleToolLoop, print the response, add it to messages
             String response = toolSupport.handleToolLoop(client, messages);
             if (response != null) System.out.println(response);
-            // @end
         });
         return 0;
+        // @end
     }
 
     public static void main(String[] args) {

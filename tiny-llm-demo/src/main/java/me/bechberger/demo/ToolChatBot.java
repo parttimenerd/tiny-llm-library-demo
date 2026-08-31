@@ -7,6 +7,7 @@ import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
 import me.bechberger.femtocli.annotations.Mixin;
 import me.bechberger.femtocli.annotations.Option;
+import me.bechberger.util.femtoschema.Schemas;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -47,20 +48,9 @@ public class ToolChatBot implements Callable<Integer> {
         var toolSupport = new ToolSupport();
         var fileTools = new FileTools(Path.of(root));
 
-        // Each tool: registerTool(name, description, jsonSchema, handler)
-        // Pre-written to save time — see CodingTools.registerReadOnlyFileTools for ls/read-file/grep/find-file.
-        CodingTools.registerReadOnlyFileTools(toolSupport, fileTools);
-        builder.withTools(toolSupport);
-
-        var repl = builder.build();
-        repl.greet("Tool Chatbot ready. Model: " + options.resolveModel());
-        repl.run(input -> {
-            messages.add(LLMClient.user(input));
-            System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));
-            // TODO: call handleToolLoop, print the response, add it to messages
-            throw new UnsupportedOperationException("TODO: live code");
-        });
-        return 0;
+        // TODO: 1. registerTool("ls", description, Schemas.object().required("path",...).toJsonSchema(), handler)
+        // TODO: 2. call handleToolLoop(client, messages), print response
+        throw new UnsupportedOperationException("TODO: live code");
     }
 
     public static void main(String[] args) {

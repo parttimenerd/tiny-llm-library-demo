@@ -37,7 +37,10 @@ public final class CodingTools {
         register(ts, "ls", "List directory contents (one level). Use tree for a recursive overview.",
                 args -> fileTools.ls(str(args, "path")),
                 "path", "Directory path relative to project root");
+        registerReadOnlyFileToolsExceptLs(ts, fileTools);
+    }
 
+    public static void registerReadOnlyFileToolsExceptLs(ToolSupport ts, FileTools fileTools) {
         ts.registerTool("read-file",
                 "Read a file's contents. Large files are capped at 20 000 chars — use start_line/end_line to paginate.",
                 Schemas.object()
