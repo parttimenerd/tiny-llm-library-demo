@@ -47,6 +47,11 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
         return result;
     }
 
+    private String lastToolName = null;
+
+    /** Name of the most recently started tool call, or null if no tool has been called yet. */
+    public String getLastToolName() { return lastToolName; }
+
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) {
         var toolsJson = buildToolsJson();
         for (int i = 0; i < 100; i++) {
@@ -76,6 +81,7 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
         var function = Util.asMap(toolCall.get("function"));
         var toolName = (String) function.get("name");
         var argumentsJson = (String) function.get("arguments");
+        lastToolName = toolName;
 
         String result = callTool(toolName, argumentsJson);
 
