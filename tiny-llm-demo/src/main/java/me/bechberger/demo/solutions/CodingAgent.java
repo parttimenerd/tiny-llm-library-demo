@@ -234,12 +234,34 @@ public class CodingAgent extends CodingAgentSupport {
                     || e instanceof java.io.InterruptedIOException
                     || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
                     || Thread.interrupted();
-            if (!interrupted) throw e;
-            Thread.interrupted(); // clear flag
-            String last = toolSupport.getLastToolName();
-            System.out.println("\n" + Ansi.yellow("[interrupted" + (last != null ? " during " + last : "") + "]"));
-            System.out.println(Ansi.dim("What would you like to do instead?"));
-            return;
+            if (!interrupted) {
+                // Context-length exceeded → compact now and retry once
+                String msg = e.getMessage() != null ? e.getMessage() : "";
+                String cause = e.getCause() != null && e.getCause().getMessage() != null ? e.getCause().getMessage() : "";
+                boolean contextExceeded = msg.contains("context") || cause.contains("context")
+                        || msg.contains("too long") || cause.contains("too long")
+                        || msg.contains("maximum") || cause.contains("maximum")
+                        || msg.contains("400") || cause.contains("400");
+                if (contextExceeded) {
+                    System.out.println(Ansi.yellow("\n[context limit hit — compacting and retrying]"));
+                    var outcome = compactor.compactNow(client, messages);
+                    stateMessageIndex = -1;
+                    if (outcome.compacted()) {
+                        System.out.println(Ansi.dim("[compact] " + outcome.messagesBefore() + " → " + outcome.messagesAfter() + " messages"));
+                        response = toolSupport.handleToolLoop(client, messages);
+                    } else {
+                        throw e;
+                    }
+                } else {
+                    throw e;
+                }
+            } else {
+                Thread.interrupted(); // clear flag
+                String last = toolSupport.getLastToolName();
+                System.out.println("\n" + Ansi.yellow("[interrupted" + (last != null ? " during " + last : "") + "]"));
+                System.out.println(Ansi.dim("What would you like to do instead?"));
+                return;
+            }
         }
         if (Thread.interrupted()) {
             String last = toolSupport.getLastToolName();
