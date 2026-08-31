@@ -1,6 +1,7 @@
 package me.bechberger.demo;
 
 import me.bechberger.demo.util.Ansi;
+import me.bechberger.demo.util.ApprovalRules;
 import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
@@ -41,7 +42,7 @@ public class CodingAgent extends CodingAgentSupport {
         var toolSupport = createToolSupport(fileTools);
 
         registerCommands(builder, client, fileTools, toolSupport, messages);
-        builder.showPane(() -> state.renderPane());
+        builder.setLivePane(() -> state.renderPane());
         builder.withTools(toolSupport);
         this.repl = builder.build();
         startSessionLog();
@@ -108,6 +109,18 @@ public class CodingAgent extends CodingAgentSupport {
                 .on("run",     "run a shell command, output shared with the agent: /run <cmd>", args -> runForUser(args, fileTools, messages))
                 .on("yolo",    "toggle YOLO mode",                           args -> { approval = approval == ApprovalMode.YOLO ? ApprovalMode.NORMAL : ApprovalMode.YOLO; printMode(); })
                 .on("mode",    "cycle approval mode: NORMAL → AUTO-EDIT → YOLO", args -> { approval = approval.next(); printMode(); })
+                .on("allow",   "auto-allow matching actions: /allow <pattern>  e.g. /allow \"run: mvn *\"",
+                        args -> { if (args.isBlank()) { System.out.println("Usage: /allow <pattern>"); return; }
+                                  approvalRules.allow(args); System.out.println(Ansi.green("Allow: " + args)); })
+                .on("deny",    "auto-deny matching actions: /deny <pattern>",
+                        args -> { if (args.isBlank()) { System.out.println("Usage: /deny <pattern>"); return; }
+                                  approvalRules.deny(args);  System.out.println(Ansi.yellow("Deny: " + args)); })
+                .on("rules",   "list current allow/deny rules",
+                        args -> { var list = approvalRules.rules();
+                                  if (list.isEmpty()) { System.out.println(Ansi.dim("(no rules)")); return; }
+                                  list.forEach(r -> System.out.println(
+                                      (r.effect() == ApprovalRules.Effect.ALLOW ? Ansi.green("allow ") : Ansi.yellow("deny  "))
+                                      + r.pattern())); })
                 .on("clear",   "clear conversation, keep system prompt and state", args -> clearConversation(messages))
                 .on("compact", "fold old history into a summary now",        args -> compactNow(client, messages))
                 .on("tokens",  "show token usage and compaction threshold",  args -> printTokens(client, messages));

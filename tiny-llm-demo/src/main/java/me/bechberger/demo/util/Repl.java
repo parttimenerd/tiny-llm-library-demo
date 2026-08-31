@@ -51,6 +51,8 @@ public final class Repl {
     /** True only when running interactively on a real TTY with stdin as input source. */
     final boolean interactive;
     final History history;
+    private Supplier<String> livePane = null;
+    private int lastPaneLines = 0; // lines printed by last printLivePane(); 0 = needs fresh print
 
     /**
      * @param prompt  printed before every input line, e.g. "\nYou: "
@@ -74,6 +76,37 @@ public final class Repl {
         this.prompt = prompt;
         return this;
     }
+
+    /**
+     * Register a live pane shown above the prompt line on every REPL cycle (interactive mode only).
+     * In non-interactive mode the pane is never rendered here — use showPane() for that.
+     */
+    public Repl setLivePane(Supplier<String> pane) {
+        this.livePane = pane;
+        return this;
+    }
+
+    /**
+     * Erase the previous pane (cursor-up by lastPaneLines), print the new content, track line count.
+     * No-op when not interactive or no live pane is registered.
+     * Resets lastPaneLines to 0 when content is empty (nothing on screen to erase next time).
+     */
+    void printLivePane() {
+        if (!interactive || livePane == null) return;
+        String content = livePane.get();
+        if (lastPaneLines > 0) {
+            System.out.print(Ansi.cursorUp(lastPaneLines));
+            for (int i = 0; i < lastPaneLines; i++)
+                System.out.print("\r" + Ansi.ERASE_EOL + (i < lastPaneLines - 1 ? "\n" : ""));
+        }
+        if (content == null || content.isBlank()) { lastPaneLines = 0; System.out.flush(); return; }
+        System.out.println(content);
+        System.out.flush();
+        lastPaneLines = content.split("\n", -1).length + 1;
+    }
+
+    /** Reset pane line counter so next printLivePane() repaints fresh below current output. */
+    void resetLivePaneCount() { lastPaneLines = 0; }
 
     /** The command table - add your own slash-commands here. */
     public Commands commands() {
@@ -155,13 +188,21 @@ public final class Repl {
     /** Run prompt - dispatch commands - chat, until exit/quit or EOF. */
     public void run(Chat chat) {
         while (!stopped) {
-            System.out.print(prompt.get());
+            if (interactive) {
+                printLivePane(); // pane above prompt; readLogicalLine/lineEditor prints the prompt itself
+            } else {
+                System.out.print(prompt.get());
+            }
             if (!interactive && !scanner.hasNextLine()) break;
             String raw = readLogicalLine();
             if (raw == null) break; // EOF from line editor (Ctrl-D on empty line)
             String input = raw.trim();
             if (input.isEmpty()) continue;
-            if (commands.handle(input)) { if (onResponse != null && !stopped) onResponse.run(); continue; }
+            if (commands.handle(input)) {
+                if (onResponse != null && !stopped) onResponse.run();
+                resetLivePaneCount();
+                continue;
+            }
             history.add(input);
             try {
                 chat.chat(input);
@@ -169,6 +210,7 @@ public final class Repl {
                 if (e.getCause() instanceof java.io.InterruptedIOException) {
                     Thread.interrupted();
                     System.out.println("\n[interrupted]");
+                    resetLivePaneCount();
                     continue;
                 }
                 throw e;
@@ -176,12 +218,14 @@ public final class Repl {
                 if (e instanceof java.io.InterruptedIOException) {
                     Thread.interrupted();
                     System.out.println("\n[interrupted]");
+                    resetLivePaneCount();
                     continue;
                 }
                 throw new RuntimeException(e);
             }
-            if (Thread.interrupted()) { System.out.println("\n[interrupted]"); continue; }
+            if (Thread.interrupted()) { System.out.println("\n[interrupted]"); resetLivePaneCount(); continue; }
             if (onResponse != null) onResponse.run();
+            resetLivePaneCount(); // response text scrolled the terminal; next cycle repaints fresh
         }
     }
 
@@ -517,6 +561,24 @@ public final class Repl {
         /** Register a pane supplier; stores the pane Runnable for use by {@link #withTools}. */
         public Builder showPane(Supplier<String> paneSupplier) {
             this.pane = repl.showPane(paneSupplier);
+            return this;
+        }
+
+        /**
+         * Register a live pane that stays above the prompt line in interactive mode.
+         * In non-interactive mode falls back to printing after each response (via onResponse).
+         * Stores the mid-turn Runnable for {@link #withTools} so tool-call updates still print.
+         */
+        public Builder setLivePane(Supplier<String> paneSupplier) {
+            repl.setLivePane(paneSupplier);
+            // Mid-turn print (during tool loops): print below tool output as before.
+            // printLivePane() handles prompt-time display; onResponse is skipped for interactive.
+            Runnable midTurn = () -> { var s = paneSupplier.get(); if (s != null && !s.isBlank()) System.out.println(s); };
+            this.pane = midTurn;
+            if (!repl.interactive) {
+                // Non-interactive: wire as a regular onResponse pane.
+                repl.onResponse = midTurn;
+            }
             return this;
         }
 

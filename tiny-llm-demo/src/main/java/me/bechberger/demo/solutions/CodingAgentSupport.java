@@ -6,6 +6,7 @@ import me.bechberger.demo.FileTools;
 import me.bechberger.demo.LLMClient;
 import me.bechberger.demo.solutions.ToolSupport;
 import me.bechberger.demo.util.Ansi;
+import me.bechberger.demo.util.ApprovalRules;
 import me.bechberger.demo.util.Compactor;
 
 import me.bechberger.demo.util.Repl;
@@ -58,6 +59,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
     final Scanner scanner = new Scanner(System.in);
 
     protected ApprovalMode approval = ApprovalMode.NORMAL;
+    final ApprovalRules approvalRules = new ApprovalRules();
 
     protected enum ApprovalMode {
         NORMAL(""), AUTO_EDIT("⏵ "), YOLO("⚡ ");
@@ -138,6 +140,9 @@ abstract class CodingAgentSupport implements Callable<Integer> {
 
     /** Ask the user to approve a risky agent action — auto-approved in YOLO/AUTO_EDIT mode. */
     boolean confirm(String action, boolean defaultYes) {
+        var effect = approvalRules.match(action);
+        if (effect == ApprovalRules.Effect.ALLOW) { System.out.println("  " + Ansi.dim("rule-allow: " + action)); return true; }
+        if (effect == ApprovalRules.Effect.DENY)  { System.out.println("  " + Ansi.dim("rule-deny: "  + action)); return false; }
         boolean autoApprove = approval == ApprovalMode.YOLO
                 || (approval == ApprovalMode.AUTO_EDIT && action.startsWith("run:"));
         if (autoApprove) {
