@@ -1487,6 +1487,100 @@ Hybrid Memory has three tiers: system prompt is pinned (never summarized), the m
 -->
 
 ---
+
+# The Summarization Prompt
+
+<img src="./img/qr-claude-cookbook-compaction.png" class="absolute top-4 right-4 w-16 z-10 opacity-70" />
+
+<div class="grid grid-cols-2 gap-6 mt-4">
+
+<div>
+
+```text
+Summarize this coding session so work
+can resume in a new context window.
+Do NOT call any tools.
+Write to enable immediate resumption.
+Wrap in <summary></summary> tags.
+
+## Task
+What the user asked for, constraints.
+
+## Done
+Completed steps, files created/modified
+(with paths), key decisions + rationale.
+```
+
+</div>
+
+<div>
+
+```text
+## Errors
+Problems hit and how resolved.
+Quote error messages verbatim.
+
+## Next
+Remaining steps in priority order.
+Open questions or blockers.
+
+## Context
+User preferences, non-obvious constraints,
+promises made, anything preventing
+duplicate work.
+
+Be thorough on files and errors.
+Err on the side of including detail.
+```
+
+</div>
+
+</div>
+
+<!--
+**[~39:45]** "The summarization prompt is the heart of hybrid memory. Five structured sections, three constraints up front: don't call tools, enable immediate resumption, wrap in tags so we can extract cleanly."
+
+Two common approaches to prompting the summary: (1) structured sections like this — Task/Done/Errors/Next/Context — works great for coding agents where you need exact file paths and error messages verbatim; (2) free-form narrative — "summarize the conversation so far" — simpler but loses precise details. The structured version is much more robust for agents doing real work.
+-->
+
+---
+
+# What the Summary Looks Like
+
+<img src="./img/qr-claude-cookbook-compaction.png" class="absolute top-4 right-4 w-16 z-10 opacity-70" />
+
+<div class="text-xs text-gray-300 bg-gray-800/60 rounded p-3 font-mono leading-relaxed mt-4">
+
+<div class="text-orange-400 font-bold mb-1">## Task</div>
+Add retry-on-429 to chatRaw. Cap wait at 10s.
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Done</div>
+- solutions/LLMClient.java: chatRaw now retries<br/>
+  up to 3× on 429, wait = min(server_secs+2, 10)<br/>
+- parseRetryAfter() parses "N seconds" from msg<br/>
+- Committed & pushed (main, 5e04868)
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Errors</div>
+None. Build clean on first attempt.
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Next</div>
+User asked to improve compaction summary prompt.
+
+<div class="text-orange-400 font-bold mt-2 mb-1">## Context</div>
+solutions/ is source of truth; sync-demo.py<br/>
+generates demo/. Always sync + mvn -q package.
+
+</div>
+
+<div class="text-xs text-gray-500 mt-3"><code>/compact prompt</code> — opens the exact prompt sent to the LLM in <code>less</code></div>
+
+<!--
+**[~40:00]** "Here's what the summary actually looks like — five sections, structured, actionable. A real example from this project's session."
+
+The `/compact prompt` command shows the exact system prompt plus the serialized conversation that gets sent — useful for debugging or understanding what the LLM sees.
+-->
+
+---
 layout: center
 ---
 
@@ -1886,100 +1980,6 @@ END: one line — done + how verified
 
 <!--
 **[~45:45]** "The system prompt is the agent's standing orders. Exploration discipline, edit discipline, always verify, clarify before acting, plan for non-trivial tasks. Short enough to fit on a slide — long enough to prevent the most common mistakes."
--->
-
----
-
-# The Summarization Prompt
-
-<img src="./img/qr-claude-cookbook-compaction.png" class="absolute top-4 right-4 w-16 z-10 opacity-70" />
-
-<div class="grid grid-cols-2 gap-6 mt-4">
-
-<div>
-
-```text
-Summarize this coding session so work
-can resume in a new context window.
-Do NOT call any tools.
-Write to enable immediate resumption.
-Wrap in <summary></summary> tags.
-
-## Task
-What the user asked for, constraints.
-
-## Done
-Completed steps, files created/modified
-(with paths), key decisions + rationale.
-
-## Errors
-Problems hit and how resolved.
-Quote error messages verbatim.
-
-## Next
-Remaining steps in priority order.
-Open questions or blockers.
-
-## Context
-User preferences, non-obvious constraints,
-promises made, anything preventing
-duplicate work.
-
-Be thorough on files and errors.
-Err on the side of including detail.
-```
-
-</div>
-
-<div class="flex flex-col gap-3 justify-center">
-
-</div>
-
-</div>
-
-<!--
-**[~45:50]** "The summarization prompt is the heart of hybrid memory. Five structured sections, three constraints up front: don't call tools, enable immediate resumption, wrap in tags so we can extract cleanly."
-
-Two common approaches to prompting the summary: (1) structured sections like this — Task/Done/Errors/Next/Context — works great for coding agents where you need exact file paths and error messages verbatim; (2) free-form narrative — "summarize the conversation so far" — simpler but loses precise details. The structured version is much more robust for agents doing real work.
-
-On the right: the conversation layout. System prompt is pinned and never included in what gets summarized. The summary replaces the compressed messages in-place. Recent messages stay verbatim for coherent follow-up.
--->
-
----
-
-# What the Summary Looks Like
-
-<img src="./img/qr-claude-cookbook-compaction.png" class="absolute top-4 right-4 w-16 z-10 opacity-70" />
-
-<div class="text-xs text-gray-300 bg-gray-800/60 rounded p-3 font-mono leading-relaxed mt-4">
-
-<div class="text-orange-400 font-bold mb-1">## Task</div>
-Add retry-on-429 to chatRaw. Cap wait at 10s.
-
-<div class="text-orange-400 font-bold mt-2 mb-1">## Done</div>
-- solutions/LLMClient.java: chatRaw now retries<br/>
-  up to 3× on 429, wait = min(server_secs+2, 10)<br/>
-- parseRetryAfter() parses "N seconds" from msg<br/>
-- Committed & pushed (main, 5e04868)
-
-<div class="text-orange-400 font-bold mt-2 mb-1">## Errors</div>
-None. Build clean on first attempt.
-
-<div class="text-orange-400 font-bold mt-2 mb-1">## Next</div>
-User asked to improve compaction summary prompt.
-
-<div class="text-orange-400 font-bold mt-2 mb-1">## Context</div>
-solutions/ is source of truth; sync-demo.py<br/>
-generates demo/. Always sync + mvn -q package.
-
-</div>
-
-<div class="text-xs text-gray-500 mt-3"><code>/compact prompt</code> — opens the exact prompt sent to the LLM in <code>less</code></div>
-
-<!--
-**[~46:05]** "Here's what the summary actually looks like — five sections, structured, actionable. A real example from this project's session."
-
-The `/compact prompt` command shows the exact system prompt plus the serialized conversation that gets sent — useful for debugging or understanding what the LLM sees.
 -->
 
 ---
