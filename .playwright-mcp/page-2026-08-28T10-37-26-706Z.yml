@@ -1,0 +1,1031 @@
+- generic [active] [ref=f160e1]:
+  - link "Jump to content" [ref=f160e2] [cursor=pointer]:
+    - /url: "#bodyContent"
+  - banner [ref=f160e4]:
+    - generic [ref=f160e5]:
+      - navigation "Site" [ref=f160e6]:
+        - generic "Main menu" [ref=f160e7]:
+          - button "Main menu" [ref=f160e8] [cursor=pointer]
+          - option "Qafár af"
+          - option "Arbërisht"
+          - option "аԥсшәа"
+          - option "Abron"
+          - option "bahasa ambon"
+          - option "Acèh"
+          - option "Kwéyòl Sent Lisi"
+          - option "عراقي"
+          - option "адыгабзэ"
+          - option "адыгабзэ"
+          - option "تونسي / Tûnsî"
+          - option "تونسي"
+          - option "Tûnsî"
+          - option "Afrikaans"
+          - option "Aghem"
+          - option "Aanteegan an' Baabyuudan"
+          - option "Akan"
+          - option "Gegë"
+          - option "Alemannisch"
+          - option "алтай тил"
+          - option "አማርኛ"
+          - option "Pangcah"
+          - option "aragonés"
+          - option "Ænglisc"
+          - option "Obolo"
+          - option "अंगिका"
+          - option "شامي"
+          - option "العربية"
+          - option "ܐܪܡܝܐ"
+          - option "mapudungun"
+          - option "جازايرية"
+          - option "الدارجة"
+          - option "مصرى"
+          - option "অসমীয়া"
+          - option "American sign language"
+          - option "asturianu"
+          - option "Atikamekw"
+          - option "авар"
+          - option "Kotava"
+          - option "अवधी"
+          - option "Aymar aru"
+          - option "azərbaycanca"
+          - option "تۆرکجه"
+          - option "башҡортса"
+          - option "Tuki"
+          - option "Basa Bali"
+          - option "ᬩᬲᬩᬮᬶ"
+          - option "Boarisch"
+          - option "Basaa"
+          - option "žemaitėška"
+          - option "Bamum"
+          - option "Batak Toba"
+          - option "Batak Toba"
+          - option "Ghomála'"
+          - option "جهلسری بلوچی"
+          - option "wawle"
+          - option "Bikol Central"
+          - option "Bajau Sama"
+          - option "беларуская"
+          - option "беларуская (тарашкевіца)"
+          - option "беларуская (тарашкевіца)"
+          - option "Betawi"
+          - option "Bafut"
+          - option "ରେମସାମ୍"
+          - option "български"
+          - option "हरियाणवी"
+          - option "روچ کپتین بلوچی"
+          - option "भोजपुरी"
+          - option "भोजपुरी"
+          - option "Bislama"
+          - option "Banjar"
+          - option "Baka"
+          - option "Bakoko"
+          - option "Kom"
+          - option "ပအိုဝ်ႏဘာႏသာႏ"
+          - option "bamanankan"
+          - option "বাংলা"
+          - option "བོད་ཡིག"
+          - option "bòo pìkkà"
+          - option "বিষ্ণুপ্রিয়া মণিপুরী"
+          - option "بختیاری"
+          - option "Mka'a"
+          - option "brezhoneg"
+          - option "Bráhuí"
+          - option "bosanski"
+          - option "Batak Mandailing"
+          - option "Iriga Bicolano"
+          - option "Basa Ugi"
+          - option "ᨅᨔ ᨕᨘᨁᨗ"
+          - option "буряад"
+          - option "Medumba"
+          - option "català"
+          - option "Kaqchikel"
+          - option "Carolinian"
+          - option "Chavacano de Zamboanga"
+          - option "𑄌𑄋𑄴𑄟𑄳𑄦"
+          - option "閩東語 / Mìng-dĕ̤ng-ngṳ̄"
+          - option "閩東語（傳統漢字）"
+          - option "Mìng-dĕ̤ng-ngṳ̄ (Bàng-uâ-cê)"
+          - option "нохчийн"
+          - option "Cebuano"
+          - option "Chamoru"
+          - option "chinuk wawa"
+          - option "Chahta anumpa"
+          - option "ᏣᎳᎩ"
+          - option "Tsetsêhestâhese"
+          - option "کوردی"
+          - option "Hakha Chin"
+          - option "corsu"
+          - option "ϯⲙⲉⲧⲣⲉⲙⲛ̀ⲭⲏⲙⲓ"
+          - option "Capiceño"
+          - option "莆仙語 / Pó-sing-gṳ̂"
+          - option "莆仙语（简体）"
+          - option "莆仙語（繁體）"
+          - option "Pó-sing-gṳ̂ (Báⁿ-uā-ci̍)"
+          - option "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ"
+          - option "qırımtatarca"
+          - option "къырымтатарджа (Кирилл)"
+          - option "qırımtatarca (Latin)"
+          - option "tatarşa"
+          - option "čeština"
+          - option "kaszëbsczi"
+          - option "словѣньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ"
+          - option "чӑвашла"
+          - option "Cymraeg"
+          - option "dansk"
+          - option "dagbanli"
+          - option "Deutsch"
+          - option "Österreichisches Deutsch"
+          - option "Schweizer Hochdeutsch"
+          - option "Deutsch (Sie-Form)"
+          - option "Dagaare"
+          - option "Thuɔŋjäŋ"
+          - option "Zazaki"
+          - option "долган тыла"
+          - option "dolnoserbski"
+          - option "ଦେଶିଆ"
+          - option "Kadazandusun"
+          - option "डोटेली"
+          - option "Duala"
+          - option "ދިވެހިބަސް"
+          - option "ཇོང་ཁ"
+          - option "eʋegbe"
+          - option "Efịk"
+          - option "Emiliàn"
+          - option "Ελληνικά"
+          - option "emiliàn e rumagnòl"
+          - option "English" [selected]
+          - option "Canadian English"
+          - option "British English"
+          - option "American English"
+          - option "Esperanto"
+          - option "español"
+          - option "español de América Latina"
+          - option "español (formal)"
+          - option "eesti"
+          - option "Eton"
+          - option "Ejagham"
+          - option "euskara"
+          - option "Ewondo"
+          - option "estremeñu"
+          - option "فارسی"
+          - option "mfantse"
+          - option "Fulfulde"
+          - option "suomi"
+          - option "meänkieli"
+          - option "võro"
+          - option "Na Vosa Vakaviti"
+          - option "kvääni"
+          - option "Fe'fe'"
+          - option "føroyskt"
+          - option "fɔ̀ngbè"
+          - option "français"
+          - option "français cadien"
+          - option "arpetan"
+          - option "Nordfriisk"
+          - option "Oostfräisk"
+          - option "furlan"
+          - option "poor’íŋ belé’ŋ"
+          - option "Frysk"
+          - option "Gaeilge"
+          - option "Ga"
+          - option "Gagauz"
+          - option "贛語"
+          - option "赣语（简体）"
+          - option "贛語（繁體）"
+          - option "kréyòl Gwadloup"
+          - option "kriyòl gwiyannen"
+          - option "Gàidhlig"
+          - option "گوجری"
+          - option "गुज्जरी"
+          - option "galego"
+          - option "на̄ни"
+          - option "گیلکی"
+          - option "Avañe'ẽ"
+          - option "गोंयची कोंकणी / Gõychi Konknni"
+          - option "गोंयची कोंकणी"
+          - option "Gõychi Konknni"
+          - option "Bahasa Hulontalo"
+          - option "𐌲𐌿𐍄𐌹𐍃𐌺"
+          - option "Ghanaian Pidgin"
+          - option "Ἀρχαία ἑλληνικὴ"
+          - option "Alemannisch"
+          - option "ગુજરાતી"
+          - option "wayuunaiki"
+          - option "farefare"
+          - option "gungbe"
+          - option "Gaelg"
+          - option "Gbaya"
+          - option "Hausa"
+          - option "客家語 / Hak-kâ-ngî"
+          - option "客家语（简体）"
+          - option "客家語（繁體）"
+          - option "Hak-kâ-ngî (Pha̍k-fa-sṳ)"
+          - option "Hawaiʻi"
+          - option "עברית"
+          - option "हिन्दी"
+          - option "Fiji Hindi"
+          - option "Fiji Hindi"
+          - option "Ilonggo"
+          - option "kihunde"
+          - option "ہندکو"
+          - option "Hiri Motu"
+          - option "𑢹𑣉𑣉 𑣎𑣋𑣜"
+          - option "Ho"
+          - option "hrvatski"
+          - option "Hunsrik"
+          - option "hornjoserbsce"
+          - option "湘語"
+          - option "Kreyòl ayisyen"
+          - option "magyar"
+          - option "magyar (formal)"
+          - option "հայերեն"
+          - option "Արեւմտահայերէն"
+          - option "Otsiherero"
+          - option "interlingua"
+          - option "Jaku Iban"
+          - option "ibibio"
+          - option "Bahasa Indonesia"
+          - option "Interlingue"
+          - option "Igbo"
+          - option "Igala"
+          - option "ꆇꉙ"
+          - option "Iñupiatun"
+          - option "ᐃᓄᒃᑎᑐᑦ"
+          - option "inuktitut"
+          - option "Ilokano"
+          - option "гӀалгӀай"
+          - option "Ido"
+          - option "íslenska"
+          - option "Isu"
+          - option "medžuslovjansky"
+          - option "меджусловјанскы"
+          - option "medžuslovjansky"
+          - option "italiano"
+          - option "ᐃᓄᒃᑎᑐᑦ / inuktitut"
+          - option "日本語"
+          - option "Patois"
+          - option "la .lojban."
+          - option "jysk"
+          - option "Jawa"
+          - option "ꦗꦮ"
+          - option "ქართული"
+          - option "Qaraqalpaqsha"
+          - option "Taqbaylit"
+          - option "Karai-karai"
+          - option "Jju"
+          - option "адыгэбзэ"
+          - option "адыгэбзэ"
+          - option "Kabɩyɛ"
+          - option "Tyap"
+          - option "kabuverdianu"
+          - option "Kera"
+          - option "Kongo"
+          - option "Kumoring"
+          - option "गेम्येहाक़ गिपन"
+          - option "کھوار"
+          - option "Gĩkũyũ"
+          - option "Kırmancki"
+          - option "Kwanyama"
+          - option "хакас"
+          - option "ဖၠုံလိက်"
+          - option "қазақша"
+          - option "قازاقشا (تٴوتە)"
+          - option "قازاقشا (جۇنگو)"
+          - option "қазақша (кирил)"
+          - option "қазақша (Қазақстан)"
+          - option "qazaqşa (latın)"
+          - option "qazaqşa (Türkïya)"
+          - option "kalaallisut"
+          - option "ភាសាខ្មែរ"
+          - option "ಕನ್ನಡ"
+          - option "Yerwa Kanuri"
+          - option "한국어"
+          - option "조선말"
+          - option "перем коми"
+          - option "kanuri"
+          - option "къарачай-малкъар"
+          - option "Krio"
+          - option "Kinaray-a"
+          - option "karjal"
+          - option "کٲشُر"
+          - option "کٲشُر"
+          - option "कॉशुर"
+          - option "Bafia"
+          - option "Ripoarisch"
+          - option "စှီၤ"
+          - option "kurdî"
+          - option "کوردی (عەرەبی)"
+          - option "kurdî (latînî)"
+          - option "къумукъ"
+          - option "Kʋsaal"
+          - option "коми"
+          - option "kernowek"
+          - option "кыргызча"
+          - option "Latina"
+          - option "Ladino"
+          - option "Lëtzebuergesch"
+          - option "лакку"
+          - option "Nomaande"
+          - option "лезги"
+          - option "Lingua Franca Nova"
+          - option "Luganda"
+          - option "Limburgs"
+          - option "Ligure"
+          - option "Līvõ kēļ"
+          - option "Lampung Api"
+          - option "لەکی"
+          - option "Lakȟótiyapi"
+          - option "Ladin"
+          - option "lombard"
+          - option "lingála"
+          - option "Lamnso'"
+          - option "ລາວ"
+          - option "Silozi"
+          - option "لۊری شومالی"
+          - option "lietuvių"
+          - option "latgaļu"
+          - option "ciluba"
+          - option "Mizo ţawng"
+          - option "لئری دوٙمینی"
+          - option "latviešu"
+          - option "文言"
+          - option "Lazuri"
+          - option "Madhurâ"
+          - option "मगही"
+          - option "मैथिली"
+          - option "Basa Banyumasan"
+          - option "vùn màsànà"
+          - option "Maka"
+          - option "мокшень"
+          - option "Malagasy"
+          - option "Ebon"
+          - option "олык марий"
+          - option "Māori"
+          - option "Minangkabau"
+          - option "македонски"
+          - option "മലയാളം"
+          - option "монгол"
+          - option "manju gisun"
+          - option "manju gisun"
+          - option "ᠮᠠᠨᠵᡠ ᡤᡳᠰᡠᠨ"
+          - option "ꯃꯤꯇꯩ ꯂꯣꯟ"
+          - option "ဘာသာမန်"
+          - option "молдовеняскэ"
+          - option "moore"
+          - option "मराठी"
+          - option "Mara"
+          - option "кырык мары"
+          - option "Bahasa Melayu"
+          - option "بهاس ملايو"
+          - option "Malti"
+          - option "Mundang"
+          - option "Baso Palembang"
+          - option "Mvskoke"
+          - option "Mirandés"
+          - option "မြန်မာဘာသာ"
+          - option "эрзянь"
+          - option "مازِرونی"
+          - option "Dorerin Naoero"
+          - option "Nāhuatl"
+          - option "閩南語 / Bân-lâm-gí"
+          - option "閩南語"
+          - option "閩南語（傳統漢字）"
+          - option "Bân-lâm-gí (Pe̍h-ōe-jī)"
+          - option "Bân-lâm-gí (Tâi-lô)"
+          - option "Napulitano"
+          - option "norsk bokmål"
+          - option "Plattdüütsch"
+          - option "Nedersaksies"
+          - option "नेपाली"
+          - option "नेपाल भाषा"
+          - option "Oshiwambo"
+          - option "Ngémba"
+          - option "Li Niha"
+          - option "కొలామి"
+          - option "Niuē"
+          - option "Nederlands"
+          - option "Nederlands (informeel)"
+          - option "Ngombala"
+          - option "Kwasio"
+          - option "nawdm"
+          - option "norsk nynorsk"
+          - option "Ngiemboon"
+          - option "Nda'nda'"
+          - option "norsk"
+          - option "ᨣᩤᩴᨾᩮᩬᩥᨦ"
+          - option "ногайша"
+          - option "Novial"
+          - option "ߒߞߏ"
+          - option "isiNdebele seSewula"
+          - option "Nouormand"
+          - option "Sesotho sa Leboa"
+          - option "Nupe"
+          - option "Diné bizaad"
+          - option "Chi-Chewa"
+          - option "runyankore"
+          - option "Orunyoro"
+          - option "Nyunga"
+          - option "occitan"
+          - option "Ojibwemowin"
+          - option "livvinkarjala"
+          - option "Oromoo"
+          - option "ଓଡ଼ିଆ"
+          - option "ирон"
+          - option "Wažáže íe"
+          - option "لسان عثمانى"
+          - option "ਪੰਜਾਬੀ"
+          - option "Pangasinan"
+          - option "Kapampangan"
+          - option "Papiamentu"
+          - option "Papiamento"
+          - option "Picard"
+          - option "Naijá"
+          - option "Deitsch"
+          - option "Plautdietsch"
+          - option "Pälzisch"
+          - option "पालि"
+          - option "Norfuk / Pitkern"
+          - option "polski"
+          - option "Piemontèis"
+          - option "پنجابی"
+          - option "Ποντιακά"
+          - option "Nawat"
+          - option "prūsiskan"
+          - option "پښتو"
+          - option "português"
+          - option "português do Brasil"
+          - option "pinayuanan"
+          - option "Runa Simi"
+          - option "Qatzijob\\ʼal"
+          - option "Runa shimi"
+          - option "Rumagnôl"
+          - option "Tarifit"
+          - option "ရခိုင်"
+          - option "rumantsch"
+          - option "romaňi čhib"
+          - option "kaalengo tšimb"
+          - option "romani čhib"
+          - option "ikirundi"
+          - option "română"
+          - option "armãneashti"
+          - option "tarandíne"
+          - option "руски"
+          - option "русский"
+          - option "русиньскый"
+          - option "armãneashti"
+          - option "Vlăheşte"
+          - option "Влахесте"
+          - option "Vlăheşte"
+          - option "мыхаӀбишды"
+          - option "Ikinyarwanda"
+          - option "मारवाड़ी"
+          - option "沖縄口"
+          - option "संस्कृतम्"
+          - option "саха тыла"
+          - option "Sasak"
+          - option "ᱥᱟᱱᱛᱟᱲᱤ"
+          - option "sardu"
+          - option "sicilianu"
+          - option "Scots"
+          - option "سنڌي"
+          - option "Sassaresu"
+          - option "کوردی خوارگ"
+          - option "davvisámegiella"
+          - option "davvisámegiella (Suoma bealde)"
+          - option "davvisámegiella (Norgga bealde)"
+          - option "davvisámegiella (Ruoŧa bealde)"
+          - option "Cmique Itom"
+          - option "Koyraboro Senni"
+          - option "Sängö"
+          - option "žemaitėška"
+          - option "srpskohrvatski / српскохрватски"
+          - option "српскохрватски (ћирилица)"
+          - option "srpskohrvatski (latinica)"
+          - option "Taclḥit"
+          - option "Taclḥit"
+          - option "ⵜⴰⵛⵍⵃⵉⵜ"
+          - option "တႆး"
+          - option "tacawit"
+          - option "tacawit"
+          - option "සිංහල"
+          - option "Simple English"
+          - option "кӣллт са̄мь кӣлл"
+          - option "bidumsámegiella"
+          - option "ubmejesámiengiälla"
+          - option "slovenčina"
+          - option "سرائیکی"
+          - option "سرائیکی"
+          - option "slovenščina"
+          - option "Schläsch"
+          - option "Gagana Samoa"
+          - option "åarjelsaemien"
+          - option "julevsámegiella"
+          - option "anarâškielâ"
+          - option "nuõrttsääʹmǩiõll"
+          - option "chiShona"
+          - option "Soomaaliga"
+          - option "shqip"
+          - option "српски / srpski"
+          - option "српски (ћирилица)"
+          - option "srpski (latinica)"
+          - option "Sranantongo"
+          - option "sardu campidanesu"
+          - option "mbia cheë"
+          - option "SiSwati"
+          - option "Sesotho"
+          - option "Seeltersk"
+          - option "себертатар"
+          - option "Sunda"
+          - option "svenska"
+          - option "ლუშნუ"
+          - option "Kiswahili"
+          - option "ꠍꠤꠟꠐꠤ"
+          - option "ślůnski"
+          - option "Sakizaya"
+          - option "தமிழ்"
+          - option "Tayal"
+          - option "ತುಳು"
+          - option "ᥖᥭᥰ ᥖᥬᥲ ᥑᥨᥒᥰ"
+          - option "తెలుగు"
+          - option "tetun"
+          - option "тоҷикӣ"
+          - option "тоҷикӣ"
+          - option "tojikī"
+          - option "ไทย"
+          - option "काेचिला थारु"
+          - option "ትግርኛ"
+          - option "ትግሬ"
+          - option "Türkmençe"
+          - option "Tagalog"
+          - option "tolışi"
+          - option "толыши"
+          - option "Setswana"
+          - option "lea faka-Tonga"
+          - option "toki pona"
+          - option "Tok Pisin"
+          - option "Tanapag"
+          - option "Türkçe"
+          - option "Ṫuroyo"
+          - option "Seediq"
+          - option "Xitsonga"
+          - option "татарча / tatarça"
+          - option "татарча"
+          - option "tatarça"
+          - option "Orutooro"
+          - option "chiTumbuka"
+          - option "Tunen"
+          - option "Twi"
+          - option "reo tahiti"
+          - option "тыва дыл"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ"
+          - option "удмурт"
+          - option "ئۇيغۇرچە / Uyghurche"
+          - option "ئۇيغۇرچە"
+          - option "Uyghurche"
+          - option "українська"
+          - option "اردو"
+          - option "oʻzbekcha / ўзбекча"
+          - option "ўзбекча"
+          - option "oʻzbekcha"
+          - option "Tshivenda"
+          - option "vèneto"
+          - option "vepsän kel’"
+          - option "Tiếng Việt"
+          - option "West-Vlams"
+          - option "Mainfränkisch"
+          - option "emakhuwa"
+          - option "Volapük"
+          - option "Vaďďa"
+          - option "võro"
+          - option "Vute"
+          - option "walon"
+          - option "wolaytta"
+          - option "Winaray"
+          - option "Pidgin (Cameroon)"
+          - option "Fakaʻuvea"
+          - option "waale"
+          - option "Wolof"
+          - option "吴语"
+          - option "吴语（简体）"
+          - option "吳語（正體）"
+          - option "Wyandot"
+          - option "хальмг"
+          - option "isiXhosa"
+          - option "მარგალური"
+          - option "saisiyat"
+          - option "Nugunu"
+          - option "Yambeta"
+          - option "Yangben"
+          - option "Yemba"
+          - option "ייִדיש"
+          - option "Yorùbá"
+          - option "Nhẽẽgatú"
+          - option "maaya t’aan"
+          - option "粵語"
+          - option "粵语（简体）"
+          - option "粵語（繁體）"
+          - option "Vahcuengh"
+          - option "Zeêuws"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵡⴰⵢⵜ"
+          - option "tamaziɣt tanawayt"
+          - option "中文"
+          - option "文言"
+          - option "中文（中国大陆）"
+          - option "中文（简体）"
+          - option "中文（繁體）"
+          - option "中文（香港）"
+          - option "Bân-lâm-gú"
+          - option "中文（澳門）"
+          - option "中文（马来西亚）"
+          - option "中文（新加坡）"
+          - option "中文（臺灣）"
+          - option "粵語"
+          - option "isiZulu"
+      - link [ref=f160e12] [cursor=pointer]:
+        - /url: /wiki/Main_Page
+        - img "Wikimedia Commons" [ref=f160e15]
+    - generic [ref=f160e16]:
+      - search [ref=f160e17]:
+        - generic [ref=f160e20]:
+          - searchbox "Search Wikimedia Commons" [ref=f160e23]
+          - button "Search" [ref=f160e25]
+      - navigation "Personal tools" [ref=f160e26]:
+        - generic [ref=f160e27]:
+          - list [ref=f160e30]:
+            - listitem [ref=f160e31]:
+              - link "English" [ref=f160e32] [cursor=pointer]:
+                - /url: "#"
+          - list [ref=f160e37]:
+            - listitem [ref=f160e38]:
+              - link "Donate" [ref=f160e39] [cursor=pointer]:
+                - /url: https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=commons.wikimedia.org&uselang=en
+            - listitem [ref=f160e40]:
+              - link "Create account" [ref=f160e41] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:CreateAccount&returnto=File%3A1461677+Cat-Draculas-Library+620.jpg
+            - listitem [ref=f160e42]:
+              - link "Log in" [ref=f160e43] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:UserLogin&returnto=File%3A1461677+Cat-Draculas-Library+620.jpg
+  - generic [ref=f160e45]:
+    - navigation "Contents" [ref=f160e49]:
+      - generic [ref=f160e51]:
+        - generic [ref=f160e52]:
+          - heading "Contents" [level=2] [ref=f160e53]
+          - button "Hide Contents" [ref=f160e54] [cursor=pointer]: hide
+        - list [ref=f160e55]:
+          - listitem [ref=f160e56]:
+            - link "Beginning" [ref=f160e57] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=f160e59]:
+            - link "File" [ref=f160e60] [cursor=pointer]:
+              - /url: "#file"
+            - list
+          - listitem [ref=f160e62]:
+            - link "Summary" [ref=f160e63] [cursor=pointer]:
+              - /url: "#Summary"
+            - list
+          - listitem [ref=f160e65]:
+            - link "Licensing" [ref=f160e66] [cursor=pointer]:
+              - /url: "#Licensing"
+            - list
+          - listitem [ref=f160e68]:
+            - link "File history" [ref=f160e69] [cursor=pointer]:
+              - /url: "#filehistory"
+            - list
+          - listitem [ref=f160e71]:
+            - link "File usage on Commons" [ref=f160e72] [cursor=pointer]:
+              - /url: "#filelinks"
+            - list
+          - listitem [ref=f160e74]:
+            - link "Metadata" [ref=f160e75] [cursor=pointer]:
+              - /url: "#metadata"
+            - list
+    - main [ref=f160e78]:
+      - heading "File:1461677 Cat-Draculas-Library 620.jpg" [level=1] [ref=f160e80]
+      - generic [ref=f160e83]:
+        - navigation "Namespaces" [ref=f160e85]:
+          - list [ref=f160e88]:
+            - listitem [ref=f160e89]:
+              - link "File" [ref=f160e90] [cursor=pointer]:
+                - /url: /wiki/File:1461677_Cat-Draculas-Library_620.jpg
+            - listitem [ref=f160e92]:
+              - link "Discussion" [ref=f160e93] [cursor=pointer]:
+                - /url: /w/index.php?title=File_talk:1461677_Cat-Draculas-Library_620.jpg&action=edit&redlink=1
+        - generic [ref=f160e95]:
+          - navigation "Views" [ref=f160e96]:
+            - list [ref=f160e99]:
+              - listitem [ref=f160e100]:
+                - link "Read" [ref=f160e101] [cursor=pointer]:
+                  - /url: /wiki/File:1461677_Cat-Draculas-Library_620.jpg
+              - listitem [ref=f160e103]:
+                - link "Edit" [ref=f160e104] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:1461677_Cat-Draculas-Library_620.jpg&action=edit
+              - listitem [ref=f160e106]:
+                - link "View history" [ref=f160e107] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:1461677_Cat-Draculas-Library_620.jpg&action=history
+          - navigation "Page tools" [ref=f160e109]:
+            - generic [ref=f160e110]:
+              - button "Tools" [ref=f160e111] [cursor=pointer]
+              - generic [ref=f160e112]: Tools
+      - navigation "Appearance" [ref=f160e117]:
+        - generic [ref=f160e119]:
+          - generic [ref=f160e120]:
+            - generic [ref=f160e121]: Appearance
+            - button "Hide Appearance" [ref=f160e122] [cursor=pointer]: hide
+          - generic [ref=f160e123]:
+            - generic [ref=f160e124]: Text
+            - list [ref=f160e126]:
+              - listitem [ref=f160e127]:
+                - generic [ref=f160e128]:
+                  - generic [ref=f160e129]:
+                    - generic [ref=f160e130]:
+                      - radio "Small" [disabled] [ref=f160e131]
+                      - generic [ref=f160e133]: Small
+                    - generic [ref=f160e135]:
+                      - radio "Standard" [disabled] [ref=f160e136]
+                      - generic [ref=f160e138]: Standard
+                    - generic [ref=f160e140]:
+                      - radio "Large" [disabled] [ref=f160e141]
+                      - generic [ref=f160e143]: Large
+                  - paragraph [ref=f160e145]: This page always uses small font size
+          - generic [ref=f160e146]:
+            - generic [ref=f160e147]: Width
+            - list [ref=f160e149]:
+              - listitem [ref=f160e150]:
+                - generic [ref=f160e152]:
+                  - generic [ref=f160e153]:
+                    - radio "Standard" [checked] [ref=f160e154]
+                    - generic [ref=f160e156]: Standard
+                  - generic [ref=f160e158]:
+                    - radio "Wide" [ref=f160e159]
+                    - generic [ref=f160e161]: Wide
+          - generic [ref=f160e163]:
+            - generic [ref=f160e164]:
+              - text: Color
+              - generic [ref=f160e165]: (beta)
+            - list [ref=f160e167]:
+              - listitem [ref=f160e168]:
+                - generic [ref=f160e170]:
+                  - generic [ref=f160e171]:
+                    - radio "Automatic" [ref=f160e172]
+                    - generic [ref=f160e174]: Automatic
+                  - generic [ref=f160e176]:
+                    - radio "Light" [checked] [ref=f160e177]
+                    - generic [ref=f160e179]: Light
+                  - generic [ref=f160e181]:
+                    - radio "Dark" [ref=f160e182]
+                    - generic [ref=f160e184]: Dark
+      - generic "File:1461677 Cat-Draculas-Library 620.jpg" [ref=f160e186]:
+        - generic [ref=f160e187]:
+          - generic [ref=f160e188]:
+            - button "Download all sizes" [ref=f160e189] [cursor=pointer]:
+              - generic [ref=f160e192]:
+                - text: Download
+                - generic [ref=f160e193]: all sizes
+            - button "Use this file on the web" [ref=f160e194] [cursor=pointer]:
+              - generic [ref=f160e197]:
+                - text: Use this file
+                - generic [ref=f160e198]: on the web
+            - button "Use this file on a wiki" [ref=f160e199] [cursor=pointer]:
+              - generic [ref=f160e202]:
+                - text: Use this file
+                - generic [ref=f160e203]: on a wiki
+            - link "Email a link to this file" [ref=f160e204] [cursor=pointer]:
+              - /url: mailto:?subject=1461677%20Cat-Draculas-Library%20620&body=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3A1461677_Cat-Draculas-Library_620.jpg%0A%0AMs%20angie%20gray%2C%20CC%20BY-SA%204.0%20%3Chttps%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-sa%2F4.0%3E%2C%20via%20Wikimedia%20Commons
+              - generic [ref=f160e207]:
+                - text: Email a link
+                - generic [ref=f160e208]: to this file
+            - link "Information about reusing" [ref=f160e209] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Reusing_content_outside_Wikimedia
+              - generic [ref=f160e212]:
+                - text: Information
+                - generic [ref=f160e213]: about reusing
+            - generic "Remove these icons" [ref=f160e215] [cursor=pointer]
+          - generic [ref=f160e217]:
+            - link [ref=f160e218] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/e/ed/1461677_Cat-Draculas-Library_620.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+              - img "File:1461677 Cat-Draculas-Library 620.jpg" [ref=f160e219]
+            - generic [ref=f160e220]:
+              - text: "Size of this preview:"
+              - link "375 × 500 pixels" [ref=f160e221] [cursor=pointer]:
+                - /url: https://upload.wikimedia.org/wikipedia/commons/e/ed/1461677_Cat-Draculas-Library_620.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled
+              - text: .
+              - generic [ref=f160e222]:
+                - text: "Other resolution:"
+                - link "250 × 333 pixels" [ref=f160e223] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/1461677_Cat-Draculas-Library_620.jpg/250px-1461677_Cat-Draculas-Library_620.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: .
+          - generic [ref=f160e224]:
+            - link "Original file" [ref=f160e226] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/e/ed/1461677_Cat-Draculas-Library_620.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+            - generic [ref=f160e227]: "(375 × 500 pixels, file size: 37 KB, MIME type: image/jpeg)"
+            - button "Open in Media Viewer" [ref=f160e228]
+          - generic [ref=f160e231]:
+            - tablist [ref=f160e234]:
+              - tab "File information" [selected] [ref=f160e235]
+              - tab "Structured data" [ref=f160e237] [cursor=pointer]
+            - tabpanel "File information" [ref=f160e241]:
+              - generic [ref=f160e243]:
+                - heading [level=3] [ref=f160e244]:
+                  - text: Captions
+                  - button "Edit" [ref=f160e246] [cursor=pointer]
+                - generic [ref=f160e247]:
+                  - generic [ref=f160e248]: English
+                  - generic [ref=f160e249]: Add a one-line explanation of what this file represents
+              - generic [ref=f160e251]:
+                - generic [ref=f160e252]:
+                  - heading "Summary" [level=2] [ref=f160e253]
+                  - generic [ref=f160e254]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:1461677_Cat-Draculas-Library_620.jpg&action=edit&section=1
+                - table [ref=f160e256]:
+                  - rowgroup [ref=f160e257]:
+                    - row [ref=f160e258]:
+                      - cell "Description" [ref=f160e259]
+                      - 'cell "English: cat in Halloween costume" [ref=f160e260]':
+                        - generic [ref=f160e261]:
+                          - generic "English" [ref=f160e262]: "English:"
+                          - text: cat in Halloween costume
+                    - row [ref=f160e263]:
+                      - cell "Date" [ref=f160e264]
+                      - cell [ref=f160e265]:
+                        - time [ref=f160e266]: 23 October 2009
+                    - row [ref=f160e267]:
+                      - cell "Source" [ref=f160e268]
+                      - cell "Own work" [ref=f160e269]
+                    - row [ref=f160e270]:
+                      - cell "Author" [ref=f160e271]
+                      - cell [ref=f160e272]:
+                        - link "Ms angie gray" [ref=f160e273] [cursor=pointer]:
+                          - /url: /wiki/User:Ms_angie_gray
+                - generic [ref=f160e274]:
+                  - heading "Licensing" [level=2] [ref=f160e275]
+                  - generic [ref=f160e276]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:1461677_Cat-Draculas-Library_620.jpg&action=edit&section=2
+                - generic [ref=f160e277]:
+                  - generic [ref=f160e278]: "I, the copyright holder of this work, hereby publish it under the following license:"
+                  - generic [ref=f160e279]:
+                    - generic [ref=f160e280]:
+                      - generic "w:en:Creative Commons" [ref=f160e282]:
+                        - img "w:en:Creative Commons" [ref=f160e283]
+                      - generic "attribution" [ref=f160e285]:
+                        - img "attribution" [ref=f160e286]
+                      - generic "share alike" [ref=f160e288]:
+                        - img "share alike" [ref=f160e289]
+                    - generic [ref=f160e290]:
+                      - generic [ref=f160e291]:
+                        - text: This file is licensed under the
+                        - link "Creative Commons" [ref=f160e292] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/en:Creative_Commons
+                        - link "Attribution-Share Alike 4.0 International" [ref=f160e293] [cursor=pointer]:
+                          - /url: //creativecommons.org/licenses/by-sa/4.0/deed.en
+                        - text: license.
+                      - generic [ref=f160e295]:
+                        - definition [ref=f160e296]:
+                          - text: "You are free:"
+                          - list [ref=f160e297]:
+                            - listitem [ref=f160e298]: to share – to copy, distribute and transmit the work
+                            - listitem [ref=f160e299]: to remix – to adapt the work
+                        - definition [ref=f160e300]:
+                          - text: "Under the following conditions:"
+                          - list [ref=f160e301]:
+                            - listitem [ref=f160e302]: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+                            - listitem [ref=f160e303]:
+                              - text: share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the
+                              - link "same or compatible license" [ref=f160e304] [cursor=pointer]:
+                                - /url: https://creativecommons.org/share-your-work/licensing-considerations/compatible-licenses
+                              - text: as the original.
+              - heading "File history" [level=2] [ref=f160e305]
+              - generic [ref=f160e306]:
+                - paragraph [ref=f160e307]: Click on a date/time to view the file as it appeared at that time.
+                - table [ref=f160e308]:
+                  - rowgroup [ref=f160e309]:
+                    - row [ref=f160e310]:
+                      - columnheader [ref=f160e311]
+                      - columnheader "Date/Time" [ref=f160e312]
+                      - columnheader "Thumbnail" [ref=f160e313]
+                      - columnheader "Dimensions" [ref=f160e314]
+                      - columnheader "User" [ref=f160e315]
+                      - columnheader "Comment" [ref=f160e316]
+                    - row [ref=f160e317]:
+                      - cell "current" [ref=f160e318]
+                      - cell [ref=f160e319]:
+                        - link "06:21, 20 September 2015" [ref=f160e320] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/e/ed/1461677_Cat-Draculas-Library_620.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                      - cell [ref=f160e321]:
+                        - link [ref=f160e322] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/e/ed/1461677_Cat-Draculas-Library_620.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                          - img "Thumbnail for version as of 06:21, 20 September 2015" [ref=f160e323]
+                      - cell "375 × 500 (37 KB)" [ref=f160e324]
+                      - cell [ref=f160e325]:
+                        - link "Ms angie gray" [ref=f160e326] [cursor=pointer]:
+                          - /url: /wiki/User:Ms_angie_gray
+                        - generic [ref=f160e328]:
+                          - text: (
+                          - link "talk" [ref=f160e329] [cursor=pointer]:
+                            - /url: /wiki/User_talk:Ms_angie_gray
+                          - text: "|"
+                          - link "contribs" [ref=f160e330] [cursor=pointer]:
+                            - /url: /wiki/Special:Contributions/Ms_angie_gray
+                          - text: )
+                      - cell "User created page with UploadWizard" [ref=f160e331]
+              - paragraph [ref=f160e333]: You cannot overwrite this file.
+              - heading "File usage on Commons" [level=2] [ref=f160e334]
+              - paragraph [ref=f160e336]: There are no pages that use this file.
+              - heading "Metadata" [level=2] [ref=f160e337]
+              - generic [ref=f160e338]:
+                - paragraph [ref=f160e339]: This file contains additional information such as Exif metadata which may have been added by the digital camera, scanner, or software program used to create or digitize it. If the file has been modified from its original state, some details such as the timestamp may not fully reflect those of the original file. The timestamp is only as accurate as the clock in the camera, and it may be completely wrong.
+                - table [ref=f160e340]:
+                  - rowgroup [ref=f160e341]:
+                    - row [ref=f160e342]:
+                      - rowheader "JPEG file comment" [ref=f160e343]
+                      - 'cell "CREATOR: gd-jpeg v1.0 (using IJG JPEG v62), default quality" [ref=f160e344]'
+        - generic [ref=f160e345]:
+          - generic [ref=f160e346]:
+            - link "Categories" [ref=f160e347] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Categories
+            - text: ":"
+            - list [ref=f160e348]:
+              - listitem [ref=f160e349]:
+                - link "Red blotched tabby domestic short-haired cats" [ref=f160e350] [cursor=pointer]:
+                  - /url: /wiki/Category:Red_blotched_tabby_domestic_short-haired_cats
+              - listitem [ref=f160e351]:
+                - link "Cats wearing Halloween costumes" [ref=f160e352] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_wearing_Halloween_costumes
+              - listitem [ref=f160e353]:
+                - link "Halloween 2010" [ref=f160e354] [cursor=pointer]:
+                  - /url: /wiki/Category:Halloween_2010
+              - listitem [ref=f160e355]:
+                - link "Cats and books" [ref=f160e356] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_and_books
+              - listitem [ref=f160e357]:
+                - link "Cats in libraries" [ref=f160e358] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_in_libraries
+              - listitem [ref=f160e359]:
+                - link "Women reading" [ref=f160e360] [cursor=pointer]:
+                  - /url: /wiki/Category:Women_reading
+          - generic [ref=f160e361]:
+            - text: "Hidden categories:"
+            - list [ref=f160e362]:
+              - listitem [ref=f160e363]:
+                - link "CC-BY-SA-4.0" [ref=f160e364] [cursor=pointer]:
+                  - /url: /wiki/Category:CC-BY-SA-4.0
+              - listitem [ref=f160e365]:
+                - link "Self-published work" [ref=f160e366] [cursor=pointer]:
+                  - /url: /wiki/Category:Self-published_work
+    - contentinfo [ref=f160e368]:
+      - list [ref=f160e369]:
+        - listitem [ref=f160e370]: This page was last edited on 19 September 2024, at 13:49.
+        - listitem [ref=f160e371]:
+          - text: Files are available under licenses specified on their description page. All structured data from the file namespace is available under the
+          - link "Creative Commons CC0 License" [ref=f160e372] [cursor=pointer]:
+            - /url: https://creativecommons.org/publicdomain/zero/1.0/
+          - text: ; all unstructured text is available under the
+          - link "Creative Commons Attribution-ShareAlike License" [ref=f160e373] [cursor=pointer]:
+            - /url: https://creativecommons.org/licenses/by-sa/4.0/
+          - text: ; additional terms may apply. By using this site, you agree to the
+          - link "Terms of Use" [ref=f160e374] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use
+          - text: and the
+          - link "Privacy Policy" [ref=f160e375] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+          - text: .
+      - list:
+        - listitem [ref=f160e376]:
+          - link "Privacy policy" [ref=f160e377] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+        - listitem [ref=f160e378]:
+          - link "About Wikimedia Commons" [ref=f160e379] [cursor=pointer]:
+            - /url: /wiki/Commons:Welcome
+        - listitem [ref=f160e380]:
+          - link "Disclaimers" [ref=f160e381] [cursor=pointer]:
+            - /url: /wiki/Commons:General_disclaimer
+        - listitem [ref=f160e382]:
+          - link "Legal & safety contacts" [ref=f160e383] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information
+        - listitem [ref=f160e384]:
+          - link "Code of Conduct" [ref=f160e385] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct
+        - listitem [ref=f160e386]:
+          - link "Developers" [ref=f160e387] [cursor=pointer]:
+            - /url: https://developer.wikimedia.org
+        - listitem [ref=f160e388]:
+          - link "Statistics" [ref=f160e389] [cursor=pointer]:
+            - /url: https://stats.wikimedia.org/#/commons.wikimedia.org
+        - listitem [ref=f160e390]:
+          - link "Cookie statement" [ref=f160e391] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement
+        - listitem [ref=f160e392]:
+          - link "Mobile view" [ref=f160e393] [cursor=pointer]:
+            - /url: //commons.wikimedia.org/w/index.php?title=File:1461677_Cat-Draculas-Library_620.jpg&mobileaction=toggle_view_mobile
+      - list [ref=f160e394]:
+        - listitem [ref=f160e395]:
+          - link [ref=f160e396] [cursor=pointer]:
+            - /url: https://www.wikimedia.org/
+            - img "Wikimedia Foundation" [ref=f160e398]
+        - listitem [ref=f160e399]:
+          - link [ref=f160e400] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/
+            - img "Powered by MediaWiki" [ref=f160e402]
+  - generic [ref=f160e403]:
+    - list

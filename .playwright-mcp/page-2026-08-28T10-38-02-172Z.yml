@@ -1,0 +1,1168 @@
+- generic [active] [ref=f165e1]:
+  - link "Jump to content" [ref=f165e2] [cursor=pointer]:
+    - /url: "#bodyContent"
+  - banner [ref=f165e4]:
+    - generic [ref=f165e5]:
+      - navigation "Site" [ref=f165e6]:
+        - generic "Main menu" [ref=f165e7]:
+          - button "Main menu" [ref=f165e8] [cursor=pointer]
+          - option "Qafár af"
+          - option "Arbërisht"
+          - option "аԥсшәа"
+          - option "Abron"
+          - option "bahasa ambon"
+          - option "Acèh"
+          - option "Kwéyòl Sent Lisi"
+          - option "عراقي"
+          - option "адыгабзэ"
+          - option "адыгабзэ"
+          - option "تونسي / Tûnsî"
+          - option "تونسي"
+          - option "Tûnsî"
+          - option "Afrikaans"
+          - option "Aghem"
+          - option "Aanteegan an' Baabyuudan"
+          - option "Akan"
+          - option "Gegë"
+          - option "Alemannisch"
+          - option "алтай тил"
+          - option "አማርኛ"
+          - option "Pangcah"
+          - option "aragonés"
+          - option "Ænglisc"
+          - option "Obolo"
+          - option "अंगिका"
+          - option "شامي"
+          - option "العربية"
+          - option "ܐܪܡܝܐ"
+          - option "mapudungun"
+          - option "جازايرية"
+          - option "الدارجة"
+          - option "مصرى"
+          - option "অসমীয়া"
+          - option "American sign language"
+          - option "asturianu"
+          - option "Atikamekw"
+          - option "авар"
+          - option "Kotava"
+          - option "अवधी"
+          - option "Aymar aru"
+          - option "azərbaycanca"
+          - option "تۆرکجه"
+          - option "башҡортса"
+          - option "Tuki"
+          - option "Basa Bali"
+          - option "ᬩᬲᬩᬮᬶ"
+          - option "Boarisch"
+          - option "Basaa"
+          - option "žemaitėška"
+          - option "Bamum"
+          - option "Batak Toba"
+          - option "Batak Toba"
+          - option "Ghomála'"
+          - option "جهلسری بلوچی"
+          - option "wawle"
+          - option "Bikol Central"
+          - option "Bajau Sama"
+          - option "беларуская"
+          - option "беларуская (тарашкевіца)"
+          - option "беларуская (тарашкевіца)"
+          - option "Betawi"
+          - option "Bafut"
+          - option "ରେମସାମ୍"
+          - option "български"
+          - option "हरियाणवी"
+          - option "روچ کپتین بلوچی"
+          - option "भोजपुरी"
+          - option "भोजपुरी"
+          - option "Bislama"
+          - option "Banjar"
+          - option "Baka"
+          - option "Bakoko"
+          - option "Kom"
+          - option "ပအိုဝ်ႏဘာႏသာႏ"
+          - option "bamanankan"
+          - option "বাংলা"
+          - option "བོད་ཡིག"
+          - option "bòo pìkkà"
+          - option "বিষ্ণুপ্রিয়া মণিপুরী"
+          - option "بختیاری"
+          - option "Mka'a"
+          - option "brezhoneg"
+          - option "Bráhuí"
+          - option "bosanski"
+          - option "Batak Mandailing"
+          - option "Iriga Bicolano"
+          - option "Basa Ugi"
+          - option "ᨅᨔ ᨕᨘᨁᨗ"
+          - option "буряад"
+          - option "Medumba"
+          - option "català"
+          - option "Kaqchikel"
+          - option "Carolinian"
+          - option "Chavacano de Zamboanga"
+          - option "𑄌𑄋𑄴𑄟𑄳𑄦"
+          - option "閩東語 / Mìng-dĕ̤ng-ngṳ̄"
+          - option "閩東語（傳統漢字）"
+          - option "Mìng-dĕ̤ng-ngṳ̄ (Bàng-uâ-cê)"
+          - option "нохчийн"
+          - option "Cebuano"
+          - option "Chamoru"
+          - option "chinuk wawa"
+          - option "Chahta anumpa"
+          - option "ᏣᎳᎩ"
+          - option "Tsetsêhestâhese"
+          - option "کوردی"
+          - option "Hakha Chin"
+          - option "corsu"
+          - option "ϯⲙⲉⲧⲣⲉⲙⲛ̀ⲭⲏⲙⲓ"
+          - option "Capiceño"
+          - option "莆仙語 / Pó-sing-gṳ̂"
+          - option "莆仙语（简体）"
+          - option "莆仙語（繁體）"
+          - option "Pó-sing-gṳ̂ (Báⁿ-uā-ci̍)"
+          - option "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ"
+          - option "qırımtatarca"
+          - option "къырымтатарджа (Кирилл)"
+          - option "qırımtatarca (Latin)"
+          - option "tatarşa"
+          - option "čeština"
+          - option "kaszëbsczi"
+          - option "словѣньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ"
+          - option "чӑвашла"
+          - option "Cymraeg"
+          - option "dansk"
+          - option "dagbanli"
+          - option "Deutsch"
+          - option "Österreichisches Deutsch"
+          - option "Schweizer Hochdeutsch"
+          - option "Deutsch (Sie-Form)"
+          - option "Dagaare"
+          - option "Thuɔŋjäŋ"
+          - option "Zazaki"
+          - option "долган тыла"
+          - option "dolnoserbski"
+          - option "ଦେଶିଆ"
+          - option "Kadazandusun"
+          - option "डोटेली"
+          - option "Duala"
+          - option "ދިވެހިބަސް"
+          - option "ཇོང་ཁ"
+          - option "eʋegbe"
+          - option "Efịk"
+          - option "Emiliàn"
+          - option "Ελληνικά"
+          - option "emiliàn e rumagnòl"
+          - option "English" [selected]
+          - option "Canadian English"
+          - option "British English"
+          - option "American English"
+          - option "Esperanto"
+          - option "español"
+          - option "español de América Latina"
+          - option "español (formal)"
+          - option "eesti"
+          - option "Eton"
+          - option "Ejagham"
+          - option "euskara"
+          - option "Ewondo"
+          - option "estremeñu"
+          - option "فارسی"
+          - option "mfantse"
+          - option "Fulfulde"
+          - option "suomi"
+          - option "meänkieli"
+          - option "võro"
+          - option "Na Vosa Vakaviti"
+          - option "kvääni"
+          - option "Fe'fe'"
+          - option "føroyskt"
+          - option "fɔ̀ngbè"
+          - option "français"
+          - option "français cadien"
+          - option "arpetan"
+          - option "Nordfriisk"
+          - option "Oostfräisk"
+          - option "furlan"
+          - option "poor’íŋ belé’ŋ"
+          - option "Frysk"
+          - option "Gaeilge"
+          - option "Ga"
+          - option "Gagauz"
+          - option "贛語"
+          - option "赣语（简体）"
+          - option "贛語（繁體）"
+          - option "kréyòl Gwadloup"
+          - option "kriyòl gwiyannen"
+          - option "Gàidhlig"
+          - option "گوجری"
+          - option "गुज्जरी"
+          - option "galego"
+          - option "на̄ни"
+          - option "گیلکی"
+          - option "Avañe'ẽ"
+          - option "गोंयची कोंकणी / Gõychi Konknni"
+          - option "गोंयची कोंकणी"
+          - option "Gõychi Konknni"
+          - option "Bahasa Hulontalo"
+          - option "𐌲𐌿𐍄𐌹𐍃𐌺"
+          - option "Ghanaian Pidgin"
+          - option "Ἀρχαία ἑλληνικὴ"
+          - option "Alemannisch"
+          - option "ગુજરાતી"
+          - option "wayuunaiki"
+          - option "farefare"
+          - option "gungbe"
+          - option "Gaelg"
+          - option "Gbaya"
+          - option "Hausa"
+          - option "客家語 / Hak-kâ-ngî"
+          - option "客家语（简体）"
+          - option "客家語（繁體）"
+          - option "Hak-kâ-ngî (Pha̍k-fa-sṳ)"
+          - option "Hawaiʻi"
+          - option "עברית"
+          - option "हिन्दी"
+          - option "Fiji Hindi"
+          - option "Fiji Hindi"
+          - option "Ilonggo"
+          - option "kihunde"
+          - option "ہندکو"
+          - option "Hiri Motu"
+          - option "𑢹𑣉𑣉 𑣎𑣋𑣜"
+          - option "Ho"
+          - option "hrvatski"
+          - option "Hunsrik"
+          - option "hornjoserbsce"
+          - option "湘語"
+          - option "Kreyòl ayisyen"
+          - option "magyar"
+          - option "magyar (formal)"
+          - option "հայերեն"
+          - option "Արեւմտահայերէն"
+          - option "Otsiherero"
+          - option "interlingua"
+          - option "Jaku Iban"
+          - option "ibibio"
+          - option "Bahasa Indonesia"
+          - option "Interlingue"
+          - option "Igbo"
+          - option "Igala"
+          - option "ꆇꉙ"
+          - option "Iñupiatun"
+          - option "ᐃᓄᒃᑎᑐᑦ"
+          - option "inuktitut"
+          - option "Ilokano"
+          - option "гӀалгӀай"
+          - option "Ido"
+          - option "íslenska"
+          - option "Isu"
+          - option "medžuslovjansky"
+          - option "меджусловјанскы"
+          - option "medžuslovjansky"
+          - option "italiano"
+          - option "ᐃᓄᒃᑎᑐᑦ / inuktitut"
+          - option "日本語"
+          - option "Patois"
+          - option "la .lojban."
+          - option "jysk"
+          - option "Jawa"
+          - option "ꦗꦮ"
+          - option "ქართული"
+          - option "Qaraqalpaqsha"
+          - option "Taqbaylit"
+          - option "Karai-karai"
+          - option "Jju"
+          - option "адыгэбзэ"
+          - option "адыгэбзэ"
+          - option "Kabɩyɛ"
+          - option "Tyap"
+          - option "kabuverdianu"
+          - option "Kera"
+          - option "Kongo"
+          - option "Kumoring"
+          - option "गेम्येहाक़ गिपन"
+          - option "کھوار"
+          - option "Gĩkũyũ"
+          - option "Kırmancki"
+          - option "Kwanyama"
+          - option "хакас"
+          - option "ဖၠုံလိက်"
+          - option "қазақша"
+          - option "قازاقشا (تٴوتە)"
+          - option "قازاقشا (جۇنگو)"
+          - option "қазақша (кирил)"
+          - option "қазақша (Қазақстан)"
+          - option "qazaqşa (latın)"
+          - option "qazaqşa (Türkïya)"
+          - option "kalaallisut"
+          - option "ភាសាខ្មែរ"
+          - option "ಕನ್ನಡ"
+          - option "Yerwa Kanuri"
+          - option "한국어"
+          - option "조선말"
+          - option "перем коми"
+          - option "kanuri"
+          - option "къарачай-малкъар"
+          - option "Krio"
+          - option "Kinaray-a"
+          - option "karjal"
+          - option "کٲشُر"
+          - option "کٲشُر"
+          - option "कॉशुर"
+          - option "Bafia"
+          - option "Ripoarisch"
+          - option "စှီၤ"
+          - option "kurdî"
+          - option "کوردی (عەرەبی)"
+          - option "kurdî (latînî)"
+          - option "къумукъ"
+          - option "Kʋsaal"
+          - option "коми"
+          - option "kernowek"
+          - option "кыргызча"
+          - option "Latina"
+          - option "Ladino"
+          - option "Lëtzebuergesch"
+          - option "лакку"
+          - option "Nomaande"
+          - option "лезги"
+          - option "Lingua Franca Nova"
+          - option "Luganda"
+          - option "Limburgs"
+          - option "Ligure"
+          - option "Līvõ kēļ"
+          - option "Lampung Api"
+          - option "لەکی"
+          - option "Lakȟótiyapi"
+          - option "Ladin"
+          - option "lombard"
+          - option "lingála"
+          - option "Lamnso'"
+          - option "ລາວ"
+          - option "Silozi"
+          - option "لۊری شومالی"
+          - option "lietuvių"
+          - option "latgaļu"
+          - option "ciluba"
+          - option "Mizo ţawng"
+          - option "لئری دوٙمینی"
+          - option "latviešu"
+          - option "文言"
+          - option "Lazuri"
+          - option "Madhurâ"
+          - option "मगही"
+          - option "मैथिली"
+          - option "Basa Banyumasan"
+          - option "vùn màsànà"
+          - option "Maka"
+          - option "мокшень"
+          - option "Malagasy"
+          - option "Ebon"
+          - option "олык марий"
+          - option "Māori"
+          - option "Minangkabau"
+          - option "македонски"
+          - option "മലയാളം"
+          - option "монгол"
+          - option "manju gisun"
+          - option "manju gisun"
+          - option "ᠮᠠᠨᠵᡠ ᡤᡳᠰᡠᠨ"
+          - option "ꯃꯤꯇꯩ ꯂꯣꯟ"
+          - option "ဘာသာမန်"
+          - option "молдовеняскэ"
+          - option "moore"
+          - option "मराठी"
+          - option "Mara"
+          - option "кырык мары"
+          - option "Bahasa Melayu"
+          - option "بهاس ملايو"
+          - option "Malti"
+          - option "Mundang"
+          - option "Baso Palembang"
+          - option "Mvskoke"
+          - option "Mirandés"
+          - option "မြန်မာဘာသာ"
+          - option "эрзянь"
+          - option "مازِرونی"
+          - option "Dorerin Naoero"
+          - option "Nāhuatl"
+          - option "閩南語 / Bân-lâm-gí"
+          - option "閩南語"
+          - option "閩南語（傳統漢字）"
+          - option "Bân-lâm-gí (Pe̍h-ōe-jī)"
+          - option "Bân-lâm-gí (Tâi-lô)"
+          - option "Napulitano"
+          - option "norsk bokmål"
+          - option "Plattdüütsch"
+          - option "Nedersaksies"
+          - option "नेपाली"
+          - option "नेपाल भाषा"
+          - option "Oshiwambo"
+          - option "Ngémba"
+          - option "Li Niha"
+          - option "కొలామి"
+          - option "Niuē"
+          - option "Nederlands"
+          - option "Nederlands (informeel)"
+          - option "Ngombala"
+          - option "Kwasio"
+          - option "nawdm"
+          - option "norsk nynorsk"
+          - option "Ngiemboon"
+          - option "Nda'nda'"
+          - option "norsk"
+          - option "ᨣᩤᩴᨾᩮᩬᩥᨦ"
+          - option "ногайша"
+          - option "Novial"
+          - option "ߒߞߏ"
+          - option "isiNdebele seSewula"
+          - option "Nouormand"
+          - option "Sesotho sa Leboa"
+          - option "Nupe"
+          - option "Diné bizaad"
+          - option "Chi-Chewa"
+          - option "runyankore"
+          - option "Orunyoro"
+          - option "Nyunga"
+          - option "occitan"
+          - option "Ojibwemowin"
+          - option "livvinkarjala"
+          - option "Oromoo"
+          - option "ଓଡ଼ିଆ"
+          - option "ирон"
+          - option "Wažáže íe"
+          - option "لسان عثمانى"
+          - option "ਪੰਜਾਬੀ"
+          - option "Pangasinan"
+          - option "Kapampangan"
+          - option "Papiamentu"
+          - option "Papiamento"
+          - option "Picard"
+          - option "Naijá"
+          - option "Deitsch"
+          - option "Plautdietsch"
+          - option "Pälzisch"
+          - option "पालि"
+          - option "Norfuk / Pitkern"
+          - option "polski"
+          - option "Piemontèis"
+          - option "پنجابی"
+          - option "Ποντιακά"
+          - option "Nawat"
+          - option "prūsiskan"
+          - option "پښتو"
+          - option "português"
+          - option "português do Brasil"
+          - option "pinayuanan"
+          - option "Runa Simi"
+          - option "Qatzijob\\ʼal"
+          - option "Runa shimi"
+          - option "Rumagnôl"
+          - option "Tarifit"
+          - option "ရခိုင်"
+          - option "rumantsch"
+          - option "romaňi čhib"
+          - option "kaalengo tšimb"
+          - option "romani čhib"
+          - option "ikirundi"
+          - option "română"
+          - option "armãneashti"
+          - option "tarandíne"
+          - option "руски"
+          - option "русский"
+          - option "русиньскый"
+          - option "armãneashti"
+          - option "Vlăheşte"
+          - option "Влахесте"
+          - option "Vlăheşte"
+          - option "мыхаӀбишды"
+          - option "Ikinyarwanda"
+          - option "मारवाड़ी"
+          - option "沖縄口"
+          - option "संस्कृतम्"
+          - option "саха тыла"
+          - option "Sasak"
+          - option "ᱥᱟᱱᱛᱟᱲᱤ"
+          - option "sardu"
+          - option "sicilianu"
+          - option "Scots"
+          - option "سنڌي"
+          - option "Sassaresu"
+          - option "کوردی خوارگ"
+          - option "davvisámegiella"
+          - option "davvisámegiella (Suoma bealde)"
+          - option "davvisámegiella (Norgga bealde)"
+          - option "davvisámegiella (Ruoŧa bealde)"
+          - option "Cmique Itom"
+          - option "Koyraboro Senni"
+          - option "Sängö"
+          - option "žemaitėška"
+          - option "srpskohrvatski / српскохрватски"
+          - option "српскохрватски (ћирилица)"
+          - option "srpskohrvatski (latinica)"
+          - option "Taclḥit"
+          - option "Taclḥit"
+          - option "ⵜⴰⵛⵍⵃⵉⵜ"
+          - option "တႆး"
+          - option "tacawit"
+          - option "tacawit"
+          - option "සිංහල"
+          - option "Simple English"
+          - option "кӣллт са̄мь кӣлл"
+          - option "bidumsámegiella"
+          - option "ubmejesámiengiälla"
+          - option "slovenčina"
+          - option "سرائیکی"
+          - option "سرائیکی"
+          - option "slovenščina"
+          - option "Schläsch"
+          - option "Gagana Samoa"
+          - option "åarjelsaemien"
+          - option "julevsámegiella"
+          - option "anarâškielâ"
+          - option "nuõrttsääʹmǩiõll"
+          - option "chiShona"
+          - option "Soomaaliga"
+          - option "shqip"
+          - option "српски / srpski"
+          - option "српски (ћирилица)"
+          - option "srpski (latinica)"
+          - option "Sranantongo"
+          - option "sardu campidanesu"
+          - option "mbia cheë"
+          - option "SiSwati"
+          - option "Sesotho"
+          - option "Seeltersk"
+          - option "себертатар"
+          - option "Sunda"
+          - option "svenska"
+          - option "ლუშნუ"
+          - option "Kiswahili"
+          - option "ꠍꠤꠟꠐꠤ"
+          - option "ślůnski"
+          - option "Sakizaya"
+          - option "தமிழ்"
+          - option "Tayal"
+          - option "ತುಳು"
+          - option "ᥖᥭᥰ ᥖᥬᥲ ᥑᥨᥒᥰ"
+          - option "తెలుగు"
+          - option "tetun"
+          - option "тоҷикӣ"
+          - option "тоҷикӣ"
+          - option "tojikī"
+          - option "ไทย"
+          - option "काेचिला थारु"
+          - option "ትግርኛ"
+          - option "ትግሬ"
+          - option "Türkmençe"
+          - option "Tagalog"
+          - option "tolışi"
+          - option "толыши"
+          - option "Setswana"
+          - option "lea faka-Tonga"
+          - option "toki pona"
+          - option "Tok Pisin"
+          - option "Tanapag"
+          - option "Türkçe"
+          - option "Ṫuroyo"
+          - option "Seediq"
+          - option "Xitsonga"
+          - option "татарча / tatarça"
+          - option "татарча"
+          - option "tatarça"
+          - option "Orutooro"
+          - option "chiTumbuka"
+          - option "Tunen"
+          - option "Twi"
+          - option "reo tahiti"
+          - option "тыва дыл"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ"
+          - option "удмурт"
+          - option "ئۇيغۇرچە / Uyghurche"
+          - option "ئۇيغۇرچە"
+          - option "Uyghurche"
+          - option "українська"
+          - option "اردو"
+          - option "oʻzbekcha / ўзбекча"
+          - option "ўзбекча"
+          - option "oʻzbekcha"
+          - option "Tshivenda"
+          - option "vèneto"
+          - option "vepsän kel’"
+          - option "Tiếng Việt"
+          - option "West-Vlams"
+          - option "Mainfränkisch"
+          - option "emakhuwa"
+          - option "Volapük"
+          - option "Vaďďa"
+          - option "võro"
+          - option "Vute"
+          - option "walon"
+          - option "wolaytta"
+          - option "Winaray"
+          - option "Pidgin (Cameroon)"
+          - option "Fakaʻuvea"
+          - option "waale"
+          - option "Wolof"
+          - option "吴语"
+          - option "吴语（简体）"
+          - option "吳語（正體）"
+          - option "Wyandot"
+          - option "хальмг"
+          - option "isiXhosa"
+          - option "მარგალური"
+          - option "saisiyat"
+          - option "Nugunu"
+          - option "Yambeta"
+          - option "Yangben"
+          - option "Yemba"
+          - option "ייִדיש"
+          - option "Yorùbá"
+          - option "Nhẽẽgatú"
+          - option "maaya t’aan"
+          - option "粵語"
+          - option "粵语（简体）"
+          - option "粵語（繁體）"
+          - option "Vahcuengh"
+          - option "Zeêuws"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵡⴰⵢⵜ"
+          - option "tamaziɣt tanawayt"
+          - option "中文"
+          - option "文言"
+          - option "中文（中国大陆）"
+          - option "中文（简体）"
+          - option "中文（繁體）"
+          - option "中文（香港）"
+          - option "Bân-lâm-gú"
+          - option "中文（澳門）"
+          - option "中文（马来西亚）"
+          - option "中文（新加坡）"
+          - option "中文（臺灣）"
+          - option "粵語"
+          - option "isiZulu"
+      - link [ref=f165e12] [cursor=pointer]:
+        - /url: /wiki/Main_Page
+        - img "Wikimedia Commons" [ref=f165e15]
+    - generic [ref=f165e16]:
+      - search [ref=f165e17]:
+        - generic [ref=f165e20]:
+          - searchbox "Search Wikimedia Commons" [ref=f165e23]
+          - button "Search" [ref=f165e25]
+      - navigation "Personal tools" [ref=f165e26]:
+        - generic [ref=f165e27]:
+          - list [ref=f165e30]:
+            - listitem [ref=f165e31]:
+              - link "English" [ref=f165e32] [cursor=pointer]:
+                - /url: "#"
+          - list [ref=f165e37]:
+            - listitem [ref=f165e38]:
+              - link "Donate" [ref=f165e39] [cursor=pointer]:
+                - /url: https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=commons.wikimedia.org&uselang=en
+            - listitem [ref=f165e40]:
+              - link "Create account" [ref=f165e41] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:CreateAccount&returnto=File%3AComputer+Using+Cat.jpg
+            - listitem [ref=f165e42]:
+              - link "Log in" [ref=f165e43] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:UserLogin&returnto=File%3AComputer+Using+Cat.jpg
+  - generic [ref=f165e45]:
+    - navigation "Contents" [ref=f165e49]:
+      - generic [ref=f165e51]:
+        - generic [ref=f165e52]:
+          - heading "Contents" [level=2] [ref=f165e53]
+          - button "Hide Contents" [ref=f165e54] [cursor=pointer]: hide
+        - list [ref=f165e55]:
+          - listitem [ref=f165e56]:
+            - link "Beginning" [ref=f165e57] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=f165e59]:
+            - link "File" [ref=f165e60] [cursor=pointer]:
+              - /url: "#file"
+            - list
+          - listitem [ref=f165e62]:
+            - link "Summary" [ref=f165e63] [cursor=pointer]:
+              - /url: "#Summary"
+            - list
+          - listitem [ref=f165e65]:
+            - link "Licensing" [ref=f165e66] [cursor=pointer]:
+              - /url: "#Licensing"
+            - list
+          - listitem [ref=f165e68]:
+            - link "File history" [ref=f165e69] [cursor=pointer]:
+              - /url: "#filehistory"
+            - list
+          - listitem [ref=f165e71]:
+            - link "File usage on Commons" [ref=f165e72] [cursor=pointer]:
+              - /url: "#filelinks"
+            - list
+          - listitem [ref=f165e74]:
+            - link "File usage on other wikis" [ref=f165e75] [cursor=pointer]:
+              - /url: "#globalusage"
+            - list
+          - listitem [ref=f165e77]:
+            - link "Metadata" [ref=f165e78] [cursor=pointer]:
+              - /url: "#metadata"
+            - list
+    - main [ref=f165e81]:
+      - heading "File:Computer Using Cat.jpg" [level=1] [ref=f165e83]
+      - generic [ref=f165e86]:
+        - navigation "Namespaces" [ref=f165e88]:
+          - list [ref=f165e91]:
+            - listitem [ref=f165e92]:
+              - link "File" [ref=f165e93] [cursor=pointer]:
+                - /url: /wiki/File:Computer_Using_Cat.jpg
+            - listitem [ref=f165e95]:
+              - link "Discussion" [ref=f165e96] [cursor=pointer]:
+                - /url: /w/index.php?title=File_talk:Computer_Using_Cat.jpg&action=edit&redlink=1
+        - generic [ref=f165e98]:
+          - navigation "Views" [ref=f165e99]:
+            - list [ref=f165e102]:
+              - listitem [ref=f165e103]:
+                - link "Read" [ref=f165e104] [cursor=pointer]:
+                  - /url: /wiki/File:Computer_Using_Cat.jpg
+              - listitem [ref=f165e106]:
+                - link "Edit" [ref=f165e107] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:Computer_Using_Cat.jpg&action=edit
+              - listitem [ref=f165e109]:
+                - link "View history" [ref=f165e110] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:Computer_Using_Cat.jpg&action=history
+          - navigation "Page tools" [ref=f165e112]:
+            - generic [ref=f165e113]:
+              - button "Tools" [ref=f165e114] [cursor=pointer]
+              - generic [ref=f165e115]: Tools
+      - navigation "Appearance" [ref=f165e120]:
+        - generic [ref=f165e122]:
+          - generic [ref=f165e123]:
+            - generic [ref=f165e124]: Appearance
+            - button "Hide Appearance" [ref=f165e125] [cursor=pointer]: hide
+          - generic [ref=f165e126]:
+            - generic [ref=f165e127]: Text
+            - list [ref=f165e129]:
+              - listitem [ref=f165e130]:
+                - generic [ref=f165e131]:
+                  - generic [ref=f165e132]:
+                    - generic [ref=f165e133]:
+                      - radio "Small" [disabled] [ref=f165e134]
+                      - generic [ref=f165e136]: Small
+                    - generic [ref=f165e138]:
+                      - radio "Standard" [disabled] [ref=f165e139]
+                      - generic [ref=f165e141]: Standard
+                    - generic [ref=f165e143]:
+                      - radio "Large" [disabled] [ref=f165e144]
+                      - generic [ref=f165e146]: Large
+                  - paragraph [ref=f165e148]: This page always uses small font size
+          - generic [ref=f165e149]:
+            - generic [ref=f165e150]: Width
+            - list [ref=f165e152]:
+              - listitem [ref=f165e153]:
+                - generic [ref=f165e155]:
+                  - generic [ref=f165e156]:
+                    - radio "Standard" [checked] [ref=f165e157]
+                    - generic [ref=f165e159]: Standard
+                  - generic [ref=f165e161]:
+                    - radio "Wide" [ref=f165e162]
+                    - generic [ref=f165e164]: Wide
+          - generic [ref=f165e166]:
+            - generic [ref=f165e167]:
+              - text: Color
+              - generic [ref=f165e168]: (beta)
+            - list [ref=f165e170]:
+              - listitem [ref=f165e171]:
+                - generic [ref=f165e173]:
+                  - generic [ref=f165e174]:
+                    - radio "Automatic" [ref=f165e175]
+                    - generic [ref=f165e177]: Automatic
+                  - generic [ref=f165e179]:
+                    - radio "Light" [checked] [ref=f165e180]
+                    - generic [ref=f165e182]: Light
+                  - generic [ref=f165e184]:
+                    - radio "Dark" [ref=f165e185]
+                    - generic [ref=f165e187]: Dark
+      - generic "File:Computer Using Cat.jpg" [ref=f165e189]:
+        - generic [ref=f165e190]:
+          - generic [ref=f165e191]:
+            - button "Download all sizes" [ref=f165e192] [cursor=pointer]:
+              - generic [ref=f165e195]:
+                - text: Download
+                - generic [ref=f165e196]: all sizes
+            - button "Use this file on the web" [ref=f165e197] [cursor=pointer]:
+              - generic [ref=f165e200]:
+                - text: Use this file
+                - generic [ref=f165e201]: on the web
+            - button "Use this file on a wiki" [ref=f165e202] [cursor=pointer]:
+              - generic [ref=f165e205]:
+                - text: Use this file
+                - generic [ref=f165e206]: on a wiki
+            - link "Email a link to this file" [ref=f165e207] [cursor=pointer]:
+              - /url: mailto:?subject=Computer%20Using%20Cat&body=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AComputer_Using_Cat.jpg%0A%0AEvanLovely%20from%20Portland%2C%20OR%2C%20USA%20(image%20on%20display%3A%20Chi%20King)%2C%20CC%20BY%202.0%20%3Chttps%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby%2F2.0%3E%2C%20via%20Wikimedia%20Commons
+              - generic [ref=f165e210]:
+                - text: Email a link
+                - generic [ref=f165e211]: to this file
+            - link "Information about reusing" [ref=f165e212] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Reusing_content_outside_Wikimedia
+              - generic [ref=f165e215]:
+                - text: Information
+                - generic [ref=f165e216]: about reusing
+            - generic "Remove these icons" [ref=f165e218] [cursor=pointer]
+          - generic [ref=f165e220]:
+            - link [ref=f165e221] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/6/63/Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+              - img "File:Computer Using Cat.jpg" [ref=f165e222]
+            - generic [ref=f165e223]:
+              - text: "Size of this preview:"
+              - link "960 × 720 pixels" [ref=f165e224] [cursor=pointer]:
+                - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Computer_Using_Cat.jpg/960px-Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+              - text: .
+              - generic [ref=f165e225]:
+                - text: "Other resolutions:"
+                - link "330 × 248 pixels" [ref=f165e226] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Computer_Using_Cat.jpg/330px-Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: "|"
+                - link "1,280 × 960 pixels" [ref=f165e227] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Computer_Using_Cat.jpg/1280px-Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: "|"
+                - link "3,840 × 2,880 pixels" [ref=f165e228] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Computer_Using_Cat.jpg/3840px-Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: .
+          - generic [ref=f165e229]:
+            - link "Original file" [ref=f165e231] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/6/63/Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+            - generic [ref=f165e232]: "(4,000 × 3,000 pixels, file size: 3.21 MB, MIME type: image/jpeg)"
+            - generic [ref=f165e233]:
+              - text: ;
+              - link "ZoomViewer" [ref=f165e234] [cursor=pointer]:
+                - /url: https://zoomviewer.toolforge.org/index.php?f=Computer%20Using%20Cat.jpg&flash=no
+            - button "Open in Media Viewer" [ref=f165e235]
+          - generic [ref=f165e238]:
+            - tablist [ref=f165e241]:
+              - tab "File information" [selected] [ref=f165e242]
+              - tab "Structured data" [ref=f165e244] [cursor=pointer]
+            - tabpanel "File information" [ref=f165e248]:
+              - generic [ref=f165e250]:
+                - heading [level=3] [ref=f165e251]:
+                  - text: Captions
+                  - button "Edit" [ref=f165e253] [cursor=pointer]
+                - generic [ref=f165e254]:
+                  - generic [ref=f165e255]: English
+                  - generic [ref=f165e256]: Add a one-line explanation of what this file represents
+              - generic [ref=f165e258]:
+                - generic [ref=f165e259]:
+                  - heading "Summary" [level=2] [ref=f165e260]
+                  - generic [ref=f165e261]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:Computer_Using_Cat.jpg&action=edit&section=1
+                - table [ref=f165e263]:
+                  - rowgroup [ref=f165e264]:
+                    - row [ref=f165e265]:
+                      - cell "Description" [ref=f165e266]
+                      - cell "He gets jealous of me giving my laptop attention so he sits at it so I have to give him attention too." [ref=f165e267]
+                    - row [ref=f165e268]:
+                      - cell "Date" [ref=f165e269]
+                      - cell [ref=f165e270]:
+                        - time [ref=f165e271]: 14 August 2009, 17:35
+                    - row [ref=f165e272]:
+                      - cell "Source" [ref=f165e273]
+                      - cell [ref=f165e274]:
+                        - paragraph [ref=f165e275]:
+                          - link "Computer Using Cat" [ref=f165e276] [cursor=pointer]:
+                            - /url: https://www.flickr.com/photos/footfun/3838719190/
+                          - text: ", image on display:"
+                          - link "File:Look Up! (HONG KONG-SKY-CLOUDS) VI (739293514).jpg" [ref=f165e277] [cursor=pointer]:
+                            - /url: /wiki/File:Look_Up!_(HONG_KONG-SKY-CLOUDS)_VI_(739293514).jpg
+                        - list [ref=f165e278]:
+                          - listitem [ref=f165e279]:
+                            - text: Uploaded by
+                            - link "JohnnyMrNinja" [ref=f165e280] [cursor=pointer]:
+                              - /url: /wiki/User:JohnnyMrNinja
+                    - row [ref=f165e281]:
+                      - cell "Author" [ref=f165e282]
+                      - cell [ref=f165e283]:
+                        - link "EvanLovely" [ref=f165e284] [cursor=pointer]:
+                          - /url: https://www.flickr.com/people/70797980@N00
+                        - text: "from Portland, OR, USA (image on display:"
+                        - link "Chi King" [ref=f165e285] [cursor=pointer]:
+                          - /url: https://www.flickr.com/people/8285539@N07
+                        - text: )
+                    - row [ref=f165e286]:
+                      - cell "Other versions" [ref=f165e287]
+                      - 'cell "Image extraction process This image has an extracted file: Computer Using Cat (2009; cropped 2024).jpg. lang=en \"I hope u liek backlox\" lolcat \"I hope u liek backlox\" lolcat" [ref=f165e288]':
+                        - table [ref=f165e289]:
+                          - rowgroup [ref=f165e290]:
+                            - row [ref=f165e291]:
+                              - cell [ref=f165e292]:
+                                - link [ref=f165e294] [cursor=pointer]:
+                                  - /url: /wiki/File:Extracted_image_icon.svg
+                                  - img "Image extraction process" [ref=f165e295]
+                              - cell [ref=f165e296]:
+                                - text: "This image has an extracted file:"
+                                - link "Computer Using Cat (2009; cropped 2024).jpg" [ref=f165e297] [cursor=pointer]:
+                                  - /url: /wiki/File:Computer_Using_Cat_(2009;_cropped_2024).jpg
+                                - text: .
+                              - cell [ref=f165e298]:
+                                - link [ref=f165e301] [cursor=pointer]:
+                                  - /url: /wiki/File:Computer_Using_Cat_(2009;_cropped_2024).jpg
+                                  - img "lang=en" [ref=f165e302]
+                        - list [ref=f165e303]:
+                          - listitem [ref=f165e304]:
+                            - link [ref=f165e307] [cursor=pointer]:
+                              - /url: /wiki/File:I_hope_u_liek_backlox_lolcat_image_macro.jpg
+                              - img "\"I hope u liek backlox\" lolcat" [ref=f165e308]
+                            - generic [ref=f165e309]: "\"I hope u liek backlox\" lolcat"
+                - generic [ref=f165e310]:
+                  - heading "Licensing" [level=2] [ref=f165e311]
+                  - generic [ref=f165e312]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:Computer_Using_Cat.jpg&action=edit&section=2
+                - generic [ref=f165e313]:
+                  - generic [ref=f165e314]:
+                    - generic "w:en:Creative Commons" [ref=f165e316]:
+                      - img "w:en:Creative Commons" [ref=f165e317]
+                    - generic "attribution" [ref=f165e319]:
+                      - img "attribution" [ref=f165e320]
+                  - generic [ref=f165e321]:
+                    - generic [ref=f165e322]:
+                      - text: This file is licensed under the
+                      - link "Creative Commons" [ref=f165e323] [cursor=pointer]:
+                        - /url: https://en.wikipedia.org/wiki/en:Creative_Commons
+                      - link "Attribution 2.0 Generic" [ref=f165e324] [cursor=pointer]:
+                        - /url: //creativecommons.org/licenses/by/2.0/deed.en
+                      - text: license.
+                    - generic [ref=f165e326]:
+                      - definition [ref=f165e327]:
+                        - text: "You are free:"
+                        - list [ref=f165e328]:
+                          - listitem [ref=f165e329]: to share – to copy, distribute and transmit the work
+                          - listitem [ref=f165e330]: to remix – to adapt the work
+                      - definition [ref=f165e331]:
+                        - text: "Under the following conditions:"
+                        - list [ref=f165e332]:
+                          - listitem [ref=f165e333]: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+                - table [ref=f165e334]:
+                  - rowgroup [ref=f165e335]:
+                    - row [ref=f165e336]:
+                      - cell [ref=f165e337]
+                      - cell [ref=f165e341]:
+                        - text: This image, originally posted to
+                        - link "Flickr" [ref=f165e344] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Flickr
+                        - text: ", was reviewed on September 17, 2011 by the"
+                        - link "administrator" [ref=f165e345] [cursor=pointer]:
+                          - /url: /wiki/Commons:A
+                        - text: or
+                        - link "reviewer" [ref=f165e346] [cursor=pointer]:
+                          - /url: /wiki/Commons:License_review
+                        - link "File Upload Bot (Magnus Manske)" [ref=f165e348] [cursor=pointer]:
+                          - /url: /wiki/User:File_Upload_Bot_(Magnus_Manske)
+                        - text: ", who confirmed that it was available on Flickr under the stated license on that date."
+                      - cell [ref=f165e349]:
+                        - figure [ref=f165e350]
+              - heading "File history" [level=2] [ref=f165e353]
+              - generic [ref=f165e354]:
+                - paragraph [ref=f165e355]: Click on a date/time to view the file as it appeared at that time.
+                - table [ref=f165e356]:
+                  - rowgroup [ref=f165e357]:
+                    - row [ref=f165e358]:
+                      - columnheader [ref=f165e359]
+                      - columnheader "Date/Time" [ref=f165e360]
+                      - columnheader "Thumbnail" [ref=f165e361]
+                      - columnheader "Dimensions" [ref=f165e362]
+                      - columnheader "User" [ref=f165e363]
+                      - columnheader "Comment" [ref=f165e364]
+                    - row [ref=f165e365]:
+                      - cell "current" [ref=f165e366]
+                      - cell [ref=f165e367]:
+                        - link "21:38, 18 January 2019" [ref=f165e368] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/6/63/Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                      - cell [ref=f165e369]:
+                        - link [ref=f165e370] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/6/63/Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                          - img "Thumbnail for version as of 21:38, 18 January 2019" [ref=f165e371]
+                      - cell "4,000 × 3,000 (3.21 MB)" [ref=f165e372]
+                      - cell [ref=f165e373]:
+                        - link "Alexis Jazz" [ref=f165e374] [cursor=pointer]:
+                          - /url: /wiki/User:Alexis_Jazz
+                        - generic [ref=f165e376]:
+                          - text: (
+                          - link "talk" [ref=f165e377] [cursor=pointer]:
+                            - /url: /wiki/User_talk:Alexis_Jazz
+                          - text: "|"
+                          - link "contribs" [ref=f165e378] [cursor=pointer]:
+                            - /url: /wiki/Special:Contributions/Alexis_Jazz
+                          - text: )
+                      - cell [ref=f165e379]:
+                        - text: unknown copyright status wallpaper replaced with
+                        - link "File:Look Up! (HONG KONG-SKY-CLOUDS) VI (739293514).jpg" [ref=f165e380] [cursor=pointer]:
+                          - /url: /wiki/File:Look_Up!_(HONG_KONG-SKY-CLOUDS)_VI_(739293514).jpg
+                    - row [ref=f165e381]:
+                      - cell [ref=f165e382]
+                      - cell [ref=f165e383]:
+                        - link "09:18, 17 September 2011" [ref=f165e384] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/archive/6/63/20190118213852%21Computer_Using_Cat.jpg
+                      - cell [ref=f165e385]:
+                        - link [ref=f165e386] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/archive/6/63/20190118213852%21Computer_Using_Cat.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                          - img "Thumbnail for version as of 09:18, 17 September 2011" [ref=f165e387]
+                      - cell "4,000 × 3,000 (3.56 MB)" [ref=f165e388]
+                      - cell [ref=f165e389]:
+                        - link "File Upload Bot (Magnus Manske)" [ref=f165e390] [cursor=pointer]:
+                          - /url: /wiki/User:File_Upload_Bot_(Magnus_Manske)
+                        - generic [ref=f165e392]:
+                          - text: (
+                          - link "talk" [ref=f165e393] [cursor=pointer]:
+                            - /url: /wiki/User_talk:File_Upload_Bot_(Magnus_Manske)
+                          - text: "|"
+                          - link "contribs" [ref=f165e394] [cursor=pointer]:
+                            - /url: /wiki/Special:Contributions/File_Upload_Bot_(Magnus_Manske)
+                          - text: )
+                      - 'cell "{{Information |Description=He gets jealous of me giving my laptop attention so he sits at it so I have to give him attention too. |Source=[http://www.flickr.com/photos/footfun/3838719190/ Computer Using Cat] * Uploaded by [[User:JohnnyMrNinja|JohnnyMrNinj" [ref=f165e395]'
+              - paragraph [ref=f165e397]: You cannot overwrite this file.
+              - heading "File usage on Commons" [level=2] [ref=f165e398]
+              - generic [ref=f165e399]:
+                - paragraph [ref=f165e400]: "The following 2 pages use this file:"
+                - list [ref=f165e401]:
+                  - listitem [ref=f165e402]:
+                    - link "File:Computer Using Cat (2009; cropped 2024).jpg" [ref=f165e403] [cursor=pointer]:
+                      - /url: /wiki/File:Computer_Using_Cat_(2009;_cropped_2024).jpg
+                  - listitem [ref=f165e404]:
+                    - link "File:I hope u liek backlox lolcat image macro.jpg" [ref=f165e405] [cursor=pointer]:
+                      - /url: /wiki/File:I_hope_u_liek_backlox_lolcat_image_macro.jpg
+              - heading "File usage on other wikis" [level=2] [ref=f165e406]
+              - generic [ref=f165e407]:
+                - paragraph [ref=f165e408]: "The following other wikis use this file:"
+                - list [ref=f165e409]:
+                  - listitem [ref=f165e410]:
+                    - text: Usage on ar.wikipedia.org
+                    - list [ref=f165e411]:
+                      - listitem [ref=f165e412]:
+                        - link "مستخدم:Yoseef Owis/ملعب" [ref=f165e413] [cursor=pointer]:
+                          - /url: https://ar.wikipedia.org/wiki/%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85:Yoseef_Owis/%D9%85%D9%84%D8%B9%D8%A8
+                  - listitem [ref=f165e414]:
+                    - text: Usage on en.wikipedia.org
+                    - list [ref=f165e415]:
+                      - listitem [ref=f165e416]:
+                        - link "User:Myrealnamm/Biographies of living pets" [ref=f165e417] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/User:Myrealnamm/Biographies_of_living_pets
+              - heading "Metadata" [level=2] [ref=f165e418]
+              - generic [ref=f165e419]:
+                - paragraph [ref=f165e420]: This file contains additional information such as Exif metadata which may have been added by the digital camera, scanner, or software program used to create or digitize it. If the file has been modified from its original state, some details such as the timestamp may not fully reflect those of the original file. The timestamp is only as accurate as the clock in the camera, and it may be completely wrong.
+                - table [ref=f165e421]:
+                  - rowgroup [ref=f165e422]:
+                    - row [ref=f165e423]:
+                      - rowheader "Camera manufacturer" [ref=f165e424]
+                      - cell [ref=f165e425]:
+                        - link "Canon" [ref=f165e426] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Canon_Inc.
+                    - row [ref=f165e427]:
+                      - rowheader "Camera model" [ref=f165e428]
+                      - cell [ref=f165e429]:
+                        - link "Canon PowerShot SD960 IS" [ref=f165e431] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Special:Search?search=Canon+PowerShot+SD960+IS
+                    - row [ref=f165e432]:
+                      - rowheader "Exposure time" [ref=f165e433]
+                      - cell "1/30 sec (0.033333333333333)" [ref=f165e434]
+                    - row [ref=f165e435]:
+                      - rowheader [ref=f165e436]:
+                        - link "F-number" [ref=f165e437] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/F-number
+                      - cell "f/2.8" [ref=f165e438]
+                    - row [ref=f165e439]:
+                      - rowheader "ISO speed rating" [ref=f165e440]
+                      - cell "200" [ref=f165e441]
+                    - row [ref=f165e442]:
+                      - rowheader "Date and time of data generation" [ref=f165e443]
+                      - cell "17:35, 14 August 2009" [ref=f165e444]
+                    - row [ref=f165e445]:
+                      - rowheader "Lens focal length" [ref=f165e446]
+                      - cell "5 mm" [ref=f165e447]
+                    - row [ref=f165e448]:
+                      - rowheader "JPEG file comment" [ref=f165e449]
+                      - cell "AppleMark" [ref=f165e450]
+                    - row [ref=f165e451]:
+                      - cell [ref=f165e452]:
+                        - button "Show extended details" [ref=f165e453] [cursor=pointer]
+        - generic [ref=f165e454]:
+          - generic [ref=f165e455]:
+            - link "Categories" [ref=f165e456] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Categories
+            - text: ":"
+            - list [ref=f165e457]:
+              - listitem [ref=f165e458]:
+                - link "Red tabby cats" [ref=f165e459] [cursor=pointer]:
+                  - /url: /wiki/Category:Red_tabby_cats
+              - listitem [ref=f165e460]:
+                - link "Cats on laptop computers" [ref=f165e461] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_on_laptop_computers
+              - listitem [ref=f165e462]:
+                - link "Cats looking up" [ref=f165e463] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_looking_up
+              - listitem [ref=f165e464]:
+                - link "MacBook Pro (Intel-based)" [ref=f165e465] [cursor=pointer]:
+                  - /url: /wiki/Category:MacBook_Pro_(Intel-based)
+          - generic [ref=f165e466]:
+            - text: "Hidden categories:"
+            - list [ref=f165e467]:
+              - listitem [ref=f165e468]:
+                - link "Images with extracted images" [ref=f165e469] [cursor=pointer]:
+                  - /url: /wiki/Category:Images_with_extracted_images
+              - listitem [ref=f165e470]:
+                - link "CC-BY-2.0" [ref=f165e471] [cursor=pointer]:
+                  - /url: /wiki/Category:CC-BY-2.0
+              - listitem [ref=f165e472]:
+                - link "Flickr images reviewed by File Upload Bot (Magnus Manske)" [ref=f165e473] [cursor=pointer]:
+                  - /url: /wiki/Category:Flickr_images_reviewed_by_File_Upload_Bot_(Magnus_Manske)
+    - contentinfo [ref=f165e475]:
+      - list [ref=f165e476]:
+        - listitem [ref=f165e477]: This page was last edited on 5 January 2026, at 11:46.
+        - listitem [ref=f165e478]:
+          - text: Files are available under licenses specified on their description page. All structured data from the file namespace is available under the
+          - link "Creative Commons CC0 License" [ref=f165e479] [cursor=pointer]:
+            - /url: https://creativecommons.org/publicdomain/zero/1.0/
+          - text: ; all unstructured text is available under the
+          - link "Creative Commons Attribution-ShareAlike License" [ref=f165e480] [cursor=pointer]:
+            - /url: https://creativecommons.org/licenses/by-sa/4.0/
+          - text: ; additional terms may apply. By using this site, you agree to the
+          - link "Terms of Use" [ref=f165e481] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use
+          - text: and the
+          - link "Privacy Policy" [ref=f165e482] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+          - text: .
+      - list:
+        - listitem [ref=f165e483]:
+          - link "Privacy policy" [ref=f165e484] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+        - listitem [ref=f165e485]:
+          - link "About Wikimedia Commons" [ref=f165e486] [cursor=pointer]:
+            - /url: /wiki/Commons:Welcome
+        - listitem [ref=f165e487]:
+          - link "Disclaimers" [ref=f165e488] [cursor=pointer]:
+            - /url: /wiki/Commons:General_disclaimer
+        - listitem [ref=f165e489]:
+          - link "Legal & safety contacts" [ref=f165e490] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information
+        - listitem [ref=f165e491]:
+          - link "Code of Conduct" [ref=f165e492] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct
+        - listitem [ref=f165e493]:
+          - link "Developers" [ref=f165e494] [cursor=pointer]:
+            - /url: https://developer.wikimedia.org
+        - listitem [ref=f165e495]:
+          - link "Statistics" [ref=f165e496] [cursor=pointer]:
+            - /url: https://stats.wikimedia.org/#/commons.wikimedia.org
+        - listitem [ref=f165e497]:
+          - link "Cookie statement" [ref=f165e498] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement
+        - listitem [ref=f165e499]:
+          - link "Mobile view" [ref=f165e500] [cursor=pointer]:
+            - /url: //commons.wikimedia.org/w/index.php?title=File:Computer_Using_Cat.jpg&mobileaction=toggle_view_mobile
+      - list [ref=f165e501]:
+        - listitem [ref=f165e502]:
+          - link [ref=f165e503] [cursor=pointer]:
+            - /url: https://www.wikimedia.org/
+            - img "Wikimedia Foundation" [ref=f165e505]
+        - listitem [ref=f165e506]:
+          - link [ref=f165e507] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/
+            - img "Powered by MediaWiki" [ref=f165e509]
+  - generic [ref=f165e510]:
+    - list

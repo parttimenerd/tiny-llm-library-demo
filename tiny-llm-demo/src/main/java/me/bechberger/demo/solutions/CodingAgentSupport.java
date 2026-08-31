@@ -64,36 +64,11 @@ abstract class CodingAgentSupport implements Callable<Integer> {
 
     private static ApprovalRules defaultRules() {
         var r = new ApprovalRules();
-        // file write tools — allow all by default
-        r.allow("create-file: *");
-        r.allow("write-file: *");
-        r.allow("edit: *");
-        r.allow("create-folder: *");
-        // run — safe read-only and build commands
-        r.allow("run: ls*");
-        r.allow("run: cat *");
-        r.allow("run: find *");
-        r.allow("run: grep *");
-        r.allow("run: pwd*");
+        r.allow("run: pwd");
         r.allow("run: echo *");
         r.allow("run: which *");
-        r.allow("run: wc *");
-        r.allow("run: head *");
-        r.allow("run: tail *");
         r.allow("run: git status*");
-        r.allow("run: git log*");
-        r.allow("run: git diff*");
-        r.allow("run: git show*");
-        r.allow("run: git branch*");
-        r.allow("run: mvn*");
-        r.allow("run: ./mvnw*");
-        r.allow("run: gradle*");
-        r.allow("run: ./gradlew*");
-        r.allow("run: make*");
-        r.allow("run: npm test*");
-        r.allow("run: npm run*");
-        r.allow("run: python*");
-        r.allow("run: java -jar*");
+        r.allow("run: git diff");
         return r;
     }
 
@@ -106,6 +81,12 @@ abstract class CodingAgentSupport implements Callable<Integer> {
     }
 
     final AgentState state = new AgentState();
+
+    /**
+     * Set by the `continue` or `schedule` tool — chat() drains this after each tool loop
+     * and re-invokes itself without waiting for user input.
+     */
+    volatile String pendingContinuation = null;
 
     /** Set once the REPL is built in call() — used by confirmPlan for prompting. */
     Repl repl;

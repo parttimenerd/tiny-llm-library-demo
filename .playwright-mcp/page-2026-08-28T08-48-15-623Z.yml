@@ -1,0 +1,21 @@
+- generic [ref=f52e2]:
+  - generic [ref=f52e4]:
+    - generic [ref=f52e11]:
+      - generic [ref=f52e12]: Let's create a tiny AI library together
+      - generic [ref=f52e13]: Peeking behind the curtain of LLM libraries
+      - generic [ref=f52e14]: Johannes Bechberger · SAP SE
+    - navigation [ref=f52e16]:
+      - generic [ref=f52e17]:
+        - button "Enter fullscreen" [ref=f52e18] [cursor=pointer]
+        - button "Go to previous slide"
+        - button "Go to next slide" [ref=f52e21] [cursor=pointer]
+        - button "Show slide overview" [ref=f52e24] [cursor=pointer]
+        - button "Show drawing toolbar" [ref=f52e28] [cursor=pointer]
+        - button "Presenter Mode" [ref=f52e32] [cursor=pointer]
+        - button "Show info" [ref=f52e35] [cursor=pointer]
+        - button [ref=f52e40] [cursor=pointer]:
+          - button "Change sync settings" [ref=f52e41]
+        - button [ref=f52e46] [cursor=pointer]:
+          - button "More Options" [ref=f52e47]
+        - generic [ref=f52e51]: 1 / 62
+  - textbox "Goto..." [disabled] [ref=f52e54]

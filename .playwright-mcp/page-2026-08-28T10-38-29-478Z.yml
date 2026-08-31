@@ -1,0 +1,1164 @@
+- generic [active] [ref=f169e1]:
+  - link "Jump to content" [ref=f169e2] [cursor=pointer]:
+    - /url: "#bodyContent"
+  - banner [ref=f169e4]:
+    - generic [ref=f169e5]:
+      - navigation "Site" [ref=f169e6]:
+        - generic "Main menu" [ref=f169e7]:
+          - button "Main menu" [ref=f169e8] [cursor=pointer]
+          - option "Qafár af"
+          - option "Arbërisht"
+          - option "аԥсшәа"
+          - option "Abron"
+          - option "bahasa ambon"
+          - option "Acèh"
+          - option "Kwéyòl Sent Lisi"
+          - option "عراقي"
+          - option "адыгабзэ"
+          - option "адыгабзэ"
+          - option "تونسي / Tûnsî"
+          - option "تونسي"
+          - option "Tûnsî"
+          - option "Afrikaans"
+          - option "Aghem"
+          - option "Aanteegan an' Baabyuudan"
+          - option "Akan"
+          - option "Gegë"
+          - option "Alemannisch"
+          - option "алтай тил"
+          - option "አማርኛ"
+          - option "Pangcah"
+          - option "aragonés"
+          - option "Ænglisc"
+          - option "Obolo"
+          - option "अंगिका"
+          - option "شامي"
+          - option "العربية"
+          - option "ܐܪܡܝܐ"
+          - option "mapudungun"
+          - option "جازايرية"
+          - option "الدارجة"
+          - option "مصرى"
+          - option "অসমীয়া"
+          - option "American sign language"
+          - option "asturianu"
+          - option "Atikamekw"
+          - option "авар"
+          - option "Kotava"
+          - option "अवधी"
+          - option "Aymar aru"
+          - option "azərbaycanca"
+          - option "تۆرکجه"
+          - option "башҡортса"
+          - option "Tuki"
+          - option "Basa Bali"
+          - option "ᬩᬲᬩᬮᬶ"
+          - option "Boarisch"
+          - option "Basaa"
+          - option "žemaitėška"
+          - option "Bamum"
+          - option "Batak Toba"
+          - option "Batak Toba"
+          - option "Ghomála'"
+          - option "جهلسری بلوچی"
+          - option "wawle"
+          - option "Bikol Central"
+          - option "Bajau Sama"
+          - option "беларуская"
+          - option "беларуская (тарашкевіца)"
+          - option "беларуская (тарашкевіца)"
+          - option "Betawi"
+          - option "Bafut"
+          - option "ରେମସାମ୍"
+          - option "български"
+          - option "हरियाणवी"
+          - option "روچ کپتین بلوچی"
+          - option "भोजपुरी"
+          - option "भोजपुरी"
+          - option "Bislama"
+          - option "Banjar"
+          - option "Baka"
+          - option "Bakoko"
+          - option "Kom"
+          - option "ပအိုဝ်ႏဘာႏသာႏ"
+          - option "bamanankan"
+          - option "বাংলা"
+          - option "བོད་ཡིག"
+          - option "bòo pìkkà"
+          - option "বিষ্ণুপ্রিয়া মণিপুরী"
+          - option "بختیاری"
+          - option "Mka'a"
+          - option "brezhoneg"
+          - option "Bráhuí"
+          - option "bosanski"
+          - option "Batak Mandailing"
+          - option "Iriga Bicolano"
+          - option "Basa Ugi"
+          - option "ᨅᨔ ᨕᨘᨁᨗ"
+          - option "буряад"
+          - option "Medumba"
+          - option "català"
+          - option "Kaqchikel"
+          - option "Carolinian"
+          - option "Chavacano de Zamboanga"
+          - option "𑄌𑄋𑄴𑄟𑄳𑄦"
+          - option "閩東語 / Mìng-dĕ̤ng-ngṳ̄"
+          - option "閩東語（傳統漢字）"
+          - option "Mìng-dĕ̤ng-ngṳ̄ (Bàng-uâ-cê)"
+          - option "нохчийн"
+          - option "Cebuano"
+          - option "Chamoru"
+          - option "chinuk wawa"
+          - option "Chahta anumpa"
+          - option "ᏣᎳᎩ"
+          - option "Tsetsêhestâhese"
+          - option "کوردی"
+          - option "Hakha Chin"
+          - option "corsu"
+          - option "ϯⲙⲉⲧⲣⲉⲙⲛ̀ⲭⲏⲙⲓ"
+          - option "Capiceño"
+          - option "莆仙語 / Pó-sing-gṳ̂"
+          - option "莆仙语（简体）"
+          - option "莆仙語（繁體）"
+          - option "Pó-sing-gṳ̂ (Báⁿ-uā-ci̍)"
+          - option "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ"
+          - option "qırımtatarca"
+          - option "къырымтатарджа (Кирилл)"
+          - option "qırımtatarca (Latin)"
+          - option "tatarşa"
+          - option "čeština"
+          - option "kaszëbsczi"
+          - option "словѣньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ"
+          - option "чӑвашла"
+          - option "Cymraeg"
+          - option "dansk"
+          - option "dagbanli"
+          - option "Deutsch"
+          - option "Österreichisches Deutsch"
+          - option "Schweizer Hochdeutsch"
+          - option "Deutsch (Sie-Form)"
+          - option "Dagaare"
+          - option "Thuɔŋjäŋ"
+          - option "Zazaki"
+          - option "долган тыла"
+          - option "dolnoserbski"
+          - option "ଦେଶିଆ"
+          - option "Kadazandusun"
+          - option "डोटेली"
+          - option "Duala"
+          - option "ދިވެހިބަސް"
+          - option "ཇོང་ཁ"
+          - option "eʋegbe"
+          - option "Efịk"
+          - option "Emiliàn"
+          - option "Ελληνικά"
+          - option "emiliàn e rumagnòl"
+          - option "English" [selected]
+          - option "Canadian English"
+          - option "British English"
+          - option "American English"
+          - option "Esperanto"
+          - option "español"
+          - option "español de América Latina"
+          - option "español (formal)"
+          - option "eesti"
+          - option "Eton"
+          - option "Ejagham"
+          - option "euskara"
+          - option "Ewondo"
+          - option "estremeñu"
+          - option "فارسی"
+          - option "mfantse"
+          - option "Fulfulde"
+          - option "suomi"
+          - option "meänkieli"
+          - option "võro"
+          - option "Na Vosa Vakaviti"
+          - option "kvääni"
+          - option "Fe'fe'"
+          - option "føroyskt"
+          - option "fɔ̀ngbè"
+          - option "français"
+          - option "français cadien"
+          - option "arpetan"
+          - option "Nordfriisk"
+          - option "Oostfräisk"
+          - option "furlan"
+          - option "poor’íŋ belé’ŋ"
+          - option "Frysk"
+          - option "Gaeilge"
+          - option "Ga"
+          - option "Gagauz"
+          - option "贛語"
+          - option "赣语（简体）"
+          - option "贛語（繁體）"
+          - option "kréyòl Gwadloup"
+          - option "kriyòl gwiyannen"
+          - option "Gàidhlig"
+          - option "گوجری"
+          - option "गुज्जरी"
+          - option "galego"
+          - option "на̄ни"
+          - option "گیلکی"
+          - option "Avañe'ẽ"
+          - option "गोंयची कोंकणी / Gõychi Konknni"
+          - option "गोंयची कोंकणी"
+          - option "Gõychi Konknni"
+          - option "Bahasa Hulontalo"
+          - option "𐌲𐌿𐍄𐌹𐍃𐌺"
+          - option "Ghanaian Pidgin"
+          - option "Ἀρχαία ἑλληνικὴ"
+          - option "Alemannisch"
+          - option "ગુજરાતી"
+          - option "wayuunaiki"
+          - option "farefare"
+          - option "gungbe"
+          - option "Gaelg"
+          - option "Gbaya"
+          - option "Hausa"
+          - option "客家語 / Hak-kâ-ngî"
+          - option "客家语（简体）"
+          - option "客家語（繁體）"
+          - option "Hak-kâ-ngî (Pha̍k-fa-sṳ)"
+          - option "Hawaiʻi"
+          - option "עברית"
+          - option "हिन्दी"
+          - option "Fiji Hindi"
+          - option "Fiji Hindi"
+          - option "Ilonggo"
+          - option "kihunde"
+          - option "ہندکو"
+          - option "Hiri Motu"
+          - option "𑢹𑣉𑣉 𑣎𑣋𑣜"
+          - option "Ho"
+          - option "hrvatski"
+          - option "Hunsrik"
+          - option "hornjoserbsce"
+          - option "湘語"
+          - option "Kreyòl ayisyen"
+          - option "magyar"
+          - option "magyar (formal)"
+          - option "հայերեն"
+          - option "Արեւմտահայերէն"
+          - option "Otsiherero"
+          - option "interlingua"
+          - option "Jaku Iban"
+          - option "ibibio"
+          - option "Bahasa Indonesia"
+          - option "Interlingue"
+          - option "Igbo"
+          - option "Igala"
+          - option "ꆇꉙ"
+          - option "Iñupiatun"
+          - option "ᐃᓄᒃᑎᑐᑦ"
+          - option "inuktitut"
+          - option "Ilokano"
+          - option "гӀалгӀай"
+          - option "Ido"
+          - option "íslenska"
+          - option "Isu"
+          - option "medžuslovjansky"
+          - option "меджусловјанскы"
+          - option "medžuslovjansky"
+          - option "italiano"
+          - option "ᐃᓄᒃᑎᑐᑦ / inuktitut"
+          - option "日本語"
+          - option "Patois"
+          - option "la .lojban."
+          - option "jysk"
+          - option "Jawa"
+          - option "ꦗꦮ"
+          - option "ქართული"
+          - option "Qaraqalpaqsha"
+          - option "Taqbaylit"
+          - option "Karai-karai"
+          - option "Jju"
+          - option "адыгэбзэ"
+          - option "адыгэбзэ"
+          - option "Kabɩyɛ"
+          - option "Tyap"
+          - option "kabuverdianu"
+          - option "Kera"
+          - option "Kongo"
+          - option "Kumoring"
+          - option "गेम्येहाक़ गिपन"
+          - option "کھوار"
+          - option "Gĩkũyũ"
+          - option "Kırmancki"
+          - option "Kwanyama"
+          - option "хакас"
+          - option "ဖၠုံလိက်"
+          - option "қазақша"
+          - option "قازاقشا (تٴوتە)"
+          - option "قازاقشا (جۇنگو)"
+          - option "қазақша (кирил)"
+          - option "қазақша (Қазақстан)"
+          - option "qazaqşa (latın)"
+          - option "qazaqşa (Türkïya)"
+          - option "kalaallisut"
+          - option "ភាសាខ្មែរ"
+          - option "ಕನ್ನಡ"
+          - option "Yerwa Kanuri"
+          - option "한국어"
+          - option "조선말"
+          - option "перем коми"
+          - option "kanuri"
+          - option "къарачай-малкъар"
+          - option "Krio"
+          - option "Kinaray-a"
+          - option "karjal"
+          - option "کٲشُر"
+          - option "کٲشُر"
+          - option "कॉशुर"
+          - option "Bafia"
+          - option "Ripoarisch"
+          - option "စှီၤ"
+          - option "kurdî"
+          - option "کوردی (عەرەبی)"
+          - option "kurdî (latînî)"
+          - option "къумукъ"
+          - option "Kʋsaal"
+          - option "коми"
+          - option "kernowek"
+          - option "кыргызча"
+          - option "Latina"
+          - option "Ladino"
+          - option "Lëtzebuergesch"
+          - option "лакку"
+          - option "Nomaande"
+          - option "лезги"
+          - option "Lingua Franca Nova"
+          - option "Luganda"
+          - option "Limburgs"
+          - option "Ligure"
+          - option "Līvõ kēļ"
+          - option "Lampung Api"
+          - option "لەکی"
+          - option "Lakȟótiyapi"
+          - option "Ladin"
+          - option "lombard"
+          - option "lingála"
+          - option "Lamnso'"
+          - option "ລາວ"
+          - option "Silozi"
+          - option "لۊری شومالی"
+          - option "lietuvių"
+          - option "latgaļu"
+          - option "ciluba"
+          - option "Mizo ţawng"
+          - option "لئری دوٙمینی"
+          - option "latviešu"
+          - option "文言"
+          - option "Lazuri"
+          - option "Madhurâ"
+          - option "मगही"
+          - option "मैथिली"
+          - option "Basa Banyumasan"
+          - option "vùn màsànà"
+          - option "Maka"
+          - option "мокшень"
+          - option "Malagasy"
+          - option "Ebon"
+          - option "олык марий"
+          - option "Māori"
+          - option "Minangkabau"
+          - option "македонски"
+          - option "മലയാളം"
+          - option "монгол"
+          - option "manju gisun"
+          - option "manju gisun"
+          - option "ᠮᠠᠨᠵᡠ ᡤᡳᠰᡠᠨ"
+          - option "ꯃꯤꯇꯩ ꯂꯣꯟ"
+          - option "ဘာသာမန်"
+          - option "молдовеняскэ"
+          - option "moore"
+          - option "मराठी"
+          - option "Mara"
+          - option "кырык мары"
+          - option "Bahasa Melayu"
+          - option "بهاس ملايو"
+          - option "Malti"
+          - option "Mundang"
+          - option "Baso Palembang"
+          - option "Mvskoke"
+          - option "Mirandés"
+          - option "မြန်မာဘာသာ"
+          - option "эрзянь"
+          - option "مازِرونی"
+          - option "Dorerin Naoero"
+          - option "Nāhuatl"
+          - option "閩南語 / Bân-lâm-gí"
+          - option "閩南語"
+          - option "閩南語（傳統漢字）"
+          - option "Bân-lâm-gí (Pe̍h-ōe-jī)"
+          - option "Bân-lâm-gí (Tâi-lô)"
+          - option "Napulitano"
+          - option "norsk bokmål"
+          - option "Plattdüütsch"
+          - option "Nedersaksies"
+          - option "नेपाली"
+          - option "नेपाल भाषा"
+          - option "Oshiwambo"
+          - option "Ngémba"
+          - option "Li Niha"
+          - option "కొలామి"
+          - option "Niuē"
+          - option "Nederlands"
+          - option "Nederlands (informeel)"
+          - option "Ngombala"
+          - option "Kwasio"
+          - option "nawdm"
+          - option "norsk nynorsk"
+          - option "Ngiemboon"
+          - option "Nda'nda'"
+          - option "norsk"
+          - option "ᨣᩤᩴᨾᩮᩬᩥᨦ"
+          - option "ногайша"
+          - option "Novial"
+          - option "ߒߞߏ"
+          - option "isiNdebele seSewula"
+          - option "Nouormand"
+          - option "Sesotho sa Leboa"
+          - option "Nupe"
+          - option "Diné bizaad"
+          - option "Chi-Chewa"
+          - option "runyankore"
+          - option "Orunyoro"
+          - option "Nyunga"
+          - option "occitan"
+          - option "Ojibwemowin"
+          - option "livvinkarjala"
+          - option "Oromoo"
+          - option "ଓଡ଼ିଆ"
+          - option "ирон"
+          - option "Wažáže íe"
+          - option "لسان عثمانى"
+          - option "ਪੰਜਾਬੀ"
+          - option "Pangasinan"
+          - option "Kapampangan"
+          - option "Papiamentu"
+          - option "Papiamento"
+          - option "Picard"
+          - option "Naijá"
+          - option "Deitsch"
+          - option "Plautdietsch"
+          - option "Pälzisch"
+          - option "पालि"
+          - option "Norfuk / Pitkern"
+          - option "polski"
+          - option "Piemontèis"
+          - option "پنجابی"
+          - option "Ποντιακά"
+          - option "Nawat"
+          - option "prūsiskan"
+          - option "پښتو"
+          - option "português"
+          - option "português do Brasil"
+          - option "pinayuanan"
+          - option "Runa Simi"
+          - option "Qatzijob\\ʼal"
+          - option "Runa shimi"
+          - option "Rumagnôl"
+          - option "Tarifit"
+          - option "ရခိုင်"
+          - option "rumantsch"
+          - option "romaňi čhib"
+          - option "kaalengo tšimb"
+          - option "romani čhib"
+          - option "ikirundi"
+          - option "română"
+          - option "armãneashti"
+          - option "tarandíne"
+          - option "руски"
+          - option "русский"
+          - option "русиньскый"
+          - option "armãneashti"
+          - option "Vlăheşte"
+          - option "Влахесте"
+          - option "Vlăheşte"
+          - option "мыхаӀбишды"
+          - option "Ikinyarwanda"
+          - option "मारवाड़ी"
+          - option "沖縄口"
+          - option "संस्कृतम्"
+          - option "саха тыла"
+          - option "Sasak"
+          - option "ᱥᱟᱱᱛᱟᱲᱤ"
+          - option "sardu"
+          - option "sicilianu"
+          - option "Scots"
+          - option "سنڌي"
+          - option "Sassaresu"
+          - option "کوردی خوارگ"
+          - option "davvisámegiella"
+          - option "davvisámegiella (Suoma bealde)"
+          - option "davvisámegiella (Norgga bealde)"
+          - option "davvisámegiella (Ruoŧa bealde)"
+          - option "Cmique Itom"
+          - option "Koyraboro Senni"
+          - option "Sängö"
+          - option "žemaitėška"
+          - option "srpskohrvatski / српскохрватски"
+          - option "српскохрватски (ћирилица)"
+          - option "srpskohrvatski (latinica)"
+          - option "Taclḥit"
+          - option "Taclḥit"
+          - option "ⵜⴰⵛⵍⵃⵉⵜ"
+          - option "တႆး"
+          - option "tacawit"
+          - option "tacawit"
+          - option "සිංහල"
+          - option "Simple English"
+          - option "кӣллт са̄мь кӣлл"
+          - option "bidumsámegiella"
+          - option "ubmejesámiengiälla"
+          - option "slovenčina"
+          - option "سرائیکی"
+          - option "سرائیکی"
+          - option "slovenščina"
+          - option "Schläsch"
+          - option "Gagana Samoa"
+          - option "åarjelsaemien"
+          - option "julevsámegiella"
+          - option "anarâškielâ"
+          - option "nuõrttsääʹmǩiõll"
+          - option "chiShona"
+          - option "Soomaaliga"
+          - option "shqip"
+          - option "српски / srpski"
+          - option "српски (ћирилица)"
+          - option "srpski (latinica)"
+          - option "Sranantongo"
+          - option "sardu campidanesu"
+          - option "mbia cheë"
+          - option "SiSwati"
+          - option "Sesotho"
+          - option "Seeltersk"
+          - option "себертатар"
+          - option "Sunda"
+          - option "svenska"
+          - option "ლუშნუ"
+          - option "Kiswahili"
+          - option "ꠍꠤꠟꠐꠤ"
+          - option "ślůnski"
+          - option "Sakizaya"
+          - option "தமிழ்"
+          - option "Tayal"
+          - option "ತುಳು"
+          - option "ᥖᥭᥰ ᥖᥬᥲ ᥑᥨᥒᥰ"
+          - option "తెలుగు"
+          - option "tetun"
+          - option "тоҷикӣ"
+          - option "тоҷикӣ"
+          - option "tojikī"
+          - option "ไทย"
+          - option "काेचिला थारु"
+          - option "ትግርኛ"
+          - option "ትግሬ"
+          - option "Türkmençe"
+          - option "Tagalog"
+          - option "tolışi"
+          - option "толыши"
+          - option "Setswana"
+          - option "lea faka-Tonga"
+          - option "toki pona"
+          - option "Tok Pisin"
+          - option "Tanapag"
+          - option "Türkçe"
+          - option "Ṫuroyo"
+          - option "Seediq"
+          - option "Xitsonga"
+          - option "татарча / tatarça"
+          - option "татарча"
+          - option "tatarça"
+          - option "Orutooro"
+          - option "chiTumbuka"
+          - option "Tunen"
+          - option "Twi"
+          - option "reo tahiti"
+          - option "тыва дыл"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ"
+          - option "удмурт"
+          - option "ئۇيغۇرچە / Uyghurche"
+          - option "ئۇيغۇرچە"
+          - option "Uyghurche"
+          - option "українська"
+          - option "اردو"
+          - option "oʻzbekcha / ўзбекча"
+          - option "ўзбекча"
+          - option "oʻzbekcha"
+          - option "Tshivenda"
+          - option "vèneto"
+          - option "vepsän kel’"
+          - option "Tiếng Việt"
+          - option "West-Vlams"
+          - option "Mainfränkisch"
+          - option "emakhuwa"
+          - option "Volapük"
+          - option "Vaďďa"
+          - option "võro"
+          - option "Vute"
+          - option "walon"
+          - option "wolaytta"
+          - option "Winaray"
+          - option "Pidgin (Cameroon)"
+          - option "Fakaʻuvea"
+          - option "waale"
+          - option "Wolof"
+          - option "吴语"
+          - option "吴语（简体）"
+          - option "吳語（正體）"
+          - option "Wyandot"
+          - option "хальмг"
+          - option "isiXhosa"
+          - option "მარგალური"
+          - option "saisiyat"
+          - option "Nugunu"
+          - option "Yambeta"
+          - option "Yangben"
+          - option "Yemba"
+          - option "ייִדיש"
+          - option "Yorùbá"
+          - option "Nhẽẽgatú"
+          - option "maaya t’aan"
+          - option "粵語"
+          - option "粵语（简体）"
+          - option "粵語（繁體）"
+          - option "Vahcuengh"
+          - option "Zeêuws"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵡⴰⵢⵜ"
+          - option "tamaziɣt tanawayt"
+          - option "中文"
+          - option "文言"
+          - option "中文（中国大陆）"
+          - option "中文（简体）"
+          - option "中文（繁體）"
+          - option "中文（香港）"
+          - option "Bân-lâm-gú"
+          - option "中文（澳門）"
+          - option "中文（马来西亚）"
+          - option "中文（新加坡）"
+          - option "中文（臺灣）"
+          - option "粵語"
+          - option "isiZulu"
+      - link [ref=f169e12] [cursor=pointer]:
+        - /url: /wiki/Main_Page
+        - img "Wikimedia Commons" [ref=f169e15]
+    - generic [ref=f169e16]:
+      - search [ref=f169e17]:
+        - generic [ref=f169e20]:
+          - searchbox "Search Wikimedia Commons" [ref=f169e23]
+          - button "Search" [ref=f169e25]
+      - navigation "Personal tools" [ref=f169e26]:
+        - generic [ref=f169e27]:
+          - list [ref=f169e30]:
+            - listitem [ref=f169e31]:
+              - link "English" [ref=f169e32] [cursor=pointer]:
+                - /url: "#"
+          - list [ref=f169e37]:
+            - listitem [ref=f169e38]:
+              - link "Donate" [ref=f169e39] [cursor=pointer]:
+                - /url: https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=commons.wikimedia.org&uselang=en
+            - listitem [ref=f169e40]:
+              - link "Create account" [ref=f169e41] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:CreateAccount&returnto=File%3ACat+sitting+on+a+radio%2C+Sydney%2C+1930s+-+Sam+Hood+%283282801241%29.jpg
+            - listitem [ref=f169e42]:
+              - link "Log in" [ref=f169e43] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:UserLogin&returnto=File%3ACat+sitting+on+a+radio%2C+Sydney%2C+1930s+-+Sam+Hood+%283282801241%29.jpg
+  - generic [ref=f169e45]:
+    - navigation "Contents" [ref=f169e49]:
+      - generic [ref=f169e51]:
+        - generic [ref=f169e52]:
+          - heading "Contents" [level=2] [ref=f169e53]
+          - button "Hide Contents" [ref=f169e54] [cursor=pointer]: hide
+        - list [ref=f169e55]:
+          - listitem [ref=f169e56]:
+            - link "Beginning" [ref=f169e57] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=f169e59]:
+            - link "File" [ref=f169e60] [cursor=pointer]:
+              - /url: "#file"
+            - list
+          - listitem [ref=f169e62]:
+            - link "Summary" [ref=f169e63] [cursor=pointer]:
+              - /url: "#Summary"
+            - list
+          - listitem [ref=f169e65]:
+            - link "Licensing" [ref=f169e66] [cursor=pointer]:
+              - /url: "#Licensing"
+            - list
+          - listitem [ref=f169e68]:
+            - link "File history" [ref=f169e69] [cursor=pointer]:
+              - /url: "#filehistory"
+            - list
+          - listitem [ref=f169e71]:
+            - link "File usage on Commons" [ref=f169e72] [cursor=pointer]:
+              - /url: "#filelinks"
+            - list
+          - listitem [ref=f169e74]:
+            - link "File usage on other wikis" [ref=f169e75] [cursor=pointer]:
+              - /url: "#globalusage"
+            - list
+    - main [ref=f169e78]:
+      - heading "File:Cat sitting on a radio, Sydney, 1930s - Sam Hood (3282801241).jpg" [level=1] [ref=f169e80]
+      - generic [ref=f169e83]:
+        - navigation "Namespaces" [ref=f169e85]:
+          - list [ref=f169e88]:
+            - listitem [ref=f169e89]:
+              - link "File" [ref=f169e90] [cursor=pointer]:
+                - /url: /wiki/File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg
+            - listitem [ref=f169e92]:
+              - link "Discussion" [ref=f169e93] [cursor=pointer]:
+                - /url: /w/index.php?title=File_talk:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg&action=edit&redlink=1
+        - generic [ref=f169e95]:
+          - navigation "Views" [ref=f169e96]:
+            - list [ref=f169e99]:
+              - listitem [ref=f169e100]:
+                - link "Read" [ref=f169e101] [cursor=pointer]:
+                  - /url: /wiki/File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg
+              - listitem [ref=f169e103]:
+                - link "Edit" [ref=f169e104] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg&action=edit
+              - listitem [ref=f169e106]:
+                - link "View history" [ref=f169e107] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg&action=history
+          - navigation "Page tools" [ref=f169e109]:
+            - generic [ref=f169e110]:
+              - button "Tools" [ref=f169e111] [cursor=pointer]
+              - generic [ref=f169e112]: Tools
+      - navigation "Appearance" [ref=f169e117]:
+        - generic [ref=f169e119]:
+          - generic [ref=f169e120]:
+            - generic [ref=f169e121]: Appearance
+            - button "Hide Appearance" [ref=f169e122] [cursor=pointer]: hide
+          - generic [ref=f169e123]:
+            - generic [ref=f169e124]: Text
+            - list [ref=f169e126]:
+              - listitem [ref=f169e127]:
+                - generic [ref=f169e128]:
+                  - generic [ref=f169e129]:
+                    - generic [ref=f169e130]:
+                      - radio "Small" [disabled] [ref=f169e131]
+                      - generic [ref=f169e133]: Small
+                    - generic [ref=f169e135]:
+                      - radio "Standard" [disabled] [ref=f169e136]
+                      - generic [ref=f169e138]: Standard
+                    - generic [ref=f169e140]:
+                      - radio "Large" [disabled] [ref=f169e141]
+                      - generic [ref=f169e143]: Large
+                  - paragraph [ref=f169e145]: This page always uses small font size
+          - generic [ref=f169e146]:
+            - generic [ref=f169e147]: Width
+            - list [ref=f169e149]:
+              - listitem [ref=f169e150]:
+                - generic [ref=f169e152]:
+                  - generic [ref=f169e153]:
+                    - radio "Standard" [checked] [ref=f169e154]
+                    - generic [ref=f169e156]: Standard
+                  - generic [ref=f169e158]:
+                    - radio "Wide" [ref=f169e159]
+                    - generic [ref=f169e161]: Wide
+          - generic [ref=f169e163]:
+            - generic [ref=f169e164]:
+              - text: Color
+              - generic [ref=f169e165]: (beta)
+            - list [ref=f169e167]:
+              - listitem [ref=f169e168]:
+                - generic [ref=f169e170]:
+                  - generic [ref=f169e171]:
+                    - radio "Automatic" [ref=f169e172]
+                    - generic [ref=f169e174]: Automatic
+                  - generic [ref=f169e176]:
+                    - radio "Light" [checked] [ref=f169e177]
+                    - generic [ref=f169e179]: Light
+                  - generic [ref=f169e181]:
+                    - radio "Dark" [ref=f169e182]
+                    - generic [ref=f169e184]: Dark
+      - generic "File:Cat sitting on a radio, Sydney, 1930s - Sam Hood (3282801241).jpg" [ref=f169e186]:
+        - generic [ref=f169e187]:
+          - generic [ref=f169e188]:
+            - button "Download all sizes" [ref=f169e189] [cursor=pointer]:
+              - generic [ref=f169e192]:
+                - text: Download
+                - generic [ref=f169e193]: all sizes
+            - button "Use this file on the web" [ref=f169e194] [cursor=pointer]:
+              - generic [ref=f169e197]:
+                - text: Use this file
+                - generic [ref=f169e198]: on the web
+            - button "Use this file on a wiki" [ref=f169e199] [cursor=pointer]:
+              - generic [ref=f169e202]:
+                - text: Use this file
+                - generic [ref=f169e203]: on a wiki
+            - link "Email a link to this file" [ref=f169e204] [cursor=pointer]:
+              - /url: mailto:?subject=Cat%20sitting%20on%20a%20radio%2C%20Sydney%2C%201930s%20-%20Sam%20Hood%20(3282801241)&body=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3ACat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_(3282801241).jpg%0A%0AState%20Library%20of%20New%20South%20Wales%20collection%2C%20No%20restrictions%2C%20via%20Wikimedia%20Commons
+              - generic [ref=f169e207]:
+                - text: Email a link
+                - generic [ref=f169e208]: to this file
+            - link "Information about reusing" [ref=f169e209] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Reusing_content_outside_Wikimedia
+              - generic [ref=f169e212]:
+                - text: Information
+                - generic [ref=f169e213]: about reusing
+            - generic "Remove these icons" [ref=f169e215] [cursor=pointer]
+          - generic [ref=f169e217]:
+            - link [ref=f169e218] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/0/0f/Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+              - img "File:Cat sitting on a radio, Sydney, 1930s - Sam Hood (3282801241).jpg" [ref=f169e219]
+            - generic [ref=f169e220]:
+              - text: "Size of this preview:"
+              - link "640 × 465 pixels" [ref=f169e221] [cursor=pointer]:
+                - /url: https://upload.wikimedia.org/wikipedia/commons/0/0f/Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled
+              - text: .
+              - generic [ref=f169e222]:
+                - text: "Other resolution:"
+                - link "330 × 240 pixels" [ref=f169e223] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg/330px-Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: .
+          - generic [ref=f169e224]:
+            - link "Original file" [ref=f169e226] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/0/0f/Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+            - generic [ref=f169e227]: "(640 × 465 pixels, file size: 51 KB, MIME type: image/jpeg)"
+            - button "Open in Media Viewer" [ref=f169e228]
+          - generic [ref=f169e231]:
+            - tablist [ref=f169e234]:
+              - tab "File information" [selected] [ref=f169e235]
+              - tab "Structured data" [ref=f169e237] [cursor=pointer]
+            - tabpanel "File information" [ref=f169e241]:
+              - generic [ref=f169e243]:
+                - heading [level=3] [ref=f169e244]:
+                  - text: Captions
+                  - button "Edit" [ref=f169e246] [cursor=pointer]
+                - generic [ref=f169e247]:
+                  - generic [ref=f169e248]: English
+                  - generic [ref=f169e249]: Add a one-line explanation of what this file represents
+              - generic [ref=f169e251]:
+                - generic [ref=f169e252]:
+                  - heading "Summary" [level=2] [ref=f169e253]
+                  - generic [ref=f169e254]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg&action=edit&section=1
+                - table [ref=f169e256]:
+                  - rowgroup [ref=f169e257]:
+                    - row [ref=f169e258]:
+                      - cell "Description" [ref=f169e259]
+                      - 'cell "English: Black and white photograph of a cat sitting on a radio, 1930s, Sydney, Australia. Notes: Find more detailed information about this photographic collection: acms.sl.nsw.gov.au/item/itemDetailPaged.aspx?itemID=153570 Search for more great images in the State Library''s collections: acms.sl.nsw.gov.au/search/SimpleSearch.aspx From the collection of the State Library of New South Wales www.sl.nsw.gov.au" [ref=f169e260]':
+                        - generic [ref=f169e261]:
+                          - generic "English" [ref=f169e262]: "English:"
+                          - text: Black and white photograph of a cat sitting on a radio, 1930s, Sydney, Australia.
+                          - generic [ref=f169e263]:
+                            - definition [ref=f169e264]:
+                              - text: "Notes: Find more detailed information about this photographic collection:"
+                              - link "acms.sl.nsw.gov.au/item/itemDetailPaged.aspx?itemID=153570" [ref=f169e265] [cursor=pointer]:
+                                - /url: http://acms.sl.nsw.gov.au/item/itemDetailPaged.aspx?itemID=153570
+                            - definition [ref=f169e266]:
+                              - text: "Search for more great images in the State Library's collections:"
+                              - link "acms.sl.nsw.gov.au/search/SimpleSearch.aspx" [ref=f169e267] [cursor=pointer]:
+                                - /url: http://acms.sl.nsw.gov.au/search/SimpleSearch.aspx
+                            - definition [ref=f169e268]:
+                              - text: From the collection of the State Library of New South Wales
+                              - link "www.sl.nsw.gov.au" [ref=f169e269] [cursor=pointer]:
+                                - /url: http://www.sl.nsw.gov.au
+                    - row [ref=f169e270]:
+                      - cell "Date" [ref=f169e271]
+                      - cell "1930s" [ref=f169e272]
+                    - row [ref=f169e273]:
+                      - cell "Source" [ref=f169e274]
+                      - cell [ref=f169e275]:
+                        - link "https://www.flickr.com/photos/statelibraryofnsw/3282801241/" [ref=f169e276] [cursor=pointer]:
+                          - /url: https://www.flickr.com/photos/statelibraryofnsw/3282801241/
+                    - row [ref=f169e277]:
+                      - cell "Author" [ref=f169e278]
+                      - cell [ref=f169e279]:
+                        - link "State Library of New South Wales collection" [ref=f169e280] [cursor=pointer]:
+                          - /url: https://www.flickr.com/people/29454428@N08
+                    - row [ref=f169e281]:
+                      - cell [ref=f169e282]:
+                        - text: Permission
+                        - generic [ref=f169e283]:
+                          - text: (
+                          - link "Reusing this file" [ref=f169e284] [cursor=pointer]:
+                            - /url: /wiki/Commons:Reusing_content_outside_Wikimedia
+                          - text: )
+                      - cell [ref=f169e285]:
+                        - text: At the time of upload, the image license was automatically confirmed using the Flickr
+                        - link "API" [ref=f169e286] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/API
+                        - text: . For more information see
+                        - link "Flickr API detail" [ref=f169e287] [cursor=pointer]:
+                          - /url: /wiki/User:F%C3%A6/Flickr_API_detail
+                        - text: .
+                    - row [ref=f169e288]:
+                      - cell "Flickr sets" [ref=f169e289]
+                      - cell [ref=f169e290]:
+                        - list [ref=f169e292]:
+                          - listitem [ref=f169e293]: Pets and other animals
+                    - row [ref=f169e294]:
+                      - cell "Flickr pools" [ref=f169e295]
+                      - cell [ref=f169e296]:
+                        - list [ref=f169e298]:
+                          - listitem [ref=f169e299]: ((( transcend dépassez supere 超越しなさい ))) ·
+                          - listitem [ref=f169e300]: The way we were - Vintage & retrò P1/C2
+                    - row [ref=f169e301]:
+                      - cell "Flickr tags" [ref=f169e302]
+                      - cell [ref=f169e303]:
+                        - list [ref=f169e305]:
+                          - listitem [ref=f169e306]: tabby ·
+                          - listitem [ref=f169e307]: cat ·
+                          - listitem [ref=f169e308]: radio ·
+                          - listitem [ref=f169e309]: bedroom ·
+                          - listitem [ref=f169e310]: bed ·
+                          - listitem [ref=f169e311]: dresser ·
+                          - listitem [ref=f169e312]: lamp ·
+                          - listitem [ref=f169e313]: mirror ·
+                          - listitem [ref=f169e314]: vase ·
+                          - listitem [ref=f169e315]: flower ·
+                          - listitem [ref=f169e316]: photograph ·
+                          - listitem [ref=f169e317]: woman ·
+                          - listitem [ref=f169e318]: rabbit on the moon ·
+                          - listitem [ref=f169e319]: Sam Hood ·
+                          - listitem [ref=f169e320]: reflection ·
+                          - listitem [ref=f169e321]: State Library of New South Wales ·
+                          - listitem [ref=f169e322]: gay ·
+                          - listitem [ref=f169e323]: cabinet photography ·
+                          - listitem [ref=f169e324]: interior ·
+                          - listitem [ref=f169e325]: 30s ·
+                          - listitem [ref=f169e326]: majestic ·
+                          - listitem [ref=f169e327]: furniture ·
+                          - listitem [ref=f169e328]: b&w
+                - generic [ref=f169e329]:
+                  - heading "Licensing" [level=2] [ref=f169e330]
+                  - generic [ref=f169e331]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg&action=edit&section=2
+                - table [ref=f169e332]:
+                  - rowgroup [ref=f169e333]:
+                    - row [ref=f169e334]:
+                      - cell [ref=f169e335]:
+                        - generic [ref=f169e336]:
+                          - generic [ref=f169e337]:
+                            - text: This image was taken from
+                            - link "Flickr" [ref=f169e339] [cursor=pointer]:
+                              - /url: https://en.wikipedia.org/wiki/Flickr
+                            - text: "'s"
+                            - link "The Commons" [ref=f169e340] [cursor=pointer]:
+                              - /url: https://flickr.com/commons
+                            - text: ". The uploading organization may have various reasons for determining that no known copyright restrictions exist, such as:"
+                          - list [ref=f169e342]:
+                            - listitem [ref=f169e343]: The copyright is in the public domain because it has expired;
+                            - listitem [ref=f169e344]: The copyright was injected into the public domain for other reasons, such as failure to adhere to required formalities or conditions;
+                            - listitem [ref=f169e345]: The institution owns the copyright but is not interested in exercising control; or
+                            - listitem [ref=f169e346]: The institution has legal rights sufficient to authorize others to use the work without restrictions.
+                          - paragraph [ref=f169e347]:
+                            - text: More information can be found at
+                            - link "https://flickr.com/commons/usage/" [ref=f169e348] [cursor=pointer]:
+                              - /url: https://flickr.com/commons/usage/
+                            - text: .
+                          - separator [ref=f169e349]
+                          - text: Please add additional
+                          - link "copyright tags" [ref=f169e350] [cursor=pointer]:
+                            - /url: /wiki/Special:MyLanguage/Commons:Copyright_tags
+                          - text: to this image if more specific information about copyright status can be determined. See
+                          - link "Commons:Licensing" [ref=f169e351] [cursor=pointer]:
+                            - /url: /wiki/Special:MyLanguage/Commons:Licensing
+                          - text: for more information.
+                      - cell [ref=f169e352]:
+                        - link [ref=f169e354] [cursor=pointer]:
+                          - /url: /wiki/File:Flickr_Commons_circle_logo.png
+                - table [ref=f169e356]:
+                  - rowgroup [ref=f169e357]:
+                    - row [ref=f169e358]:
+                      - cell [ref=f169e359]
+                      - cell [ref=f169e363]:
+                        - text: This image was originally posted to
+                        - link "Flickr" [ref=f169e365] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Flickr
+                        - text: by State Library of New South Wales collection at
+                        - link "https://www.flickr.com/photos/29454428@N08/3282801241" [ref=f169e366] [cursor=pointer]:
+                          - /url: https://www.flickr.com/photos/29454428@N08/3282801241
+                        - text: . It was reviewed on 12 July 2015 by
+                        - link "FlickreviewR" [ref=f169e369] [cursor=pointer]:
+                          - /url: /wiki/User:FlickreviewR
+                        - text: and was confirmed to be licensed under the terms of the No known copyright restrictions.
+                      - cell [ref=f169e370]
+                - paragraph
+              - heading "File history" [level=2] [ref=f169e374]
+              - generic [ref=f169e375]:
+                - paragraph [ref=f169e376]: Click on a date/time to view the file as it appeared at that time.
+                - table [ref=f169e377]:
+                  - rowgroup [ref=f169e378]:
+                    - row [ref=f169e379]:
+                      - columnheader [ref=f169e380]
+                      - columnheader "Date/Time" [ref=f169e381]
+                      - columnheader "Thumbnail" [ref=f169e382]
+                      - columnheader "Dimensions" [ref=f169e383]
+                      - columnheader "User" [ref=f169e384]
+                      - columnheader "Comment" [ref=f169e385]
+                    - row [ref=f169e386]:
+                      - cell "current" [ref=f169e387]
+                      - cell [ref=f169e388]:
+                        - link "15:41, 12 July 2015" [ref=f169e389] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/0/0f/Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                      - cell [ref=f169e390]:
+                        - link [ref=f169e391] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/0/0f/Cat_sitting_on_a_radio%2C_Sydney%2C_1930s_-_Sam_Hood_%283282801241%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                          - img "Thumbnail for version as of 15:41, 12 July 2015" [ref=f169e392]
+                      - cell "640 × 465 (51 KB)" [ref=f169e393]
+                      - cell [ref=f169e394]:
+                        - link "Fæ" [ref=f169e395] [cursor=pointer]:
+                          - /url: /wiki/User:F%C3%A6
+                        - generic [ref=f169e397]:
+                          - text: (
+                          - link "talk" [ref=f169e398] [cursor=pointer]:
+                            - /url: /wiki/User_talk:F%C3%A6
+                          - text: "|"
+                          - link "contribs" [ref=f169e399] [cursor=pointer]:
+                            - /url: /wiki/Special:Contributions/F%C3%A6
+                          - text: )
+                      - 'cell "== {{int:filedesc}} == {{subst:chc}} {{information |description={{en|1=Format: Photograph<br> <br> Notes: Find more detailed information about this photographic collection: [http://acms.sl.nsw.gov.au/item/itemDetailPaged.aspx?itemID=153570 acms.sl.nsw..." [ref=f169e400]'
+              - paragraph [ref=f169e402]: You cannot overwrite this file.
+              - heading "File usage on Commons" [level=2] [ref=f169e403]
+              - paragraph [ref=f169e405]: There are no pages that use this file.
+              - heading "File usage on other wikis" [level=2] [ref=f169e406]
+              - generic [ref=f169e407]:
+                - paragraph [ref=f169e408]: "The following other wikis use this file:"
+                - list [ref=f169e409]:
+                  - listitem [ref=f169e410]:
+                    - text: Usage on as.wikiquote.org
+                    - list [ref=f169e411]:
+                      - listitem [ref=f169e412]:
+                        - link "কবিতা" [ref=f169e413] [cursor=pointer]:
+                          - /url: https://as.wikiquote.org/wiki/%E0%A6%95%E0%A6%AC%E0%A6%BF%E0%A6%A4%E0%A6%BE
+                  - listitem [ref=f169e414]:
+                    - text: Usage on en.wikiquote.org
+                    - list [ref=f169e415]:
+                      - listitem [ref=f169e416]:
+                        - link "Poetry" [ref=f169e417] [cursor=pointer]:
+                          - /url: https://en.wikiquote.org/wiki/Poetry
+                  - listitem [ref=f169e418]:
+                    - text: Usage on fr.wikibooks.org
+                    - list [ref=f169e419]:
+                      - listitem [ref=f169e420]:
+                        - link "Photographie/Personnalités/H/Samuel John Hood" [ref=f169e421] [cursor=pointer]:
+                          - /url: https://fr.wikibooks.org/wiki/Photographie/Personnalit%C3%A9s/H/Samuel_John_Hood
+        - generic [ref=f169e422]:
+          - generic [ref=f169e423]:
+            - link "Categories" [ref=f169e424] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Categories
+            - text: ":"
+            - list [ref=f169e425]:
+              - listitem [ref=f169e426]:
+                - link "1930s photographs of cats" [ref=f169e427] [cursor=pointer]:
+                  - /url: /wiki/Category:1930s_photographs_of_cats
+              - listitem [ref=f169e428]:
+                - link "Cats with electronic devices" [ref=f169e429] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_with_electronic_devices
+              - listitem [ref=f169e430]:
+                - link "Vacuum tube radios" [ref=f169e431] [cursor=pointer]:
+                  - /url: /wiki/Category:Vacuum_tube_radios
+              - listitem [ref=f169e432]:
+                - link "Desktop radio receivers" [ref=f169e433] [cursor=pointer]:
+                  - /url: /wiki/Category:Desktop_radio_receivers
+              - listitem [ref=f169e434]:
+                - link "1930s radio productions" [ref=f169e435] [cursor=pointer]:
+                  - /url: /wiki/Category:1930s_radio_productions
+              - listitem [ref=f169e436]:
+                - link "Perched cats" [ref=f169e437] [cursor=pointer]:
+                  - /url: /wiki/Category:Perched_cats
+              - listitem [ref=f169e438]:
+                - link "Black blotched tabby domestic short-haired cats" [ref=f169e439] [cursor=pointer]:
+                  - /url: /wiki/Category:Black_blotched_tabby_domestic_short-haired_cats
+              - listitem [ref=f169e440]:
+                - link "Historical images of cats in Australia" [ref=f169e441] [cursor=pointer]:
+                  - /url: /wiki/Category:Historical_images_of_cats_in_Australia
+              - listitem [ref=f169e442]:
+                - link "History of tabby cats" [ref=f169e443] [cursor=pointer]:
+                  - /url: /wiki/Category:History_of_tabby_cats
+              - listitem [ref=f169e444]:
+                - link "Interiors of houses in Australia" [ref=f169e445] [cursor=pointer]:
+                  - /url: /wiki/Category:Interiors_of_houses_in_Australia
+              - listitem [ref=f169e446]:
+                - link "Cats sitting on objects" [ref=f169e447] [cursor=pointer]:
+                  - /url: /wiki/Category:Cats_sitting_on_objects
+              - listitem [ref=f169e448]:
+                - link "History of Sydney" [ref=f169e449] [cursor=pointer]:
+                  - /url: /wiki/Category:History_of_Sydney
+              - listitem [ref=f169e450]:
+                - link "1930s portrait photographs" [ref=f169e451] [cursor=pointer]:
+                  - /url: /wiki/Category:1930s_portrait_photographs
+              - listitem [ref=f169e452]:
+                - link "Dressers" [ref=f169e453] [cursor=pointer]:
+                  - /url: /wiki/Category:Dressers
+          - generic [ref=f169e454]:
+            - text: "Hidden categories:"
+            - list [ref=f169e455]:
+              - listitem [ref=f169e456]:
+                - link "Files from Flickr's 'The Commons'" [ref=f169e457] [cursor=pointer]:
+                  - /url: /wiki/Category:Files_from_Flickr%27s_%27The_Commons%27
+              - listitem [ref=f169e458]:
+                - link "Flickr images reviewed by FlickreviewR" [ref=f169e459] [cursor=pointer]:
+                  - /url: /wiki/Category:Flickr_images_reviewed_by_FlickreviewR
+              - listitem [ref=f169e460]:
+                - link "Photographs by Sam Hood" [ref=f169e461] [cursor=pointer]:
+                  - /url: /wiki/Category:Photographs_by_Sam_Hood
+              - listitem [ref=f169e462]:
+                - link "Images from the State Library of NSW Flickr stream" [ref=f169e463] [cursor=pointer]:
+                  - /url: /wiki/Category:Images_from_the_State_Library_of_NSW_Flickr_stream
+              - listitem [ref=f169e464]:
+                - link "Photos uploaded from Flickr by Fæ using a script" [ref=f169e465] [cursor=pointer]:
+                  - /url: /wiki/Category:Photos_uploaded_from_Flickr_by_F%C3%A6_using_a_script
+    - contentinfo [ref=f169e467]:
+      - list [ref=f169e468]:
+        - listitem [ref=f169e469]: This page was last edited on 27 November 2025, at 20:30.
+        - listitem [ref=f169e470]:
+          - text: Files are available under licenses specified on their description page. All structured data from the file namespace is available under the
+          - link "Creative Commons CC0 License" [ref=f169e471] [cursor=pointer]:
+            - /url: https://creativecommons.org/publicdomain/zero/1.0/
+          - text: ; all unstructured text is available under the
+          - link "Creative Commons Attribution-ShareAlike License" [ref=f169e472] [cursor=pointer]:
+            - /url: https://creativecommons.org/licenses/by-sa/4.0/
+          - text: ; additional terms may apply. By using this site, you agree to the
+          - link "Terms of Use" [ref=f169e473] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use
+          - text: and the
+          - link "Privacy Policy" [ref=f169e474] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+          - text: .
+      - list:
+        - listitem [ref=f169e475]:
+          - link "Privacy policy" [ref=f169e476] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+        - listitem [ref=f169e477]:
+          - link "About Wikimedia Commons" [ref=f169e478] [cursor=pointer]:
+            - /url: /wiki/Commons:Welcome
+        - listitem [ref=f169e479]:
+          - link "Disclaimers" [ref=f169e480] [cursor=pointer]:
+            - /url: /wiki/Commons:General_disclaimer
+        - listitem [ref=f169e481]:
+          - link "Legal & safety contacts" [ref=f169e482] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information
+        - listitem [ref=f169e483]:
+          - link "Code of Conduct" [ref=f169e484] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct
+        - listitem [ref=f169e485]:
+          - link "Developers" [ref=f169e486] [cursor=pointer]:
+            - /url: https://developer.wikimedia.org
+        - listitem [ref=f169e487]:
+          - link "Statistics" [ref=f169e488] [cursor=pointer]:
+            - /url: https://stats.wikimedia.org/#/commons.wikimedia.org
+        - listitem [ref=f169e489]:
+          - link "Cookie statement" [ref=f169e490] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement
+        - listitem [ref=f169e491]:
+          - link "Mobile view" [ref=f169e492] [cursor=pointer]:
+            - /url: //commons.wikimedia.org/w/index.php?title=File:Cat_sitting_on_a_radio,_Sydney,_1930s_-_Sam_Hood_(3282801241).jpg&mobileaction=toggle_view_mobile
+      - list [ref=f169e493]:
+        - listitem [ref=f169e494]:
+          - link [ref=f169e495] [cursor=pointer]:
+            - /url: https://www.wikimedia.org/
+            - img "Wikimedia Foundation" [ref=f169e497]
+        - listitem [ref=f169e498]:
+          - link [ref=f169e499] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/
+            - img "Powered by MediaWiki" [ref=f169e501]
+  - generic [ref=f169e502]:
+    - list

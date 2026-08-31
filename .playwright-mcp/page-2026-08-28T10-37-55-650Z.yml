@@ -1,0 +1,915 @@
+- generic [active] [ref=f164e1]:
+  - link "Jump to content" [ref=f164e2] [cursor=pointer]:
+    - /url: "#bodyContent"
+  - banner [ref=f164e4]:
+    - generic [ref=f164e5]:
+      - navigation "Site" [ref=f164e6]:
+        - generic "Main menu" [ref=f164e7]:
+          - button "Main menu" [ref=f164e8] [cursor=pointer]
+          - option "Qafár af"
+          - option "Arbërisht"
+          - option "аԥсшәа"
+          - option "Abron"
+          - option "bahasa ambon"
+          - option "Acèh"
+          - option "Kwéyòl Sent Lisi"
+          - option "عراقي"
+          - option "адыгабзэ"
+          - option "адыгабзэ"
+          - option "تونسي / Tûnsî"
+          - option "تونسي"
+          - option "Tûnsî"
+          - option "Afrikaans"
+          - option "Aghem"
+          - option "Aanteegan an' Baabyuudan"
+          - option "Akan"
+          - option "Gegë"
+          - option "Alemannisch"
+          - option "алтай тил"
+          - option "አማርኛ"
+          - option "Pangcah"
+          - option "aragonés"
+          - option "Ænglisc"
+          - option "Obolo"
+          - option "अंगिका"
+          - option "شامي"
+          - option "العربية"
+          - option "ܐܪܡܝܐ"
+          - option "mapudungun"
+          - option "جازايرية"
+          - option "الدارجة"
+          - option "مصرى"
+          - option "অসমীয়া"
+          - option "American sign language"
+          - option "asturianu"
+          - option "Atikamekw"
+          - option "авар"
+          - option "Kotava"
+          - option "अवधी"
+          - option "Aymar aru"
+          - option "azərbaycanca"
+          - option "تۆرکجه"
+          - option "башҡортса"
+          - option "Tuki"
+          - option "Basa Bali"
+          - option "ᬩᬲᬩᬮᬶ"
+          - option "Boarisch"
+          - option "Basaa"
+          - option "žemaitėška"
+          - option "Bamum"
+          - option "Batak Toba"
+          - option "Batak Toba"
+          - option "Ghomála'"
+          - option "جهلسری بلوچی"
+          - option "wawle"
+          - option "Bikol Central"
+          - option "Bajau Sama"
+          - option "беларуская"
+          - option "беларуская (тарашкевіца)"
+          - option "беларуская (тарашкевіца)"
+          - option "Betawi"
+          - option "Bafut"
+          - option "ରେମସାମ୍"
+          - option "български"
+          - option "हरियाणवी"
+          - option "روچ کپتین بلوچی"
+          - option "भोजपुरी"
+          - option "भोजपुरी"
+          - option "Bislama"
+          - option "Banjar"
+          - option "Baka"
+          - option "Bakoko"
+          - option "Kom"
+          - option "ပအိုဝ်ႏဘာႏသာႏ"
+          - option "bamanankan"
+          - option "বাংলা"
+          - option "བོད་ཡིག"
+          - option "bòo pìkkà"
+          - option "বিষ্ণুপ্রিয়া মণিপুরী"
+          - option "بختیاری"
+          - option "Mka'a"
+          - option "brezhoneg"
+          - option "Bráhuí"
+          - option "bosanski"
+          - option "Batak Mandailing"
+          - option "Iriga Bicolano"
+          - option "Basa Ugi"
+          - option "ᨅᨔ ᨕᨘᨁᨗ"
+          - option "буряад"
+          - option "Medumba"
+          - option "català"
+          - option "Kaqchikel"
+          - option "Carolinian"
+          - option "Chavacano de Zamboanga"
+          - option "𑄌𑄋𑄴𑄟𑄳𑄦"
+          - option "閩東語 / Mìng-dĕ̤ng-ngṳ̄"
+          - option "閩東語（傳統漢字）"
+          - option "Mìng-dĕ̤ng-ngṳ̄ (Bàng-uâ-cê)"
+          - option "нохчийн"
+          - option "Cebuano"
+          - option "Chamoru"
+          - option "chinuk wawa"
+          - option "Chahta anumpa"
+          - option "ᏣᎳᎩ"
+          - option "Tsetsêhestâhese"
+          - option "کوردی"
+          - option "Hakha Chin"
+          - option "corsu"
+          - option "ϯⲙⲉⲧⲣⲉⲙⲛ̀ⲭⲏⲙⲓ"
+          - option "Capiceño"
+          - option "莆仙語 / Pó-sing-gṳ̂"
+          - option "莆仙语（简体）"
+          - option "莆仙語（繁體）"
+          - option "Pó-sing-gṳ̂ (Báⁿ-uā-ci̍)"
+          - option "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ"
+          - option "qırımtatarca"
+          - option "къырымтатарджа (Кирилл)"
+          - option "qırımtatarca (Latin)"
+          - option "tatarşa"
+          - option "čeština"
+          - option "kaszëbsczi"
+          - option "словѣньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ"
+          - option "чӑвашла"
+          - option "Cymraeg"
+          - option "dansk"
+          - option "dagbanli"
+          - option "Deutsch"
+          - option "Österreichisches Deutsch"
+          - option "Schweizer Hochdeutsch"
+          - option "Deutsch (Sie-Form)"
+          - option "Dagaare"
+          - option "Thuɔŋjäŋ"
+          - option "Zazaki"
+          - option "долган тыла"
+          - option "dolnoserbski"
+          - option "ଦେଶିଆ"
+          - option "Kadazandusun"
+          - option "डोटेली"
+          - option "Duala"
+          - option "ދިވެހިބަސް"
+          - option "ཇོང་ཁ"
+          - option "eʋegbe"
+          - option "Efịk"
+          - option "Emiliàn"
+          - option "Ελληνικά"
+          - option "emiliàn e rumagnòl"
+          - option "English" [selected]
+          - option "Canadian English"
+          - option "British English"
+          - option "American English"
+          - option "Esperanto"
+          - option "español"
+          - option "español de América Latina"
+          - option "español (formal)"
+          - option "eesti"
+          - option "Eton"
+          - option "Ejagham"
+          - option "euskara"
+          - option "Ewondo"
+          - option "estremeñu"
+          - option "فارسی"
+          - option "mfantse"
+          - option "Fulfulde"
+          - option "suomi"
+          - option "meänkieli"
+          - option "võro"
+          - option "Na Vosa Vakaviti"
+          - option "kvääni"
+          - option "Fe'fe'"
+          - option "føroyskt"
+          - option "fɔ̀ngbè"
+          - option "français"
+          - option "français cadien"
+          - option "arpetan"
+          - option "Nordfriisk"
+          - option "Oostfräisk"
+          - option "furlan"
+          - option "poor’íŋ belé’ŋ"
+          - option "Frysk"
+          - option "Gaeilge"
+          - option "Ga"
+          - option "Gagauz"
+          - option "贛語"
+          - option "赣语（简体）"
+          - option "贛語（繁體）"
+          - option "kréyòl Gwadloup"
+          - option "kriyòl gwiyannen"
+          - option "Gàidhlig"
+          - option "گوجری"
+          - option "गुज्जरी"
+          - option "galego"
+          - option "на̄ни"
+          - option "گیلکی"
+          - option "Avañe'ẽ"
+          - option "गोंयची कोंकणी / Gõychi Konknni"
+          - option "गोंयची कोंकणी"
+          - option "Gõychi Konknni"
+          - option "Bahasa Hulontalo"
+          - option "𐌲𐌿𐍄𐌹𐍃𐌺"
+          - option "Ghanaian Pidgin"
+          - option "Ἀρχαία ἑλληνικὴ"
+          - option "Alemannisch"
+          - option "ગુજરાતી"
+          - option "wayuunaiki"
+          - option "farefare"
+          - option "gungbe"
+          - option "Gaelg"
+          - option "Gbaya"
+          - option "Hausa"
+          - option "客家語 / Hak-kâ-ngî"
+          - option "客家语（简体）"
+          - option "客家語（繁體）"
+          - option "Hak-kâ-ngî (Pha̍k-fa-sṳ)"
+          - option "Hawaiʻi"
+          - option "עברית"
+          - option "हिन्दी"
+          - option "Fiji Hindi"
+          - option "Fiji Hindi"
+          - option "Ilonggo"
+          - option "kihunde"
+          - option "ہندکو"
+          - option "Hiri Motu"
+          - option "𑢹𑣉𑣉 𑣎𑣋𑣜"
+          - option "Ho"
+          - option "hrvatski"
+          - option "Hunsrik"
+          - option "hornjoserbsce"
+          - option "湘語"
+          - option "Kreyòl ayisyen"
+          - option "magyar"
+          - option "magyar (formal)"
+          - option "հայերեն"
+          - option "Արեւմտահայերէն"
+          - option "Otsiherero"
+          - option "interlingua"
+          - option "Jaku Iban"
+          - option "ibibio"
+          - option "Bahasa Indonesia"
+          - option "Interlingue"
+          - option "Igbo"
+          - option "Igala"
+          - option "ꆇꉙ"
+          - option "Iñupiatun"
+          - option "ᐃᓄᒃᑎᑐᑦ"
+          - option "inuktitut"
+          - option "Ilokano"
+          - option "гӀалгӀай"
+          - option "Ido"
+          - option "íslenska"
+          - option "Isu"
+          - option "medžuslovjansky"
+          - option "меджусловјанскы"
+          - option "medžuslovjansky"
+          - option "italiano"
+          - option "ᐃᓄᒃᑎᑐᑦ / inuktitut"
+          - option "日本語"
+          - option "Patois"
+          - option "la .lojban."
+          - option "jysk"
+          - option "Jawa"
+          - option "ꦗꦮ"
+          - option "ქართული"
+          - option "Qaraqalpaqsha"
+          - option "Taqbaylit"
+          - option "Karai-karai"
+          - option "Jju"
+          - option "адыгэбзэ"
+          - option "адыгэбзэ"
+          - option "Kabɩyɛ"
+          - option "Tyap"
+          - option "kabuverdianu"
+          - option "Kera"
+          - option "Kongo"
+          - option "Kumoring"
+          - option "गेम्येहाक़ गिपन"
+          - option "کھوار"
+          - option "Gĩkũyũ"
+          - option "Kırmancki"
+          - option "Kwanyama"
+          - option "хакас"
+          - option "ဖၠုံလိက်"
+          - option "қазақша"
+          - option "قازاقشا (تٴوتە)"
+          - option "قازاقشا (جۇنگو)"
+          - option "қазақша (кирил)"
+          - option "қазақша (Қазақстан)"
+          - option "qazaqşa (latın)"
+          - option "qazaqşa (Türkïya)"
+          - option "kalaallisut"
+          - option "ភាសាខ្មែរ"
+          - option "ಕನ್ನಡ"
+          - option "Yerwa Kanuri"
+          - option "한국어"
+          - option "조선말"
+          - option "перем коми"
+          - option "kanuri"
+          - option "къарачай-малкъар"
+          - option "Krio"
+          - option "Kinaray-a"
+          - option "karjal"
+          - option "کٲشُر"
+          - option "کٲشُر"
+          - option "कॉशुर"
+          - option "Bafia"
+          - option "Ripoarisch"
+          - option "စှီၤ"
+          - option "kurdî"
+          - option "کوردی (عەرەبی)"
+          - option "kurdî (latînî)"
+          - option "къумукъ"
+          - option "Kʋsaal"
+          - option "коми"
+          - option "kernowek"
+          - option "кыргызча"
+          - option "Latina"
+          - option "Ladino"
+          - option "Lëtzebuergesch"
+          - option "лакку"
+          - option "Nomaande"
+          - option "лезги"
+          - option "Lingua Franca Nova"
+          - option "Luganda"
+          - option "Limburgs"
+          - option "Ligure"
+          - option "Līvõ kēļ"
+          - option "Lampung Api"
+          - option "لەکی"
+          - option "Lakȟótiyapi"
+          - option "Ladin"
+          - option "lombard"
+          - option "lingála"
+          - option "Lamnso'"
+          - option "ລາວ"
+          - option "Silozi"
+          - option "لۊری شومالی"
+          - option "lietuvių"
+          - option "latgaļu"
+          - option "ciluba"
+          - option "Mizo ţawng"
+          - option "لئری دوٙمینی"
+          - option "latviešu"
+          - option "文言"
+          - option "Lazuri"
+          - option "Madhurâ"
+          - option "मगही"
+          - option "मैथिली"
+          - option "Basa Banyumasan"
+          - option "vùn màsànà"
+          - option "Maka"
+          - option "мокшень"
+          - option "Malagasy"
+          - option "Ebon"
+          - option "олык марий"
+          - option "Māori"
+          - option "Minangkabau"
+          - option "македонски"
+          - option "മലയാളം"
+          - option "монгол"
+          - option "manju gisun"
+          - option "manju gisun"
+          - option "ᠮᠠᠨᠵᡠ ᡤᡳᠰᡠᠨ"
+          - option "ꯃꯤꯇꯩ ꯂꯣꯟ"
+          - option "ဘာသာမန်"
+          - option "молдовеняскэ"
+          - option "moore"
+          - option "मराठी"
+          - option "Mara"
+          - option "кырык мары"
+          - option "Bahasa Melayu"
+          - option "بهاس ملايو"
+          - option "Malti"
+          - option "Mundang"
+          - option "Baso Palembang"
+          - option "Mvskoke"
+          - option "Mirandés"
+          - option "မြန်မာဘာသာ"
+          - option "эрзянь"
+          - option "مازِرونی"
+          - option "Dorerin Naoero"
+          - option "Nāhuatl"
+          - option "閩南語 / Bân-lâm-gí"
+          - option "閩南語"
+          - option "閩南語（傳統漢字）"
+          - option "Bân-lâm-gí (Pe̍h-ōe-jī)"
+          - option "Bân-lâm-gí (Tâi-lô)"
+          - option "Napulitano"
+          - option "norsk bokmål"
+          - option "Plattdüütsch"
+          - option "Nedersaksies"
+          - option "नेपाली"
+          - option "नेपाल भाषा"
+          - option "Oshiwambo"
+          - option "Ngémba"
+          - option "Li Niha"
+          - option "కొలామి"
+          - option "Niuē"
+          - option "Nederlands"
+          - option "Nederlands (informeel)"
+          - option "Ngombala"
+          - option "Kwasio"
+          - option "nawdm"
+          - option "norsk nynorsk"
+          - option "Ngiemboon"
+          - option "Nda'nda'"
+          - option "norsk"
+          - option "ᨣᩤᩴᨾᩮᩬᩥᨦ"
+          - option "ногайша"
+          - option "Novial"
+          - option "ߒߞߏ"
+          - option "isiNdebele seSewula"
+          - option "Nouormand"
+          - option "Sesotho sa Leboa"
+          - option "Nupe"
+          - option "Diné bizaad"
+          - option "Chi-Chewa"
+          - option "runyankore"
+          - option "Orunyoro"
+          - option "Nyunga"
+          - option "occitan"
+          - option "Ojibwemowin"
+          - option "livvinkarjala"
+          - option "Oromoo"
+          - option "ଓଡ଼ିଆ"
+          - option "ирон"
+          - option "Wažáže íe"
+          - option "لسان عثمانى"
+          - option "ਪੰਜਾਬੀ"
+          - option "Pangasinan"
+          - option "Kapampangan"
+          - option "Papiamentu"
+          - option "Papiamento"
+          - option "Picard"
+          - option "Naijá"
+          - option "Deitsch"
+          - option "Plautdietsch"
+          - option "Pälzisch"
+          - option "पालि"
+          - option "Norfuk / Pitkern"
+          - option "polski"
+          - option "Piemontèis"
+          - option "پنجابی"
+          - option "Ποντιακά"
+          - option "Nawat"
+          - option "prūsiskan"
+          - option "پښتو"
+          - option "português"
+          - option "português do Brasil"
+          - option "pinayuanan"
+          - option "Runa Simi"
+          - option "Qatzijob\\ʼal"
+          - option "Runa shimi"
+          - option "Rumagnôl"
+          - option "Tarifit"
+          - option "ရခိုင်"
+          - option "rumantsch"
+          - option "romaňi čhib"
+          - option "kaalengo tšimb"
+          - option "romani čhib"
+          - option "ikirundi"
+          - option "română"
+          - option "armãneashti"
+          - option "tarandíne"
+          - option "руски"
+          - option "русский"
+          - option "русиньскый"
+          - option "armãneashti"
+          - option "Vlăheşte"
+          - option "Влахесте"
+          - option "Vlăheşte"
+          - option "мыхаӀбишды"
+          - option "Ikinyarwanda"
+          - option "मारवाड़ी"
+          - option "沖縄口"
+          - option "संस्कृतम्"
+          - option "саха тыла"
+          - option "Sasak"
+          - option "ᱥᱟᱱᱛᱟᱲᱤ"
+          - option "sardu"
+          - option "sicilianu"
+          - option "Scots"
+          - option "سنڌي"
+          - option "Sassaresu"
+          - option "کوردی خوارگ"
+          - option "davvisámegiella"
+          - option "davvisámegiella (Suoma bealde)"
+          - option "davvisámegiella (Norgga bealde)"
+          - option "davvisámegiella (Ruoŧa bealde)"
+          - option "Cmique Itom"
+          - option "Koyraboro Senni"
+          - option "Sängö"
+          - option "žemaitėška"
+          - option "srpskohrvatski / српскохрватски"
+          - option "српскохрватски (ћирилица)"
+          - option "srpskohrvatski (latinica)"
+          - option "Taclḥit"
+          - option "Taclḥit"
+          - option "ⵜⴰⵛⵍⵃⵉⵜ"
+          - option "တႆး"
+          - option "tacawit"
+          - option "tacawit"
+          - option "සිංහල"
+          - option "Simple English"
+          - option "кӣллт са̄мь кӣлл"
+          - option "bidumsámegiella"
+          - option "ubmejesámiengiälla"
+          - option "slovenčina"
+          - option "سرائیکی"
+          - option "سرائیکی"
+          - option "slovenščina"
+          - option "Schläsch"
+          - option "Gagana Samoa"
+          - option "åarjelsaemien"
+          - option "julevsámegiella"
+          - option "anarâškielâ"
+          - option "nuõrttsääʹmǩiõll"
+          - option "chiShona"
+          - option "Soomaaliga"
+          - option "shqip"
+          - option "српски / srpski"
+          - option "српски (ћирилица)"
+          - option "srpski (latinica)"
+          - option "Sranantongo"
+          - option "sardu campidanesu"
+          - option "mbia cheë"
+          - option "SiSwati"
+          - option "Sesotho"
+          - option "Seeltersk"
+          - option "себертатар"
+          - option "Sunda"
+          - option "svenska"
+          - option "ლუშნუ"
+          - option "Kiswahili"
+          - option "ꠍꠤꠟꠐꠤ"
+          - option "ślůnski"
+          - option "Sakizaya"
+          - option "தமிழ்"
+          - option "Tayal"
+          - option "ತುಳು"
+          - option "ᥖᥭᥰ ᥖᥬᥲ ᥑᥨᥒᥰ"
+          - option "తెలుగు"
+          - option "tetun"
+          - option "тоҷикӣ"
+          - option "тоҷикӣ"
+          - option "tojikī"
+          - option "ไทย"
+          - option "काेचिला थारु"
+          - option "ትግርኛ"
+          - option "ትግሬ"
+          - option "Türkmençe"
+          - option "Tagalog"
+          - option "tolışi"
+          - option "толыши"
+          - option "Setswana"
+          - option "lea faka-Tonga"
+          - option "toki pona"
+          - option "Tok Pisin"
+          - option "Tanapag"
+          - option "Türkçe"
+          - option "Ṫuroyo"
+          - option "Seediq"
+          - option "Xitsonga"
+          - option "татарча / tatarça"
+          - option "татарча"
+          - option "tatarça"
+          - option "Orutooro"
+          - option "chiTumbuka"
+          - option "Tunen"
+          - option "Twi"
+          - option "reo tahiti"
+          - option "тыва дыл"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ"
+          - option "удмурт"
+          - option "ئۇيغۇرچە / Uyghurche"
+          - option "ئۇيغۇرچە"
+          - option "Uyghurche"
+          - option "українська"
+          - option "اردو"
+          - option "oʻzbekcha / ўзбекча"
+          - option "ўзбекча"
+          - option "oʻzbekcha"
+          - option "Tshivenda"
+          - option "vèneto"
+          - option "vepsän kel’"
+          - option "Tiếng Việt"
+          - option "West-Vlams"
+          - option "Mainfränkisch"
+          - option "emakhuwa"
+          - option "Volapük"
+          - option "Vaďďa"
+          - option "võro"
+          - option "Vute"
+          - option "walon"
+          - option "wolaytta"
+          - option "Winaray"
+          - option "Pidgin (Cameroon)"
+          - option "Fakaʻuvea"
+          - option "waale"
+          - option "Wolof"
+          - option "吴语"
+          - option "吴语（简体）"
+          - option "吳語（正體）"
+          - option "Wyandot"
+          - option "хальмг"
+          - option "isiXhosa"
+          - option "მარგალური"
+          - option "saisiyat"
+          - option "Nugunu"
+          - option "Yambeta"
+          - option "Yangben"
+          - option "Yemba"
+          - option "ייִדיש"
+          - option "Yorùbá"
+          - option "Nhẽẽgatú"
+          - option "maaya t’aan"
+          - option "粵語"
+          - option "粵语（简体）"
+          - option "粵語（繁體）"
+          - option "Vahcuengh"
+          - option "Zeêuws"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵡⴰⵢⵜ"
+          - option "tamaziɣt tanawayt"
+          - option "中文"
+          - option "文言"
+          - option "中文（中国大陆）"
+          - option "中文（简体）"
+          - option "中文（繁體）"
+          - option "中文（香港）"
+          - option "Bân-lâm-gú"
+          - option "中文（澳門）"
+          - option "中文（马来西亚）"
+          - option "中文（新加坡）"
+          - option "中文（臺灣）"
+          - option "粵語"
+          - option "isiZulu"
+      - link [ref=f164e12] [cursor=pointer]:
+        - /url: /wiki/Main_Page
+        - img "Wikimedia Commons" [ref=f164e15]
+    - generic [ref=f164e16]:
+      - search [ref=f164e17]:
+        - generic [ref=f164e20]:
+          - searchbox "Search Wikimedia Commons" [ref=f164e23]
+          - button "Search" [ref=f164e25]
+      - navigation "Personal tools" [ref=f164e26]:
+        - generic [ref=f164e27]:
+          - list [ref=f164e30]:
+            - listitem [ref=f164e31]:
+              - link "English" [ref=f164e32] [cursor=pointer]:
+                - /url: "#"
+          - list [ref=f164e37]:
+            - listitem [ref=f164e38]:
+              - link "Donate" [ref=f164e39] [cursor=pointer]:
+                - /url: https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=commons.wikimedia.org&uselang=en
+            - listitem [ref=f164e40]:
+              - link "Create account" [ref=f164e41] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:CreateAccount&returnto=Special%3AMediaSearch&returntoquery=search%3Dcat%2Bcomputer%26type%3Dimage
+            - listitem [ref=f164e42]:
+              - link "Log in" [ref=f164e43] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:UserLogin&returnto=Special%3AMediaSearch&returntoquery=search%3Dcat%2Bcomputer%26type%3Dimage
+  - generic [ref=f164e45]:
+    - main [ref=f164e49]:
+      - generic [ref=f164e50]:
+        - heading "Search media" [level=1] [ref=f164e51]
+        - generic [ref=f164e52]:
+          - link "Switch to Special:Search" [ref=f164e54] [cursor=pointer]:
+            - /url: https://commons.wikimedia.org/w/index.php?title=Special%3ASearch&search=cat+computer
+          - link "Help" [ref=f164e56] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/wiki/Special:MyLanguage/Help:MediaSearch
+      - generic [ref=f164e58]:
+        - generic:
+          - navigation "Namespaces"
+        - generic [ref=f164e59]:
+          - navigation "Views"
+          - navigation "Page tools" [ref=f164e60]:
+            - generic [ref=f164e61]:
+              - button "Tools" [ref=f164e62] [cursor=pointer]
+              - generic [ref=f164e63]: Tools
+      - navigation "Appearance" [ref=f164e68]:
+        - generic [ref=f164e70]:
+          - generic [ref=f164e71]:
+            - generic [ref=f164e72]: Appearance
+            - button "Hide Appearance" [ref=f164e73] [cursor=pointer]: hide
+          - generic [ref=f164e74]:
+            - generic [ref=f164e75]: Text
+            - list [ref=f164e77]:
+              - listitem [ref=f164e78]:
+                - generic [ref=f164e79]:
+                  - generic [ref=f164e80]:
+                    - generic [ref=f164e81]:
+                      - radio "Small" [disabled] [ref=f164e82]
+                      - generic [ref=f164e84]: Small
+                    - generic [ref=f164e86]:
+                      - radio "Standard" [disabled] [ref=f164e87]
+                      - generic [ref=f164e89]: Standard
+                    - generic [ref=f164e91]:
+                      - radio "Large" [disabled] [ref=f164e92]
+                      - generic [ref=f164e94]: Large
+                  - paragraph [ref=f164e96]: This page always uses small font size
+          - generic [ref=f164e97]:
+            - generic [ref=f164e98]: Width
+            - list [ref=f164e100]:
+              - listitem [ref=f164e101]:
+                - generic [ref=f164e103]:
+                  - generic [ref=f164e104]:
+                    - radio "Standard" [checked] [ref=f164e105]
+                    - generic [ref=f164e107]: Standard
+                  - generic [ref=f164e109]:
+                    - radio "Wide" [ref=f164e110]
+                    - generic [ref=f164e112]: Wide
+          - generic [ref=f164e114]:
+            - generic [ref=f164e115]:
+              - text: Color
+              - generic [ref=f164e116]: (beta)
+            - list [ref=f164e118]:
+              - listitem [ref=f164e119]:
+                - generic [ref=f164e121]:
+                  - generic [ref=f164e122]:
+                    - radio "Automatic" [ref=f164e123]
+                    - generic [ref=f164e125]: Automatic
+                  - generic [ref=f164e127]:
+                    - radio "Light" [checked] [ref=f164e128]
+                    - generic [ref=f164e130]: Light
+                  - generic [ref=f164e132]:
+                    - radio "Dark" [ref=f164e133]
+                    - generic [ref=f164e135]: Dark
+      - generic "Search media" [ref=f164e137]:
+        - generic [ref=f164e138]:
+          - generic [ref=f164e140]:
+            - generic [ref=f164e141]:
+              - generic [ref=f164e142]: Search media
+              - textbox "Search media Search media" [ref=f164e144]:
+                - /placeholder: Search for images, audio, video and more
+                - text: cat computer
+            - button "Search" [ref=f164e146]
+          - generic [ref=f164e148]:
+            - tablist [ref=f164e151]:
+              - tab "Images" [selected] [ref=f164e152]
+              - tab "Audio" [ref=f164e153]
+              - tab "Video" [ref=f164e154]
+              - tab "Other Media" [ref=f164e155]
+              - tab "Categories and Pages" [ref=f164e156]
+            - tabpanel [ref=f164e158]:
+              - generic [ref=f164e159]: 21,651,598 results
+              - generic [ref=f164e162]:
+                - generic [ref=f164e163]:
+                  - link "Cat stares at itself on computer monitor.jpg" [ref=f164e164] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_stares_at_itself_on_computer_monitor.jpg
+                    - img "Cat stares at itself on computer monitor.jpg"
+                  - link "Computer Cat Nap.jpg" [ref=f164e165] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_Cat_Nap.jpg
+                    - img "Computer Cat Nap.jpg"
+                  - link "Cat-and-computer-monitor-3388.jpg" [ref=f164e166] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat-and-computer-monitor-3388.jpg
+                    - img "Cat-and-computer-monitor-3388.jpg"
+                  - link "Cat-and-computer.JPG" [ref=f164e167] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat-and-computer.JPG
+                    - img "Cat-and-computer.JPG"
+                  - link "Cat using computer.jpg" [ref=f164e168] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_using_computer.jpg
+                    - img "Cat using computer.jpg"
+                  - link "Apple computer cat.jpg" [ref=f164e169] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Apple_computer_cat.jpg
+                    - img "Apple computer cat.jpg"
+                  - link "Computer Using Cat.jpg" [ref=f164e170] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_Using_Cat.jpg
+                    - img "Computer Using Cat.jpg"
+                  - link "White cat on the computer desk.jpg" [ref=f164e171] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:White_cat_on_the_computer_desk.jpg
+                    - img "White cat on the computer desk.jpg"
+                  - link "Cat with book 1767174.jpg" [ref=f164e172] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_with_book_1767174.jpg
+                    - img "Cat with book 1767174.jpg"
+                  - link "Cat sitting on a chair with computer mouse.jpg" [ref=f164e173] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_sitting_on_a_chair_with_computer_mouse.jpg
+                    - img "Cat sitting on a chair with computer mouse.jpg"
+                  - link "Cat on a laptop.jpg" [ref=f164e174] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_on_a_laptop.jpg
+                    - img "Cat on a laptop.jpg"
+                  - link "Cat keyboard.jpg" [ref=f164e175] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_keyboard.jpg
+                    - img "Cat keyboard.jpg"
+                  - link "Computer-Matze 5.JPG" [ref=f164e176] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer-Matze_5.JPG
+                    - img "Computer-Matze 5.JPG"
+                  - link "Cat on laptop yawning.jpg" [ref=f164e177] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_on_laptop_yawning.jpg
+                    - img "Cat on laptop yawning.jpg"
+                  - link "Cat on a Mac.jpg" [ref=f164e178] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_on_a_Mac.jpg
+                    - img "Cat on a Mac.jpg"
+                  - link "Cat Cinema.jpg" [ref=f164e179] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_Cinema.jpg
+                    - img "Cat Cinema.jpg"
+                  - link "Tired 20-year-old cat.jpg" [ref=f164e180] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Tired_20-year-old_cat.jpg
+                    - img "Tired 20-year-old cat.jpg"
+                  - link "Cat Matahari on the 'Internet'.jpg" [ref=f164e181] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_Matahari_on_the_%27Internet%27.jpg
+                    - img "Cat Matahari on the 'Internet'.jpg"
+                  - link "Computer-kitten.jpg" [ref=f164e182] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer-kitten.jpg
+                    - img "Computer-kitten.jpg"
+                  - link "SMIL computer manouver panel.jpg" [ref=f164e183] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:SMIL_computer_manouver_panel.jpg
+                    - img "SMIL computer manouver panel.jpg"
+                  - link "Cat monitor reflection.jpg" [ref=f164e184] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_monitor_reflection.jpg
+                    - img "Cat monitor reflection.jpg"
+                  - link "'Cyber cat' - panoramio.jpg" [ref=f164e185] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:%27Cyber_cat%27_-_panoramio.jpg
+                    - img "'Cyber cat' - panoramio.jpg"
+                  - link "Cat & The Dell - Feb 2007.jpg" [ref=f164e186] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_%26_The_Dell_-_Feb_2007.jpg
+                    - img "Cat & The Dell - Feb 2007.jpg"
+                  - link "Charlie the pink cat studies a spreadsheet.jpg" [ref=f164e187] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Charlie_the_pink_cat_studies_a_spreadsheet.jpg
+                    - img "Charlie the pink cat studies a spreadsheet.jpg"
+                  - link "Cat and mice on computer chair.JPG" [ref=f164e188] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_and_mice_on_computer_chair.JPG
+                    - img "Cat and mice on computer chair.JPG"
+                  - link "Cat on computer.webp" [ref=f164e189] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Cat_on_computer.webp
+                    - img "Cat on computer.webp"
+                  - link "Computer Using Cat (2009; cropped 2024).jpg" [ref=f164e190] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_Using_Cat_(2009;_cropped_2024).jpg
+                    - img "Computer Using Cat (2009; cropped 2024).jpg"
+                  - link "Personal computer, exploded.svg" [ref=f164e191] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Personal_computer,_exploded.svg
+                    - img "Personal computer, exploded.svg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488860).jpg" [ref=f164e192] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488860).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488860).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488872).jpg" [ref=f164e193] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488872).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488872).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488864).jpg" [ref=f164e194] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488864).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488864).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488863).jpg" [ref=f164e195] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488863).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488863).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488871).jpg" [ref=f164e196] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488871).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488871).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488866).jpg" [ref=f164e197] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488866).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488866).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488873).jpg" [ref=f164e198] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488873).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488873).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488867).jpg" [ref=f164e199] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488867).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488867).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488874).jpg" [ref=f164e200] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488874).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488874).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488875).jpg" [ref=f164e201] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488875).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488875).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488862).jpg" [ref=f164e202] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488862).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488862).jpg"
+                  - link "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488870).jpg" [ref=f164e203] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Computer_system_at_Cyttir_Mawr,_Llandegfan,_M%C3%B4n,_solving_a_market_problem_(1488870).jpg
+                    - img "Computer system at Cyttir Mawr, Llandegfan, Môn, solving a market problem (1488870).jpg"
+                - button "Load more" [ref=f164e205]
+                - button "Load more" [ref=f164e208] [cursor=pointer]
+    - contentinfo [ref=f164e210]:
+      - list:
+        - listitem [ref=f164e211]:
+          - link "Privacy policy" [ref=f164e212] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+        - listitem [ref=f164e213]:
+          - link "About Wikimedia Commons" [ref=f164e214] [cursor=pointer]:
+            - /url: /wiki/Commons:Welcome
+        - listitem [ref=f164e215]:
+          - link "Disclaimers" [ref=f164e216] [cursor=pointer]:
+            - /url: /wiki/Commons:General_disclaimer
+        - listitem [ref=f164e217]:
+          - link "Legal & safety contacts" [ref=f164e218] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information
+        - listitem [ref=f164e219]:
+          - link "Code of Conduct" [ref=f164e220] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct
+        - listitem [ref=f164e221]:
+          - link "Developers" [ref=f164e222] [cursor=pointer]:
+            - /url: https://developer.wikimedia.org
+        - listitem [ref=f164e223]:
+          - link "Statistics" [ref=f164e224] [cursor=pointer]:
+            - /url: https://stats.wikimedia.org/#/commons.wikimedia.org
+        - listitem [ref=f164e225]:
+          - link "Cookie statement" [ref=f164e226] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement
+        - listitem [ref=f164e227]:
+          - link "Mobile view" [ref=f164e228] [cursor=pointer]:
+            - /url: //commons.wikimedia.org/w/index.php?title=Special:MediaSearch&search=cat+computer&type=image&mobileaction=toggle_view_mobile
+      - list [ref=f164e229]:
+        - listitem [ref=f164e230]:
+          - link [ref=f164e231] [cursor=pointer]:
+            - /url: https://www.wikimedia.org/
+            - img "Wikimedia Foundation" [ref=f164e233]
+        - listitem [ref=f164e234]:
+          - link [ref=f164e235] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/
+            - img "Powered by MediaWiki" [ref=f164e237]
+  - generic [ref=f164e238]:
+    - list

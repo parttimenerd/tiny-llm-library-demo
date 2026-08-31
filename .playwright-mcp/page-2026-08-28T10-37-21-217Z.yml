@@ -1,0 +1,280 @@
+- generic [active] [ref=f159e1]:
+  - link "Jump to content" [ref=f159e2] [cursor=pointer]:
+    - /url: "#bodyContent"
+  - banner [ref=f159e4]:
+    - generic [ref=f159e5]:
+      - navigation "Site" [ref=f159e6]:
+        - generic "Main menu" [ref=f159e7]:
+          - button "Main menu" [ref=f159e8] [cursor=pointer]
+      - link [ref=f159e12] [cursor=pointer]:
+        - /url: /wiki/Main_Page
+        - img "Wikimedia Commons" [ref=f159e15]
+    - generic [ref=f159e16]:
+      - search [ref=f159e17]:
+        - generic [ref=f159e20]:
+          - searchbox "Search Wikimedia Commons" [ref=f159e23]
+          - button "Search" [ref=f159e25]
+      - navigation "Personal tools" [ref=f159e26]:
+        - generic [ref=f159e27]:
+          - list [ref=f159e30]:
+            - listitem [ref=f159e31]:
+              - link "English" [ref=f159e32] [cursor=pointer]:
+                - /url: "#"
+          - list [ref=f159e37]:
+            - listitem [ref=f159e38]:
+              - link "Donate" [ref=f159e39] [cursor=pointer]:
+                - /url: https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=commons.wikimedia.org&uselang=en
+            - listitem [ref=f159e40]:
+              - link "Create account" [ref=f159e41] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:CreateAccount&returnto=Special%3AMediaSearch&returntoquery=search%3Dcat%2Blibrary%2Bbooks%26type%3Dimage
+            - listitem [ref=f159e42]:
+              - link "Log in" [ref=f159e43] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:UserLogin&returnto=Special%3AMediaSearch&returntoquery=search%3Dcat%2Blibrary%2Bbooks%26type%3Dimage
+  - generic [ref=f159e45]:
+    - main [ref=f159e49]:
+      - generic [ref=f159e50]:
+        - heading "Search media" [level=1] [ref=f159e51]
+        - generic [ref=f159e52]:
+          - link "Switch to Special:Search" [ref=f159e54] [cursor=pointer]:
+            - /url: https://commons.wikimedia.org/w/index.php?title=Special%3ASearch&search=cat+library+books
+          - link "Help" [ref=f159e56] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/wiki/Special:MyLanguage/Help:MediaSearch
+      - generic [ref=f159e58]:
+        - generic:
+          - navigation "Namespaces"
+        - generic [ref=f159e59]:
+          - navigation "Views"
+          - navigation "Page tools" [ref=f159e60]:
+            - generic [ref=f159e61]:
+              - button "Tools" [ref=f159e62] [cursor=pointer]
+              - generic [ref=f159e63]: Tools
+      - navigation "Appearance" [ref=f159e68]:
+        - generic [ref=f159e70]:
+          - generic [ref=f159e71]:
+            - generic [ref=f159e72]: Appearance
+            - button "Hide Appearance" [ref=f159e73] [cursor=pointer]: hide
+          - generic [ref=f159e74]:
+            - generic [ref=f159e75]: Text
+            - list [ref=f159e77]:
+              - listitem [ref=f159e78]:
+                - generic [ref=f159e79]:
+                  - generic [ref=f159e80]:
+                    - generic [ref=f159e81]:
+                      - radio "Small" [disabled] [ref=f159e82]
+                      - generic [ref=f159e84]: Small
+                    - generic [ref=f159e86]:
+                      - radio "Standard" [disabled] [ref=f159e87]
+                      - generic [ref=f159e89]: Standard
+                    - generic [ref=f159e91]:
+                      - radio "Large" [disabled] [ref=f159e92]
+                      - generic [ref=f159e94]: Large
+                  - paragraph [ref=f159e96]: This page always uses small font size
+          - generic [ref=f159e97]:
+            - generic [ref=f159e98]: Width
+            - list [ref=f159e100]:
+              - listitem [ref=f159e101]:
+                - generic [ref=f159e103]:
+                  - generic [ref=f159e104]:
+                    - radio "Standard" [checked] [ref=f159e105]
+                    - generic [ref=f159e107]: Standard
+                  - generic [ref=f159e109]:
+                    - radio "Wide" [ref=f159e110]
+                    - generic [ref=f159e112]: Wide
+          - generic [ref=f159e114]:
+            - generic [ref=f159e115]:
+              - text: Color
+              - generic [ref=f159e116]: (beta)
+            - list [ref=f159e118]:
+              - listitem [ref=f159e119]:
+                - generic [ref=f159e121]:
+                  - generic [ref=f159e122]:
+                    - radio "Automatic" [ref=f159e123]
+                    - generic [ref=f159e125]: Automatic
+                  - generic [ref=f159e127]:
+                    - radio "Light" [checked] [ref=f159e128]
+                    - generic [ref=f159e130]: Light
+                  - generic [ref=f159e132]:
+                    - radio "Dark" [ref=f159e133]
+                    - generic [ref=f159e135]: Dark
+      - generic "Search media" [ref=f159e137]:
+        - generic [ref=f159e138]:
+          - generic [ref=f159e140]:
+            - generic [ref=f159e141]:
+              - generic [ref=f159e142]: Search media
+              - textbox "Search media Search media" [ref=f159e144]:
+                - /placeholder: Search for images, audio, video and more
+                - text: cat library books
+            - button "Search" [ref=f159e146]
+          - generic [ref=f159e148]:
+            - tablist [ref=f159e151]:
+              - tab "Images" [selected] [ref=f159e152]
+              - tab "Audio" [ref=f159e153]
+              - tab "Video" [ref=f159e154]
+              - tab "Other Media" [ref=f159e155]
+              - tab "Categories and Pages" [ref=f159e156]
+            - tabpanel [ref=f159e158]:
+              - generic [ref=f159e159]: 18,570,484 results
+              - generic [ref=f159e162]:
+                - generic [ref=f159e163]:
+                  - link "Austria - Göttweig Abbey - 2015.jpg" [ref=f159e164] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Austria_-_G%C3%B6ttweig_Abbey_-_2015.jpg
+                    - img "Austria - Göttweig Abbey - 2015.jpg"
+                  - link "13-11-02-olb-by-RalfR-03.jpg" [ref=f159e165] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:13-11-02-olb-by-RalfR-03.jpg
+                    - img "13-11-02-olb-by-RalfR-03.jpg"
+                  - link "National Library of Australia, ACT - perspective controlled.jpg" [ref=f159e166] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:National_Library_of_Australia,_ACT_-_perspective_controlled.jpg
+                    - img "National Library of Australia, ACT - perspective controlled.jpg"
+                  - link "Interior of the library at Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg" [ref=f159e167] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Interior_of_the_library_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg
+                    - img "Interior of the library at Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg"
+                  - link "George-peabody-library.jpg" [ref=f159e168] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:George-peabody-library.jpg
+                    - img "George-peabody-library.jpg"
+                  - link "National Library-Thimphu-Bhutan-2008 01 23.jpg" [ref=f159e169] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:National_Library-Thimphu-Bhutan-2008_01_23.jpg
+                    - img "National Library-Thimphu-Bhutan-2008 01 23.jpg"
+                  - link "Swing into books, Book week, November 1-7, 1964.jpg" [ref=f159e170] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Swing_into_books,_Book_week,_November_1-7,_1964.jpg
+                    - img "Swing into books, Book week, November 1-7, 1964.jpg"
+                  - link "Museo de la Catedral de Quito, Quito, Ecuador, 2015-07-22, DD 94-96 HDR.JPG" [ref=f159e171] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Museo_de_la_Catedral_de_Quito,_Quito,_Ecuador,_2015-07-22,_DD_94-96_HDR.JPG
+                    - img "Museo de la Catedral de Quito, Quito, Ecuador, 2015-07-22, DD 94-96 HDR.JPG"
+                  - link "Stift Altenburg Bibliothek 03.JPG" [ref=f159e172] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Stift_Altenburg_Bibliothek_03.JPG
+                    - img "Stift Altenburg Bibliothek 03.JPG"
+                  - link "Bibliotheque-musee-Guimet.jpg" [ref=f159e173] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Bibliotheque-musee-Guimet.jpg
+                    - img "Bibliotheque-musee-Guimet.jpg"
+                  - link "Bibliothèque humaniste de Sélestat 21 janvier 2014-97.jpg" [ref=f159e174] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Biblioth%C3%A8que_humaniste_de_S%C3%A9lestat_21_janvier_2014-97.jpg
+                    - img "Bibliothèque humaniste de Sélestat 21 janvier 2014-97.jpg"
+                  - link "1461677 Cat-Draculas-Library 620.jpg" [ref=f159e175] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1461677_Cat-Draculas-Library_620.jpg
+                    - img "1461677 Cat-Draculas-Library 620.jpg"
+                  - link "The children's library at the Broomfield Library.jpg" [ref=f159e176] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:The_children%27s_library_at_the_Broomfield_Library.jpg
+                    - img "The children's library at the Broomfield Library.jpg"
+                  - link "Höxter Germany Corvey-Abbey-01.jpg" [ref=f159e177] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:H%C3%B6xter_Germany_Corvey-Abbey-01.jpg
+                    - img "Höxter Germany Corvey-Abbey-01.jpg"
+                  - link "Kõrgem Kunstikool Pallas 003-raamatukogu pano.jpg" [ref=f159e178] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:K%C3%B5rgem_Kunstikool_Pallas_003-raamatukogu_pano.jpg
+                    - img "Kõrgem Kunstikool Pallas 003-raamatukogu pano.jpg"
+                  - link "Library Frame by Jules Adeline.jpg" [ref=f159e179] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Library_Frame_by_Jules_Adeline.jpg
+                    - img "Library Frame by Jules Adeline.jpg"
+                  - link "Graz University-Library reading-room.jpg" [ref=f159e180] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Graz_University-Library_reading-room.jpg
+                    - img "Graz University-Library reading-room.jpg"
+                  - link "Library of Celsus 6242.jpg" [ref=f159e181] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Library_of_Celsus_6242.jpg
+                    - img "Library of Celsus 6242.jpg"
+                  - link "Westland District Library books cabinet.jpg" [ref=f159e182] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Westland_District_Library_books_cabinet.jpg
+                    - img "Westland District Library books cabinet.jpg"
+                  - link "Hilltop Library dedication - DPLA - b7049b2a2e719e1e1b8882308f1114e6.jpg" [ref=f159e183] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Hilltop_Library_dedication_-_DPLA_-_b7049b2a2e719e1e1b8882308f1114e6.jpg
+                    - img "Hilltop Library dedication - DPLA - b7049b2a2e719e1e1b8882308f1114e6.jpg"
+                  - link "Appenzell library 20210528.jpg" [ref=f159e184] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Appenzell_library_20210528.jpg
+                    - img "Appenzell library 20210528.jpg"
+                  - link "Library by name karen Khurshudyan.jpg" [ref=f159e185] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Library_by_name_karen_Khurshudyan.jpg
+                    - img "Library by name karen Khurshudyan.jpg"
+                  - link "Frank P Doyle Library, Santa Rosa Junior College.jpg" [ref=f159e186] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Frank_P_Doyle_Library,_Santa_Rosa_Junior_College.jpg
+                    - img "Frank P Doyle Library, Santa Rosa Junior College.jpg"
+                  - link "Hilltop Library dedication - DPLA - 60417b29abbff0acc7eefed7f7733321 (page 2).jpg" [ref=f159e187] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Hilltop_Library_dedication_-_DPLA_-_60417b29abbff0acc7eefed7f7733321_(page_2).jpg
+                    - img "Hilltop Library dedication - DPLA - 60417b29abbff0acc7eefed7f7733321 (page 2).jpg"
+                  - link "Hilltop Library dedication - DPLA - 60417b29abbff0acc7eefed7f7733321 (page 1).jpg" [ref=f159e188] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Hilltop_Library_dedication_-_DPLA_-_60417b29abbff0acc7eefed7f7733321_(page_1).jpg
+                    - img "Hilltop Library dedication - DPLA - 60417b29abbff0acc7eefed7f7733321 (page 1).jpg"
+                  - link "Library of Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg" [ref=f159e189] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Library_of_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg
+                    - img "Library of Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg"
+                  - link "Library of Congress, Washington, D.C. - c. 1902.jpg" [ref=f159e190] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Library_of_Congress,_Washington,_D.C._-_c._1902.jpg
+                    - img "Library of Congress, Washington, D.C. - c. 1902.jpg"
+                  - link "Jerwood Library Trinity Hall Cambridge.jpg" [ref=f159e191] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Jerwood_Library_Trinity_Hall_Cambridge.jpg
+                    - img "Jerwood Library Trinity Hall Cambridge.jpg"
+                  - link "Library NISM Patalganga Maharashtra Jan23 D72 25149.jpg" [ref=f159e192] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Library_NISM_Patalganga_Maharashtra_Jan23_D72_25149.jpg
+                    - img "Library NISM Patalganga Maharashtra Jan23 D72 25149.jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 2).jpg" [ref=f159e193] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_2).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 2).jpg"
+                  - link "2017 Biblioteka w Bystrzycy Kłodzkiej.jpg" [ref=f159e194] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:2017_Biblioteka_w_Bystrzycy_K%C5%82odzkiej.jpg
+                    - img "2017 Biblioteka w Bystrzycy Kłodzkiej.jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 5).jpg" [ref=f159e195] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_5).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 5).jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 7).jpg" [ref=f159e196] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_7).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 7).jpg"
+                  - link "Glass door of the library at Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg" [ref=f159e197] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Glass_door_of_the_library_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos.jpg
+                    - img "Glass door of the library at Amantaka luxury Resort & Hotel in Luang Prabang Laos.jpg"
+                  - link "Interior of the library at Amantaka luxury Resort & Hotel in Luang Prabang Laos - front view.jpg" [ref=f159e198] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Interior_of_the_library_at_Amantaka_luxury_Resort_%26_Hotel_in_Luang_Prabang_Laos_-_front_view.jpg
+                    - img "Interior of the library at Amantaka luxury Resort & Hotel in Luang Prabang Laos - front view.jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 4).jpg" [ref=f159e199] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_4).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 4).jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 6).jpg" [ref=f159e200] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_6).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 6).jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 3).jpg" [ref=f159e201] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_3).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 3).jpg"
+                  - link "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 1).jpg" [ref=f159e202] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:1996_Hilltop_Branch_Library_dedication_program_-_DPLA_-_f455eeaca5242f16e53b8aaf7851a836_(page_1).jpg
+                    - img "1996 Hilltop Branch Library dedication program - DPLA - f455eeaca5242f16e53b8aaf7851a836 (page 1).jpg"
+                  - link "Nottuln, Appelhülsen, Katholische öffentliche Bücherei -- 2015 -- 5467.jpg" [ref=f159e203] [cursor=pointer]:
+                    - /url: https://commons.wikimedia.org/wiki/File:Nottuln,_Appelh%C3%BClsen,_Katholische_%C3%B6ffentliche_B%C3%BCcherei_--_2015_--_5467.jpg
+                    - img "Nottuln, Appelhülsen, Katholische öffentliche Bücherei -- 2015 -- 5467.jpg"
+                - button "Load more" [ref=f159e205]
+                - button "Load more" [ref=f159e208] [cursor=pointer]
+    - contentinfo [ref=f159e210]:
+      - list:
+        - listitem [ref=f159e211]:
+          - link "Privacy policy" [ref=f159e212] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+        - listitem [ref=f159e213]:
+          - link "About Wikimedia Commons" [ref=f159e214] [cursor=pointer]:
+            - /url: /wiki/Commons:Welcome
+        - listitem [ref=f159e215]:
+          - link "Disclaimers" [ref=f159e216] [cursor=pointer]:
+            - /url: /wiki/Commons:General_disclaimer
+        - listitem [ref=f159e217]:
+          - link "Legal & safety contacts" [ref=f159e218] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information
+        - listitem [ref=f159e219]:
+          - link "Code of Conduct" [ref=f159e220] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct
+        - listitem [ref=f159e221]:
+          - link "Developers" [ref=f159e222] [cursor=pointer]:
+            - /url: https://developer.wikimedia.org
+        - listitem [ref=f159e223]:
+          - link "Statistics" [ref=f159e224] [cursor=pointer]:
+            - /url: https://stats.wikimedia.org/#/commons.wikimedia.org
+        - listitem [ref=f159e225]:
+          - link "Cookie statement" [ref=f159e226] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement
+        - listitem [ref=f159e227]:
+          - link "Mobile view" [ref=f159e228] [cursor=pointer]:
+            - /url: //commons.wikimedia.org/w/index.php?title=Special:MediaSearch&search=cat+library+books&type=image&mobileaction=toggle_view_mobile
+      - list [ref=f159e229]:
+        - listitem [ref=f159e230]:
+          - link [ref=f159e231] [cursor=pointer]:
+            - /url: https://www.wikimedia.org/
+            - img "Wikimedia Foundation" [ref=f159e233]
+        - listitem [ref=f159e234]:
+          - link [ref=f159e235] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/
+            - img "Powered by MediaWiki" [ref=f159e237]
+  - generic [ref=f159e238]:
+    - list

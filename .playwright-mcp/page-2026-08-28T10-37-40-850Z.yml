@@ -1,0 +1,1241 @@
+- generic [active] [ref=f162e1]:
+  - link "Jump to content" [ref=f162e2] [cursor=pointer]:
+    - /url: "#bodyContent"
+  - banner [ref=f162e4]:
+    - generic [ref=f162e5]:
+      - navigation "Site" [ref=f162e6]:
+        - generic "Main menu" [ref=f162e7]:
+          - button "Main menu" [ref=f162e8] [cursor=pointer]
+          - option "Qafár af"
+          - option "Arbërisht"
+          - option "аԥсшәа"
+          - option "Abron"
+          - option "bahasa ambon"
+          - option "Acèh"
+          - option "Kwéyòl Sent Lisi"
+          - option "عراقي"
+          - option "адыгабзэ"
+          - option "адыгабзэ"
+          - option "تونسي / Tûnsî"
+          - option "تونسي"
+          - option "Tûnsî"
+          - option "Afrikaans"
+          - option "Aghem"
+          - option "Aanteegan an' Baabyuudan"
+          - option "Akan"
+          - option "Gegë"
+          - option "Alemannisch"
+          - option "алтай тил"
+          - option "አማርኛ"
+          - option "Pangcah"
+          - option "aragonés"
+          - option "Ænglisc"
+          - option "Obolo"
+          - option "अंगिका"
+          - option "شامي"
+          - option "العربية"
+          - option "ܐܪܡܝܐ"
+          - option "mapudungun"
+          - option "جازايرية"
+          - option "الدارجة"
+          - option "مصرى"
+          - option "অসমীয়া"
+          - option "American sign language"
+          - option "asturianu"
+          - option "Atikamekw"
+          - option "авар"
+          - option "Kotava"
+          - option "अवधी"
+          - option "Aymar aru"
+          - option "azərbaycanca"
+          - option "تۆرکجه"
+          - option "башҡортса"
+          - option "Tuki"
+          - option "Basa Bali"
+          - option "ᬩᬲᬩᬮᬶ"
+          - option "Boarisch"
+          - option "Basaa"
+          - option "žemaitėška"
+          - option "Bamum"
+          - option "Batak Toba"
+          - option "Batak Toba"
+          - option "Ghomála'"
+          - option "جهلسری بلوچی"
+          - option "wawle"
+          - option "Bikol Central"
+          - option "Bajau Sama"
+          - option "беларуская"
+          - option "беларуская (тарашкевіца)"
+          - option "беларуская (тарашкевіца)"
+          - option "Betawi"
+          - option "Bafut"
+          - option "ରେମସାମ୍"
+          - option "български"
+          - option "हरियाणवी"
+          - option "روچ کپتین بلوچی"
+          - option "भोजपुरी"
+          - option "भोजपुरी"
+          - option "Bislama"
+          - option "Banjar"
+          - option "Baka"
+          - option "Bakoko"
+          - option "Kom"
+          - option "ပအိုဝ်ႏဘာႏသာႏ"
+          - option "bamanankan"
+          - option "বাংলা"
+          - option "བོད་ཡིག"
+          - option "bòo pìkkà"
+          - option "বিষ্ণুপ্রিয়া মণিপুরী"
+          - option "بختیاری"
+          - option "Mka'a"
+          - option "brezhoneg"
+          - option "Bráhuí"
+          - option "bosanski"
+          - option "Batak Mandailing"
+          - option "Iriga Bicolano"
+          - option "Basa Ugi"
+          - option "ᨅᨔ ᨕᨘᨁᨗ"
+          - option "буряад"
+          - option "Medumba"
+          - option "català"
+          - option "Kaqchikel"
+          - option "Carolinian"
+          - option "Chavacano de Zamboanga"
+          - option "𑄌𑄋𑄴𑄟𑄳𑄦"
+          - option "閩東語 / Mìng-dĕ̤ng-ngṳ̄"
+          - option "閩東語（傳統漢字）"
+          - option "Mìng-dĕ̤ng-ngṳ̄ (Bàng-uâ-cê)"
+          - option "нохчийн"
+          - option "Cebuano"
+          - option "Chamoru"
+          - option "chinuk wawa"
+          - option "Chahta anumpa"
+          - option "ᏣᎳᎩ"
+          - option "Tsetsêhestâhese"
+          - option "کوردی"
+          - option "Hakha Chin"
+          - option "corsu"
+          - option "ϯⲙⲉⲧⲣⲉⲙⲛ̀ⲭⲏⲙⲓ"
+          - option "Capiceño"
+          - option "莆仙語 / Pó-sing-gṳ̂"
+          - option "莆仙语（简体）"
+          - option "莆仙語（繁體）"
+          - option "Pó-sing-gṳ̂ (Báⁿ-uā-ci̍)"
+          - option "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ"
+          - option "qırımtatarca"
+          - option "къырымтатарджа (Кирилл)"
+          - option "qırımtatarca (Latin)"
+          - option "tatarşa"
+          - option "čeština"
+          - option "kaszëbsczi"
+          - option "словѣньскъ / ⰔⰎⰑⰂⰡⰐⰠⰔⰍⰟ"
+          - option "чӑвашла"
+          - option "Cymraeg"
+          - option "dansk"
+          - option "dagbanli"
+          - option "Deutsch"
+          - option "Österreichisches Deutsch"
+          - option "Schweizer Hochdeutsch"
+          - option "Deutsch (Sie-Form)"
+          - option "Dagaare"
+          - option "Thuɔŋjäŋ"
+          - option "Zazaki"
+          - option "долган тыла"
+          - option "dolnoserbski"
+          - option "ଦେଶିଆ"
+          - option "Kadazandusun"
+          - option "डोटेली"
+          - option "Duala"
+          - option "ދިވެހިބަސް"
+          - option "ཇོང་ཁ"
+          - option "eʋegbe"
+          - option "Efịk"
+          - option "Emiliàn"
+          - option "Ελληνικά"
+          - option "emiliàn e rumagnòl"
+          - option "English" [selected]
+          - option "Canadian English"
+          - option "British English"
+          - option "American English"
+          - option "Esperanto"
+          - option "español"
+          - option "español de América Latina"
+          - option "español (formal)"
+          - option "eesti"
+          - option "Eton"
+          - option "Ejagham"
+          - option "euskara"
+          - option "Ewondo"
+          - option "estremeñu"
+          - option "فارسی"
+          - option "mfantse"
+          - option "Fulfulde"
+          - option "suomi"
+          - option "meänkieli"
+          - option "võro"
+          - option "Na Vosa Vakaviti"
+          - option "kvääni"
+          - option "Fe'fe'"
+          - option "føroyskt"
+          - option "fɔ̀ngbè"
+          - option "français"
+          - option "français cadien"
+          - option "arpetan"
+          - option "Nordfriisk"
+          - option "Oostfräisk"
+          - option "furlan"
+          - option "poor’íŋ belé’ŋ"
+          - option "Frysk"
+          - option "Gaeilge"
+          - option "Ga"
+          - option "Gagauz"
+          - option "贛語"
+          - option "赣语（简体）"
+          - option "贛語（繁體）"
+          - option "kréyòl Gwadloup"
+          - option "kriyòl gwiyannen"
+          - option "Gàidhlig"
+          - option "گوجری"
+          - option "गुज्जरी"
+          - option "galego"
+          - option "на̄ни"
+          - option "گیلکی"
+          - option "Avañe'ẽ"
+          - option "गोंयची कोंकणी / Gõychi Konknni"
+          - option "गोंयची कोंकणी"
+          - option "Gõychi Konknni"
+          - option "Bahasa Hulontalo"
+          - option "𐌲𐌿𐍄𐌹𐍃𐌺"
+          - option "Ghanaian Pidgin"
+          - option "Ἀρχαία ἑλληνικὴ"
+          - option "Alemannisch"
+          - option "ગુજરાતી"
+          - option "wayuunaiki"
+          - option "farefare"
+          - option "gungbe"
+          - option "Gaelg"
+          - option "Gbaya"
+          - option "Hausa"
+          - option "客家語 / Hak-kâ-ngî"
+          - option "客家语（简体）"
+          - option "客家語（繁體）"
+          - option "Hak-kâ-ngî (Pha̍k-fa-sṳ)"
+          - option "Hawaiʻi"
+          - option "עברית"
+          - option "हिन्दी"
+          - option "Fiji Hindi"
+          - option "Fiji Hindi"
+          - option "Ilonggo"
+          - option "kihunde"
+          - option "ہندکو"
+          - option "Hiri Motu"
+          - option "𑢹𑣉𑣉 𑣎𑣋𑣜"
+          - option "Ho"
+          - option "hrvatski"
+          - option "Hunsrik"
+          - option "hornjoserbsce"
+          - option "湘語"
+          - option "Kreyòl ayisyen"
+          - option "magyar"
+          - option "magyar (formal)"
+          - option "հայերեն"
+          - option "Արեւմտահայերէն"
+          - option "Otsiherero"
+          - option "interlingua"
+          - option "Jaku Iban"
+          - option "ibibio"
+          - option "Bahasa Indonesia"
+          - option "Interlingue"
+          - option "Igbo"
+          - option "Igala"
+          - option "ꆇꉙ"
+          - option "Iñupiatun"
+          - option "ᐃᓄᒃᑎᑐᑦ"
+          - option "inuktitut"
+          - option "Ilokano"
+          - option "гӀалгӀай"
+          - option "Ido"
+          - option "íslenska"
+          - option "Isu"
+          - option "medžuslovjansky"
+          - option "меджусловјанскы"
+          - option "medžuslovjansky"
+          - option "italiano"
+          - option "ᐃᓄᒃᑎᑐᑦ / inuktitut"
+          - option "日本語"
+          - option "Patois"
+          - option "la .lojban."
+          - option "jysk"
+          - option "Jawa"
+          - option "ꦗꦮ"
+          - option "ქართული"
+          - option "Qaraqalpaqsha"
+          - option "Taqbaylit"
+          - option "Karai-karai"
+          - option "Jju"
+          - option "адыгэбзэ"
+          - option "адыгэбзэ"
+          - option "Kabɩyɛ"
+          - option "Tyap"
+          - option "kabuverdianu"
+          - option "Kera"
+          - option "Kongo"
+          - option "Kumoring"
+          - option "गेम्येहाक़ गिपन"
+          - option "کھوار"
+          - option "Gĩkũyũ"
+          - option "Kırmancki"
+          - option "Kwanyama"
+          - option "хакас"
+          - option "ဖၠုံလိက်"
+          - option "қазақша"
+          - option "قازاقشا (تٴوتە)"
+          - option "قازاقشا (جۇنگو)"
+          - option "қазақша (кирил)"
+          - option "қазақша (Қазақстан)"
+          - option "qazaqşa (latın)"
+          - option "qazaqşa (Türkïya)"
+          - option "kalaallisut"
+          - option "ភាសាខ្មែរ"
+          - option "ಕನ್ನಡ"
+          - option "Yerwa Kanuri"
+          - option "한국어"
+          - option "조선말"
+          - option "перем коми"
+          - option "kanuri"
+          - option "къарачай-малкъар"
+          - option "Krio"
+          - option "Kinaray-a"
+          - option "karjal"
+          - option "کٲشُر"
+          - option "کٲشُر"
+          - option "कॉशुर"
+          - option "Bafia"
+          - option "Ripoarisch"
+          - option "စှီၤ"
+          - option "kurdî"
+          - option "کوردی (عەرەبی)"
+          - option "kurdî (latînî)"
+          - option "къумукъ"
+          - option "Kʋsaal"
+          - option "коми"
+          - option "kernowek"
+          - option "кыргызча"
+          - option "Latina"
+          - option "Ladino"
+          - option "Lëtzebuergesch"
+          - option "лакку"
+          - option "Nomaande"
+          - option "лезги"
+          - option "Lingua Franca Nova"
+          - option "Luganda"
+          - option "Limburgs"
+          - option "Ligure"
+          - option "Līvõ kēļ"
+          - option "Lampung Api"
+          - option "لەکی"
+          - option "Lakȟótiyapi"
+          - option "Ladin"
+          - option "lombard"
+          - option "lingála"
+          - option "Lamnso'"
+          - option "ລາວ"
+          - option "Silozi"
+          - option "لۊری شومالی"
+          - option "lietuvių"
+          - option "latgaļu"
+          - option "ciluba"
+          - option "Mizo ţawng"
+          - option "لئری دوٙمینی"
+          - option "latviešu"
+          - option "文言"
+          - option "Lazuri"
+          - option "Madhurâ"
+          - option "मगही"
+          - option "मैथिली"
+          - option "Basa Banyumasan"
+          - option "vùn màsànà"
+          - option "Maka"
+          - option "мокшень"
+          - option "Malagasy"
+          - option "Ebon"
+          - option "олык марий"
+          - option "Māori"
+          - option "Minangkabau"
+          - option "македонски"
+          - option "മലയാളം"
+          - option "монгол"
+          - option "manju gisun"
+          - option "manju gisun"
+          - option "ᠮᠠᠨᠵᡠ ᡤᡳᠰᡠᠨ"
+          - option "ꯃꯤꯇꯩ ꯂꯣꯟ"
+          - option "ဘာသာမန်"
+          - option "молдовеняскэ"
+          - option "moore"
+          - option "मराठी"
+          - option "Mara"
+          - option "кырык мары"
+          - option "Bahasa Melayu"
+          - option "بهاس ملايو"
+          - option "Malti"
+          - option "Mundang"
+          - option "Baso Palembang"
+          - option "Mvskoke"
+          - option "Mirandés"
+          - option "မြန်မာဘာသာ"
+          - option "эрзянь"
+          - option "مازِرونی"
+          - option "Dorerin Naoero"
+          - option "Nāhuatl"
+          - option "閩南語 / Bân-lâm-gí"
+          - option "閩南語"
+          - option "閩南語（傳統漢字）"
+          - option "Bân-lâm-gí (Pe̍h-ōe-jī)"
+          - option "Bân-lâm-gí (Tâi-lô)"
+          - option "Napulitano"
+          - option "norsk bokmål"
+          - option "Plattdüütsch"
+          - option "Nedersaksies"
+          - option "नेपाली"
+          - option "नेपाल भाषा"
+          - option "Oshiwambo"
+          - option "Ngémba"
+          - option "Li Niha"
+          - option "కొలామి"
+          - option "Niuē"
+          - option "Nederlands"
+          - option "Nederlands (informeel)"
+          - option "Ngombala"
+          - option "Kwasio"
+          - option "nawdm"
+          - option "norsk nynorsk"
+          - option "Ngiemboon"
+          - option "Nda'nda'"
+          - option "norsk"
+          - option "ᨣᩤᩴᨾᩮᩬᩥᨦ"
+          - option "ногайша"
+          - option "Novial"
+          - option "ߒߞߏ"
+          - option "isiNdebele seSewula"
+          - option "Nouormand"
+          - option "Sesotho sa Leboa"
+          - option "Nupe"
+          - option "Diné bizaad"
+          - option "Chi-Chewa"
+          - option "runyankore"
+          - option "Orunyoro"
+          - option "Nyunga"
+          - option "occitan"
+          - option "Ojibwemowin"
+          - option "livvinkarjala"
+          - option "Oromoo"
+          - option "ଓଡ଼ିଆ"
+          - option "ирон"
+          - option "Wažáže íe"
+          - option "لسان عثمانى"
+          - option "ਪੰਜਾਬੀ"
+          - option "Pangasinan"
+          - option "Kapampangan"
+          - option "Papiamentu"
+          - option "Papiamento"
+          - option "Picard"
+          - option "Naijá"
+          - option "Deitsch"
+          - option "Plautdietsch"
+          - option "Pälzisch"
+          - option "पालि"
+          - option "Norfuk / Pitkern"
+          - option "polski"
+          - option "Piemontèis"
+          - option "پنجابی"
+          - option "Ποντιακά"
+          - option "Nawat"
+          - option "prūsiskan"
+          - option "پښتو"
+          - option "português"
+          - option "português do Brasil"
+          - option "pinayuanan"
+          - option "Runa Simi"
+          - option "Qatzijob\\ʼal"
+          - option "Runa shimi"
+          - option "Rumagnôl"
+          - option "Tarifit"
+          - option "ရခိုင်"
+          - option "rumantsch"
+          - option "romaňi čhib"
+          - option "kaalengo tšimb"
+          - option "romani čhib"
+          - option "ikirundi"
+          - option "română"
+          - option "armãneashti"
+          - option "tarandíne"
+          - option "руски"
+          - option "русский"
+          - option "русиньскый"
+          - option "armãneashti"
+          - option "Vlăheşte"
+          - option "Влахесте"
+          - option "Vlăheşte"
+          - option "мыхаӀбишды"
+          - option "Ikinyarwanda"
+          - option "मारवाड़ी"
+          - option "沖縄口"
+          - option "संस्कृतम्"
+          - option "саха тыла"
+          - option "Sasak"
+          - option "ᱥᱟᱱᱛᱟᱲᱤ"
+          - option "sardu"
+          - option "sicilianu"
+          - option "Scots"
+          - option "سنڌي"
+          - option "Sassaresu"
+          - option "کوردی خوارگ"
+          - option "davvisámegiella"
+          - option "davvisámegiella (Suoma bealde)"
+          - option "davvisámegiella (Norgga bealde)"
+          - option "davvisámegiella (Ruoŧa bealde)"
+          - option "Cmique Itom"
+          - option "Koyraboro Senni"
+          - option "Sängö"
+          - option "žemaitėška"
+          - option "srpskohrvatski / српскохрватски"
+          - option "српскохрватски (ћирилица)"
+          - option "srpskohrvatski (latinica)"
+          - option "Taclḥit"
+          - option "Taclḥit"
+          - option "ⵜⴰⵛⵍⵃⵉⵜ"
+          - option "တႆး"
+          - option "tacawit"
+          - option "tacawit"
+          - option "සිංහල"
+          - option "Simple English"
+          - option "кӣллт са̄мь кӣлл"
+          - option "bidumsámegiella"
+          - option "ubmejesámiengiälla"
+          - option "slovenčina"
+          - option "سرائیکی"
+          - option "سرائیکی"
+          - option "slovenščina"
+          - option "Schläsch"
+          - option "Gagana Samoa"
+          - option "åarjelsaemien"
+          - option "julevsámegiella"
+          - option "anarâškielâ"
+          - option "nuõrttsääʹmǩiõll"
+          - option "chiShona"
+          - option "Soomaaliga"
+          - option "shqip"
+          - option "српски / srpski"
+          - option "српски (ћирилица)"
+          - option "srpski (latinica)"
+          - option "Sranantongo"
+          - option "sardu campidanesu"
+          - option "mbia cheë"
+          - option "SiSwati"
+          - option "Sesotho"
+          - option "Seeltersk"
+          - option "себертатар"
+          - option "Sunda"
+          - option "svenska"
+          - option "ლუშნუ"
+          - option "Kiswahili"
+          - option "ꠍꠤꠟꠐꠤ"
+          - option "ślůnski"
+          - option "Sakizaya"
+          - option "தமிழ்"
+          - option "Tayal"
+          - option "ತುಳು"
+          - option "ᥖᥭᥰ ᥖᥬᥲ ᥑᥨᥒᥰ"
+          - option "తెలుగు"
+          - option "tetun"
+          - option "тоҷикӣ"
+          - option "тоҷикӣ"
+          - option "tojikī"
+          - option "ไทย"
+          - option "काेचिला थारु"
+          - option "ትግርኛ"
+          - option "ትግሬ"
+          - option "Türkmençe"
+          - option "Tagalog"
+          - option "tolışi"
+          - option "толыши"
+          - option "Setswana"
+          - option "lea faka-Tonga"
+          - option "toki pona"
+          - option "Tok Pisin"
+          - option "Tanapag"
+          - option "Türkçe"
+          - option "Ṫuroyo"
+          - option "Seediq"
+          - option "Xitsonga"
+          - option "татарча / tatarça"
+          - option "татарча"
+          - option "tatarça"
+          - option "Orutooro"
+          - option "chiTumbuka"
+          - option "Tunen"
+          - option "Twi"
+          - option "reo tahiti"
+          - option "тыва дыл"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ"
+          - option "удмурт"
+          - option "ئۇيغۇرچە / Uyghurche"
+          - option "ئۇيغۇرچە"
+          - option "Uyghurche"
+          - option "українська"
+          - option "اردو"
+          - option "oʻzbekcha / ўзбекча"
+          - option "ўзбекча"
+          - option "oʻzbekcha"
+          - option "Tshivenda"
+          - option "vèneto"
+          - option "vepsän kel’"
+          - option "Tiếng Việt"
+          - option "West-Vlams"
+          - option "Mainfränkisch"
+          - option "emakhuwa"
+          - option "Volapük"
+          - option "Vaďďa"
+          - option "võro"
+          - option "Vute"
+          - option "walon"
+          - option "wolaytta"
+          - option "Winaray"
+          - option "Pidgin (Cameroon)"
+          - option "Fakaʻuvea"
+          - option "waale"
+          - option "Wolof"
+          - option "吴语"
+          - option "吴语（简体）"
+          - option "吳語（正體）"
+          - option "Wyandot"
+          - option "хальмг"
+          - option "isiXhosa"
+          - option "მარგალური"
+          - option "saisiyat"
+          - option "Nugunu"
+          - option "Yambeta"
+          - option "Yangben"
+          - option "Yemba"
+          - option "ייִדיש"
+          - option "Yorùbá"
+          - option "Nhẽẽgatú"
+          - option "maaya t’aan"
+          - option "粵語"
+          - option "粵语（简体）"
+          - option "粵語（繁體）"
+          - option "Vahcuengh"
+          - option "Zeêuws"
+          - option "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵡⴰⵢⵜ"
+          - option "tamaziɣt tanawayt"
+          - option "中文"
+          - option "文言"
+          - option "中文（中国大陆）"
+          - option "中文（简体）"
+          - option "中文（繁體）"
+          - option "中文（香港）"
+          - option "Bân-lâm-gú"
+          - option "中文（澳門）"
+          - option "中文（马来西亚）"
+          - option "中文（新加坡）"
+          - option "中文（臺灣）"
+          - option "粵語"
+          - option "isiZulu"
+      - link [ref=f162e12] [cursor=pointer]:
+        - /url: /wiki/Main_Page
+        - img "Wikimedia Commons" [ref=f162e15]
+    - generic [ref=f162e16]:
+      - search [ref=f162e17]:
+        - generic [ref=f162e20]:
+          - searchbox "Search Wikimedia Commons" [ref=f162e23]
+          - button "Search" [ref=f162e25]
+      - navigation "Personal tools" [ref=f162e26]:
+        - generic [ref=f162e27]:
+          - list [ref=f162e30]:
+            - listitem [ref=f162e31]:
+              - link "English" [ref=f162e32] [cursor=pointer]:
+                - /url: "#"
+          - list [ref=f162e37]:
+            - listitem [ref=f162e38]:
+              - link "Donate" [ref=f162e39] [cursor=pointer]:
+                - /url: https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=commons.wikimedia.org&uselang=en
+            - listitem [ref=f162e40]:
+              - link "Create account" [ref=f162e41] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:CreateAccount&returnto=File%3APhotograph+of+Socks+the+Cat+Sitting+Behind+the+President%27s+Desk+in+the+Oval+Office+-+DPLA+-+f4177e993c655cfb4831c4786a60412a.jpg
+            - listitem [ref=f162e42]:
+              - link "Log in" [ref=f162e43] [cursor=pointer]:
+                - /url: /w/index.php?title=Special:UserLogin&returnto=File%3APhotograph+of+Socks+the+Cat+Sitting+Behind+the+President%27s+Desk+in+the+Oval+Office+-+DPLA+-+f4177e993c655cfb4831c4786a60412a.jpg
+  - generic [ref=f162e45]:
+    - navigation "Contents" [ref=f162e49]:
+      - generic [ref=f162e51]:
+        - generic [ref=f162e52]:
+          - heading "Contents" [level=2] [ref=f162e53]
+          - button "Hide Contents" [ref=f162e54] [cursor=pointer]: hide
+        - list [ref=f162e55]:
+          - listitem [ref=f162e56]:
+            - link "Beginning" [ref=f162e57] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=f162e59]:
+            - link "File" [ref=f162e60] [cursor=pointer]:
+              - /url: "#file"
+            - list
+          - listitem [ref=f162e62]:
+            - link "Summary" [ref=f162e63] [cursor=pointer]:
+              - /url: "#Summary"
+            - list
+          - listitem [ref=f162e65]:
+            - link "File history" [ref=f162e66] [cursor=pointer]:
+              - /url: "#filehistory"
+            - list
+          - listitem [ref=f162e68]:
+            - link "File usage on Commons" [ref=f162e69] [cursor=pointer]:
+              - /url: "#filelinks"
+            - list
+          - listitem [ref=f162e71]:
+            - link "File usage on other wikis" [ref=f162e72] [cursor=pointer]:
+              - /url: "#globalusage"
+            - list
+          - listitem [ref=f162e74]:
+            - link "Metadata" [ref=f162e75] [cursor=pointer]:
+              - /url: "#metadata"
+            - list
+    - main [ref=f162e78]:
+      - heading "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office - DPLA - f4177e993c655cfb4831c4786a60412a.jpg" [level=1] [ref=f162e80]
+      - generic [ref=f162e83]:
+        - navigation "Namespaces" [ref=f162e85]:
+          - list [ref=f162e88]:
+            - listitem [ref=f162e89]:
+              - link "File" [ref=f162e90] [cursor=pointer]:
+                - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg
+            - listitem [ref=f162e92]:
+              - link "Discussion" [ref=f162e93] [cursor=pointer]:
+                - /url: /w/index.php?title=File_talk:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg&action=edit&redlink=1
+        - generic [ref=f162e95]:
+          - navigation "Views" [ref=f162e96]:
+            - list [ref=f162e99]:
+              - listitem [ref=f162e100]:
+                - link "Read" [ref=f162e101] [cursor=pointer]:
+                  - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg
+              - listitem [ref=f162e103]:
+                - link "Edit" [ref=f162e104] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg&action=edit
+              - listitem [ref=f162e106]:
+                - link "View history" [ref=f162e107] [cursor=pointer]:
+                  - /url: /w/index.php?title=File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg&action=history
+          - navigation "Page tools" [ref=f162e109]:
+            - generic [ref=f162e110]:
+              - button "Tools" [ref=f162e111] [cursor=pointer]
+              - generic [ref=f162e112]: Tools
+      - navigation "Appearance" [ref=f162e117]:
+        - generic [ref=f162e119]:
+          - generic [ref=f162e120]:
+            - generic [ref=f162e121]: Appearance
+            - button "Hide Appearance" [ref=f162e122] [cursor=pointer]: hide
+          - generic [ref=f162e123]:
+            - generic [ref=f162e124]: Text
+            - list [ref=f162e126]:
+              - listitem [ref=f162e127]:
+                - generic [ref=f162e128]:
+                  - generic [ref=f162e129]:
+                    - generic [ref=f162e130]:
+                      - radio "Small" [disabled] [ref=f162e131]
+                      - generic [ref=f162e133]: Small
+                    - generic [ref=f162e135]:
+                      - radio "Standard" [disabled] [ref=f162e136]
+                      - generic [ref=f162e138]: Standard
+                    - generic [ref=f162e140]:
+                      - radio "Large" [disabled] [ref=f162e141]
+                      - generic [ref=f162e143]: Large
+                  - paragraph [ref=f162e145]: This page always uses small font size
+          - generic [ref=f162e146]:
+            - generic [ref=f162e147]: Width
+            - list [ref=f162e149]:
+              - listitem [ref=f162e150]:
+                - generic [ref=f162e152]:
+                  - generic [ref=f162e153]:
+                    - radio "Standard" [checked] [ref=f162e154]
+                    - generic [ref=f162e156]: Standard
+                  - generic [ref=f162e158]:
+                    - radio "Wide" [ref=f162e159]
+                    - generic [ref=f162e161]: Wide
+          - generic [ref=f162e163]:
+            - generic [ref=f162e164]:
+              - text: Color
+              - generic [ref=f162e165]: (beta)
+            - list [ref=f162e167]:
+              - listitem [ref=f162e168]:
+                - generic [ref=f162e170]:
+                  - generic [ref=f162e171]:
+                    - radio "Automatic" [ref=f162e172]
+                    - generic [ref=f162e174]: Automatic
+                  - generic [ref=f162e176]:
+                    - radio "Light" [checked] [ref=f162e177]
+                    - generic [ref=f162e179]: Light
+                  - generic [ref=f162e181]:
+                    - radio "Dark" [ref=f162e182]
+                    - generic [ref=f162e184]: Dark
+      - generic "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office - DPLA - f4177e993c655cfb4831c4786a60412a.jpg" [ref=f162e186]:
+        - generic [ref=f162e187]:
+          - generic [ref=f162e188]:
+            - button "Download all sizes" [ref=f162e189] [cursor=pointer]:
+              - generic [ref=f162e192]:
+                - text: Download
+                - generic [ref=f162e193]: all sizes
+            - button "Use this file on the web" [ref=f162e194] [cursor=pointer]:
+              - generic [ref=f162e197]:
+                - text: Use this file
+                - generic [ref=f162e198]: on the web
+            - button "Use this file on a wiki" [ref=f162e199] [cursor=pointer]:
+              - generic [ref=f162e202]:
+                - text: Use this file
+                - generic [ref=f162e203]: on a wiki
+            - link "Email a link to this file" [ref=f162e204] [cursor=pointer]:
+              - /url: mailto:?subject=Photograph%20of%20Socks%20the%20Cat%20Sitting%20Behind%20the%20President's%20Desk%20in%20the%20Oval%20Office%20-%20DPLA%20-%20f4177e993c655cfb4831c4786a60412a&body=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3APhotograph_of_Socks_the_Cat_Sitting_Behind_the_President%2527s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg%0A%0ANational%20Archives%20and%20Records%20Administration%2C%20Public%20domain%2C%20via%20Wikimedia%20Commons
+              - generic [ref=f162e207]:
+                - text: Email a link
+                - generic [ref=f162e208]: to this file
+            - link "Information about reusing" [ref=f162e209] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Reusing_content_outside_Wikimedia
+              - generic [ref=f162e212]:
+                - text: Information
+                - generic [ref=f162e213]: about reusing
+            - generic "Remove these icons" [ref=f162e215] [cursor=pointer]
+          - generic [ref=f162e217]:
+            - link [ref=f162e218] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+              - img "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office - DPLA - f4177e993c655cfb4831c4786a60412a.jpg" [ref=f162e219]
+            - generic [ref=f162e220]:
+              - text: "Size of this preview:"
+              - link "960 × 632 pixels" [ref=f162e221] [cursor=pointer]:
+                - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg/960px-Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+              - text: .
+              - generic [ref=f162e222]:
+                - text: "Other resolutions:"
+                - link "330 × 217 pixels" [ref=f162e223] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg/330px-Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: "|"
+                - link "1,280 × 843 pixels" [ref=f162e224] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg/1280px-Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail
+                - text: "|"
+                - link "3,150 × 2,074 pixels" [ref=f162e225] [cursor=pointer]:
+                  - /url: https://upload.wikimedia.org/wikipedia/commons/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled
+                - text: .
+          - generic [ref=f162e226]:
+            - link "Original file" [ref=f162e228] [cursor=pointer]:
+              - /url: https://upload.wikimedia.org/wikipedia/commons/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+            - generic [ref=f162e229]: "(3,150 × 2,074 pixels, file size: 2.13 MB, MIME type: image/jpeg)"
+            - generic [ref=f162e230]:
+              - text: ;
+              - link "ZoomViewer" [ref=f162e231] [cursor=pointer]:
+                - /url: https://zoomviewer.toolforge.org/index.php?f=Photograph%20of%20Socks%20the%20Cat%20Sitting%20Behind%20the%20President's%20Desk%20in%20the%20Oval%20Office%20-%20DPLA%20-%20f4177e993c655cfb4831c4786a60412a.jpg&flash=no
+            - button "Open in Media Viewer" [ref=f162e232]
+          - generic [ref=f162e235]:
+            - tablist [ref=f162e238]:
+              - tab "File information" [selected] [ref=f162e239]
+              - tab "Structured data" [ref=f162e241] [cursor=pointer]
+            - tabpanel "File information" [ref=f162e245]:
+              - generic [ref=f162e247]:
+                - heading [level=3] [ref=f162e248]:
+                  - text: Captions
+                  - button "Edit" [ref=f162e250] [cursor=pointer]
+                - generic [ref=f162e251]:
+                  - generic [ref=f162e252]: English
+                  - generic [ref=f162e253]: Add a one-line explanation of what this file represents
+              - generic [ref=f162e255]:
+                - generic [ref=f162e256]:
+                  - heading "Summary" [level=2] [ref=f162e257]
+                  - generic [ref=f162e258]:
+                    - link "edit":
+                      - /url: /w/index.php?title=File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg&action=edit&section=1
+                - 'generic "This file was uploaded by the [[w:Digital Public Library of America|Digital Public Library of America]], and the following item metadata was created by the contributing institution''s staff. Note: this data is being maintained by an automated bot, synced with the source data." [ref=f162e259]':
+                  - generic [ref=f162e260]:
+                    - text: This file was uploaded by the
+                    - link "Digital Public Library of America" [ref=f162e261] [cursor=pointer]:
+                      - /url: https://en.wikipedia.org/wiki/Digital_Public_Library_of_America
+                    - text: ", and the following item metadata was created by the contributing institution's staff. Note: this data is being maintained by an automated bot, synced with the source data."
+                  - table [ref=f162e263]:
+                    - rowgroup [ref=f162e264]:
+                      - row [ref=f162e265]:
+                        - columnheader "Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office" [ref=f162e266]
+                      - row [ref=f162e267]:
+                        - cell "Title" [ref=f162e268]
+                        - cell "Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office" [ref=f162e269]
+                      - row [ref=f162e270]:
+                        - cell "Creator" [ref=f162e271]
+                        - 'cell "President (1993-2001 : Clinton). White House Photograph Office. 1/20/1993-1/20/2001" [ref=f162e272]'
+                      - row [ref=f162e273]:
+                        - cell "Date" [ref=f162e274]
+                        - cell "7 January 1994" [ref=f162e275]
+                      - row [ref=f162e276]:
+                        - cell "Institution" [ref=f162e277]
+                        - cell [ref=f162e278]:
+                          - table [ref=f162e280]:
+                            - rowgroup [ref=f162e281]:
+                              - row [ref=f162e282]:
+                                - columnheader [ref=f162e283] [cursor=pointer]:
+                                  - link "National Archives and Records Administration" [ref=f162e286]:
+                                    - /url: https://en.wikipedia.org/wiki/en:National_Archives_and_Records_Administration
+                                  - link "Institution:National Archives and Records Administration" [ref=f162e288]:
+                                    - /url: /wiki/Institution:National_Archives_and_Records_Administration
+                                  - link [ref=f162e291]:
+                                    - /url: https://www.wikidata.org/wiki/Q518155
+                                    - img "wikidata:Q518155" [ref=f162e292]
+                              - text: · · · · · ·
+                      - row [ref=f162e293]:
+                        - cell "Source" [ref=f162e294]
+                        - cell [ref=f162e295]:
+                          - link "File URL" [ref=f162e299] [cursor=pointer]:
+                            - /url: https://nara-media-001.s3.amazonaws.com/arcmedia/presidential-libraries/clinton/594653/P11155_29_07JAN1994.jpg
+                          - link "Catalog record" [ref=f162e303] [cursor=pointer]:
+                            - /url: https://catalog.archives.gov/id/6036916
+                      - row [ref=f162e304]:
+                        - cell "DPLA ID" [ref=f162e305]
+                        - cell [ref=f162e306]:
+                          - link "f4177e993c655cfb4831c4786a60412a" [ref=f162e307] [cursor=pointer]:
+                            - /url: https://dp.la/item/f4177e993c655cfb4831c4786a60412a
+                      - row [ref=f162e308]:
+                        - cell "Partnership" [ref=f162e309]
+                        - cell [ref=f162e310]:
+                          - generic [ref=f162e311]:
+                            - link [ref=f162e314] [cursor=pointer]:
+                              - /url: /wiki/File:NARA_Logo_created_2010.svg
+                            - generic [ref=f162e315]:
+                              - text: This file was contributed to Wikimedia Commons by
+                              - link "National Archives and Records Administration" [ref=f162e316] [cursor=pointer]:
+                                - /url: https://www.wikidata.org/wiki/Q518155
+                              - text: as part of a cooperation project. The donation was facilitated by the
+                              - link "Digital Public Library of America" [ref=f162e317] [cursor=pointer]:
+                                - /url: https://en.wikipedia.org/wiki/Digital_Public_Library_of_America
+                              - text: .
+                            - link [ref=f162e320] [cursor=pointer]:
+                              - /url: /wiki/File:DPLA_square_logo.svg
+                      - row [ref=f162e321]:
+                        - cell "Permission" [ref=f162e322]
+                        - cell [ref=f162e323]:
+                          - generic [ref=f162e324]:
+                            - generic [ref=f162e326]:
+                              - text: Copyright determination made by "
+                              - link "National Archives and Records Administration (Q518155)" [ref=f162e327] [cursor=pointer]:
+                                - /url: https://www.wikidata.org/wiki/Q518155
+                                - generic "United States government agency" [ref=f162e328]: National Archives and Records Administration (Q518155)
+                              - text: "\" using"
+                              - link "RightsStatements.org" [ref=f162e329] [cursor=pointer]:
+                                - /url: https://rightsstatements.org/
+                            - table [ref=f162e330]:
+                              - rowgroup [ref=f162e331]:
+                                - row [ref=f162e332]:
+                                  - cell [ref=f162e333]
+                                  - cell [ref=f162e334]:
+                                    - link "No Copyright - United States" [ref=f162e336] [cursor=pointer]:
+                                      - /url: https://rightsstatements.org/page/NoC-US/1.0/
+                                    - definition [ref=f162e338]: The organization that has made the Item available believes that the Item is in the Public Domain under the laws of the United States, but a determination was not made as to its copyright status under the copyright laws of other countries. The Item may not be in the Public Domain under the laws of other countries. Please refer to the organization that has made the Item available for more information.
+                                    - table [ref=f162e340]:
+                                      - rowgroup [ref=f162e341]:
+                                        - row [ref=f162e342]:
+                                          - columnheader [ref=f162e343]:
+                                            - button "[Expand]" [ref=f162e344] [cursor=pointer]
+                                            - text: Notices
+                                        - row
+                            - table [ref=f162e345]:
+                              - rowgroup [ref=f162e346]:
+                                - row [ref=f162e347]:
+                                  - cell "Public domain" [ref=f162e348]:
+                                    - figure "Public domain" [ref=f162e349]:
+                                      - generic "Public domain" [ref=f162e350]:
+                                        - img "Public domain" [ref=f162e351]
+                                  - cell [ref=f162e352]:
+                                    - generic [ref=f162e354]:
+                                      - text: This media file is in the
+                                      - link "public domain" [ref=f162e356] [cursor=pointer]:
+                                        - /url: https://en.wikipedia.org/wiki/public_domain
+                                      - text: in the
+                                      - link "United States" [ref=f162e357] [cursor=pointer]:
+                                        - /url: /wiki/United_States
+                                      - text: . This applies to U.S. works where the copyright has expired, often because its first
+                                      - link "publication" [ref=f162e358] [cursor=pointer]:
+                                        - /url: https://en.wikipedia.org/wiki/publication
+                                      - text: occurred prior to January 1, 1931, and if not then due to lack of notice or renewal. See
+                                      - link "this page" [ref=f162e359] [cursor=pointer]:
+                                        - /url: /wiki/Commons:Hirtle_chart
+                                      - text: for further explanation.
+                                    - separator [ref=f162e360]
+                                  - cell "United States" [ref=f162e361]:
+                                    - figure "United States" [ref=f162e362]:
+                                      - generic "United States" [ref=f162e363]:
+                                        - img "United States" [ref=f162e364]
+                                - row [ref=f162e365]:
+                                  - cell [ref=f162e366]:
+                                    - figure [ref=f162e367]
+                                  - cell [ref=f162e370]:
+                                    - generic [ref=f162e373]:
+                                      - text: This image might not be in the public domain outside of the United States; this especially applies in the countries and areas that do not apply the
+                                      - link "rule of the shorter term" [ref=f162e374] [cursor=pointer]:
+                                        - /url: https://en.wikipedia.org/wiki/rule_of_the_shorter_term
+                                      - text: for US works, such as Canada, Mainland China (not Hong Kong or Macao), Germany, Mexico, and Switzerland. The creator and year of publication are essential information and must be provided. See
+                                      - link "Wikipedia:Public domain" [ref=f162e375] [cursor=pointer]:
+                                        - /url: https://en.wikipedia.org/wiki/Wikipedia:Public_domain
+                                      - text: and
+                                      - link "Wikipedia:Copyrights" [ref=f162e376] [cursor=pointer]:
+                                        - /url: https://en.wikipedia.org/wiki/Wikipedia:Copyrights
+                                      - text: for more details.
+                                  - cell [ref=f162e377]
+                - paragraph [ref=f162e378]
+                - table [ref=f162e379]:
+                  - rowgroup [ref=f162e380]:
+                    - row [ref=f162e381]:
+                      - cell [ref=f162e382]:
+                        - link [ref=f162e384] [cursor=pointer]:
+                          - /url: /wiki/File:Extracted_image_icon.svg
+                          - img "Image extraction process" [ref=f162e385]
+                      - cell [ref=f162e386]:
+                        - paragraph [ref=f162e387]: "This image has multiple extracted files:"
+                        - list [ref=f162e388]:
+                          - listitem [ref=f162e389]:
+                            - figure [ref=f162e390]:
+                              - link [ref=f162e391] [cursor=pointer]:
+                                - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped1).jpg
+                              - link "Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323) (cropped1).jpg" [ref=f162e394] [cursor=pointer]:
+                                - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped1).jpg
+                          - listitem [ref=f162e395]:
+                            - figure [ref=f162e396]:
+                              - link [ref=f162e397] [cursor=pointer]:
+                                - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped2).jpg
+                              - link "Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323) (cropped2).jpg" [ref=f162e400] [cursor=pointer]:
+                                - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped2).jpg
+                          - listitem [ref=f162e401]:
+                            - figure [ref=f162e402]:
+                              - link [ref=f162e403] [cursor=pointer]:
+                                - /url: /wiki/File:Socks_and_the_President%27s_Desk.jpg
+                              - link "Socks and the President's Desk.jpg" [ref=f162e406] [cursor=pointer]:
+                                - /url: /wiki/File:Socks_and_the_President%27s_Desk.jpg
+                      - cell [ref=f162e407]
+              - heading "File history" [level=2] [ref=f162e408]
+              - generic [ref=f162e409]:
+                - paragraph [ref=f162e410]: Click on a date/time to view the file as it appeared at that time.
+                - table [ref=f162e411]:
+                  - rowgroup [ref=f162e412]:
+                    - row [ref=f162e413]:
+                      - columnheader [ref=f162e414]
+                      - columnheader "Date/Time" [ref=f162e415]
+                      - columnheader "Thumbnail" [ref=f162e416]
+                      - columnheader "Dimensions" [ref=f162e417]
+                      - columnheader "User" [ref=f162e418]
+                      - columnheader "Comment" [ref=f162e419]
+                    - row [ref=f162e420]:
+                      - cell "current" [ref=f162e421]
+                      - cell [ref=f162e422]:
+                        - link "21:24, 19 September 2016" [ref=f162e423] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                      - cell [ref=f162e424]:
+                        - link [ref=f162e425] [cursor=pointer]:
+                          - /url: https://upload.wikimedia.org/wikipedia/commons/5/53/Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original
+                          - img "Thumbnail for version as of 21:24, 19 September 2016" [ref=f162e426]
+                      - cell "3,150 × 2,074 (2.13 MB)" [ref=f162e427]
+                      - cell [ref=f162e428]:
+                        - link "Vanished Account Byeznhpyxeuztibuo" [ref=f162e429] [cursor=pointer]:
+                          - /url: /wiki/User:Vanished_Account_Byeznhpyxeuztibuo
+                        - generic [ref=f162e431]:
+                          - text: (
+                          - link "talk" [ref=f162e432] [cursor=pointer]:
+                            - /url: /wiki/User_talk:Vanished_Account_Byeznhpyxeuztibuo
+                          - text: "|"
+                          - link "contribs" [ref=f162e433] [cursor=pointer]:
+                            - /url: /wiki/Special:Contributions/Vanished_Account_Byeznhpyxeuztibuo
+                          - text: )
+                      - cell [ref=f162e434]:
+                        - text: Transferred from Flickr via
+                        - link "Flickr2Commons" [ref=f162e435] [cursor=pointer]:
+                          - /url: /wiki/Commons:Flickr2Commons
+              - paragraph [ref=f162e437]: You cannot overwrite this file.
+              - heading "File usage on Commons" [level=2] [ref=f162e438]
+              - generic [ref=f162e439]:
+                - paragraph [ref=f162e440]: "The following 13 pages use this file:"
+                - list [ref=f162e441]:
+                  - listitem [ref=f162e442]:
+                    - link "User:Aristeas/Galleries/Notebook" [ref=f162e443] [cursor=pointer]:
+                      - /url: /wiki/User:Aristeas/Galleries/Notebook
+                  - listitem [ref=f162e444]:
+                    - link "Commons:Featured picture candidates/File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323).jpg" [ref=f162e445] [cursor=pointer]:
+                      - /url: /wiki/Commons:Featured_picture_candidates/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323).jpg
+                  - listitem [ref=f162e446]:
+                    - link "Commons:Featured picture candidates/Log/May 2021" [ref=f162e447] [cursor=pointer]:
+                      - /url: /wiki/Commons:Featured_picture_candidates/Log/May_2021
+                  - listitem [ref=f162e448]:
+                    - link "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323).jpg" [ref=f162e449] [cursor=pointer]:
+                      - /url: /w/index.php?title=File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323).jpg&redirect=no
+                    - text: (file redirect)
+                    - list [ref=f162e450]:
+                      - listitem [ref=f162e451]:
+                        - link "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323) (cropped1).jpg" [ref=f162e452] [cursor=pointer]:
+                          - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped1).jpg
+                      - listitem [ref=f162e453]:
+                        - link "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323) (cropped2).jpg" [ref=f162e454] [cursor=pointer]:
+                          - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped2).jpg
+                      - listitem [ref=f162e455]:
+                        - link "Commons:Featured picture candidates/Log/May 2021" [ref=f162e456] [cursor=pointer]:
+                          - /url: /wiki/Commons:Featured_picture_candidates/Log/May_2021
+                      - listitem [ref=f162e457]:
+                        - link "Commons:Featured picture candidates/File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323).jpg" [ref=f162e458] [cursor=pointer]:
+                          - /url: /wiki/Commons:Featured_picture_candidates/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323).jpg
+                      - listitem [ref=f162e459]:
+                        - link "User:Aristeas/Galleries/Notebook" [ref=f162e460] [cursor=pointer]:
+                          - /url: /wiki/User:Aristeas/Galleries/Notebook
+                      - listitem [ref=f162e461]:
+                        - link "File:Socks and the President's Desk.jpg" [ref=f162e462] [cursor=pointer]:
+                          - /url: /wiki/File:Socks_and_the_President%27s_Desk.jpg
+                  - listitem [ref=f162e463]:
+                    - link "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323) (cropped1).jpg" [ref=f162e464] [cursor=pointer]:
+                      - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped1).jpg
+                  - listitem [ref=f162e465]:
+                    - link "File:Photograph of Socks the Cat Sitting Behind the President's Desk in the Oval Office- 01-07-1994 (6461515323) (cropped2).jpg" [ref=f162e466] [cursor=pointer]:
+                      - /url: /wiki/File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office-_01-07-1994_(6461515323)_(cropped2).jpg
+                  - listitem [ref=f162e467]:
+                    - link "File:Socks and the President's Desk.jpg" [ref=f162e468] [cursor=pointer]:
+                      - /url: /wiki/File:Socks_and_the_President%27s_Desk.jpg
+              - heading "File usage on other wikis" [level=2] [ref=f162e469]
+              - generic [ref=f162e470]:
+                - paragraph [ref=f162e471]: "The following other wikis use this file:"
+                - list [ref=f162e472]:
+                  - listitem [ref=f162e473]:
+                    - text: Usage on ca.wikipedia.org
+                    - list [ref=f162e474]:
+                      - listitem [ref=f162e475]:
+                        - link "Animals domèstics dels presidents dels Estats Units" [ref=f162e476] [cursor=pointer]:
+                          - /url: https://ca.wikipedia.org/wiki/Animals_dom%C3%A8stics_dels_presidents_dels_Estats_Units
+                  - listitem [ref=f162e477]:
+                    - text: Usage on en.wikipedia.org
+                    - list [ref=f162e478]:
+                      - listitem [ref=f162e479]:
+                        - link "Socks (cat)" [ref=f162e480] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Socks_(cat)
+                  - listitem [ref=f162e481]:
+                    - text: Usage on fr.wikipedia.org
+                    - list [ref=f162e482]:
+                      - listitem [ref=f162e483]:
+                        - link "Socks" [ref=f162e484] [cursor=pointer]:
+                          - /url: https://fr.wikipedia.org/wiki/Socks
+                  - listitem [ref=f162e485]:
+                    - text: Usage on sv.wikipedia.org
+                    - list [ref=f162e486]:
+                      - listitem [ref=f162e487]:
+                        - link "Användare:Allexim" [ref=f162e488] [cursor=pointer]:
+                          - /url: https://sv.wikipedia.org/wiki/Anv%C3%A4ndare:Allexim
+                      - listitem [ref=f162e489]:
+                        - link "Socks" [ref=f162e490] [cursor=pointer]:
+                          - /url: https://sv.wikipedia.org/wiki/Socks
+              - heading "Metadata" [level=2] [ref=f162e491]
+              - generic [ref=f162e492]:
+                - paragraph [ref=f162e493]: This file contains additional information such as Exif metadata which may have been added by the digital camera, scanner, or software program used to create or digitize it. If the file has been modified from its original state, some details such as the timestamp may not fully reflect those of the original file. The timestamp is only as accurate as the clock in the camera, and it may be completely wrong.
+                - table [ref=f162e494]:
+                  - rowgroup [ref=f162e495]:
+                    - row [ref=f162e496]:
+                      - rowheader "Camera manufacturer" [ref=f162e497]
+                      - cell [ref=f162e498]:
+                        - link "NIKON" [ref=f162e499] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Nikon
+                    - row [ref=f162e500]:
+                      - rowheader "Camera model" [ref=f162e501]
+                      - cell [ref=f162e502]:
+                        - link "Nikon SUPER COOLSCAN 8000 ED" [ref=f162e504] [cursor=pointer]:
+                          - /url: https://en.wikipedia.org/wiki/Special:Search?search=Nikon+SUPER+COOLSCAN+8000+ED
+                    - row [ref=f162e505]:
+                      - cell [ref=f162e506]:
+                        - button "Show extended details" [ref=f162e507] [cursor=pointer]
+        - generic [ref=f162e508]:
+          - generic [ref=f162e509]:
+            - link "Categories" [ref=f162e510] [cursor=pointer]:
+              - /url: /wiki/Special:MyLanguage/Commons:Categories
+            - text: ":"
+            - list [ref=f162e511]:
+              - listitem [ref=f162e512]:
+                - link "Socks (cat)" [ref=f162e513] [cursor=pointer]:
+                  - /url: /wiki/Category:Socks_(cat)
+              - listitem [ref=f162e514]:
+                - link "Resolute desk" [ref=f162e515] [cursor=pointer]:
+                  - /url: /wiki/Category:Resolute_desk
+              - listitem [ref=f162e516]:
+                - link "Pets in the Oval Office" [ref=f162e517] [cursor=pointer]:
+                  - /url: /wiki/Category:Pets_in_the_Oval_Office
+              - listitem [ref=f162e518]:
+                - link "White House in January 1994" [ref=f162e519] [cursor=pointer]:
+                  - /url: /wiki/Category:White_House_in_January_1994
+              - listitem [ref=f162e520]:
+                - link "Potted plants in the United States" [ref=f162e521] [cursor=pointer]:
+                  - /url: /wiki/Category:Potted_plants_in_the_United_States
+              - listitem [ref=f162e522]:
+                - link "Plants in offices" [ref=f162e523] [cursor=pointer]:
+                  - /url: /wiki/Category:Plants_in_offices
+          - generic [ref=f162e524]:
+            - text: "Hidden categories:"
+            - list [ref=f162e525]:
+              - listitem [ref=f162e526]:
+                - link "PD US" [ref=f162e527] [cursor=pointer]:
+                  - /url: /wiki/Category:PD_US
+              - listitem [ref=f162e528]:
+                - link "Media contributed by the Digital Public Library of America" [ref=f162e529] [cursor=pointer]:
+                  - /url: /wiki/Category:Media_contributed_by_the_Digital_Public_Library_of_America
+              - listitem [ref=f162e530]:
+                - link "Media contributed by the National Archives and Records Administration" [ref=f162e531] [cursor=pointer]:
+                  - /url: /wiki/Category:Media_contributed_by_the_National_Archives_and_Records_Administration
+              - listitem [ref=f162e532]:
+                - link "Media contributed by Clinton Presidential Center" [ref=f162e533] [cursor=pointer]:
+                  - /url: /wiki/Category:Media_contributed_by_Clinton_Presidential_Center
+              - listitem [ref=f162e534]:
+                - link "Images with extracted images" [ref=f162e535] [cursor=pointer]:
+                  - /url: /wiki/Category:Images_with_extracted_images
+    - contentinfo [ref=f162e537]:
+      - list [ref=f162e538]:
+        - listitem [ref=f162e539]: This page was last edited on 7 July 2026, at 14:18.
+        - listitem [ref=f162e540]:
+          - text: Files are available under licenses specified on their description page. All structured data from the file namespace is available under the
+          - link "Creative Commons CC0 License" [ref=f162e541] [cursor=pointer]:
+            - /url: https://creativecommons.org/publicdomain/zero/1.0/
+          - text: ; all unstructured text is available under the
+          - link "Creative Commons Attribution-ShareAlike License" [ref=f162e542] [cursor=pointer]:
+            - /url: https://creativecommons.org/licenses/by-sa/4.0/
+          - text: ; additional terms may apply. By using this site, you agree to the
+          - link "Terms of Use" [ref=f162e543] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use
+          - text: and the
+          - link "Privacy Policy" [ref=f162e544] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+          - text: .
+      - list:
+        - listitem [ref=f162e545]:
+          - link "Privacy policy" [ref=f162e546] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy
+        - listitem [ref=f162e547]:
+          - link "About Wikimedia Commons" [ref=f162e548] [cursor=pointer]:
+            - /url: /wiki/Commons:Welcome
+        - listitem [ref=f162e549]:
+          - link "Disclaimers" [ref=f162e550] [cursor=pointer]:
+            - /url: /wiki/Commons:General_disclaimer
+        - listitem [ref=f162e551]:
+          - link "Legal & safety contacts" [ref=f162e552] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information
+        - listitem [ref=f162e553]:
+          - link "Code of Conduct" [ref=f162e554] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct
+        - listitem [ref=f162e555]:
+          - link "Developers" [ref=f162e556] [cursor=pointer]:
+            - /url: https://developer.wikimedia.org
+        - listitem [ref=f162e557]:
+          - link "Statistics" [ref=f162e558] [cursor=pointer]:
+            - /url: https://stats.wikimedia.org/#/commons.wikimedia.org
+        - listitem [ref=f162e559]:
+          - link "Cookie statement" [ref=f162e560] [cursor=pointer]:
+            - /url: https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement
+        - listitem [ref=f162e561]:
+          - link "Mobile view" [ref=f162e562] [cursor=pointer]:
+            - /url: //commons.wikimedia.org/w/index.php?title=File:Photograph_of_Socks_the_Cat_Sitting_Behind_the_President%27s_Desk_in_the_Oval_Office_-_DPLA_-_f4177e993c655cfb4831c4786a60412a.jpg&mobileaction=toggle_view_mobile
+      - list [ref=f162e563]:
+        - listitem [ref=f162e564]:
+          - link [ref=f162e565] [cursor=pointer]:
+            - /url: https://www.wikimedia.org/
+            - img "Wikimedia Foundation" [ref=f162e567]
+        - listitem [ref=f162e568]:
+          - link [ref=f162e569] [cursor=pointer]:
+            - /url: https://www.mediawiki.org/
+            - img "Powered by MediaWiki" [ref=f162e571]
+  - generic [ref=f162e572]:
+    - list

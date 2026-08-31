@@ -48,6 +48,8 @@ public final class Repl {
     private Supplier<String> prompt;
     private Runnable onResponse;
     private boolean stopped = false;
+    /** When non-null, injected as the next input line instead of reading from stdin. */
+    private volatile Supplier<String> injectedInput;
     /** True only when running interactively on a real TTY with stdin as input source. */
     final boolean interactive;
     final History history;
@@ -107,6 +109,9 @@ public final class Repl {
 
     /** Reset pane line counter so next printLivePane() repaints fresh below current output. */
     public void resetLivePaneCount() { lastPaneLines = 0; }
+
+    /** Inject a line to be consumed as the next user input (used by the schedule tool). */
+    public void injectInput(String line) { this.injectedInput = () -> line; }
 
     /** The command table - add your own slash-commands here. */
     public Commands commands() {
@@ -194,6 +199,20 @@ public final class Repl {
     public void run(Chat chat) {
         while (!stopped) {
             Thread.interrupted(); // clear any pending interrupt from a previous turn's Ctrl-C
+            // check for input injected by the schedule/continue tool
+            var injected = injectedInput;
+            if (injected != null) {
+                injectedInput = null;
+                String input = injected.get();
+                if (input != null && !input.isBlank()) {
+                    System.out.println(Ansi.dim("[scheduled] " + input));
+                    history.add(input);
+                    try { chat.chat(input); } catch (Exception e) { /* handled below */ }
+                    if (onResponse != null) onResponse.run();
+                    resetLivePaneCount();
+                    continue;
+                }
+            }
             if (interactive) {
                 printLivePane(); // pane above prompt; readLogicalLine/lineEditor prints the prompt itself
             } else {

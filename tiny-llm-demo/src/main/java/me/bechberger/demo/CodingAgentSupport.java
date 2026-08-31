@@ -76,6 +76,8 @@ abstract class CodingAgentSupport implements Callable<Integer> {
 
     final AgentState state = new AgentState();
 
+    volatile String pendingContinuation = null;
+
     /** Set once the REPL is built in call() — used by confirmPlan for prompting. */
     Repl repl;
 

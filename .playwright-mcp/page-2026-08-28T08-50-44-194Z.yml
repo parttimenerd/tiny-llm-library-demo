@@ -1,0 +1,16 @@
+- generic [ref=f145e2]:
+  - navigation [ref=f145e9]:
+    - generic [ref=f145e10]:
+      - button "Enter fullscreen" [ref=f145e11] [cursor=pointer]
+      - button "Go to previous slide"
+      - button "Go to next slide" [ref=f145e14] [cursor=pointer]
+      - button "Show slide overview" [ref=f145e17] [cursor=pointer]
+      - button "Show drawing toolbar" [ref=f145e21] [cursor=pointer]
+      - button "Presenter Mode" [ref=f145e25] [cursor=pointer]
+      - button "Show info" [ref=f145e28] [cursor=pointer]
+      - button [ref=f145e33] [cursor=pointer]:
+        - button "Change sync settings" [ref=f145e34]
+      - button [ref=f145e39] [cursor=pointer]:
+        - button "More Options" [ref=f145e40]
+      - generic [ref=f145e44]: 1 / 62
+  - textbox "Goto..." [disabled] [ref=f145e47]

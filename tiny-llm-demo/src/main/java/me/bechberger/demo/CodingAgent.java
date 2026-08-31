@@ -11,6 +11,8 @@ import me.bechberger.demo.util.Commands;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.FemtoCli;
 import me.bechberger.femtocli.annotations.Command;
+import me.bechberger.util.femtoschema.Schemas;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +84,35 @@ public class CodingAgent extends CodingAgentSupport {
         var toolSupport = new ToolSupport();
         CodingTools.registerFileTools(toolSupport, fileTools, action -> confirm(action, false));
         CodingTools.registerStateTools(toolSupport, state, action -> confirmPlan(action));
+
+        toolSupport.registerTool("continue",
+            "Continue working autonomously — re-invoke the agent immediately with a follow-up message " +
+            "without waiting for user input. Use to chain steps or iterate without interrupting the user.",
+            Schemas.object()
+                .required("message", Schemas.string().withDescription("The follow-up instruction to act on next"))
+                .toJsonSchema(),
+            args -> {
+                pendingContinuation = CodingTools.str(args, "message");
+                return "Continuation scheduled.";
+            });
+
+        toolSupport.registerTool("schedule",
+            "Schedule a follow-up message to be sent after a delay. " +
+            "Use to check back on a long-running process or remind the user about something.",
+            Schemas.object()
+                .required("message",        Schemas.string().withDescription("Message to inject as the next user turn"))
+                .required("delay_seconds",  Schemas.number().withDescription("Seconds to wait before injecting the message"))
+                .toJsonSchema(),
+            args -> {
+                String message = CodingTools.str(args, "message");
+                int delay = ((Number) args.get("delay_seconds")).intValue();
+                Thread.ofVirtual().start(() -> {
+                    try { Thread.sleep(delay * 1000L); } catch (InterruptedException ignored) { return; }
+                    if (repl != null) repl.injectInput(message);
+                });
+                return "Scheduled in " + delay + "s: " + message;
+            });
+
         return toolSupport;
     }
 
