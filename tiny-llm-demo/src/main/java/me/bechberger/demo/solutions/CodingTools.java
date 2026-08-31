@@ -3,7 +3,6 @@ package me.bechberger.demo.solutions;
 import me.bechberger.demo.AgentState;
 import me.bechberger.demo.FileTools;
 import me.bechberger.util.femtoschema.Schemas;
-import me.bechberger.util.json.CompactPrinter;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -107,33 +106,6 @@ public final class CodingTools {
     }
 
     public static void registerStateTools(ToolSupport ts, AgentState state, Predicate<String> approve) {
-        ts.registerTool("state-get",
-                "Read one state field as JSON. field: 'goal' (string), 'plan' (string), 'todos' (array of {id,description,status}).",
-                Schemas.object()
-                        .required("field", Schemas.string().withDescription("goal, plan, or todos"))
-                        .toJsonSchema(),
-                args -> switch (str(args, "field")) {
-                    case "goal"  -> CompactPrinter.compactPrint(state.getGoal());
-                    case "plan"  -> CompactPrinter.compactPrint(state.getPlan());
-                    case "todos" -> CompactPrinter.compactPrint(
-                            state.getTodos().stream()
-                                 .map(t -> Map.of("id", t.id(), "description", t.description(), "status", t.status().name().toLowerCase()))
-                                 .toList());
-                    default      -> "Unknown field. Use: goal, plan, todos";
-                });
-
-        ts.registerTool("state-set",
-                "Overwrite one state field. field: 'goal' or 'plan' (value is a plain string).",
-                Schemas.object()
-                        .required("field", Schemas.string().withDescription("goal or plan"))
-                        .required("value", Schemas.string().withDescription("New value"))
-                        .toJsonSchema(),
-                args -> switch (str(args, "field")) {
-                    case "goal" -> { state.setGoal(str(args, "value")); yield "goal updated"; }
-                    case "plan" -> { state.setPlan(str(args, "value")); yield "plan updated"; }
-                    default     -> "Unknown field. Use: goal or plan";
-                });
-
         register(ts, "todo-add", "Add a new TODO item",
                 args -> "Added TODO #" + state.addTodo(str(args, "description")),
                 "description", "What needs to be done");
