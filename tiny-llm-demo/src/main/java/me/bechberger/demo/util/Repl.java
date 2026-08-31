@@ -61,7 +61,7 @@ public final class Repl {
      */
     public Repl(String prompt, Scanner scanner) {
         this.scanner = scanner;
-        this.interactive = System.console() != null && isStdinScanner(scanner);
+        this.interactive = isStdinScanner(scanner) && new java.io.File("/dev/tty").exists();
         this.history = new History(interactive);
         this.prompt = () -> prompt;
         commands.on("exit", "leave the chat", args -> stop(), "quit");
@@ -605,8 +605,11 @@ public final class Repl {
 
     private static void runStty(String[] cmd) {
         try {
-            new ProcessBuilder(cmd).inheritIO()
-                    .redirectInput(ProcessBuilder.Redirect.from(new java.io.File("/dev/tty")))
+            var devTty = new java.io.File("/dev/tty");
+            new ProcessBuilder(cmd)
+                    .redirectInput(ProcessBuilder.Redirect.from(devTty))
+                    .redirectOutput(ProcessBuilder.Redirect.to(devTty))
+                    .redirectError(ProcessBuilder.Redirect.to(devTty))
                     .start().waitFor();
         } catch (Exception ignored) {}
     }
