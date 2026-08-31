@@ -336,6 +336,7 @@ public final class Repl {
             boolean searchMode = false;
             var searchBuf = new StringBuilder();
 
+            redrawLine(buf, cursor); // print initial prompt
             while (true) {
                 int b = tty.read();
                 if (b == -1) return null;  // EOF
