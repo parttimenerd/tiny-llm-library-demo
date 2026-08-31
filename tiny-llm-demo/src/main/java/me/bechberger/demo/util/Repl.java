@@ -397,12 +397,13 @@ public final class Repl {
                 } else if (b == 127 || b == 8) {   // Backspace / Ctrl-H
                     if (cursor > 0) { buf.deleteCharAt(--cursor); redrawLine(buf, cursor); }
                 } else if (b == 27) {              // Escape sequence
-                    long deadline = System.currentTimeMillis() + 30;
-                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                    long deadline = System.currentTimeMillis() + 50;
+                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
                     if (tty.available() == 0) continue; // bare Esc — ignore
                     int b2 = tty.read();
                     if (b2 == '[') {
-                        while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                        deadline = System.currentTimeMillis() + 50;
+                        while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
                         if (tty.available() == 0) continue;
                         int b3 = tty.read();
                         if (b3 == 'A') {           // ↑ — older history
