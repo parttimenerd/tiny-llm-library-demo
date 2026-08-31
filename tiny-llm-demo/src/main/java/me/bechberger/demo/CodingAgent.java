@@ -253,11 +253,10 @@ public class CodingAgent extends CodingAgentSupport {
                 Call write-plan with a complete Markdown plan. Include:
                 - A short # title
                 - Approach: what will be done and why
-                - Numbered steps (each step maps to one TODO)
+                - Numbered steps
                 - Files to create/modify
                 - Verification: how to test
 
-                After write-plan, call todo-add once per step (in order).
                 Do NOT write files, run commands, or implement anything.""";
     }
 
