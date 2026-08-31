@@ -50,6 +50,16 @@ public final class Repl {
     private boolean stopped = false;
     /** When non-null, injected as the next input line instead of reading from stdin. */
     private volatile Supplier<String> injectedInput;
+    /** Active schedule handles; cancel() stops the virtual thread. */
+    private final java.util.concurrent.CopyOnWriteArrayList<ScheduleHandle> schedules =
+            new java.util.concurrent.CopyOnWriteArrayList<>();
+
+    /** Handle returned by {@link #schedule} — call {@link #cancel()} to stop it. */
+    public static final class ScheduleHandle {
+        private volatile boolean cancelled = false;
+        public void cancel() { cancelled = true; }
+        public boolean isCancelled() { return cancelled; }
+    }
     /** True only when running interactively on a real TTY with stdin as input source. */
     final boolean interactive;
     final History history;
@@ -112,6 +122,39 @@ public final class Repl {
 
     /** Inject a line to be consumed as the next user input (used by the schedule tool). */
     public void injectInput(String line) { this.injectedInput = () -> line; }
+
+    /**
+     * Schedule {@code message} to be injected after {@code delayMs} ms, then every
+     * {@code repeatMs} ms if > 0. Returns a handle whose {@link ScheduleHandle#cancel()}
+     * stops the virtual thread.
+     */
+    public ScheduleHandle schedule(String message, long delayMs, long repeatMs) {
+        var handle = new ScheduleHandle();
+        schedules.add(handle);
+        Thread.ofVirtual().start(() -> {
+            try {
+                Thread.sleep(delayMs);
+                if (!handle.isCancelled()) injectInput(message);
+                if (repeatMs > 0) {
+                    while (!handle.isCancelled()) {
+                        Thread.sleep(repeatMs);
+                        if (!handle.isCancelled()) injectInput(message);
+                    }
+                }
+            } catch (InterruptedException ignored) {
+            } finally {
+                schedules.remove(handle);
+            }
+        });
+        return handle;
+    }
+
+    /** Cancel all active scheduled injections. */
+    public void cancelAllScheduled() {
+        schedules.forEach(ScheduleHandle::cancel);
+        schedules.clear();
+        injectedInput = null;
+    }
 
     /** The command table - add your own slash-commands here. */
     public Commands commands() {

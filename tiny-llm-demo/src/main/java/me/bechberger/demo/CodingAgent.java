@@ -99,7 +99,8 @@ public class CodingAgent extends CodingAgentSupport {
         toolSupport.registerTool("schedule",
             "Schedule a follow-up message to be sent after a delay. " +
             "Use to check back on a long-running process or remind the user about something. " +
-            "Set repeat_seconds to keep firing at that interval until the agent stops it.",
+            "Set repeat_seconds to keep firing at that interval until the agent stops it. " +
+            "Returns a schedule ID to cancel later.",
             Schemas.object()
                 .required("message",        Schemas.string().withDescription("Message to inject as the next user turn"))
                 .required("delay_seconds",  Schemas.number().withDescription("Seconds to wait before injecting the message"))
@@ -107,21 +108,32 @@ public class CodingAgent extends CodingAgentSupport {
                 .toJsonSchema(),
             args -> {
                 String message = CodingTools.str(args, "message");
-                int delay = ((Number) args.get("delay_seconds")).intValue();
-                int repeat = args.get("repeat_seconds") instanceof Number n ? n.intValue() : 0;
-                Thread.ofVirtual().start(() -> {
-                    try {
-                        Thread.sleep(delay * 1000L);
-                        if (repl != null) repl.injectInput(message);
-                        if (repeat > 0) {
-                            while (true) {
-                                Thread.sleep(repeat * 1000L);
-                                if (repl != null) repl.injectInput(message);
-                            }
-                        }
-                    } catch (InterruptedException ignored) {}
-                });
-                return "Scheduled in " + delay + "s" + (repeat > 0 ? ", repeating every " + repeat + "s" : "") + ": " + message;
+                long delay  = ((Number) args.get("delay_seconds")).longValue();
+                long repeat = args.get("repeat_seconds") instanceof Number n ? n.longValue() : 0;
+                if (repl == null) return "No REPL available.";
+                var handle = repl.schedule(message, delay * 1000L, repeat * 1000L);
+                int id = System.identityHashCode(handle);
+                scheduleHandles.put(id, handle);
+                return "Scheduled id=" + id + " in " + delay + "s"
+                        + (repeat > 0 ? ", repeating every " + repeat + "s" : "") + ": " + message;
+            });
+
+        toolSupport.registerTool("cancel-schedule",
+            "Cancel a scheduled/repeating message by its ID, or cancel all if no ID given.",
+            Schemas.object()
+                .optional("id", Schemas.number().withDescription("Schedule ID returned by schedule; omit to cancel all"))
+                .toJsonSchema(),
+            args -> {
+                if (args.get("id") instanceof Number n) {
+                    var handle = scheduleHandles.remove(n.intValue());
+                    if (handle == null) return "No schedule with id=" + n.intValue();
+                    handle.cancel();
+                    return "Cancelled schedule id=" + n.intValue();
+                }
+                scheduleHandles.values().forEach(h -> h.cancel());
+                scheduleHandles.clear();
+                if (repl != null) repl.cancelAllScheduled();
+                return "All schedules cancelled.";
             });
 
         return toolSupport;

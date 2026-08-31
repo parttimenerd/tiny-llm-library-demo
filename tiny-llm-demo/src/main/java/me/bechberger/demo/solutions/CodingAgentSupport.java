@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -87,6 +88,9 @@ abstract class CodingAgentSupport implements Callable<Integer> {
      * and re-invokes itself without waiting for user input.
      */
     volatile String pendingContinuation = null;
+
+    /** Active schedule handles keyed by identity hash code, for per-ID cancellation. */
+    final Map<Integer, Repl.ScheduleHandle> scheduleHandles = new HashMap<>();
 
     /** Set once the REPL is built in call() — used by confirmPlan for prompting. */
     Repl repl;
