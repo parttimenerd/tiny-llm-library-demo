@@ -227,17 +227,20 @@ public class LLMClient {
         var req = new LinkedHashMap<String, Object>();
         req.put("model", model);
         req.put("messages", messages);
-        if (thinking) {
-            var tkw = new LinkedHashMap<String, Object>();
-            tkw.put("enable_thinking", true);
-            if (thinkingBudget > 0) tkw.put("thinking_budget", thinkingBudget);
-            req.put("chat_template_kwargs", tkw);
-        }
+        addThinkingParams(req);
         if (stream) req.put("stream", true);
         if (tools != null && !tools.isEmpty()) {
             req.put("tools", tools);
             req.put("tool_choice", "auto");
         }
         return CompactPrinter.compactPrint(req);
+    }
+
+    private void addThinkingParams(LinkedHashMap<String, Object> req) {
+        if (!thinking) return;
+        var tkw = new LinkedHashMap<String, Object>();
+        tkw.put("enable_thinking", true);
+        if (thinkingBudget > 0) tkw.put("thinking_budget", thinkingBudget);
+        req.put("chat_template_kwargs", tkw);
     }
 }

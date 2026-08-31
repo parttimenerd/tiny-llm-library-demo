@@ -115,26 +115,7 @@ public class ToolSupport implements me.bechberger.demo.util.ToolCallListener {
      * @return Final assistant response text
      */
     public String handleToolLoop(LLMClient client, List<Map<String, Object>> messages) throws IOException {
-        // TODO: loop up to 100 times: chatRaw → if finish_reason=="stop" return extractContent, else processToolCalls and continue
-        throw new UnsupportedOperationException("TODO: live code");
-    }
-
-    /**
-     * Extract content from a normal (non-tool) response.
-     * <p>
-     * Format:
-     * <pre>{@code
-     * {
-     *   "message": {
-     *     "content": "text response"
-     *   }
-     * }
-     * }</pre>
-     * <p>
-     * Implementation: Extract choice.message.content
-     */
-    private String extractContent(Map<String, Object> choice) {
-        // TODO: live code
+        // TODO: loop up to 100 times: chatRaw → if finish_reason!="tool_calls" extract+return content, else processToolCalls and continue
         throw new UnsupportedOperationException("TODO: live code");
     }
 
