@@ -64,18 +64,36 @@ abstract class CodingAgentSupport implements Callable<Integer> {
 
     private static ApprovalRules defaultRules() {
         var r = new ApprovalRules();
+        // file write tools — allow all by default
+        r.allow("create-file: *");
+        r.allow("write-file: *");
+        r.allow("edit: *");
+        r.allow("create-folder: *");
+        // run — safe read-only and build commands
         r.allow("run: ls*");
-        r.allow("run: git status*");
-        r.allow("run: git log*");
-        r.allow("run: git diff*");
         r.allow("run: cat *");
         r.allow("run: find *");
         r.allow("run: grep *");
-        r.allow("run: pwd");
+        r.allow("run: pwd*");
         r.allow("run: echo *");
-        r.allow("run: mvn test*");
-        r.allow("run: mvn package*");
-        r.allow("run: mvn -q*");
+        r.allow("run: which *");
+        r.allow("run: wc *");
+        r.allow("run: head *");
+        r.allow("run: tail *");
+        r.allow("run: git status*");
+        r.allow("run: git log*");
+        r.allow("run: git diff*");
+        r.allow("run: git show*");
+        r.allow("run: git branch*");
+        r.allow("run: mvn*");
+        r.allow("run: ./mvnw*");
+        r.allow("run: gradle*");
+        r.allow("run: ./gradlew*");
+        r.allow("run: make*");
+        r.allow("run: npm test*");
+        r.allow("run: npm run*");
+        r.allow("run: python*");
+        r.allow("run: java -jar*");
         return r;
     }
 
@@ -226,6 +244,8 @@ abstract class CodingAgentSupport implements Callable<Integer> {
                     System.out.println("  " + Ansi.dim((i + 1) + ".") + " " + label + "  " + r.pattern());
                 }
             }
+            System.out.println(Ansi.dim("  Pattern matches the full action string, e.g.:"));
+            System.out.println(Ansi.dim("    run: mvn*   run: git *   delete: tmp/*   plan: *"));
             System.out.println(Ansi.dim("  Commands: allow <pattern> | deny <pattern> | <number> to delete | empty to exit"));
             System.out.println(Ansi.bold("────────────────────────────────────────────────────────"));
             String input = repl != null ? repl.prompt("  > ", null) : null;

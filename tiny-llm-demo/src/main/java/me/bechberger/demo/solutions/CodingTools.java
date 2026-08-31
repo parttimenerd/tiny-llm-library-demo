@@ -71,22 +71,30 @@ public final class CodingTools {
         registerReadOnlyFileTools(ts, fileTools);
 
         register(ts, "create-file", "Create a new file with content (fails if it already exists - use write-file to overwrite)",
-                args -> fileTools.createFile(str(args, "path"), str(args, "content")),
+                args -> approve.test("create-file: " + args.get("path"))
+                        ? fileTools.createFile(str(args, "path"), str(args, "content"))
+                        : "User declined — ask why or suggest /yolo.",
                 "path", "File path relative to project root", "content", "File content");
 
         register(ts, "write-file", "Write (create or overwrite) a file",
-                args -> fileTools.writeFile(str(args, "path"), str(args, "content")),
+                args -> approve.test("write-file: " + args.get("path"))
+                        ? fileTools.writeFile(str(args, "path"), str(args, "content"))
+                        : "User declined — ask why or suggest /yolo.",
                 "path", "File path relative to project root", "content", "Full file content to write");
 
         register(ts, "edit", "Replace exact text in an existing file - 'old' must occur exactly once; " +
                         "use for surgical changes instead of rewriting the whole file",
-                args -> fileTools.editFile(str(args, "path"), str(args, "old"), str(args, "new")),
+                args -> approve.test("edit: " + args.get("path"))
+                        ? fileTools.editFile(str(args, "path"), str(args, "old"), str(args, "new"))
+                        : "User declined — ask why or suggest /yolo.",
                 "path", "File relative to project root",
                 "old", "Exact current text to replace (must occur exactly once - include surrounding lines if ambiguous)",
                 "new", "Replacement text");
 
         register(ts, "create-folder", "Create a folder (and any missing parents)",
-                args -> fileTools.createFolder(str(args, "path")),
+                args -> approve.test("create-folder: " + args.get("path"))
+                        ? fileTools.createFolder(str(args, "path"))
+                        : "User declined — ask why or suggest /yolo.",
                 "path", "Folder path relative to project root");
 
         register(ts, "delete", "Delete a file or folder (folders are deleted recursively). Requires user confirmation.",
