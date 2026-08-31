@@ -59,34 +59,10 @@ abstract class CodingAgentSupport implements Callable<Integer> {
 
     private static ApprovalRules defaultRules() {
         var r = new ApprovalRules();
-        r.allow("create-file: *");
-        r.allow("write-file: *");
-        r.allow("edit: *");
-        r.allow("create-folder: *");
-        r.allow("run: ls*");
-        r.allow("run: cat *");
-        r.allow("run: find *");
-        r.allow("run: grep *");
-        r.allow("run: pwd*");
+        r.allow("run: pwd");
         r.allow("run: echo *");
         r.allow("run: which *");
-        r.allow("run: wc *");
-        r.allow("run: head *");
-        r.allow("run: tail *");
         r.allow("run: git status*");
-        r.allow("run: git log*");
-        r.allow("run: git diff*");
-        r.allow("run: git show*");
-        r.allow("run: git branch*");
-        r.allow("run: mvn*");
-        r.allow("run: ./mvnw*");
-        r.allow("run: gradle*");
-        r.allow("run: ./gradlew*");
-        r.allow("run: make*");
-        r.allow("run: npm test*");
-        r.allow("run: npm run*");
-        r.allow("run: python*");
-        r.allow("run: java -jar*");
         return r;
     }
 
@@ -171,11 +147,14 @@ abstract class CodingAgentSupport implements Callable<Integer> {
         int colon = action.indexOf(": ");
         if (colon < 0) return Ansi.yellow(action);
         String prefix = action.substring(0, colon + 2);
-        String body   = action.substring(colon + 2);
+        String rest   = action.substring(colon + 2);
+        int pipe = rest.indexOf(" | {");
+        String primary = pipe >= 0 ? rest.substring(0, pipe) : rest;
+        String jsonSuffix = pipe >= 0 ? rest.substring(pipe) : "";
         String highlighted = action.startsWith("run:") || action.startsWith("delete:")
-                ? Highlight.shell(body)
-                : Ansi.yellow(body);
-        return Ansi.yellow(Ansi.BOLD + prefix + Ansi.RESET) + highlighted;
+                ? Highlight.shell(primary)
+                : Ansi.yellow(primary);
+        return Ansi.yellow(Ansi.BOLD + prefix + Ansi.RESET) + highlighted + Ansi.dim(jsonSuffix);
     }
 
     /** Ask the user to approve a risky agent action — auto-approved in YOLO/AUTO_EDIT mode. */
@@ -223,6 +202,9 @@ abstract class CodingAgentSupport implements Callable<Integer> {
                     System.out.println("  " + Ansi.dim((i + 1) + ".") + " " + label + "  " + r.pattern());
                 }
             }
+            System.out.println(Ansi.dim("  Pattern matches the full action string, e.g.:"));
+            System.out.println(Ansi.dim("    run: mvn*        edit: src/main*    delete: tmp/*"));
+            System.out.println(Ansi.dim("    edit: * | *Controller*              (match JSON args)"));
             System.out.println(Ansi.dim("  Commands: allow <pattern> | deny <pattern> | <number> to delete | empty to exit"));
             System.out.println(Ansi.bold("────────────────────────────────────────────────────────"));
             String input = repl != null ? repl.prompt("  > ", null) : null;

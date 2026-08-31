@@ -71,20 +71,20 @@ public final class CodingTools {
         registerReadOnlyFileTools(ts, fileTools);
 
         register(ts, "create-file", "Create a new file with content (fails if it already exists - use write-file to overwrite)",
-                args -> approve.test("create-file: " + args.get("path"))
+                args -> approve.test(action("create-file", args, "content"))
                         ? fileTools.createFile(str(args, "path"), str(args, "content"))
                         : "User declined — ask why or suggest /yolo.",
                 "path", "File path relative to project root", "content", "File content");
 
         register(ts, "write-file", "Write (create or overwrite) a file",
-                args -> approve.test("write-file: " + args.get("path"))
+                args -> approve.test(action("write-file", args, "content"))
                         ? fileTools.writeFile(str(args, "path"), str(args, "content"))
                         : "User declined — ask why or suggest /yolo.",
                 "path", "File path relative to project root", "content", "Full file content to write");
 
         register(ts, "edit", "Replace exact text in an existing file - 'old' must occur exactly once; " +
                         "use for surgical changes instead of rewriting the whole file",
-                args -> approve.test("edit: " + args.get("path"))
+                args -> approve.test(action("edit", args, "old", "new"))
                         ? fileTools.editFile(str(args, "path"), str(args, "old"), str(args, "new"))
                         : "User declined — ask why or suggest /yolo.",
                 "path", "File relative to project root",
@@ -92,13 +92,13 @@ public final class CodingTools {
                 "new", "Replacement text");
 
         register(ts, "create-folder", "Create a folder (and any missing parents)",
-                args -> approve.test("create-folder: " + args.get("path"))
+                args -> approve.test(action("create-folder", args))
                         ? fileTools.createFolder(str(args, "path"))
                         : "User declined — ask why or suggest /yolo.",
                 "path", "Folder path relative to project root");
 
         register(ts, "delete", "Delete a file or folder (folders are deleted recursively). Requires user confirmation.",
-                args -> approve.test("delete: " + args.get("path"))
+                args -> approve.test(action("delete", args))
                         ? fileTools.delete(str(args, "path"))
                         : "User declined this deletion - ask for reasons, or suggest they enable /yolo mode.",
                 "path", "Path relative to project root");
@@ -106,7 +106,7 @@ public final class CodingTools {
         register(ts, "run", "Run a bash command in the project root and return its output - use it to build and to " +
                         "verify, e.g. \"mvn -q package\", \"java -jar target/app.jar '2+3*4'\" " +
                         "(60s timeout, output truncated at 16KB). Requires user confirmation.",
-                args -> approve.test("run: " + args.get("command"))
+                args -> approve.test(action("run", args))
                         ? fileTools.run(str(args, "command"))
                         : "User declined to run this command - ask for reasons, or suggest they enable /yolo mode. " +
                           "The user can also execute it themselves with /run.",
@@ -163,7 +163,7 @@ public final class CodingTools {
                 args -> {
                     String plan = str(args, "plan");
                     state.setPlan(plan);
-                    if (!approve.test("plan: " + plan)) {
+                    if (!approve.test(action("plan", args))) {
                         state.setPlan(null);
                         return "Plan rejected by user. Ask the user what to change, then call update-plan again with the revised plan.";
                     }
@@ -188,5 +188,32 @@ public final class CodingTools {
                     "missing required argument '" + name + "' - check the tool's parameter list");
         }
         return value instanceof Number n ? n.intValue() : Integer.parseInt(value.toString().trim());
+    }
+
+    /**
+     * Build an action string for the approve predicate.
+     * Format: "toolName: primaryValue | {\"key\":\"val\",...}"
+     * Keys in {@code skipKeys} are excluded from the JSON suffix (use for large content fields).
+     * The primary value is the first non-skipped arg value, used for backward-compatible glob matching.
+     */
+    static String action(String toolName, Map<String, Object> args, String... skipKeys) {
+        var skip = java.util.Set.of(skipKeys);
+        // primary value: first arg value not in skipKeys, for the "toolName: X" prefix
+        String primary = args.entrySet().stream()
+                .filter(e -> !skip.contains(e.getKey()))
+                .map(e -> e.getValue() == null ? "" : e.getValue().toString())
+                .findFirst().orElse("");
+        // compact JSON of all non-skipped args
+        var sb = new StringBuilder("{");
+        boolean first = true;
+        for (var e : args.entrySet()) {
+            if (skip.contains(e.getKey())) continue;
+            if (!first) sb.append(",");
+            first = false;
+            String v = e.getValue() == null ? "" : e.getValue().toString();
+            sb.append("\"").append(e.getKey()).append("\":\"").append(v.replace("\\", "\\\\").replace("\"", "\\\"")).append("\"");
+        }
+        sb.append("}");
+        return toolName + ": " + primary + " | " + sb;
     }
 }

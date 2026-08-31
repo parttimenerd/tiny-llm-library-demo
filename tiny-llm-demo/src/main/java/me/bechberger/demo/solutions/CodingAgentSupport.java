@@ -178,11 +178,15 @@ abstract class CodingAgentSupport implements Callable<Integer> {
         int colon = action.indexOf(": ");
         if (colon < 0) return Ansi.yellow(action);
         String prefix = action.substring(0, colon + 2);
-        String body   = action.substring(colon + 2);
+        String rest   = action.substring(colon + 2);
+        // split off the " | {json}" suffix added by CodingTools.action()
+        int pipe = rest.indexOf(" | {");
+        String primary = pipe >= 0 ? rest.substring(0, pipe) : rest;
+        String jsonSuffix = pipe >= 0 ? rest.substring(pipe) : "";
         String highlighted = action.startsWith("run:") || action.startsWith("delete:")
-                ? Highlight.shell(body)
-                : Ansi.yellow(body);
-        return Ansi.yellow(Ansi.BOLD + prefix + Ansi.RESET) + highlighted;
+                ? Highlight.shell(primary)
+                : Ansi.yellow(primary);
+        return Ansi.yellow(Ansi.BOLD + prefix + Ansi.RESET) + highlighted + Ansi.dim(jsonSuffix);
     }
 
     /** Ask the user to approve a risky agent action — auto-approved in YOLO/AUTO_EDIT mode. */
@@ -245,7 +249,8 @@ abstract class CodingAgentSupport implements Callable<Integer> {
                 }
             }
             System.out.println(Ansi.dim("  Pattern matches the full action string, e.g.:"));
-            System.out.println(Ansi.dim("    run: mvn*   run: git *   delete: tmp/*   plan: *"));
+            System.out.println(Ansi.dim("    run: mvn*        edit: src/main*    delete: tmp/*"));
+            System.out.println(Ansi.dim("    edit: * | *Controller*              (match JSON args)"));
             System.out.println(Ansi.dim("  Commands: allow <pattern> | deny <pattern> | <number> to delete | empty to exit"));
             System.out.println(Ansi.bold("────────────────────────────────────────────────────────"));
             String input = repl != null ? repl.prompt("  > ", null) : null;
