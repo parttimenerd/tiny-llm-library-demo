@@ -98,19 +98,30 @@ public class CodingAgent extends CodingAgentSupport {
 
         toolSupport.registerTool("schedule",
             "Schedule a follow-up message to be sent after a delay. " +
-            "Use to check back on a long-running process or remind the user about something.",
+            "Use to check back on a long-running process or remind the user about something. " +
+            "Set repeat_seconds to keep firing at that interval until the agent stops it.",
             Schemas.object()
                 .required("message",        Schemas.string().withDescription("Message to inject as the next user turn"))
                 .required("delay_seconds",  Schemas.number().withDescription("Seconds to wait before injecting the message"))
+                .optional("repeat_seconds", Schemas.number().withDescription("If set, re-fire every this many seconds after the first fire"))
                 .toJsonSchema(),
             args -> {
                 String message = CodingTools.str(args, "message");
                 int delay = ((Number) args.get("delay_seconds")).intValue();
+                int repeat = args.get("repeat_seconds") instanceof Number n ? n.intValue() : 0;
                 Thread.ofVirtual().start(() -> {
-                    try { Thread.sleep(delay * 1000L); } catch (InterruptedException ignored) { return; }
-                    if (repl != null) repl.injectInput(message);
+                    try {
+                        Thread.sleep(delay * 1000L);
+                        if (repl != null) repl.injectInput(message);
+                        if (repeat > 0) {
+                            while (true) {
+                                Thread.sleep(repeat * 1000L);
+                                if (repl != null) repl.injectInput(message);
+                            }
+                        }
+                    } catch (InterruptedException ignored) {}
                 });
-                return "Scheduled in " + delay + "s: " + message;
+                return "Scheduled in " + delay + "s" + (repeat > 0 ? ", repeating every " + repeat + "s" : "") + ": " + message;
             });
 
         return toolSupport;
