@@ -326,10 +326,8 @@ public final class Repl {
     }
 
     private void handleTurnException(Exception e) {
-        boolean isInterrupt = e instanceof InterruptedException
-                || e instanceof java.io.InterruptedIOException
-                || (e instanceof java.io.UncheckedIOException ue && ue.getCause() instanceof java.io.InterruptedIOException)
-                || (e instanceof RuntimeException && e.getCause() instanceof InterruptedException);
+        boolean isInterrupt = hasCause(e, InterruptedException.class)
+                || hasCause(e, java.io.InterruptedIOException.class);
         if (isInterrupt) {
             Thread.interrupted();
             System.out.println("\n[interrupted]");
@@ -337,6 +335,12 @@ public final class Repl {
             return;
         }
         throw e instanceof RuntimeException re ? re : new RuntimeException(e);
+    }
+
+    private static boolean hasCause(Throwable t, Class<? extends Throwable> type) {
+        for (Throwable c = t; c != null; c = c.getCause())
+            if (type.isInstance(c)) return true;
+        return false;
     }
 
     /** Raw-mode line editor: ↑/↓ history, Ctrl-R search, basic editing. */
