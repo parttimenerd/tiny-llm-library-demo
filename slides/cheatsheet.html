@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<title>Live Coding Cheat Sheet</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --surface2: #0f3460;
+    --accent: #e94560;
+    --accent2: #0f3460;
+    --text: #e0e0e0;
+    --text-dim: #888;
+    --hint-bg: #2a2a1a;
+    --hint-border: #c0903a;
+    --sol-bg: #1a2a1a;
+    --sol-border: #4caf50;
+    --code-bg: #0d0d1a;
+    --tab-active: #e94560;
+    --tab-inactive: #16213e;
+    --border: #2a2a4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── header ── */
+  header {
+    background: var(--surface);
+    padding: 12px 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  header h1 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* ── tab bar ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+    border: none;
+    background: var(--tab-inactive);
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border-top: 2px solid transparent;
+  }
+  .tab.active {
+    background: var(--bg);
+    color: var(--text);
+    border-top-color: var(--accent);
+  }
+
+  /* ── sections ── */
+  .section { display: none; padding: 12px 0 32px; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0 16px 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  /* ── accordion item ── */
+  .item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .item-header:active { background: rgba(255,255,255,0.04); }
+
+  .item-name {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7ec8e3;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .item-class {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .chevron {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  .item.open .chevron { transform: rotate(180deg); }
+
+  /* ── item body ── */
+  .item-body {
+    display: none;
+    padding: 0 12px 16px;
+  }
+  .item.open .item-body { display: block; }
+
+  .block-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 10px 0 4px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .label-hint { color: #c0903a; background: rgba(192,144,58,0.12); }
+  .label-sol  { color: #4caf50; background: rgba(76,175,80,0.12); }
+
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 6px;
+    padding: 10px 12px;
+    border-left: 3px solid transparent;
+    overflow-x: auto;
+  }
+  .code-block.hint { border-left-color: var(--hint-border); }
+  .code-block.sol  { border-left-color: var(--sol-border); }
+
+  .code-block pre {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre;
+    color: var(--text);
+  }
+
+  /* syntax-ish coloring */
+  .kw  { color: #c792ea; }
+  .str { color: #c3e88d; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .fn  { color: #82aaff; }
+  .num { color: #f78c6c; }
+  .typ { color: #ffcb6b; }
+
+  /* ── expand all toggle ── */
+  .expand-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 6px 16px 2px;
+  }
+  .expand-toggle button {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .expand-toggle button:active { background: rgba(255,255,255,0.05); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Live Coding Cheat Sheet</h1>
+  <nav class="tabs">
+    <button class="tab active" data-tab="part3">Part 3 — LLMClient</button>
+    <button class="tab" data-tab="part5">Part 5 — Tools</button>
+    <button class="tab" data-tab="part8">Part 8 — Agent</button>
+  </nav>
+</header>
+
+<!-- ═══════════════════════════════════════════════════ PART 3 -->
+<section class="section active" id="part3">
+  <div class="expand-toggle"><button onclick="toggleAll('part3')">expand all</button></div>
+  <p class="section-title">LLMClient &amp; ChatBot</p>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">LLMClient</span>
+      <span class="item-name">chat(messages)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// POST /v1/chat/completions → parse JSON</span>
+<span class="cmt">// → return choices[0].message.content</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">var</span> response = Util.asMap(JSONParser.parse(
+    http.postJson(<span class="str">"/v1/chat/completions"</span>,
+        buildRequest(messages, <span class="kw">false</span>, <span class="kw">null</span>))));
+lastUsage = parseTokenUsage(response);
+<span class="kw">return</span> (<span class="typ">String</span>) Util.asMap(Util.asMap(
+    Util.asList(response.get(<span class="str">"choices"</span>))
+        .getFirst()).get(<span class="str">"message"</span>)).get(<span class="str">"content"</span>);</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">LLMClient</span>
+      <span class="item-name">chatStream(messages)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// processSSELine → skip empty/null([DONE])</span>
+<span class="cmt">// → call onToken, append to result</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">var</span> token = processSSELine(line);
+<span class="kw">if</span> (token == <span class="kw">null</span>) <span class="kw">break</span>;
+<span class="kw">if</span> (!token.isEmpty()) {
+    onToken.accept(token);
+    result.append(token);
+}</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">LLMClient</span>
+      <span class="item-name">processSSELine(line)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// skip non-"data: " lines</span>
+<span class="cmt">// strip prefix</span>
+<span class="cmt">// return null for "[DONE]"</span>
+<span class="cmt">// parse JSON → delta.content</span>
+<span class="cmt">// (print dim delta.reasoning_content if present)</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">if</span> (!line.startsWith(<span class="str">"data: "</span>)) <span class="kw">return</span> <span class="str">""</span>;
+<span class="typ">String</span> data = line.substring(<span class="num">6</span>).trim();
+<span class="kw">if</span> (data.equals(<span class="str">"[DONE]"</span>)) <span class="kw">return null</span>;
+<span class="kw">var</span> delta = Util.asMap(Util.asMap(
+    Util.asList(Util.asMap(
+        JSONParser.parse(data)).get(<span class="str">"choices"</span>))
+            .getFirst()).get(<span class="str">"delta"</span>));
+<span class="kw">var</span> thinking = (<span class="typ">String</span>) delta.get(<span class="str">"reasoning_content"</span>);
+<span class="kw">if</span> (thinking == <span class="kw">null</span>)
+    thinking = (<span class="typ">String</span>) delta.get(<span class="str">"thinking"</span>);
+<span class="kw">if</span> (thinking != <span class="kw">null</span> &amp;&amp; System.console() != <span class="kw">null</span>)
+    System.err.print(Ansi.dim(thinking));
+<span class="kw">var</span> content = (<span class="typ">String</span>) delta.get(<span class="str">"content"</span>);
+<span class="kw">return</span> content != <span class="kw">null</span> ? content : <span class="str">""</span>;</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ChatBot</span>
+      <span class="item-name">call()</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// greet</span>
+<span class="cmt">// repl.run: add user msg,</span>
+<span class="cmt">//   print "\nAssistant: ",</span>
+<span class="cmt">//   chatStream, add assistant msg</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre>repl.greet(<span class="str">"ChatBot ready. Model: "</span>
+    + options.resolveModel());
+repl.run(input -&gt; {
+    messages.add(LLMClient.user(input));
+    System.out.print(Ansi.bold(
+        Ansi.green(<span class="str">"\nAssistant: "</span>)));
+    <span class="typ">String</span> response =
+        client.chatStream(messages);
+    messages.add(
+        LLMClient.assistant(response));
+    System.out.println();
+});
+<span class="kw">return</span> <span class="num">0</span>;</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ PART 5 -->
+<section class="section" id="part5">
+  <div class="expand-toggle"><button onclick="toggleAll('part5')">expand all</button></div>
+  <p class="section-title">ToolSupport &amp; ToolChatBot</p>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolSupport</span>
+      <span class="item-name">buildToolsJson()</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// for each tool:</span>
+<span class="cmt">// Map.of("type","function",</span>
+<span class="cmt">//   "function", Map.of(</span>
+<span class="cmt">//     "name",…,"description",…,</span>
+<span class="cmt">//     "parameters",…))</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">var</span> result = <span class="kw">new</span> <span class="typ">ArrayList</span>&lt;<span class="typ">Map</span>&lt;<span class="typ">String</span>,<span class="typ">Object</span>&gt;&gt;();
+<span class="kw">for</span> (<span class="kw">var</span> tool : tools.values()) {
+    result.add(Map.of(
+        <span class="str">"type"</span>, <span class="str">"function"</span>,
+        <span class="str">"function"</span>, Map.of(
+            <span class="str">"name"</span>, tool.name(),
+            <span class="str">"description"</span>, tool.description(),
+            <span class="str">"parameters"</span>, tool.parameterSchema()
+        )));
+}
+<span class="kw">return</span> result;</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolSupport</span>
+      <span class="item-name">handleToolLoop(client, messages)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// loop up to 100 times:</span>
+<span class="cmt">// chatRaw → if finish_reason=="stop"</span>
+<span class="cmt">//   return extractContent</span>
+<span class="cmt">// else processToolCalls</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">var</span> toolsJson = buildToolsJson();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">100</span>; i++) {
+    <span class="kw">var</span> choice =
+        client.chatRaw(messages, toolsJson);
+    <span class="kw">if</span> (!"tool_calls".equals(
+            choice.get(<span class="str">"finish_reason"</span>)))
+        <span class="kw">return</span> extractContent(choice);
+    processToolCalls(choice, messages);
+}
+<span class="kw">return</span> <span class="str">"[Tool loop exceeded max iterations]"</span>;</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolSupport</span>
+      <span class="item-name">extractContent(choice)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// extract choice.message.content</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">return</span> (<span class="typ">String</span>) Util.asMap(
+    choice.get(<span class="str">"message"</span>)).get(<span class="str">"content"</span>);</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolSupport</span>
+      <span class="item-name">processToolCalls(choice, messages)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// add assistant message first</span>
+<span class="cmt">// then for each tool_call:</span>
+<span class="cmt">//   executeToolCall and add result</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">var</span> msg = Util.asMap(choice.get(<span class="str">"message"</span>));
+messages.add(msg);
+<span class="kw">for</span> (<span class="kw">var</span> tc : Util.asList(msg.get(<span class="str">"tool_calls"</span>)))
+    messages.add(
+        executeToolCall(Util.asMap(tc)));</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolSupport</span>
+      <span class="item-name">executeToolCall(toolCall)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// extract id + function.name</span>
+<span class="cmt">//   + function.arguments</span>
+<span class="cmt">// → callTool</span>
+<span class="cmt">// → return role:tool message</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">var</span> id   = (<span class="typ">String</span>) toolCall.get(<span class="str">"id"</span>);
+<span class="kw">var</span> fn   = Util.asMap(toolCall.get(<span class="str">"function"</span>));
+<span class="kw">var</span> name = (<span class="typ">String</span>) fn.get(<span class="str">"name"</span>);
+<span class="kw">var</span> args = (<span class="typ">String</span>) fn.get(<span class="str">"arguments"</span>);
+<span class="kw">var</span> result = callTool(name, args);
+System.out.println(<span class="str">"  ⚙ "</span> + name
+    + <span class="str">"("</span> + truncate(args, <span class="num">120</span>) + <span class="str">")"</span>);
+<span class="kw">return</span> Map.of(
+    <span class="str">"role"</span>, <span class="str">"tool"</span>,
+    <span class="str">"tool_call_id"</span>, id,
+    <span class="str">"content"</span>, result);</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolSupport</span>
+      <span class="item-name">callTool(toolName, argumentsJson)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// parse JSON args</span>
+<span class="cmt">// → lookup tool</span>
+<span class="cmt">// → call handler (or return error)</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">try</span> {
+    <span class="kw">var</span> args = Util.asMap(
+        JSONParser.parse(argumentsJson));
+    <span class="kw">var</span> tool = tools.get(toolName);
+    <span class="kw">if</span> (tool == <span class="kw">null</span>)
+        <span class="kw">return</span> <span class="str">"Error: unknown tool '"</span>
+            + toolName + <span class="str">"'"</span>;
+    <span class="kw">return</span> tool.handler().apply(args);
+} <span class="kw">catch</span> (<span class="typ">Exception</span> e) {
+    <span class="kw">return</span> <span class="str">"Error: "</span> + e.getMessage();
+}</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">ToolChatBot</span>
+      <span class="item-name">call()</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// 1. registerTool("ls", description,</span>
+<span class="cmt">//      Schemas.object().required("path",...)</span>
+<span class="cmt">//        .toJsonSchema(), handler)</span>
+<span class="cmt">// 2. handleToolLoop(client, messages),</span>
+<span class="cmt">//    print response</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre>toolSupport.registerTool(<span class="str">"ls"</span>,
+    <span class="str">"List directory contents (one level)."</span>
+    + <span class="str">" Use tree for recursive overview."</span>,
+    Schemas.object()
+        .required(<span class="str">"path"</span>,
+            Schemas.string().withDescription(
+                <span class="str">"Directory path relative to root"</span>))
+        .toJsonSchema(),
+    args -&gt; fileTools.ls(
+        args.get(<span class="str">"path"</span>).toString()));
+CodingTools.registerReadOnlyFileToolsExceptLs(
+    toolSupport, fileTools);
+builder.withTools(toolSupport);
+
+<span class="kw">var</span> repl = builder.build();
+repl.greet(<span class="str">"Tool Chatbot ready. Model: "</span>
+    + options.resolveModel());
+repl.run(input -&gt; {
+    messages.add(LLMClient.user(input));
+    System.out.print(Ansi.bold(
+        Ansi.green(<span class="str">"\nAssistant: "</span>)));
+    <span class="typ">String</span> response =
+        toolSupport.handleToolLoop(
+            client, messages);
+    <span class="kw">if</span> (response != <span class="kw">null</span>)
+        System.out.println(response);
+});
+<span class="kw">return</span> <span class="num">0</span>;</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ PART 8 -->
+<section class="section" id="part8">
+  <div class="expand-toggle"><button onclick="toggleAll('part8')">expand all</button></div>
+  <p class="section-title">CodingAgent</p>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">CodingAgent</span>
+      <span class="item-name">syncConversation (system prompt)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// if !systemPromptEdited:</span>
+<span class="cmt">//   messages.set(0, system(buildSystemPrompt()))</span>
+<span class="cmt">// syncStateMessage(messages)</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">if</span> (!systemPromptEdited)
+    messages.set(<span class="num">0</span>,
+        LLMClient.system(buildSystemPrompt()));
+syncStateMessage(messages);</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">CodingAgent</span>
+      <span class="item-name">syncStateMessage (state)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// if state.isEmpty() return</span>
+<span class="cmt">// msg = assistant(state.render())</span>
+<span class="cmt">// if stateMessageIndex &lt; 0:</span>
+<span class="cmt">//   insert at 1, record index</span>
+<span class="cmt">// else: messages.set(index, msg)</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">if</span> (state.isEmpty()) <span class="kw">return</span>;
+<span class="kw">var</span> msg =
+    LLMClient.assistant(state.render());
+<span class="kw">if</span> (stateMessageIndex &lt; <span class="num">0</span>) {
+    messages.add(<span class="num">1</span>, msg);
+    stateMessageIndex = <span class="num">1</span>;
+} <span class="kw">else</span>
+    messages.set(stateMessageIndex, msg);</pre></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <span class="item-class">CodingAgent</span>
+      <span class="item-name">handlePlanCommand(…)</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="item-body">
+      <div class="block-label label-hint">hint</div>
+      <div class="code-block hint"><pre><span class="cmt">// while(true):</span>
+<span class="cmt">//   response = callPlanToolLoop</span>
+<span class="cmt">//   if null return (interrupted)</span>
+<span class="cmt">//   show plan draft → printTodos()</span>
+<span class="cmt">//   prompt Y/n/feedback</span>
+<span class="cmt">//   break on Y, return on n,</span>
+<span class="cmt">//   append feedback and loop</span>
+<span class="cmt">// then: state.setGoal/setPlan</span>
+<span class="cmt">//   inject messages → syncStateMessage</span>
+<span class="cmt">//   chat.chat("Implement...")</span></pre></div>
+      <div class="block-label label-sol">solution</div>
+      <div class="code-block sol"><pre><span class="kw">while</span> (<span class="kw">true</span>) {
+    System.out.print(Ansi.bold(
+        Ansi.yellow(<span class="str">"\nPlanning: "</span>)));
+    response = callPlanToolLoop(
+        planTools, client, planMessages);
+    <span class="kw">if</span> (response == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="kw">if</span> (Files.exists(planTmpFile)
+            &amp;&amp; Files.size(planTmpFile) &gt; <span class="num">0</span>) {
+        System.out.println(Ansi.bold(
+            <span class="str">"\n─── Plan draft ──────────────────"</span>));
+        System.out.print(Ansi.renderMarkdown(
+            Files.readString(planTmpFile,
+                StandardCharsets.UTF_8)));
+        System.out.println(Ansi.bold(
+            <span class="str">"─────────────────────────────────"</span>));
+    }
+    printTodos();
+    <span class="typ">String</span> answer = repl != <span class="kw">null</span>
+        ? repl.prompt(
+            <span class="str">"  Proceed? [Y/n/feedback] "</span>, <span class="kw">null</span>)
+        : <span class="kw">null</span>;
+    <span class="kw">if</span> (answer == <span class="kw">null</span>) {
+        System.out.println(Ansi.yellow(
+            <span class="str">"(no input — plan not accepted)"</span>));
+        <span class="kw">return</span>;
+    }
+    <span class="kw">if</span> (answer.isEmpty()
+            || answer.equalsIgnoreCase(<span class="str">"y"</span>)) {
+        System.out.println(Ansi.bold(
+            Ansi.green(<span class="str">"\nImplementing..."</span>)));
+        <span class="kw">if</span> (repl != <span class="kw">null</span>)
+            repl.resetLivePaneCount();
+        <span class="kw">break</span>;
+    }
+    <span class="kw">if</span> (answer.equalsIgnoreCase(<span class="str">"n"</span>)) {
+        state.clear();
+        System.out.println(<span class="str">"Plan discarded."</span>);
+        <span class="kw">return</span>;
+    }
+    planMessages.add(LLMClient.user(
+        <span class="str">"Please revise the plan: "</span> + answer
+        + <span class="str">"\n\nExplore more if needed, then"</span>
+        + <span class="str">" call write-plan with revised plan."</span>));
+}
+<span class="typ">String</span> planText = Files.exists(planTmpFile)
+    ? Files.readString(planTmpFile,
+        StandardCharsets.UTF_8)
+    : <span class="str">""</span>;
+state.setGoal(goal);
+state.setPlan(planText);
+messages.add(LLMClient.user(<span class="str">"/plan "</span> + goal));
+<span class="kw">if</span> (response != <span class="kw">null</span>)
+    messages.add(LLMClient.assistant(response));
+syncStateMessage(messages);
+chat.chat(<span class="str">"Implement the plan step by step."</span>);</pre></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggle(header) {
+    header.parentElement.classList.toggle('open');
+  }
+
+  function toggleAll(sectionId) {
+    const section = document.getElementById(sectionId);
+    const items = section.querySelectorAll('.item');
+    const anyOpen = [...items].some(i => i.classList.contains('open'));
+    items.forEach(i => i.classList.toggle('open', !anyOpen));
+    section.querySelector('.expand-toggle button').textContent =
+      anyOpen ? 'expand all' : 'collapse all';
+  }
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

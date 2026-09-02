@@ -37,6 +37,11 @@ jobs:
           rm -rf slides/dist/img || true
           cp -R slides/img slides/dist/img || true
 
+      - name: Copy cheat sheet
+        run: |
+          mkdir -p slides/dist/cheatsheet
+          cp slides/cheatsheet.html slides/dist/cheatsheet/index.html
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
