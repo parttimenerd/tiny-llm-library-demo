@@ -52,7 +52,7 @@ Or view them online: https://parttimenerd.github.io/tiny-llm-library-demo
 
 Write a two sentence, fun and nerdy opening monologue for a talk called
 "Let's create a tiny LLM library together" at JavaZone Oslo (the largest Java
-conference in Scandinavia). Thank the organizers for the excellent food and
+conference in Scandinavia) by Johannes Bechberger. Thank the organizers for the excellent food and
 hospitality. Tone: enthusiastic, technical crowd.
 
 Speaker
