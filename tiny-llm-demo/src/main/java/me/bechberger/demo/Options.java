@@ -37,7 +37,8 @@ public class Options {
         String configured = Config.load().modelFor(baseUrl, null);
         if (configured != null) return configured;
         try {
-            var json = Util.asMap(JSONParser.parse(new HttpHelper(baseUrl).get("/v1/models")));
+            String resolvedUrl = Config.load().resolveBaseUrl(baseUrl);
+            var json = Util.asMap(JSONParser.parse(new HttpHelper(resolvedUrl).get("/v1/models")));
             var data = Util.asList(json.get("data"));
             if (!data.isEmpty()) return (String) Util.asMap(data.getFirst()).get("id");
         } catch (Exception ignored) {}
