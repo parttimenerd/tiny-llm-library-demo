@@ -479,6 +479,11 @@ public final class Repl {
             currentPrompt = promptText;
             promptVisibleLen = stripAnsi(promptText).length();
             try {
+                var console = System.console();
+                if (console != null) {
+                    String line = console.readLine("%s", stripAnsi(promptText));
+                    return line; // null on EOF (Ctrl-D)
+                }
                 if (tty == null) {
                     tty = new java.io.FileInputStream("/dev/tty");
                     out = System.out;
