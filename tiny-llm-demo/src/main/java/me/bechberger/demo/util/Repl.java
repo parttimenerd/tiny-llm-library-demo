@@ -725,14 +725,14 @@ public final class Repl {
                     } else if (b2 == 'b') { cursor = wordBackward(buf, cursor); redrawLine(buf, cursor); }
                     else if (b2 == 'f') { cursor = wordForward(buf, cursor); redrawLine(buf, cursor); }
                 } else if (b >= 32) {                   // printable character
-                    // Drain any additional bytes that arrived at the same time (paste burst).
-                    // Apple Terminal delivers the entire paste payload as a rapid burst after a brief delay.
+                    // Detect paste: if more bytes are already available (or arrive within 15ms),
+                    // drain them all as one chunk. Single typed chars won't have followers.
                     var chunk = new StringBuilder();
                     chunk.append((char) b);
-                    Thread.sleep(80); // wait for Apple Terminal paste buffer to fill
+                    if (tty.available() == 0) Thread.sleep(15);
                     while (tty.available() > 0) {
                         int nb = tty.read();
-                        if (nb < 32 || nb == 127) break; // stop on control chars
+                        if (nb < 32 || nb == 127) break;
                         chunk.append((char) nb);
                     }
                     String text = chunk.toString().replace('\n', ' ').replace('\r', ' ');
