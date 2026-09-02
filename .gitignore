@@ -34,3 +34,7 @@ coverage/
 
 slides/resources
 plan.md
+
+# Playwright MCP artifacts
+.playwright-mcp/
+cheatsheet-*.png
