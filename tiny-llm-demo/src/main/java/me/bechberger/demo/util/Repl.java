@@ -537,7 +537,12 @@ public final class Repl {
             boolean searchMode = false;
             var searchBuf = new StringBuilder();
 
+            // Enable bracketed paste mode so paste arrives as ESC[200~ ... ESC[201~
+            out.write("\033[?2004h".getBytes(StandardCharsets.UTF_8));
+            out.flush();
+
             redrawLine(buf, cursor);
+            try {
             while (true) {
                 // Poll so schedule-injected input can interrupt, but only on empty line.
                 while (tty.available() == 0) {
@@ -634,16 +639,102 @@ public final class Repl {
                         buf.deleteCharAt(--cursor);
                         redrawLine(buf, cursor);
                     }
-                } else if (b == 27) {                   // Escape sequence (arrows, etc.)
-                    int[] result = handleEscape(buf, cursor, histIdx, savedLine);
-                    cursor  = result[0];
-                    histIdx = result[1];
-                    if (result[2] == 1) savedLine = buf.toString(); // histIdx just initialised
-                    redrawLine(buf, cursor);
+                } else if (b == 27) {                   // Escape sequence (arrows, bracketed paste, etc.)
+                    // Peek for bracketed paste start: ESC [ 2 0 0 ~
+                    long deadline = System.currentTimeMillis() + 50;
+                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
+                    if (tty.available() == 0) { /* bare Esc — ignore */ continue; }
+                    int b2 = tty.read();
+                    if (b2 == '[') {
+                        while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(1);
+                        if (tty.available() == 0) continue;
+                        int b3 = tty.read();
+                        if (b3 == '2') {
+                            // Could be 200~ (paste start) or 201~ (paste end) — read rest of sequence
+                            var seq = new StringBuilder();
+                            seq.append((char) b3);
+                            long d2 = System.currentTimeMillis() + 50;
+                            while (System.currentTimeMillis() < d2) {
+                                while (tty.available() == 0 && System.currentTimeMillis() < d2) Thread.sleep(1);
+                                if (tty.available() == 0) break;
+                                int bx = tty.read();
+                                seq.append((char) bx);
+                                if (bx == '~') break;
+                            }
+                            if (seq.toString().equals("00~")) {
+                                // Bracketed paste start — read until ESC[201~
+                                var paste = new StringBuilder();
+                                int prev = -1;
+                                outer:
+                                while (true) {
+                                    while (tty.available() == 0) Thread.sleep(10);
+                                    int pb = tty.read();
+                                    if (pb == 27) {
+                                        // Check for ESC[201~
+                                        var end = new StringBuilder();
+                                        long d3 = System.currentTimeMillis() + 100;
+                                        while (end.length() < 5 && System.currentTimeMillis() < d3) {
+                                            while (tty.available() == 0 && System.currentTimeMillis() < d3) Thread.sleep(1);
+                                            if (tty.available() == 0) break;
+                                            end.append((char) tty.read());
+                                        }
+                                        if (end.toString().equals("[201~")) break outer;
+                                        // Not end marker — treat ESC + collected bytes as literal
+                                        paste.append((char) pb).append(end);
+                                    } else {
+                                        paste.append((char) pb);
+                                    }
+                                }
+                                // Insert paste text at cursor, replacing newlines with spaces
+                                String pasted = paste.toString().replace('\n', ' ').replace('\r', ' ');
+                                buf.insert(cursor, pasted);
+                                cursor += pasted.length();
+                                redrawLine(buf, cursor);
+                                continue;
+                            }
+                            // Not a paste sequence — ignore unknown ESC[2xx~ sequences
+                            continue;
+                        }
+                        // Delegate other ESC[ sequences to existing handler
+                        // Re-assemble: we already consumed ESC [ b3, fake a re-entry
+                        // by inlining the arrow/home/end logic for b3
+                        if (b3 == 'A') {       // ↑
+                            if (histIdx == -1) { savedLine = buf.toString(); histIdx = history.size(); }
+                            if (histIdx > 0) { histIdx--; buf.replace(0, buf.length(), history.entries().get(histIdx)); cursor = buf.length(); }
+                        } else if (b3 == 'B') { // ↓
+                            if (histIdx >= 0 && histIdx < history.size() - 1) { histIdx++; buf.replace(0, buf.length(), history.entries().get(histIdx)); cursor = buf.length(); }
+                            else if (histIdx >= history.size() - 1) { histIdx = -1; buf.replace(0, buf.length(), savedLine); cursor = buf.length(); }
+                        } else if (b3 == 'C') { if (cursor < buf.length()) cursor++; }
+                        else if (b3 == 'D') { if (cursor > 0) cursor--; }
+                        else if (b3 == 'H') { cursor = 0; }
+                        else if (b3 == 'F') { cursor = buf.length(); }
+                        else if (b3 == '3') { consumeUntilTilde(deadline); if (cursor < buf.length()) buf.deleteCharAt(cursor); }
+                        else if (b3 == '4') { consumeUntilTilde(deadline); cursor = buf.length(); }
+                        else if (b3 == '1') {
+                            while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                            if (tty.available() > 0) {
+                                int b4 = tty.read();
+                                if (b4 == '~') { cursor = 0; }
+                                else if (b4 == ';') {
+                                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                                    if (tty.available() > 0) tty.read();
+                                    while (tty.available() == 0 && System.currentTimeMillis() < deadline) Thread.sleep(2);
+                                    if (tty.available() > 0) { int b6 = tty.read(); if (b6 == 'C') cursor = wordForward(buf, cursor); else if (b6 == 'D') cursor = wordBackward(buf, cursor); }
+                                }
+                            }
+                        }
+                        redrawLine(buf, cursor);
+                    } else if (b2 == 'b') { cursor = wordBackward(buf, cursor); redrawLine(buf, cursor); }
+                    else if (b2 == 'f') { cursor = wordForward(buf, cursor); redrawLine(buf, cursor); }
                 } else if (b >= 32) {                   // printable character
                     buf.insert(cursor++, (char) b);
                     redrawLine(buf, cursor);
                 }
+            }
+            } finally {
+                // Always disable bracketed paste mode on exit
+                out.write("\033[?2004l".getBytes(StandardCharsets.UTF_8));
+                out.flush();
             }
         }
 
