@@ -474,7 +474,7 @@ layout: center
 
 <div class="flex flex-col items-center gap-6">
 
-<img src="./img/sapmachine-logo.png" class="w-48" />
+<img src="./img/sapmachine-logo.png" class="w-" />
 
 <div class="big-statement">Multimodal: Just Another Content Type</div>
 
@@ -509,7 +509,7 @@ layout: center
 ---
 
 <img src="./img/wiki-agamemnon-cable.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30 z-0" />
-<div class="absolute inset-0 bg-black/50 z-0" />
+<div class="absolute inset-0 bg-black/0 z-0" />
 
 <div class="absolute inset-0 flex flex-col items-center justify-center z-10 text-center">
 <div class="text-5xl font-extrabold leading-tight text-white">That's the <OrangeText>entire API</OrangeText>.</div>
@@ -526,7 +526,7 @@ layout: center
 ---
 
 <img src="./img/wiki-agassiz-chalkboard.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
-<div class="absolute inset-0 bg-black/50 z-0" />
+<div class="absolute inset-0 bg-black/0 z-0" />
 
 <div class="relative z-10">
 <div class="section-header">Part 3</div>
@@ -603,8 +603,6 @@ public class LLMClient {
 }
 ```
 
-<div class="mt-1 text-xl">Three small methods. That's the entire client.</div>
-
 <!--
 **[~14:30]** Start live coding. Constructor takes base URL, model name, and a Consumer<String>.
 "The helper builders are pre-written — user/assistant/system just build a map with role and content."
@@ -653,7 +651,7 @@ Type this one manually — it's only 4 lines to fill in. ~2 minutes.
 layout: center
 ---
 
-<img src="./img/wiki-llama.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<img src="./img/wiki-llama.jpg" class="absolute inset-0 w-full h-full object-cover opacity-100" />
 <div class="absolute inset-0 bg-black/55 z-0" />
 
 <div class="relative z-10">
@@ -773,7 +771,7 @@ layout: center
 ---
 
 <img src="./img/wiki-kuka-robot.jpg" class="absolute inset-0 w-full h-full object-cover opacity-25" />
-<div class="absolute inset-0 bg-black/50 z-0" />
+<div class="absolute inset-0 bg-black/0 z-0" />
 
 <div class="relative z-10">
 <div class="section-header">Part 4</div>
@@ -797,7 +795,6 @@ Talk is cheap. Let's act.
 
 
 "Tool calling sounds fancy, but it's built on old specs."
-
 -->
 
 ---
@@ -1033,7 +1030,7 @@ The LLM doesn't call anything — it asks you to call something. You're the exec
 
 # Tool Calling: The Request
 
-```bash {6-8|9-25} {style:'font-size:0.72em;line-height:1.3'}
+```bash {6|9-23} {style:'font-size:0.72em;line-height:1.3'}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -1070,7 +1067,7 @@ curl -X POST http://localhost:8080/v1/chat/completions \
 
 # Security: Tools Are Code Execution
 
-<img src="./img/loc-cat-snow-cutout.png" class="absolute right-0 bottom-0 h-full z-0 opacity-90" />
+<img src="./img/loc-cat-snow-cutout.png" class="absolute right-0 bottom-0 h-full z-0 opacity-100" />
 
 <div class="relative z-10 mt-10 w-1/2">
 
@@ -1090,7 +1087,6 @@ Image: Black kitten cutout, Library of Congress, public domain.
 -->
 
 ---
-
 
 # The Shell Script Tradeoff
 
@@ -1115,7 +1111,7 @@ Could the AI just call shell scripts directly?
 <div class="text-4xl mb-4">⚠️</div>
 
 **Untrusted input = code injection**<br/>
-**No sandboxing, no audit trail**
+
 
 </div>
 
@@ -1130,7 +1126,7 @@ Could the AI just call shell scripts directly?
 layout: center
 ---
 
-<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full object-cover" />
+<img src="./img/wiki-bletchley-cards.jpg" class="absolute inset-0 w-full h-full opacity-30" />
 
 <div class="relative z-10">
 <div class="section-header">Part 5</div>
@@ -2149,7 +2145,7 @@ java -jar target/tiny-llm-demo.jar SkillCodingAgent --base-url llama
 
 # One More Thing: The Agent Edits Itself
 
-<img src="./img/wiki-strawberry.jpg" class="absolute inset-0 w-full h-full object-cover opacity-15" />
+<img src="./img/wiki-strawberry.jpg" class="absolute inset-0 w-full h-full object-cover opacity-30" />
 
 <div class="mt-4 text-lg text-gray-300">
 
