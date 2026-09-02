@@ -15,27 +15,34 @@ mdc: true
 layout: default
 ---
 
-<img src="./img/wiki-loc-catalog.jpg" class="absolute inset-0 w-full h-full object-cover opacity-35" />
+# Streaming with Server-Sent Events
 
-<div class="absolute inset-0 bg-black/50 z-0" />
+```bash {6|all}
+curl -X POST http://localhost:8080/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "...",
+    "messages": [{"role": "user", "content": "Make fun of Java."}],
+    "stream": true
+  }'
+```
 
-<div class="relative z-10 flex flex-col items-center justify-center h-full">
 
-<div class="text-6xl font-bold leading-tight">Let's create a tiny AI library together</div>
-<div class="text-3xl mt-4 text-orange-400 font-semibold">Peeking behind the curtain of LLM libraries</div>
-
-<div class="mt-12 text-xl text-gray-500">
-Johannes Bechberger &nbsp;&nbsp;·&nbsp;&nbsp; SAP SE
-</div>
-
-</div>
+```
+data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
+data: {"choices":[{"delta":{"content":"Ah"}}]}
+data: {"choices":[{"delta":{"content":","}}]}
+data: {"choices":[{"delta":{"content":" Java"}}]}
+data: {"choices":[{"delta":{"content":"."}}]}
+...
+data: [DONE]
+```
 
 <!--
-**[~0:00]** Welcome! "We all want to do it — integrate AI into our tools. Today we're going to look behind the curtain and build one from scratch."
-Image: LOC librarians with card catalog, public domain via Wikimedia Commons.
+**[~10:00]** **[QUICK POLL]** "Who's seen SSE before?"
+"Same endpoint as before. Add stream: true and the response stays open — tokens arrive as data: lines."
+"Instead of message.content in one shot, you get delta.content one token at a time."
 -->
-
-<JsonOverlay v-if="showOverlay" :json="selectedJson" @close="showOverlay = false" />
 
 ---
 layout: center
@@ -89,33 +96,6 @@ First time saying the tagline — will repeat at the Wrap-Up.
 
 # It's Just HTTP
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div class="grid grid-cols-1 gap-4 mt-2">
-
-<div class="border border-slate-600 rounded-lg p-4">
-
-<div class="text-lg font-bold text-orange-400">POST /v1/chat/completions</div>
-<div class="text-gray-400 mt-1">Send a conversation. Get a reply.</div>
-
-</div>
-
-<div class="border border-slate-600 rounded-lg p-4">
-
-<div class="text-lg font-bold text-orange-400">stream: true</div>
-<div class="text-gray-400 mt-1">Tokens arrive as they're generated.</div>
-
-</div>
-
-<div class="border border-slate-600 rounded-lg p-4">
-
-<div class="text-lg font-bold text-orange-400">GET /v1/models</div>
-<div class="text-gray-400 mt-1">What's loaded. Optional.</div>
-
-</div>
-
-</div>
-
 <div>
 
 ```mermaid {theme: 'dark'}
@@ -134,8 +114,6 @@ flowchart TB
   style http fill:#334155,color:#e2e8f0,stroke:none
   style llm fill:#1e293b,color:#e2e8f0,stroke:#475569
 ```
-
-</div>
 
 </div>
 
@@ -286,7 +264,6 @@ Image: Herman Hollerith with tabulating machine, Leiden 1905. Public domain via 
 |----------|--------|-------------|
 | `/v1/models` | GET | Available models |
 | `/v1/chat/completions` | POST | Send messages|
-| `/v1/chat/completions` | POST (+stream) | streaming via SSE |
 
 <div class="text-xl font-bold mt-2">That's the <OrangeText>entire API</OrangeText> for everything we'll build today.</div>
 
@@ -334,7 +311,6 @@ Don't mention JSON-RPC or MCP here — save it for Part 7.
 
 **Request:**
 
-
 ```bash
 curl -X POST .../v1/chat/completions \
   -H "Content-Type: application/json" \
@@ -381,67 +357,9 @@ curl -X POST .../v1/chat/completions \
 
 ---
 
-# Conversation with History
-
-<div class="text-xl font-bold mb-3">No server memory. You re-send the <OrangeText>full history</OrangeText> every turn.</div>
-
-<div class="mt-2">
-
-
-```bash {1|2|4-9}
-curl -X POST http://localhost:8080/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "...",
-    "messages": [
-      {"role": "system", "content": "You are a helpful Java expert."},
-      {"role": "user", "content": "What is a record in Java?"},
-      {"role": "assistant", "content": "A record is a compact class..."},
-      {"role": "user", "content": "Show me an example."}
-    ]
-  }'
-```
-
-</div>
-
-<div class="mt-3 font-mono text-sm text-gray-400 space-y-1">
-<div v-click>Turn 1: <span class="text-blue-400">[SYS, U1]</span></div>
-<div v-click>Turn 2: <span class="text-blue-400">[SYS, U1, A1, U2]</span></div>
-<div v-click>Turn 3: <span class="text-blue-400">[SYS, U1, A1, U2, A2, U3]</span> <span class="text-orange-400">← grows every turn</span></div>
-</div>
-
-<!--
-**[~9:00]** Key insight: "The server doesn't remember anything. You send the entire conversation every time."
-"This is the 'context window' you hear about — it's literally this array getting longer."
-"Every framework's conversation memory is just... a List<Message>."
--->
-
----
-layout: center
----
-
-<img src="./img/wiki-wacs-teletype.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
-<div class="absolute inset-0 bg-black/55 z-0" />
-
-<div class="relative z-10">
-<div class="big-statement">
-
-Your chatbot's "memory":
-
-</div>
-
-<div class="text-3xl text-gray-300 mt-6">
-
-a <OrangeText>growing list of messages</OrangeText>.
-
-</div>
-</div>
-
----
-
 # Streaming with Server-Sent Events
 
-```bash {1|5|all}
+```bash {all|6}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -467,6 +385,27 @@ data: [DONE]
 "Same endpoint as before. Add stream: true and the response stays open — tokens arrive as data: lines."
 "Instead of message.content in one shot, you get delta.content one token at a time."
 -->
+
+---
+layout: center
+---
+
+<img src="./img/wiki-wacs-teletype.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20" />
+<div class="absolute inset-0 bg-black/55 z-0" />
+
+<div class="relative z-10">
+<div class="big-statement">
+
+Your chatbot's "memory":
+
+</div>
+
+<div class="text-3xl text-gray-300 mt-6">
+
+a <OrangeText>growing list of messages</OrangeText>.
+
+</div>
+</div>
 
 ---
 layout: center
