@@ -89,33 +89,6 @@ First time saying the tagline — will repeat at the Wrap-Up.
 
 # It's Just HTTP
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div class="grid grid-cols-1 gap-4 mt-2">
-
-<div class="border border-slate-600 rounded-lg p-4">
-
-<div class="text-lg font-bold text-orange-400">POST /v1/chat/completions</div>
-<div class="text-gray-400 mt-1">Send a conversation. Get a reply.</div>
-
-</div>
-
-<div class="border border-slate-600 rounded-lg p-4">
-
-<div class="text-lg font-bold text-orange-400">stream: true</div>
-<div class="text-gray-400 mt-1">Tokens arrive as they're generated.</div>
-
-</div>
-
-<div class="border border-slate-600 rounded-lg p-4">
-
-<div class="text-lg font-bold text-orange-400">GET /v1/models</div>
-<div class="text-gray-400 mt-1">What's loaded. Optional.</div>
-
-</div>
-
-</div>
-
 <div>
 
 ```mermaid {theme: 'dark'}
@@ -134,8 +107,6 @@ flowchart TB
   style http fill:#334155,color:#e2e8f0,stroke:none
   style llm fill:#1e293b,color:#e2e8f0,stroke:#475569
 ```
-
-</div>
 
 </div>
 
@@ -286,7 +257,6 @@ Image: Herman Hollerith with tabulating machine, Leiden 1905. Public domain via 
 |----------|--------|-------------|
 | `/v1/models` | GET | Available models |
 | `/v1/chat/completions` | POST | Send messages|
-| `/v1/chat/completions` | POST (+stream) | streaming via SSE |
 
 <div class="text-xl font-bold mt-2">That's the <OrangeText>entire API</OrangeText> for everything we'll build today.</div>
 
@@ -441,7 +411,7 @@ a <OrangeText>growing list of messages</OrangeText>.
 
 # Streaming with Server-Sent Events
 
-```bash {1|5|all}
+```bash {all|5}
 curl -X POST http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
