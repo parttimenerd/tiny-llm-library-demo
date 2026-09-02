@@ -721,7 +721,18 @@ public final class Repl {
                     } else if (b2 == 'b') { cursor = wordBackward(buf, cursor); redrawLine(buf, cursor); }
                     else if (b2 == 'f') { cursor = wordForward(buf, cursor); redrawLine(buf, cursor); }
                 } else if (b >= 32) {                   // printable character
-                    buf.insert(cursor++, (char) b);
+                    // Drain any additional bytes that arrived at the same time (paste burst)
+                    var chunk = new StringBuilder();
+                    chunk.append((char) b);
+                    Thread.sleep(12); // brief wait for paste buffer to fill
+                    while (tty.available() > 0) {
+                        int nb = tty.read();
+                        if (nb < 32 || nb == 127) break; // stop on control chars
+                        chunk.append((char) nb);
+                    }
+                    String text = chunk.toString().replace('\n', ' ').replace('\r', ' ');
+                    buf.insert(cursor, text);
+                    cursor += text.length();
                     redrawLine(buf, cursor);
                 }
             }
