@@ -81,6 +81,7 @@ abstract class CodingAgentSupport implements Callable<Integer> {
     }
 
     final AgentState state = new AgentState();
+    protected LLMClient client;
 
     /**
      * Set by the `continue` or `schedule` tool — chat() drains this after each tool loop

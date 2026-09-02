@@ -99,7 +99,16 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
         }
     }
 
-    public String getModel() { return model; }
+    public String getModel() {
+        if (model == null) {
+            try {
+                var json = Util.asMap(JSONParser.parse(http.get("/v1/models")));
+                var data = Util.asList(json.get("data"));
+                if (!data.isEmpty()) model = (String) Util.asMap(data.getFirst()).get("id");
+            } catch (Exception ignored) {}
+        }
+        return model;
+    }
     public void setModel(String model) { this.model = model; }
 
     /**

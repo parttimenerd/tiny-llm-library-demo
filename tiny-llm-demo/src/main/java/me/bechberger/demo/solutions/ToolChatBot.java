@@ -60,7 +60,7 @@ public class ToolChatBot implements Callable<Integer> {
         builder.withTools(toolSupport);
 
         var repl = builder.build();
-        repl.greet("Tool Chatbot ready. Model: " + options.resolveModel());
+        repl.greet("Tool Chatbot ready. Model: " + client.getModel());
         repl.run(input -> {
             messages.add(LLMClient.user(input));
             System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));

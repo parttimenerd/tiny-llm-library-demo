@@ -43,7 +43,7 @@ public class ChatBot implements Callable<Integer> {
         var repl = builder.build();
 
         // @stub: greet; repl.run: add user msg, print "\nAssistant: ", chatStream, add assistant msg
-        repl.greet("ChatBot ready. Model: " + options.resolveModel());
+        repl.greet("ChatBot ready. Model: " + client.getModel());
         repl.run(input -> {
             messages.add(LLMClient.user(input));
             System.out.print(Ansi.bold(Ansi.green("\nAssistant: ")));

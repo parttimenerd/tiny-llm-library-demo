@@ -46,6 +46,7 @@ public class CodingAgent extends CodingAgentSupport {
         var builder = new Repl.Builder("\n" + Ansi.bold(Ansi.blue("You: ")), scanner, messages)
                 .prompt(() -> "\n" + approval.badge() + Ansi.bold(Ansi.blue("You: ")));
         var client = createClient(builder);
+        this.client = client;
         compactor = createCompactor(client);
         var fileTools = new FileTools(rootPath);
         var toolSupport = createToolSupport(fileTools, client);
@@ -80,7 +81,7 @@ public class CodingAgent extends CodingAgentSupport {
     protected void onStart() {}
 
     protected String greeting() {
-        return "Coding agent ready. Model: " + resolveModel()
+        return "Coding agent ready. Model: " + client.getModel()
                 + " — root: " + Path.of(root).toAbsolutePath().normalize();
     }
 
