@@ -263,6 +263,17 @@ Save it as intro.md.
 
 ---
 
+## Intros
+
+```
+Write a short (3-4 sentence), fun and nerdy opening monologue for a talk called
+"Let's create a tiny LLM library together" at JavaZone Oslo (the largest Java
+conference in Scandinavia). Thank the organizers for the excellent food and
+hospitality. Tone: enthusiastic, slightly self-deprecating, technical crowd.
+```
+
+---
+
 ## Build
 
 ```bash

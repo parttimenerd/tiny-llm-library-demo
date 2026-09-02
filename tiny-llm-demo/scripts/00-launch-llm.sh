@@ -56,11 +56,11 @@ done
 echo "Model cache directory: $HF_HUB_CACHE"
 if [[ "$MODE" == "fast" ]]; then
   echo "Starting llama-server (fast mode)..."
-  llama-server -hf bartowski/Qwen3.5-2B-Instruct-GGUF:Q8_0
+  llama-server -hf unsloth/Qwen3.5-2B-GGUF:Qwen3.5-2B-Q8_0.gguf
 elif [[ "$MODE" == "medium" ]]; then
   echo "Starting llama-server (medium mode)..."
-  llama-server -hf AaryanK/Qwen3.5-9B-GGUF:Q8_0
+  llama-server -hf unsloth/Qwen3.5-9B-GGUF -hff Qwen3.5-9B-Q8_0.gguf
 else
   echo "Starting llama-server (slow mode)..."
-  llama-server -hf bartowski/Qwen_Qwen3.5-27B-GGUF:Q8_0
+  llama-server -hf unsloth/Qwen3.8-27B-GGUF:Qwen3.8-27B-UD-Q4_K_XL.gguf
 fi
