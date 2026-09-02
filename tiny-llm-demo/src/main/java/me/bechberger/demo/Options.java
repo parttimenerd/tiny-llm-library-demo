@@ -1,8 +1,11 @@
 package me.bechberger.demo;
 
 import me.bechberger.demo.http.Config;
+import me.bechberger.demo.http.HttpHelper;
 import me.bechberger.demo.util.Repl;
 import me.bechberger.femtocli.annotations.Option;
+import me.bechberger.util.json.JSONParser;
+import me.bechberger.util.json.Util;
 
 /**
  * Shared CLI options for all chatbot commands.
@@ -28,9 +31,17 @@ public class Options {
     @Option(names = {"--thinking-budget"}, description = "Cap thinking tokens (e.g. 1000)", defaultValue = "-1")
     int thinkingBudget;
 
-    /** Resolve --model against the config file; returns null if nothing is configured (endpoint default). */
+    /** Resolve --model against the config file; falls back to first model from /v1/models. */
     public String resolveModel() {
-        return model != null ? model : Config.load().modelFor(baseUrl, null);
+        if (model != null) return model;
+        String configured = Config.load().modelFor(baseUrl, null);
+        if (configured != null) return configured;
+        try {
+            var json = Util.asMap(JSONParser.parse(new HttpHelper(baseUrl).get("/v1/models")));
+            var data = Util.asList(json.get("data"));
+            if (!data.isEmpty()) return (String) Util.asMap(data.getFirst()).get("id");
+        } catch (Exception ignored) {}
+        return null;
     }
 
     /**
