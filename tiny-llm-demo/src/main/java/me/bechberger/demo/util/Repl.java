@@ -650,9 +650,8 @@ public final class Repl {
                         if (tty.available() == 0) continue;
                         int b3 = tty.read();
                         if (b3 == '2') {
-                            // Could be 200~ (paste start) or 201~ (paste end) — read rest of sequence
+                            // Could be 200~ (paste start) — read rest of sequence up to ~
                             var seq = new StringBuilder();
-                            seq.append((char) b3);
                             long d2 = System.currentTimeMillis() + 50;
                             while (System.currentTimeMillis() < d2) {
                                 while (tty.available() == 0 && System.currentTimeMillis() < d2) Thread.sleep(1);
@@ -664,7 +663,6 @@ public final class Repl {
                             if (seq.toString().equals("00~")) {
                                 // Bracketed paste start — read until ESC[201~
                                 var paste = new StringBuilder();
-                                int prev = -1;
                                 outer:
                                 while (true) {
                                     while (tty.available() == 0) Thread.sleep(10);
@@ -679,13 +677,11 @@ public final class Repl {
                                             end.append((char) tty.read());
                                         }
                                         if (end.toString().equals("[201~")) break outer;
-                                        // Not end marker — treat ESC + collected bytes as literal
                                         paste.append((char) pb).append(end);
                                     } else {
                                         paste.append((char) pb);
                                     }
                                 }
-                                // Insert paste text at cursor, replacing newlines with spaces
                                 String pasted = paste.toString().replace('\n', ' ').replace('\r', ' ');
                                 buf.insert(cursor, pasted);
                                 cursor += pasted.length();
@@ -695,9 +691,7 @@ public final class Repl {
                             // Not a paste sequence — ignore unknown ESC[2xx~ sequences
                             continue;
                         }
-                        // Delegate other ESC[ sequences to existing handler
-                        // Re-assemble: we already consumed ESC [ b3, fake a re-entry
-                        // by inlining the arrow/home/end logic for b3
+                        // Handle other ESC[ sequences (arrows, home, end, delete)
                         if (b3 == 'A') {       // ↑
                             if (histIdx == -1) { savedLine = buf.toString(); histIdx = history.size(); }
                             if (histIdx > 0) { histIdx--; buf.replace(0, buf.length(), history.entries().get(histIdx)); cursor = buf.length(); }
