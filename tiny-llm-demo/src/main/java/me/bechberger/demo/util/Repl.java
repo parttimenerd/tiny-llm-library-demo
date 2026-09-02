@@ -479,11 +479,6 @@ public final class Repl {
             currentPrompt = promptText;
             promptVisibleLen = stripAnsi(promptText).length();
             try {
-                var console = System.console();
-                if (console != null) {
-                    String line = console.readLine("%s", stripAnsi(promptText));
-                    return line; // null on EOF (Ctrl-D)
-                }
                 if (tty == null) {
                     tty = new java.io.FileInputStream("/dev/tty");
                     out = System.out;
@@ -726,10 +721,11 @@ public final class Repl {
                     } else if (b2 == 'b') { cursor = wordBackward(buf, cursor); redrawLine(buf, cursor); }
                     else if (b2 == 'f') { cursor = wordForward(buf, cursor); redrawLine(buf, cursor); }
                 } else if (b >= 32) {                   // printable character
-                    // Drain any additional bytes that arrived at the same time (paste burst)
+                    // Drain any additional bytes that arrived at the same time (paste burst).
+                    // Apple Terminal delivers the entire paste payload as a rapid burst after a brief delay.
                     var chunk = new StringBuilder();
                     chunk.append((char) b);
-                    Thread.sleep(12); // brief wait for paste buffer to fill
+                    Thread.sleep(80); // wait for Apple Terminal paste buffer to fill
                     while (tty.available() > 0) {
                         int nb = tty.read();
                         if (nb < 32 || nb == 127) break; // stop on control chars

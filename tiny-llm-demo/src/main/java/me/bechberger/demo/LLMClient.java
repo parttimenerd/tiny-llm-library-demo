@@ -227,7 +227,7 @@ public class LLMClient implements me.bechberger.demo.util.LLMClientInterface {
         try {
             for (var m : Util.asList(Util.asMap(JSONParser.parse(http.get("/v1/models"))).get("data"))) {
                 var modelMap = Util.asMap(m);
-                if (model.equals(modelMap.get("id"))) {
+                if (model != null && model.equals(modelMap.get("id"))) {
                     // llama-server: meta.n_ctx_train
                     if (modelMap.containsKey("meta")) {
                         var nCtx = Util.asMap(modelMap.get("meta")).get("n_ctx_train");
