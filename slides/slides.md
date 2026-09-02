@@ -74,8 +74,6 @@ LLM APIs are <OrangeText>boring</OrangeText>.
 
 <div class="text-2xl text-gray-300 mt-8">
 
-Boring means <OrangeText>debuggable</OrangeText>. Boring means <OrangeText>predictable</OrangeText>.
-
 </div>
 
 </div>
@@ -161,31 +159,13 @@ flowchart TB
 
 </div>
 
-<div class="mt-10 text-xl">Today we build the <OrangeText>core</OrangeText>. The rest is wrappers.</div>
-
 <!--
 **[~1:30]** "Provider adapters, retries, tracing — that's real engineering work. We're not replacing that. We're learning what's underneath so you can understand, debug, and extend it."
 -->
 
-
 ---
 
 # What We're Building Today
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-
-<div>
-
-<div class="text-xl font-bold">REST API + streaming client</div>
-<div class="text-gray-400 mb-3">Three endpoints. One JSON format.</div>
-
-<div class="text-xl font-bold">Tool calling</div>
-<div class="text-gray-400 mb-3">JSON Schema, sandbox, while loop</div>
-
-<div class="text-xl font-bold">Coding agent</div>
-<div class="text-gray-400 mb-4">Edits its own source</div>
-
-</div>
 
 <div>
 
@@ -217,8 +197,6 @@ flowchart TB
 
 </div>
 
-</div>
-
 <!--
 **[~3:30]** Show the target. "This is the finish line. A streaming chat client, with tool calling, in a tiny JAR."
 -->
@@ -232,6 +210,7 @@ flowchart TB
 <div>
 
 **llama-server**: one command, OpenAI-compatible endpoint:
+
 
 ```bash
 llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
@@ -249,7 +228,7 @@ llama-server -hf unsloth/Qwen3.5-9B-GGUF:Q8_0
 <div class="text-xl font-bold text-orange-400 mb-4">⚠️ Quality</div>
 
 <div class="text-xl font-bold text-orange-400 mb-1">⚠️ Hardware</div>
-<div class="text-xs text-gray-500 font-mono mt-1">-hf unsloth/Qwen3.5-2B-GGUF:Q8_0</div>
+
 
 </div>
 
@@ -355,6 +334,7 @@ Don't mention JSON-RPC or MCP here — save it for Part 7.
 
 **Request:**
 
+
 ```bash
 curl -X POST .../v1/chat/completions \
   -H "Content-Type: application/json" \
@@ -406,6 +386,7 @@ curl -X POST .../v1/chat/completions \
 <div class="text-xl font-bold mb-3">No server memory. You re-send the <OrangeText>full history</OrangeText> every turn.</div>
 
 <div class="mt-2">
+
 
 ```bash {1|2|4-9}
 curl -X POST http://localhost:8080/v1/chat/completions \
@@ -470,6 +451,7 @@ curl -X POST http://localhost:8080/v1/chat/completions \
   }'
 ```
 
+
 ```
 data: {"choices":[{"delta":{"role":"assistant","content":null}}]}
 data: {"choices":[{"delta":{"content":"Ah"}}]}
@@ -484,47 +466,6 @@ data: [DONE]
 **[~10:00]** **[QUICK POLL]** "Who's seen SSE before?"
 "Same endpoint as before. Add stream: true and the response stays open — tokens arrive as data: lines."
 "Instead of message.content in one shot, you get delta.content one token at a time."
--->
-
----
-
-# SSE Is a Web Standard
-
-<div class="grid grid-cols-2 gap-8 mt-2">
-
-<div>
-
-SSE = <OrangeText>Server-Sent Events</OrangeText>, a web standard (HTML5).
-
-<code>Content-Type: text/event-stream</code>
-
-One long-lived HTTP response. Server pushes `data:` lines as tokens are generated.
-
-</div>
-
-<div>
-
-```mermaid {theme: 'dark'}
-sequenceDiagram
-  participant App
-  participant LLM as LLM Server
-
-  App->>LLM: POST /v1/chat/completions (stream: true)
-  activate LLM
-  LLM-->>App: data: {"delta":{"content":"Hello"}}
-  LLM-->>App: data: {"delta":{"content":" world"}}
-  LLM-->>App: data: {"delta":{"content":"!"}}
-  LLM-->>App: data: [DONE]
-  deactivate LLM
-```
-
-</div>
-
-</div>
-
-<!--
-**[~10:30]** "Not an AI invention — it's a web standard: WHATWG draft from 2004, W3C Recommendation in 2015."
-"The server keeps the connection open and pushes events. Your InputStream delivers these lines one at a time. Parse delta.content, print it, repeat until [DONE]."
 -->
 
 ---
